@@ -1,6 +1,14 @@
 package org.davidliebman.tag;
 
+import com.intellij.openapi.components.ComponentConfig;
+import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
+
+import java.awt.*;
 import java.io.*;
+
 
 /**
  * Created by dave on 2/19/16.
@@ -137,5 +145,20 @@ public class ATAG {
         if (configCsvSecond.contentEquals("") || configLocalRoot.contentEquals("") || configCsvLocal.contentEquals("")) {
             throw new Exception();
         }
+    }
+
+    public String selectFolder() throws Exception{
+        return "";
+    }
+
+    public String selectFile(Project proj) throws Exception {
+        FileChooserDescriptor descriptor = new FileChooserDescriptor(true,false,false,false,false,false);
+        descriptor.setTitle("Select File");
+        descriptor.getContextModule();
+
+        VirtualFile file[] = com.intellij.openapi.fileChooser.FileChooser.chooseFiles(proj , descriptor);
+
+        return "";
+
     }
 }

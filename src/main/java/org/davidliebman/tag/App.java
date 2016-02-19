@@ -11,5 +11,8 @@ public class App
         System.out.println( "Hello World!" );
 
         ATAG val = new ATAG();
+
+        ATAGShowImage image = new ATAGShowImage();
+        image.setValues(val);
     }
 }
