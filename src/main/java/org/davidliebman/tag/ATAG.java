@@ -203,7 +203,7 @@ public class ATAG {
 
         String returnString = "";
 
-        JFileChooser chooser = new JFileChooser();
+        JFileChooser chooser = new JFileChooser(getStartFolder());
         FileNameExtensionFilter filter = new FileNameExtensionFilter(description,"png","bmp","jpg","jpeg");
         chooser.setFileFilter(filter);
         int returnVal = chooser.showOpenDialog(null);
@@ -213,5 +213,17 @@ public class ATAG {
 
         return returnString;
 
+    }
+
+    public String getStartFolder() {
+        String returnString = configHomeDirectory;
+
+        if (configRootDatabase.contains(File.separator)) {
+            returnString = configRootDatabase;
+        }
+
+        //System.out.println(configRootDatabase + " " + File.separator);
+
+        return returnString;
     }
 }
