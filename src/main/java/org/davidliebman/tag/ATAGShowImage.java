@@ -1,25 +1,11 @@
 package org.davidliebman.tag;
 
-import com.intellij.openapi.components.BaseComponent;
-import com.intellij.openapi.components.ComponentConfig;
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.components.*;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.pom.PomModel;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.messages.MessageBus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Created by dave on 2/19/16.
@@ -34,16 +20,15 @@ public class ATAGShowImage {
     private JLabel programName;
     private JPanel imagePanel;
     private JPanel formPanel; // do not instantiate!!
+    private JButton buttonImage;
+    private JButton buttonRoot;
+    private JButton buttonSplit;
+    private JButton buttonCsvSingle;
+    private JButton buttonCsvSecond;
+    private JButton buttonDBLocal;
+    private JButton buttonCsvLocal;
 
-    /*
-    private TextFieldWithBrowseButton textFieldWithBrowseButtonProgram;
-    private TextFieldWithBrowseButton textFieldWithBrowseDatabaseRoot;
-    private TextFieldWithBrowseButton textFieldWithBrowseSplitDir;
-    private TextFieldWithBrowseButton textFieldWithBrowseCsvSingle;
-    private TextFieldWithBrowseButton textFieldWithBrowseCsvSecond;
-    private TextFieldWithBrowseButton textFieldWithBrowseDatabaseLocal;
-    private TextFieldWithBrowseButton textFieldWithBrowseCsvLocal;
-    */
+
 
     private ATAG var;
 
@@ -61,28 +46,91 @@ public class ATAGShowImage {
         programName = new JLabel();
         imagePanel = new JPanel();
         //formPanel = new JPanel();
-        setValues(new ATAG());
-        /*
-        textFieldWithBrowseButtonProgram = new TextFieldWithBrowseButton();
-        textFieldWithBrowseCsvLocal = new TextFieldWithBrowseButton();
-        textFieldWithBrowseCsvSecond = new TextFieldWithBrowseButton();
-        textFieldWithBrowseCsvSingle = new TextFieldWithBrowseButton();
-        textFieldWithBrowseDatabaseLocal = new TextFieldWithBrowseButton();
-        textFieldWithBrowseDatabaseRoot = new TextFieldWithBrowseButton();
-        textFieldWithBrowseSplitDir = new TextFieldWithBrowseButton();
 
+        buttonImage = new JButton();
+        buttonRoot = new JButton();
+        buttonSplit = new JButton();
+        buttonCsvSingle = new JButton();
+        buttonCsvSecond = new JButton();
+        buttonDBLocal = new JButton();
+        buttonCsvLocal = new JButton();
 
-        FileChooserDescriptor filesOnly = new FileChooserDescriptor(true, false,false,false,false,false);
-        FileChooserDescriptor foldersOnly = new FileChooserDescriptor(false,true, false, false, false, false);
+        buttonImage.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String out = var.selectImage("Image");
+                if (!out.contentEquals("")) {
+                    var.configLastImage = out;
+                    var.writeConfigText(ATAG.DOTFOLDER_LAST_IMAGE, var.configLastImage);
+                    setDisplayText();
+                }
+            }
+        });
 
-        textFieldWithBrowseSplitDir.addBrowseFolderListener(" "," ", new ATAGProject(), foldersOnly);
-        textFieldWithBrowseButtonProgram.addBrowseFolderListener(" "," ", new ATAGProject(), filesOnly);
-        textFieldWithBrowseDatabaseRoot.addBrowseFolderListener(" "," ", new ATAGProject(), foldersOnly);
-        textFieldWithBrowseDatabaseLocal.addBrowseFolderListener(" "," ", new ATAGProject(), foldersOnly);
-        textFieldWithBrowseCsvLocal.addBrowseFolderListener(" "," ", new ATAGProject(),filesOnly);
-        textFieldWithBrowseCsvSecond.addBrowseFolderListener(" "," ", new ATAGProject(), filesOnly);
-        textFieldWithBrowseCsvSingle.addBrowseFolderListener(" "," ", new ATAGProject(), filesOnly);
-        */
+        buttonRoot.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String out = var.selectFolder("Folder");
+                if (!out.contentEquals("")) {
+                    var.configRootDatabase = out;
+                    var.writeConfigText(ATAG.DOTFOLDER_ROOT_DATABASE_NAME, var.configRootDatabase);
+                    setDisplayText();
+                }
+            }
+        });
+
+        buttonSplit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String out = var.selectFolder("Folder");
+                if (!out.contentEquals("")) {
+                    var.configSplitFolderName = out;
+                    var.writeConfigText(ATAG.DOTFOLDER_SPLIT_FOLDER_NAME, var.configSplitFolderName);
+                    setDisplayText();
+                }
+            }
+        });
+
+        buttonCsvSingle.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String out = var.selectFile("CSV");
+                if (!out.contentEquals("")) {
+                    var.configCsvFileSingle = out;
+                    var.writeConfigText(ATAG.DOTFOLDER_SINGLE_CSV_FILENAME, var.configCsvFileSingle);
+                    setDisplayText();
+                }
+            }
+        });
+
+        buttonCsvSecond.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String out = var.selectFile("CSV");
+                if (!out.contentEquals("")) {
+                    var.configCsvSecond = out;
+                    var.writeConfigText(ATAG.DOTFOLDER_SECOND_CSV_FILENAME, var.configCsvSecond);
+                    setDisplayText();
+                }
+            }
+        });
+
+        buttonDBLocal.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String out = var.selectFolder("Folder");
+                if (!out.contentEquals("")) {
+                    var.configLocalRoot = out;
+                    var.writeConfigText(ATAG.DOTFOLDER_LOCAL_DATA_FOLDERNAME, var.configLocalRoot);
+                    setDisplayText();
+                }
+            }
+        });
+
+        buttonCsvLocal.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String out = var.selectFile("CSV");
+                if (!out.contentEquals("")) {
+                    var.configCsvLocal = out;
+                    var.writeConfigText(ATAG.DOTFOLDER_LOCAL_DATA_CSV, var.configCsvLocal);
+                    setDisplayText();
+                }
+            }
+        });
     }
 
     private void setDisplayText() {
@@ -93,39 +141,25 @@ public class ATAGShowImage {
         csvFileSecond.setText(var.configCsvSecond);
         csvFileLocal.setText(var.configCsvLocal);
         localDatabase.setText(var.configLocalRoot);
-        programName.setText("TAG");
+        programName.setText(var.configLastImage);
         System.out.println(databaseRoot.getText());
     }
 
 
-    public void setValues(ATAG v) {
-        var = v;
-        setDisplayText();
 
-        try {
 
-            var.selectFile(new ATAGProject());
-        }
-        catch (Exception e) {e.printStackTrace();}
-    }
-
-    public static void main(String[] args) {
+    public   ATAGShowImage(ATAG v) {
         JFrame frame = new JFrame("ATAGShowImage");
-        frame.setContentPane(new ATAGShowImage().formPanel);
+        frame.setContentPane(formPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+
+        var = v;
+        setDisplayText();
     }
 
-    /*
-    class ATAGComponent extends ServiceManager {
 
-        public ATAGComponent ( ) {
-
-        }
-
-    }
-    */
 
 
 }

@@ -6,6 +6,8 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.*;
 
@@ -21,6 +23,7 @@ public class ATAG {
     public static final String DOTFOLDER_SECOND_CSV_FILENAME = "csv_file_second";
     public static final String DOTFOLDER_LOCAL_DATA_FOLDERNAME = "local_database";
     public static final String DOTFOLDER_LOCAL_DATA_CSV = "my_csv_name";
+    public static final String DOTFOLDER_LAST_IMAGE = "image_name";
 
     public String configRootDatabase = "";
     public String configSplitFolderName = "";
@@ -30,6 +33,8 @@ public class ATAG {
     public String configLocalRoot = "";
     public String configCsvLocal = "";
 
+    public String configLastImage = "";
+
     public String configHomeDirectory = "";
 
     public static final String DEFAULT_ROOT_DATABASE = "workspace";
@@ -38,6 +43,7 @@ public class ATAG {
     public static final String DEFAULT_SECOND_CSV_FILENAME = "second.csv";
     public static final String DEFAULT_LOCAL_DATA_FOLDERNAME = "local";
     public static final String DEFAULT_LOCAL_DATA_CSV = "my.csv";
+    public static final String DEFAULT_LAST_IMAGE = "image.png";
 
     public String configRootLocal = "";
 
@@ -113,20 +119,26 @@ public class ATAG {
         return output;
     }
 
-    public void writeConfigText(String textName, String contents) throws Exception {
-        if (configHomeDirectory.contentEquals("") || textName.contentEquals("")){
-            throw new Exception();
+    public void writeConfigText(String textName, String contents)  {
+
+        try {
+            if (configHomeDirectory.contentEquals("") || textName.contentEquals("")) {
+                throw new Exception();
+            }
+            String pathDotFolderFile = configHomeDirectory + File.separator + DOTFOLDER + File.separator + textName;
+            File dotFile = new File(pathDotFolderFile);
+
+            String newline = System.getProperty("line.separator");
+
+            FileWriter fw = new FileWriter(dotFile);
+            BufferedWriter writer = new BufferedWriter(fw);
+
+            writer.write(contents + newline);
+            writer.close();
         }
-        String pathDotFolderFile = configHomeDirectory + File.separator + DOTFOLDER + File.separator + textName;
-        File dotFile = new File(pathDotFolderFile);
-
-        String newline = System.getProperty("line.separator");
-
-        FileWriter fw = new FileWriter(dotFile);
-        BufferedWriter writer = new BufferedWriter(fw);
-
-        writer.write(contents + newline);
-        writer.close();
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void readDotFolder()throws Exception {
@@ -145,20 +157,61 @@ public class ATAG {
         if (configCsvSecond.contentEquals("") || configLocalRoot.contentEquals("") || configCsvLocal.contentEquals("")) {
             throw new Exception();
         }
+
+        configLastImage = this.readConfigText(DOTFOLDER_LAST_IMAGE, DEFAULT_LAST_IMAGE);
+
+        if (configLastImage.contentEquals("")) {
+            throw new Exception();
+        }
     }
 
-    public String selectFolder() throws Exception{
-        return "";
+    public String selectFolder(String description) {
+        UIManager.put("FileChooser.readOnly", Boolean.TRUE);
+
+        String returnString = "";
+
+        JFileChooser chooser = new JFileChooser();
+
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int returnVal = chooser.showOpenDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            returnString = chooser.getSelectedFile().getAbsolutePath();
+        }
+
+        return returnString;
     }
 
-    public String selectFile(Project proj) throws Exception {
-        FileChooserDescriptor descriptor = new FileChooserDescriptor(true,false,false,false,false,false);
-        descriptor.setTitle("Select File");
-        descriptor.getContextModule();
+    public String selectFile(String description )  {
+        UIManager.put("FileChooser.readOnly", Boolean.TRUE);
 
-        VirtualFile file[] = com.intellij.openapi.fileChooser.FileChooser.chooseFiles(proj , descriptor);
+        String returnString = "";
 
-        return "";
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(description,"csv");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            returnString = chooser.getSelectedFile().getAbsolutePath();
+        }
+
+        return returnString;
+
+    }
+
+    public String selectImage(String description )  {
+        UIManager.put("FileChooser.readOnly", Boolean.TRUE);
+
+        String returnString = "";
+
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(description,"png","bmp","jpg","jpeg");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            returnString = chooser.getSelectedFile().getAbsolutePath();
+        }
+
+        return returnString;
 
     }
 }

@@ -12,7 +12,7 @@ public class App
 
         ATAG val = new ATAG();
 
-        ATAGShowImage image = new ATAGShowImage();
-        image.setValues(val);
+        ATAGShowImage image = new ATAGShowImage(val);
+        //image.setValues(val);
     }
 }
