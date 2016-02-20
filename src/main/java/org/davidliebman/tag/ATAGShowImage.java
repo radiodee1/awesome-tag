@@ -142,7 +142,7 @@ public class ATAGShowImage {
         csvFileLocal.setText(var.configCsvLocal);
         localDatabase.setText(var.configLocalRoot);
         programName.setText(var.configLastImage);
-        System.out.println(databaseRoot.getText());
+
     }
 
 
