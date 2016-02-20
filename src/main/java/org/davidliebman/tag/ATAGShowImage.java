@@ -27,10 +27,10 @@ public class ATAGShowImage {
     private JButton buttonCsvSecond;
     private JButton buttonDBLocal;
     private JButton buttonCsvLocal;
-    private JButton button1;
-    private JButton button2;
-    private JButton button3;
-    private JButton button4;
+    private JButton buttonLoadCsv;
+    private JButton buttonModCsv;
+    private JButton buttonTrainCNN;
+    private JButton buttonTestCNN;
     private JPanel buttonBar;
 
 
@@ -59,6 +59,11 @@ public class ATAGShowImage {
         buttonCsvSecond = new JButton();
         buttonDBLocal = new JButton();
         buttonCsvLocal = new JButton();
+
+        buttonLoadCsv = new JButton();
+        buttonModCsv = new JButton();
+        buttonTrainCNN = new JButton();
+        buttonTestCNN = new JButton();
 
         buttonImage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -135,6 +140,22 @@ public class ATAGShowImage {
                     var.configCsvLocal = out;
                     var.writeConfigText(ATAG.DOTFOLDER_LOCAL_DATA_CSV, var.configCsvLocal);
                     setDisplayText();
+                }
+            }
+        });
+
+        buttonLoadCsv.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (proc != null) {
+                    proc.loadCsvStart();
+                }
+            }
+        });
+
+        buttonModCsv.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (proc != null) {
+                    proc.saveCsvLocal();
                 }
             }
         });

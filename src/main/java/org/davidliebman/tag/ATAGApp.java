@@ -8,7 +8,6 @@ public class ATAGApp
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
 
         ATAG val = new ATAG();
 
