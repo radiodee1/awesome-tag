@@ -66,7 +66,8 @@ public class ATAGShowImage {
                     var.configLastImage = out;
                     var.writeConfigText(ATAG.DOTFOLDER_LAST_IMAGE, var.configLastImage);
                     setDisplayText();
-                    imagePanel.revalidate();
+                    imagePanel.repaint();
+
                 }
             }
         });
@@ -177,6 +178,7 @@ public class ATAGShowImage {
 
         var = v;
         setDisplayText();
+        imagePanel.repaint();
     }
 
 
