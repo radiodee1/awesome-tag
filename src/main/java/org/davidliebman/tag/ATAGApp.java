@@ -4,7 +4,7 @@ package org.davidliebman.tag;
  * Hello world!
  *
  */
-public class App 
+public class ATAGApp
 {
     public static void main( String[] args )
     {
@@ -12,7 +12,9 @@ public class App
 
         ATAG val = new ATAG();
 
-        ATAGShowImage image = new ATAGShowImage(val);
-        //image.setValues(val);
+        ATAGProcCsv proc = new ATAGProcCsv(val);
+        ATAGShowImage image = new ATAGShowImage(val,proc);
+
+
     }
 }

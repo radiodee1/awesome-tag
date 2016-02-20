@@ -1,10 +1,5 @@
 package org.davidliebman.tag;
 
-import com.intellij.openapi.components.ComponentConfig;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;

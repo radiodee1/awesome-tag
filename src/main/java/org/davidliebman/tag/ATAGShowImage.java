@@ -35,8 +35,9 @@ public class ATAGShowImage {
 
 
     private ATAG var;
+    private ATAGProcCsv proc;
 
-    JFrame frame ;//= new JFrame("ATAGShowImage");
+    JFrame frame ;
 
 
     private void createUIComponents() {
@@ -48,7 +49,7 @@ public class ATAGShowImage {
         csvFileLocal = new JLabel();
         localDatabase = new JLabel();
         programName = new JLabel();
-        imagePanel =  new ATAGPanel();//new JPanel();
+        imagePanel =  new ATAGPanel();
         //formPanel = new JPanel();
 
         buttonImage = new JButton();
@@ -169,7 +170,7 @@ public class ATAGShowImage {
 
 
 
-    public   ATAGShowImage(ATAG v) {
+    public   ATAGShowImage(ATAG v, ATAGProcCsv p) {
         frame = new JFrame("ATAGShowImage");
         frame.setContentPane(formPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -177,6 +178,7 @@ public class ATAGShowImage {
         frame.setVisible(true);
 
         var = v;
+        proc = p;
         setDisplayText();
         imagePanel.repaint();
     }
