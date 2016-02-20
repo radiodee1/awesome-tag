@@ -14,6 +14,9 @@ public class ATAGPanel extends JPanel{
     private String filename = "";
     private BufferedImage image;
 
+    private double fx,fy,fheight,fwidth;
+    private boolean addOutline = false;
+
     public ATAGPanel() {
     }
 
@@ -22,6 +25,7 @@ public class ATAGPanel extends JPanel{
     }
 
     public void setFilename(String im) {
+        addOutline = false;
         filename = im;
         if (!filename.contentEquals("")) {
             try {
@@ -34,6 +38,16 @@ public class ATAGPanel extends JPanel{
         }
     }
 
+    public void setExtraData(ATAGProcCsv.CsvLine line) {
+        if (line.getSpecifications().size() < ATAGProcCsv.FACE_HEIGHT) return;
+
+        fx = line.getSpecifications().get(ATAGProcCsv.FACE_X);
+        fy = line.getSpecifications().get(ATAGProcCsv.FACE_Y);
+        fheight = line.getSpecifications().get(ATAGProcCsv.FACE_HEIGHT);
+        fwidth = line.getSpecifications().get(ATAGProcCsv.FACE_WIDTH);
+        addOutline = true;
+
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -41,6 +55,11 @@ public class ATAGPanel extends JPanel{
         if (image != null) {
             g.drawImage(image, 0, 0, null);
 
+            if(addOutline) {
+                g.setColor(Color.blue);
+                g.drawRect((int) fx, (int) fy, (int) fwidth, (int) fheight);
+                System.out.println("add line.");
+            }
         }
     }
 }

@@ -41,6 +41,7 @@ public class ATAGProcCsv {
         loadCsvLocal();
     }
 
+    public ArrayList<CsvLine> getLocalList() { return listLocal;}
 
     private void loadCsvSingle() {
         System.out.println( "Hello World! -- " + var.configCsvFileSingle );
@@ -216,6 +217,16 @@ public class ATAGProcCsv {
             listLocal.add(out);
         }
 
+    }
+
+    public CsvLine getFirstMatchByName() {
+        CsvLine line = new CsvLine();
+        for (int i = 0; i < listLocal.size(); i ++) {
+            if(var.configLastImage.endsWith(listLocal.get(i).getFileLocation())) {
+                line = listLocal.get(i);
+            }
+        }
+        return line;
     }
 
     class CsvLine {

@@ -32,7 +32,9 @@ public class ATAGShowImage {
     private JButton buttonTrainCNN;
     private JButton buttonTestCNN;
     private JPanel buttonBar;
+    private JButton buttonAddLine;
 
+    private ATAGProcCsv.CsvLine line;
 
     private ATAG var;
     private ATAGProcCsv proc;
@@ -64,6 +66,7 @@ public class ATAGShowImage {
         buttonModCsv = new JButton();
         buttonTrainCNN = new JButton();
         buttonTestCNN = new JButton();
+        buttonAddLine = new JButton();
 
         buttonImage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -159,6 +162,16 @@ public class ATAGShowImage {
                 }
             }
         });
+
+        buttonAddLine.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (proc.getLocalList() != null) {
+                    line = proc.getFirstMatchByName();
+                    ((ATAGPanel)imagePanel).setExtraData(line);
+                    imagePanel.repaint();
+                }
+            }
+        });
     }
 
     private void setDisplayText() {
@@ -185,6 +198,7 @@ public class ATAGShowImage {
         programName.setToolTipText(var.configLastImage);
 
         ((ATAGPanel)imagePanel).setFilename(var.configLastImage);
+
 
     }
 
