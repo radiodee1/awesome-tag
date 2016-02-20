@@ -62,7 +62,7 @@ public class ATAGShowImage {
                     var.configLastImage = out;
                     var.writeConfigText(ATAG.DOTFOLDER_LAST_IMAGE, var.configLastImage);
                     setDisplayText();
-                    imagePanel.invalidate();
+                    imagePanel.revalidate();
                 }
             }
         });

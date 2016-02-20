@@ -17,6 +17,10 @@ public class ATAGPanel extends JPanel{
     public ATAGPanel() {
     }
 
+    public ATAGPanel(String im) {
+        setFilename(im);
+    }
+
     public void setFilename(String im) {
         filename = im;
         if (!filename.contentEquals("")) {
@@ -36,7 +40,7 @@ public class ATAGPanel extends JPanel{
         super.paintComponent(g);
         if (image != null) {
             g.drawImage(image, 0, 0, null);
-            System.out.println("draw");
+
         }
     }
 }
