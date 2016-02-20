@@ -2,6 +2,7 @@ package org.davidliebman.tag;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by dave on 2/20/16.
@@ -10,6 +11,13 @@ public class ATAGProcCsv {
 
     public static final int CSV_POSITION_FILE_LOCATION = 2;
 
+    public static final int NUM_OF_APPROACHES = 4;
+    public static final int APPROACH_IS_CLOSE = 70;
+
+    public static final int FACE_X = 6;
+    public static final int FACE_Y = 7;
+    public static final int FACE_WIDTH = 8;
+    public static final int FACE_HEIGHT = 9;
 
     private ATAG var;
     private ArrayList<CsvLine> listSingle;
@@ -20,9 +28,12 @@ public class ATAGProcCsv {
     private ArrayList<String> headingLocal;
     private ArrayList<String> headingSecond;
 
+    private Random r;
+    private double avg_approach_dist = 0;
+
     public ATAGProcCsv (ATAG v) {
         var = v;
-
+        r = new Random(System.currentTimeMillis());
     }
 
     public void loadCsvStart() {
@@ -58,7 +69,9 @@ public class ATAGProcCsv {
     }
 
     public void saveCsvLocal() {
-        saveAnyCsv(var.configCsvLocal, listSingle,headingSingle,  CSV_POSITION_FILE_LOCATION);
+        processFile(listSingle,headingSingle);
+
+        saveAnyCsv(var.configCsvLocal, listLocal,headingLocal,  CSV_POSITION_FILE_LOCATION);
     }
 
 
@@ -153,6 +166,56 @@ public class ATAGProcCsv {
 
 
         System.out.println("done save");
+    }
+
+    private void processFile(ArrayList<CsvLine> csv, ArrayList<String> labels) {
+        avg_approach_dist = 0;
+        listLocal = new ArrayList<CsvLine>();
+        for (int i = 0; i < csv.size(); i ++ ) {
+            processLine(csv.get(i));
+        }
+
+        avg_approach_dist = avg_approach_dist / (listLocal.size());
+        System.out.println("average approach dist " + avg_approach_dist);
+    }
+
+    private void processLine(CsvLine line) {
+        double fx = line.getSpecifications().get(FACE_X);
+        double fy = line.getSpecifications().get(FACE_Y);
+        double fheight = line.getSpecifications().get(FACE_HEIGHT);
+        double fwidth = line.getSpecifications().get(FACE_WIDTH);
+        double approachx = 0;
+        double approachy = 0;
+        double approachdist = 0;
+        double labelOutput = 0;
+
+        for (int i = 0; i < NUM_OF_APPROACHES; i ++) {
+
+            CsvLine out = new CsvLine();
+            out.setFileLocation(line.getFileLocation());
+            for (int j = 0; j < line.getSpecifications().size(); j ++) {
+                out.getSpecifications().add(line.getSpecifications().get(j));
+            }
+
+            approachx = fx + r.nextInt((int)fwidth * 2) - fwidth;
+            approachy = fy + r.nextInt((int)fheight * 2) - fheight;
+            approachdist = Math.sqrt(Math.pow(fx - approachx,2)+Math.pow(fy - approachy,2));
+            avg_approach_dist += approachdist;
+            if (approachdist < APPROACH_IS_CLOSE) {
+                labelOutput = 1;
+            }
+            else {
+                labelOutput = 0;
+            }
+
+            out.getSpecifications().add(approachx);
+            out.getSpecifications().add(approachy);
+            out.getSpecifications().add(approachdist);
+            out.getSpecifications().add(labelOutput);
+
+            listLocal.add(out);
+        }
+
     }
 
     class CsvLine {
