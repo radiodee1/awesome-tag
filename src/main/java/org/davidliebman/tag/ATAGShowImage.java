@@ -32,7 +32,7 @@ public class ATAGShowImage {
 
     private ATAG var;
 
-    //JFrame frame ;//= new JFrame("ATAGShowImage");
+    JFrame frame ;//= new JFrame("ATAGShowImage");
 
 
     private void createUIComponents() {
@@ -44,7 +44,7 @@ public class ATAGShowImage {
         csvFileLocal = new JLabel();
         localDatabase = new JLabel();
         programName = new JLabel();
-        imagePanel = new JPanel();
+        imagePanel =  new ATAGPanel();//new JPanel();
         //formPanel = new JPanel();
 
         buttonImage = new JButton();
@@ -62,6 +62,7 @@ public class ATAGShowImage {
                     var.configLastImage = out;
                     var.writeConfigText(ATAG.DOTFOLDER_LAST_IMAGE, var.configLastImage);
                     setDisplayText();
+                    imagePanel.invalidate();
                 }
             }
         });
@@ -136,12 +137,27 @@ public class ATAGShowImage {
     private void setDisplayText() {
         if(var == null) return;
         databaseRoot.setText(var.configRootDatabase);
+        databaseRoot.setToolTipText(var.configRootDatabase);
+
         splitFolderName.setText(var.configSplitFolderName);
+        splitFolderName.setToolTipText(var.configSplitFolderName);
+
         csvFileSingle.setText(var.configCsvFileSingle);
+        csvFileSingle.setText(var.configCsvFileSingle);
+
         csvFileSecond.setText(var.configCsvSecond);
+        csvFileSecond.setToolTipText(var.configCsvSecond);
+
         csvFileLocal.setText(var.configCsvLocal);
+        csvFileLocal.setToolTipText(var.configCsvLocal);
+
         localDatabase.setText(var.configLocalRoot);
+        localDatabase.setToolTipText(var.configLocalRoot);
+
         programName.setText(var.configLastImage);
+        programName.setToolTipText(var.configLastImage);
+
+        ((ATAGPanel)imagePanel).setFilename(var.configLastImage);
 
     }
 
@@ -149,7 +165,7 @@ public class ATAGShowImage {
 
 
     public   ATAGShowImage(ATAG v) {
-        JFrame frame = new JFrame("ATAGShowImage");
+        frame = new JFrame("ATAGShowImage");
         frame.setContentPane(formPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
