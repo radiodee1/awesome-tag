@@ -44,7 +44,7 @@ public class ATAGPanel extends JPanel{
     public void setExtraDataFaces(ArrayList<ATAGProcCsv.CsvLine> list) {
         listFaces = list;
 
-        if (listFaces.get(0).getSpecifications().size() < ATAGProcCsv.FACE_HEIGHT) return;
+        if ( listFaces.isEmpty() || listFaces.get(0).getSpecifications().size() < ATAGProcCsv.FACE_HEIGHT) return;
 
 
         addOutline = true;

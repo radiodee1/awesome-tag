@@ -18,6 +18,11 @@ public class ATAGProcCsv {
     public static final int FACE_Y = 7;
     public static final int FACE_WIDTH = 8;
     public static final int FACE_HEIGHT = 9;
+    public static final int FACE_APPROACH_X = 10;
+    public static final int FACE_APPROACH_Y = 11;
+    public static final int FACE_APPROACH_DIST = 12;
+
+    public static final double FACE_MOD_AVG = 3.0d/5.0d;
 
     public static final double FACE_4 = 3000;
     public static final double FACE_3 = 1500;
@@ -188,6 +193,7 @@ public class ATAGProcCsv {
     }
 
     private void processLine(CsvLine line) {
+
         double fx = line.getSpecifications().get(FACE_X);
         double fy = line.getSpecifications().get(FACE_Y);
         double fheight = line.getSpecifications().get(FACE_HEIGHT);
@@ -201,32 +207,9 @@ public class ATAGProcCsv {
 
         if(fheight > max_size_vertical) max_size_vertical = fheight;
 
-        ////////////////////////////
-        if (fheight < FACE_1) {
-            labelsize1 = 1;
-            labelsize2 = 0;
-            labelsize3 = 0;
-            labelsize4 = 0;
-        }
-        else if(fheight < FACE_2) {
-            labelsize1 = 0;
-            labelsize2 = 1;
-            labelsize3 = 0;
-            labelsize4 = 0;
-        }
-        else if (fheight < FACE_3) {
-            labelsize1 = 0;
-            labelsize2 = 0;
-            labelsize3 = 1;
-            labelsize4 = 0;
-        }
-        else if (fheight < FACE_4){
-            labelsize1 = 0;
-            labelsize2 = 0;
-            labelsize3 = 0;
-            labelsize4 = 1;
-        }
-        ///////////////////////////
+
+
+        ArrayList<CsvLine> list = new ArrayList<CsvLine>();
 
         for (int i = 0; i < NUM_OF_APPROACHES; i ++) {
 
@@ -242,7 +225,49 @@ public class ATAGProcCsv {
             avg_approach_dist += approachdist;
             approachavg += approachdist;
 
-            if (approachdist < APPROACH_IS_CLOSE) {
+
+
+            out.getSpecifications().add(approachx);
+            out.getSpecifications().add(approachy);
+            out.getSpecifications().add(approachdist);
+            //out.getSpecifications().add(labelOutput);
+
+            list.add(out);
+        }
+
+        approachavg = approachavg / NUM_OF_APPROACHES;
+
+        for (int i = 0; i< NUM_OF_APPROACHES; i ++) {
+
+            approachdist = list.get(i).getSpecifications().get(FACE_APPROACH_DIST);
+
+            ////////////////////////////
+            if (fheight < FACE_1) {
+                labelsize1 = 1;
+                labelsize2 = 0;
+                labelsize3 = 0;
+                labelsize4 = 0;
+            }
+            else if(fheight < FACE_2) {
+                labelsize1 = 0;
+                labelsize2 = 1;
+                labelsize3 = 0;
+                labelsize4 = 0;
+            }
+            else if (fheight < FACE_3) {
+                labelsize1 = 0;
+                labelsize2 = 0;
+                labelsize3 = 1;
+                labelsize4 = 0;
+            }
+            else if (fheight < FACE_4){
+                labelsize1 = 0;
+                labelsize2 = 0;
+                labelsize3 = 0;
+                labelsize4 = 1;
+            }
+
+            if (approachdist < approachavg / FACE_MOD_AVG) {
                 labelnooutput = 0;
             }
             else {
@@ -252,20 +277,17 @@ public class ATAGProcCsv {
                 labelsize3 = 0;
                 labelsize4 = 0;
             }
+            ///////////////////////////
 
-            out.getSpecifications().add(approachx);
-            out.getSpecifications().add(approachy);
-            out.getSpecifications().add(approachdist);
-            //out.getSpecifications().add(labelOutput);
-            out.getSpecifications().add(labelsize1);
-            out.getSpecifications().add(labelsize2);
-            out.getSpecifications().add(labelsize3);
-            out.getSpecifications().add(labelsize4);
-            out.getSpecifications().add(labelnooutput);
+            list.get(i).getSpecifications().add(labelsize1);
+            list.get(i).getSpecifications().add(labelsize2);
+            list.get(i).getSpecifications().add(labelsize3);
+            list.get(i).getSpecifications().add(labelsize4);
+            list.get(i).getSpecifications().add(labelnooutput);
 
-            listLocal.add(out);
+            listLocal.add(list.get(i));
         }
-        approachavg = approachavg / 4;
+
 
     }
 
