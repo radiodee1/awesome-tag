@@ -182,6 +182,7 @@ public class ATAGShowImage {
         buttonPrevious.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 proc.getPreviousFilename();
+                var.writeConfigText(ATAG.DOTFOLDER_LAST_IMAGE, var.configLastImage);
                 setDisplayText();
                 imagePanel.repaint();
             }
@@ -190,6 +191,7 @@ public class ATAGShowImage {
         buttonNext.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 proc.getNextFilename();
+                var.writeConfigText(ATAG.DOTFOLDER_LAST_IMAGE, var.configLastImage);
                 setDisplayText();
                 imagePanel.repaint();
             }
