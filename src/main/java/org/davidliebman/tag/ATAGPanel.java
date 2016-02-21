@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by dave on 2/20/16.
@@ -13,6 +14,8 @@ public class ATAGPanel extends JPanel{
 
     private String filename = "";
     private BufferedImage image;
+
+    private ArrayList<ATAGProcCsv.CsvLine> listFaces;
 
     private double fx,fy,fheight,fwidth;
     private boolean addOutline = false;
@@ -38,13 +41,12 @@ public class ATAGPanel extends JPanel{
         }
     }
 
-    public void setExtraData(ATAGProcCsv.CsvLine line) {
-        if (line.getSpecifications().size() < ATAGProcCsv.FACE_HEIGHT) return;
+    public void setExtraDataFaces(ArrayList<ATAGProcCsv.CsvLine> list) {
+        listFaces = list;
 
-        fx = line.getSpecifications().get(ATAGProcCsv.FACE_X);
-        fy = line.getSpecifications().get(ATAGProcCsv.FACE_Y);
-        fheight = line.getSpecifications().get(ATAGProcCsv.FACE_HEIGHT);
-        fwidth = line.getSpecifications().get(ATAGProcCsv.FACE_WIDTH);
+        if (listFaces.get(0).getSpecifications().size() < ATAGProcCsv.FACE_HEIGHT) return;
+
+
         addOutline = true;
 
     }
@@ -56,9 +58,18 @@ public class ATAGPanel extends JPanel{
             g.drawImage(image, 0, 0, null);
 
             if(addOutline) {
-                g.setColor(Color.blue);
-                g.drawRect((int) fx, (int) fy, (int) fwidth, (int) fheight);
-                System.out.println("add line.");
+                for (int i = 0; i < listFaces.size(); i ++) {
+                    fx = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_X);
+                    fy = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_Y);
+                    fwidth = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_WIDTH);
+                    fheight = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_HEIGHT);
+                    g.setColor(Color.blue);
+                    g.drawRect((int) fx, (int) fy, (int) fwidth, (int) fheight);
+                    System.out.println("add line.");
+
+                }
+
+
             }
         }
     }

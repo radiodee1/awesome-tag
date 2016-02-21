@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * Created by dave on 2/19/16.
@@ -34,7 +35,7 @@ public class ATAGShowImage {
     private JPanel buttonBar;
     private JButton buttonAddLine;
 
-    private ATAGProcCsv.CsvLine line;
+    private ArrayList<ATAGProcCsv.CsvLine> listFaces;
 
     private ATAG var;
     private ATAGProcCsv proc;
@@ -166,8 +167,8 @@ public class ATAGShowImage {
         buttonAddLine.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (proc.getLocalList() != null) {
-                    line = proc.getFirstMatchByName();
-                    ((ATAGPanel)imagePanel).setExtraData(line);
+                    listFaces = proc.getFirstMatchByName();
+                    ((ATAGPanel)imagePanel).setExtraDataFaces(listFaces);
                     imagePanel.repaint();
                 }
             }

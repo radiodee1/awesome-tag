@@ -219,14 +219,17 @@ public class ATAGProcCsv {
 
     }
 
-    public CsvLine getFirstMatchByName() {
+    public ArrayList<CsvLine> getFirstMatchByName() {
+        ArrayList<CsvLine> list = new ArrayList<CsvLine>();
+
         CsvLine line = new CsvLine();
         for (int i = 0; i < listLocal.size(); i ++) {
-            if(var.configLastImage.endsWith(listLocal.get(i).getFileLocation())) {
+            if(var.configLastImage.toLowerCase().endsWith(listLocal.get(i).getFileLocation().toLowerCase())) {
                 line = listLocal.get(i);
+                list.add(line);
             }
         }
-        return line;
+        return list;
     }
 
     class CsvLine {
