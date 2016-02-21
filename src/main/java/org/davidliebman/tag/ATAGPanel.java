@@ -59,13 +59,24 @@ public class ATAGPanel extends JPanel{
 
             if(addOutline) {
                 for (int i = 0; i < listFaces.size(); i ++) {
+                    double fx,fy,fwidth, fheight;
                     fx = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_X);
                     fy = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_Y);
                     fwidth = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_WIDTH);
                     fheight = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_HEIGHT);
+
                     g.setColor(Color.blue);
                     g.drawRect((int) fx, (int) fy, (int) fwidth, (int) fheight);
+
                     System.out.println("add line.");
+
+                    g.setColor(Color.GREEN);
+                    if (listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_LABEL_NO_OUTPUT) == 1.0d) {
+                        g.setColor(Color.RED);
+                    }
+                    fx = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_X);
+                    fy = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_Y);
+                    g.drawRect((int)fx,(int)fy, (int)fwidth, (int) fheight);
 
                 }
 

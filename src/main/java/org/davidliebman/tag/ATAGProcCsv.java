@@ -21,8 +21,13 @@ public class ATAGProcCsv {
     public static final int FACE_APPROACH_X = 10;
     public static final int FACE_APPROACH_Y = 11;
     public static final int FACE_APPROACH_DIST = 12;
+    public static final int FACE_LABEL_1 = 13;
+    public static final int FACE_LABEL_2 = 14;
+    public static final int FACE_LABEL_3 = 15;
+    public static final int FACE_LABEL_4 = 16;
+    public static final int FACE_LABEL_NO_OUTPUT = 17;
 
-    public static final double FACE_MOD_AVG = 3.0d/5.0d;
+    public static final double FACE_MOD_AVG = 1.0d;//3.0d/5.0d;
 
     public static final double FACE_4 = 3000;
     public static final double FACE_3 = 1500;
@@ -203,7 +208,7 @@ public class ATAGProcCsv {
         double approachdist = 0;
         double approachavg = 0;
 
-        double labelsize1 = 0,labelsize2 = 0, labelsize3 = 0, labelsize4 = 0, labelnooutput = 0;
+
 
         if(fheight > max_size_vertical) max_size_vertical = fheight;
 
@@ -219,8 +224,11 @@ public class ATAGProcCsv {
                 out.getSpecifications().add(line.getSpecifications().get(j));
             }
 
-            approachx = fx + r.nextInt((int)fwidth * 2) - fwidth;
-            approachy = fy + r.nextInt((int)fheight * 2) - fheight;
+            //approachx = fx + r.nextInt((int)fwidth * 2) - fwidth;
+            //approachy = fy + r.nextInt((int)fheight * 2) - fheight;
+
+            approachx = fx + r.nextInt((int)fwidth ) - fwidth/2.0d;
+            approachy = fy + r.nextInt((int)fheight) - fheight/2.0d;
             approachdist = Math.sqrt(Math.pow(fx - approachx,2)+Math.pow(fy - approachy,2));
             avg_approach_dist += approachdist;
             approachavg += approachdist;
@@ -241,26 +249,28 @@ public class ATAGProcCsv {
 
             approachdist = list.get(i).getSpecifications().get(FACE_APPROACH_DIST);
 
+            double labelsize1 = 0,labelsize2 = 0, labelsize3 = 0, labelsize4 = 0, labelnooutput = 0;
+
             ////////////////////////////
-            if (fheight < FACE_1) {
+            if (fheight < FACE_1 && fheight > 0) {
                 labelsize1 = 1;
                 labelsize2 = 0;
                 labelsize3 = 0;
                 labelsize4 = 0;
             }
-            else if(fheight < FACE_2) {
+            else if(fheight < FACE_2 && fheight > FACE_1) {
                 labelsize1 = 0;
                 labelsize2 = 1;
                 labelsize3 = 0;
                 labelsize4 = 0;
             }
-            else if (fheight < FACE_3) {
+            else if (fheight < FACE_3 && fheight > FACE_2) {
                 labelsize1 = 0;
                 labelsize2 = 0;
                 labelsize3 = 1;
                 labelsize4 = 0;
             }
-            else if (fheight < FACE_4){
+            else if (fheight < FACE_4 && fheight > FACE_3){
                 labelsize1 = 0;
                 labelsize2 = 0;
                 labelsize3 = 0;
