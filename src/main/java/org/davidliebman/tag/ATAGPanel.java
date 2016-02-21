@@ -17,8 +17,9 @@ public class ATAGPanel extends JPanel{
 
     private ArrayList<ATAGProcCsv.CsvLine> listFaces;
 
-    private double fx,fy,fheight,fwidth;
+    //private double fx,fy,fheight,fwidth;
     private boolean addOutline = false;
+    private boolean showBlueFaceBox = false;
 
     public ATAGPanel() {
     }
@@ -51,6 +52,16 @@ public class ATAGPanel extends JPanel{
 
     }
 
+    public void showSizes(ATAGProcCsv.CsvLine line) {
+        for (int i = 0; i < line.getSpecifications().size(); i ++) {
+            if ( i >= ATAGProcCsv.FACE_LABEL_1){
+                System.out.print(line.getSpecifications().get(i) + "  --  ");
+            }
+        }
+        System.out.println(line.getSpecifications().get(ATAGProcCsv.FACE_HEIGHT));
+
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -65,9 +76,10 @@ public class ATAGPanel extends JPanel{
                     fwidth = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_WIDTH);
                     fheight = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_HEIGHT);
 
-                    g.setColor(Color.blue);
-                    g.drawRect((int) fx, (int) fy, (int) fwidth, (int) fheight);
-
+                    if(showBlueFaceBox) {
+                        g.setColor(Color.blue);
+                        g.drawRect((int) fx, (int) fy, (int) fwidth, (int) fheight);
+                    }
                     System.out.println("add line.");
 
                     g.setColor(Color.GREEN);
@@ -78,6 +90,7 @@ public class ATAGPanel extends JPanel{
                     fy = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_Y);
                     g.drawRect((int)fx,(int)fy, (int)fwidth, (int) fheight);
 
+                    showSizes(listFaces.get(i));
                 }
 
 

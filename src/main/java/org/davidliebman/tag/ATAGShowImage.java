@@ -34,6 +34,8 @@ public class ATAGShowImage {
     private JButton buttonTestCNN;
     private JPanel buttonBar;
     private JButton buttonAddLine;
+    private JButton buttonPrevious;
+    private JButton buttonNext;
 
     private ArrayList<ATAGProcCsv.CsvLine> listFaces;
 
@@ -68,6 +70,9 @@ public class ATAGShowImage {
         buttonTrainCNN = new JButton();
         buttonTestCNN = new JButton();
         buttonAddLine = new JButton();
+
+        buttonPrevious = new JButton();
+        buttonNext = new JButton();
 
         buttonImage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -171,6 +176,22 @@ public class ATAGShowImage {
                     ((ATAGPanel)imagePanel).setExtraDataFaces(listFaces);
                     imagePanel.repaint();
                 }
+            }
+        });
+
+        buttonPrevious.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                proc.getPreviousFilename();
+                setDisplayText();
+                imagePanel.repaint();
+            }
+        });
+
+        buttonNext.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                proc.getNextFilename();
+                setDisplayText();
+                imagePanel.repaint();
             }
         });
     }

@@ -11,7 +11,7 @@ public class ATAGProcCsv {
 
     public static final int CSV_POSITION_FILE_LOCATION = 2;
 
-    public static final int NUM_OF_APPROACHES = 4;
+    public static final int NUM_OF_APPROACHES = 5;
     public static final int APPROACH_IS_CLOSE = 70;
 
     public static final int FACE_X = 6;
@@ -30,9 +30,9 @@ public class ATAGProcCsv {
     public static final double FACE_MOD_AVG = 1.0d;//3.0d/5.0d;
 
     public static final double FACE_4 = 3000;
-    public static final double FACE_3 = 1500;
-    public static final double FACE_2 = 700;
-    public static final double FACE_1 = 350;
+    public static final double FACE_3 = 90;//1500
+    public static final double FACE_2 = 45;//700
+    public static final double FACE_1 = 22;//350
 
     private ATAG var;
     private ArrayList<CsvLine> listSingle;
@@ -227,9 +227,17 @@ public class ATAGProcCsv {
             //approachx = fx + r.nextInt((int)fwidth * 2) - fwidth;
             //approachy = fy + r.nextInt((int)fheight * 2) - fheight;
 
-            approachx = fx + r.nextInt((int)fwidth ) - fwidth/2.0d;
-            approachy = fy + r.nextInt((int)fheight) - fheight/2.0d;
-            approachdist = Math.sqrt(Math.pow(fx - approachx,2)+Math.pow(fy - approachy,2));
+            if (i != 0) {
+                approachx = fx + r.nextInt((int) fwidth) - fwidth / 2.0d;
+                approachy = fy + r.nextInt((int) fheight) - fheight / 2.0d;
+                approachdist = Math.sqrt(Math.pow(fx - approachx, 2) + Math.pow(fy - approachy, 2));
+            }
+            else {
+                approachx = fx;
+                approachy = fy;
+                approachdist = 0;
+            }
+
             avg_approach_dist += approachdist;
             approachavg += approachdist;
 
@@ -312,6 +320,58 @@ public class ATAGProcCsv {
             }
         }
         return list;
+    }
+
+    public void getNextFilename() {
+        //CsvLine line = new CsvLine();
+        if (listLocal == null) return;
+
+        CsvLine next = new CsvLine();
+        boolean found = false;
+        boolean atmargin = false;
+
+        for (int i = 0; i < listLocal.size(); i ++) {
+            if(var.configLastImage.toLowerCase().endsWith(listLocal.get(i).getFileLocation().toLowerCase())) {
+                if (i == listLocal.size() - 1) atmargin = true;
+                found = true;
+            }
+            else {
+                if (found == true) {
+                    next = listLocal.get(i);
+                    found = false;
+                }
+            }
+        }
+        if (!atmargin) {
+            var.configLastImage = var.getStartFolder() + File.separator + next.getFileLocation();
+        }
+        System.out.println(var.configLastImage + " next");
+    }
+
+    public void getPreviousFilename() {
+
+        if (listLocal == null) return;
+
+        CsvLine next = new CsvLine();
+        boolean found = false;
+        boolean atmargin = false;
+
+        for (int i = listLocal.size() - 1; i >=0; i --) {
+            if(var.configLastImage.toLowerCase().endsWith(listLocal.get(i).getFileLocation().toLowerCase())) {
+                if (i == 0) atmargin = true;
+                found = true;
+            }
+            else {
+                if (found == true) {
+                    next = listLocal.get(i);
+                    found = false;
+                }
+            }
+        }
+        if (!atmargin) {
+            var.configLastImage = var.getStartFolder() + File.separator + next.getFileLocation();
+        }
+        System.out.println(var.configLastImage + " prev");
     }
 
     class CsvLine {
