@@ -19,6 +19,11 @@ public class ATAGProcCsv {
     public static final int FACE_WIDTH = 8;
     public static final int FACE_HEIGHT = 9;
 
+    public static final double FACE_4 = 3000;
+    public static final double FACE_3 = 1500;
+    public static final double FACE_2 = 700;
+    public static final double FACE_1 = 350;
+
     private ATAG var;
     private ArrayList<CsvLine> listSingle;
     private ArrayList<CsvLine> listLocal;
@@ -30,6 +35,7 @@ public class ATAGProcCsv {
 
     private Random r;
     private double avg_approach_dist = 0;
+    private double max_size_vertical = 0;
 
     public ATAGProcCsv (ATAG v) {
         var = v;
@@ -178,6 +184,7 @@ public class ATAGProcCsv {
 
         avg_approach_dist = avg_approach_dist / (listLocal.size());
         System.out.println("average approach dist " + avg_approach_dist);
+        System.out.println("max face height " + max_size_vertical);
     }
 
     private void processLine(CsvLine line) {
@@ -188,7 +195,38 @@ public class ATAGProcCsv {
         double approachx = 0;
         double approachy = 0;
         double approachdist = 0;
-        double labelOutput = 0;
+        double approachavg = 0;
+
+        double labelsize1 = 0,labelsize2 = 0, labelsize3 = 0, labelsize4 = 0, labelnooutput = 0;
+
+        if(fheight > max_size_vertical) max_size_vertical = fheight;
+
+        ////////////////////////////
+        if (fheight < FACE_1) {
+            labelsize1 = 1;
+            labelsize2 = 0;
+            labelsize3 = 0;
+            labelsize4 = 0;
+        }
+        else if(fheight < FACE_2) {
+            labelsize1 = 0;
+            labelsize2 = 1;
+            labelsize3 = 0;
+            labelsize4 = 0;
+        }
+        else if (fheight < FACE_3) {
+            labelsize1 = 0;
+            labelsize2 = 0;
+            labelsize3 = 1;
+            labelsize4 = 0;
+        }
+        else if (fheight < FACE_4){
+            labelsize1 = 0;
+            labelsize2 = 0;
+            labelsize3 = 0;
+            labelsize4 = 1;
+        }
+        ///////////////////////////
 
         for (int i = 0; i < NUM_OF_APPROACHES; i ++) {
 
@@ -202,20 +240,32 @@ public class ATAGProcCsv {
             approachy = fy + r.nextInt((int)fheight * 2) - fheight;
             approachdist = Math.sqrt(Math.pow(fx - approachx,2)+Math.pow(fy - approachy,2));
             avg_approach_dist += approachdist;
+            approachavg += approachdist;
+
             if (approachdist < APPROACH_IS_CLOSE) {
-                labelOutput = 1;
+                labelnooutput = 0;
             }
             else {
-                labelOutput = 0;
+                labelnooutput = 1;
+                labelsize1 = 0;
+                labelsize2 = 0;
+                labelsize3 = 0;
+                labelsize4 = 0;
             }
 
             out.getSpecifications().add(approachx);
             out.getSpecifications().add(approachy);
             out.getSpecifications().add(approachdist);
-            out.getSpecifications().add(labelOutput);
+            //out.getSpecifications().add(labelOutput);
+            out.getSpecifications().add(labelsize1);
+            out.getSpecifications().add(labelsize2);
+            out.getSpecifications().add(labelsize3);
+            out.getSpecifications().add(labelsize4);
+            out.getSpecifications().add(labelnooutput);
 
             listLocal.add(out);
         }
+        approachavg = approachavg / 4;
 
     }
 
