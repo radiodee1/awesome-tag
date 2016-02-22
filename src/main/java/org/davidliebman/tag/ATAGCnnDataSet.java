@@ -41,18 +41,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     private ArrayList<ATAGProcCsv.CsvLine> listLocal;
     private ATAG var;
 
-    public ATAGCnnDataSet(int type, boolean train, float split, long seed) throws Exception {
-        super();
-        searchType = type;
-        this.seed = seed;
-        trainWithThisSet = train;
-        percentForTesting = split;
 
-        makeFileList();
-
-        //randomizeList() ;
-        splitList();
-    }
 
     public ATAGCnnDataSet(ArrayList<ATAGProcCsv.CsvLine >  list , ATAG v, int type, boolean train, float split, long seed) throws Exception {
         super();
@@ -64,31 +53,12 @@ public class ATAGCnnDataSet  implements DataSetIterator {
         listLocal = list;
         var = v;
 
-        makeFileList();
 
         //randomizeList() ;
         splitList();
     }
 
 
-    public ATAGCnnDataSet(int type, boolean train, long mSeed)  throws Exception{
-        super();
-        searchType = type;
-        seed = mSeed;
-        trainWithThisSet = train;
-
-        makeFileList();
-        //randomizeList();
-        splitList();
-
-
-        //fillArrays();
-    }
-
-    public void makeFileList() throws Exception{
-
-        System.out.println(listLocal.size());
-    }
 
     /*
     public static INDArray convert28x28(INDArray in) {
@@ -126,6 +96,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
         double outArray[][] = new double[ATAG.CNN_DIM_SIDE][ATAG.CNN_DIM_SIDE];
         for (int i  = 0; i < ATAG.CNN_DIM_SIDE; i ++) {
             for (int j = 0; j < ATAG.CNN_DIM_SIDE; j ++) {
+
                 if (i + transx >=0 && i + transx< in.rows() && j +transy >=0 && j + transy < in.columns()) {
                     if (in.getRow(i+transy).getDouble(j+ transx) > 0.5d) {
 
@@ -212,7 +183,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
             }
             System.out.println("--");
         }
-        System.out.println("------------");
+        System.out.println("------------ rows " + show.rows() + " -- cols " + show.columns() + " -------");
     }
 
 
@@ -229,13 +200,15 @@ public class ATAGCnnDataSet  implements DataSetIterator {
         listLocal = newList;
         cursorSize = (int)listLocal.size()/ATAG.CNN_BATCH_SIZE;
 
+        System.out.println(listLocal.size() + " size after split");
+
     }
 
     public void limitList(int num ) {
         if (cursorSize > num) cursorSize = num;
     }
 
-    public void fillArrays(int cursor) throws Exception{
+    public void fillArrays(int cursor) throws Exception {
 
 
         featureMatrix = new double[ ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE][ ATAG.CNN_BATCH_SIZE];
@@ -247,8 +220,12 @@ public class ATAGCnnDataSet  implements DataSetIterator {
             double xcoord = listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_X);
             double ycoord = listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_Y);
 
+            System.out.println(filename + " name " + xcoord + "  " + ycoord + " " + ( i + cursor * ATAG.CNN_BATCH_SIZE));
+
             INDArray arr = loadImageBMP(new File(filename));
             arr.linearView();
+            //System.out.println(arr.toString());
+
             INDArray out = convertSIDExSIDE(arr, xcoord, ycoord);
             out.linearView();
 
@@ -294,7 +271,8 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
 
     public DataSet next(int i) {
-        return null;
+        cursor = i;
+        return next();
     }
 
     public int totalExamples() {
@@ -302,13 +280,13 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     }
 
     public int inputColumns() {
-        return 28*28;
+        return ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE;// 28*28;
     }
 
     public int totalOutcomes() {
         //OneHotOutput output = new OneHotOutput(searchType);
         //return output.length();
-        return 5;
+        return ATAG.CNN_LABELS;
     }
 
     public void reset() {
@@ -320,11 +298,11 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     }
 
     public int cursor() {
-        return 0;
+        return cursor;
     }
 
     public int numExamples() {
-        return 0;
+        return listLocal.size();
     }
 
     public void setPreProcessor(DataSetPreProcessor dataSetPreProcessor) {
@@ -339,7 +317,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
     public boolean hasNext() {
         boolean hasnext = false;
-        if (cursor < cursorSize ) hasnext = true;
+        if (cursor <= cursorSize ) hasnext = true;
         return hasnext;
     }
 

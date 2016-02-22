@@ -29,7 +29,7 @@ public class ATAGCnn {
 
     public   ATAGCnn (ATAG var, ATAGProcCsv proc) throws Exception {
         int nChannels = 1;
-        int outputNum = 10;
+        int outputNum = ATAG.CNN_LABELS;
         int batchSize = ATAG.CNN_BATCH_SIZE;
         int nEpochs = 10;
         int iterations = 1;
@@ -38,8 +38,8 @@ public class ATAGCnn {
         int inputDim = ATAG.CNN_DIM_SIDE;//80 or 90
 
         log.info("Load data....");
-        //DataSetIterator mnistTrain = new MnistDataSetIterator(batchSize,true,12345);
-        //DataSetIterator mnistTest = new MnistDataSetIterator(batchSize,false,12345);
+
+
         DataSetIterator mnistTrain = new ATAGCnnDataSet(proc.getLocalList(), var,0,true, 0.5f,seed);
         DataSetIterator mnistTest = new ATAGCnnDataSet(proc.getLocalList(), var, 0, false, 0.5f,seed);
 
@@ -70,7 +70,7 @@ public class ATAGCnn {
                         .activation("softmax")
                         .build())
                 .backprop(true).pretrain(false);
-        new ConvolutionLayerSetup(builder,inputDim,inputDim,1);
+        new ConvolutionLayerSetup(builder,inputDim,inputDim, 1);
 
         MultiLayerConfiguration conf = builder.build();
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
