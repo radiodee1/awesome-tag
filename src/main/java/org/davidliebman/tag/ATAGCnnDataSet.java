@@ -87,11 +87,6 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
     public void makeFileList() throws Exception{
 
-
-
-
-
-
         System.out.println(listLocal.size());
     }
 
@@ -126,19 +121,22 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     public static INDArray convertSIDExSIDE(INDArray in) { return convertSIDExSIDE(in, 0, 0) ;}
 
     public static INDArray convertSIDExSIDE(INDArray in, double x_start, double y_start ) {
-        int transx = -(int)(x_start), transy = -(int)(y_start);
+        int transx = (int)(x_start), transy = (int)(y_start);
 
         double outArray[][] = new double[ATAG.CNN_DIM_SIDE][ATAG.CNN_DIM_SIDE];
         for (int i  = 0; i < ATAG.CNN_DIM_SIDE; i ++) {
             for (int j = 0; j < ATAG.CNN_DIM_SIDE; j ++) {
+                if (i + transx >=0 && i + transx< in.rows() && j +transy >=0 && j + transy < in.columns()) {
+                    if (in.getRow(i+transy).getDouble(j+ transx) > 0.5d) {
 
-                if (in.getRow(i).getDouble(j) > 0.5d) {
-                    if (i + transx >=0 && i + transx< ATAG.CNN_DIM_SIDE && j +transy >=0 && j + transy < ATAG.CNN_DIM_SIDE) {
-                        outArray[(int)(j)+transy][(int)(i) + transx] = 1.0d;
+                        outArray[(j)][(i)] = 1.0d;
                     }
                     else {
-                        outArray[(int)(j)+transy][(int)(i) + transx] = 0.0d;
+                        outArray[(j)][(i)] = 0.0d;
                     }
+                }
+                else {
+                    outArray[j][i] = 0.0d;
                 }
             }
         }
@@ -201,7 +199,21 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
     }
     */
-
+    public void showSquare(INDArray in) {
+        INDArray show = in.linearView();
+        for (int i = 0; i < ATAG.CNN_DIM_SIDE; i ++) {
+            for (int j = 0; j < ATAG.CNN_DIM_SIDE; j ++) {
+                if (show.getDouble(i * ATAG.CNN_DIM_SIDE + j) > 0.5d) {
+                    System.out.print("#");
+                }
+                else {
+                    System.out.print(" ");
+                }
+            }
+            System.out.println("--");
+        }
+        System.out.println("------------");
+    }
 
 
     public void splitList() {
@@ -224,7 +236,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     }
 
     public void fillArrays(int cursor) throws Exception{
-        //OneHotOutput output = new OneHotOutput(searchType);
+
 
         featureMatrix = new double[ ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE][ ATAG.CNN_BATCH_SIZE];
         labels = new double[ATAG.CNN_LABELS][ATAG.CNN_BATCH_SIZE];
@@ -245,15 +257,13 @@ public class ATAGCnnDataSet  implements DataSetIterator {
                 featureMatrix[j][i] = out.getDouble(j);
 
             }
-            double [] label = new double[5];
+            double [] label = new double[5]; // max possible labels... probably will use less!
             label[0] =listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_LABEL_1);
             label[1] =listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_LABEL_2);
             label[2] =listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_LABEL_3);
             label[3] =listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_LABEL_4);
             double labelnooutput =listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
 
-            //int character = getCharFromFilename(list.get(i + cursor * ATAG.CNN_BATCH_SIZE));
-            //INDArray label = output.getLabelOutput(String.valueOf((char)character));
 
             for(int j = 0; j < ATAG.CNN_LABELS -1 ; j ++) {
                 labels [j][i] = label[j];
