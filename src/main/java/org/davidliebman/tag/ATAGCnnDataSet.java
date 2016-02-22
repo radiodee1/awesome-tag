@@ -251,7 +251,8 @@ public class ATAGCnnDataSet  implements DataSetIterator {
             arr.linearView();
             INDArray out = convertSIDExSIDE(arr, xcoord, ycoord);
             out.linearView();
-            //Operation.showSquare(out);
+
+            showSquare(out);
 
             for (int j = 0; j < (ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE); j ++) {
                 featureMatrix[j][i] = out.getDouble(j);

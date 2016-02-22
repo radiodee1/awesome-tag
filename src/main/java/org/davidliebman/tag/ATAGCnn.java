@@ -27,19 +27,21 @@ package org.davidliebman.tag;
 public class ATAGCnn {
     private static final Logger log = LoggerFactory.getLogger(ATAGCnn.class);
 
-    public static void main(String[] args) throws Exception {
+    public   ATAGCnn (ATAG var, ATAGProcCsv proc) throws Exception {
         int nChannels = 1;
         int outputNum = 10;
-        int batchSize = 64;
+        int batchSize = ATAG.CNN_BATCH_SIZE;
         int nEpochs = 10;
         int iterations = 1;
         int seed = 123;
 
-        int inputDim = 28;//80 or 90
+        int inputDim = ATAG.CNN_DIM_SIDE;//80 or 90
 
         log.info("Load data....");
-        DataSetIterator mnistTrain = new MnistDataSetIterator(batchSize,true,12345);
-        DataSetIterator mnistTest = new MnistDataSetIterator(batchSize,false,12345);
+        //DataSetIterator mnistTrain = new MnistDataSetIterator(batchSize,true,12345);
+        //DataSetIterator mnistTest = new MnistDataSetIterator(batchSize,false,12345);
+        DataSetIterator mnistTrain = new ATAGCnnDataSet(proc.getLocalList(), var,0,true, 0.5f,seed);
+        DataSetIterator mnistTest = new ATAGCnnDataSet(proc.getLocalList(), var, 0, false, 0.5f,seed);
 
         log.info("Build model....");
         MultiLayerConfiguration.Builder builder = new NeuralNetConfiguration.Builder()
@@ -93,4 +95,20 @@ public class ATAGCnn {
         }
         log.info("****************Example finished********************");
     }
+
+    public static void main(String [] args) {
+
+        ATAG var = new ATAG();
+        ATAGProcCsv proc = new ATAGProcCsv(var);
+        proc.loadCsvStart(); // assume list has already been modded
+
+        try {
+            ATAGCnn cnn = new ATAGCnn(var,proc);
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
