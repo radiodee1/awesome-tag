@@ -101,7 +101,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
             for (int j = 0; j < ATAG.CNN_DIM_SIDE; j ++) {
 
                 if (i + transx >=0 && i + transx< in.rows() && j +transy >=0 && j + transy < in.columns()) {
-                    if (in.getRow(i+transy).getDouble(j+ transx) > 0.5d) {
+                    if (in.getRow(i+transx).getDouble(j+ transy) > 0.5d) {
 
                         outArray[(j)][(i)] = 1.0d;
                     }
