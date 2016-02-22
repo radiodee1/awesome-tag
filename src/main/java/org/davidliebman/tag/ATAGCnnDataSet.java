@@ -93,6 +93,9 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     public static INDArray convertSIDExSIDE(INDArray in, double x_start, double y_start ) {
         int transx = (int)(x_start), transy = (int)(y_start);
 
+        if (transx < 0) transx = 0;
+        if (transy < 0) transy = 0;
+
         double outArray[][] = new double[ATAG.CNN_DIM_SIDE][ATAG.CNN_DIM_SIDE];
         for (int i  = 0; i < ATAG.CNN_DIM_SIDE; i ++) {
             for (int j = 0; j < ATAG.CNN_DIM_SIDE; j ++) {
@@ -102,13 +105,9 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
                         outArray[(j)][(i)] = 1.0d;
                     }
-                    else {
-                        outArray[(j)][(i)] = 0.0d;
-                    }
+
                 }
-                else {
-                    outArray[j][i] = 0.0d;
-                }
+
             }
         }
 
@@ -220,6 +219,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
             double xcoord = listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_X);
             double ycoord = listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_Y);
 
+
             System.out.println(filename + " name " + xcoord + "  " + ycoord + " " + ( i + cursor * ATAG.CNN_BATCH_SIZE));
 
             INDArray arr = loadImageBMP(new File(filename));
@@ -233,9 +233,9 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
             for (int j = 0; j < (ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE); j ++) {
                 featureMatrix[j][i] = out.getDouble(j);
-
+                //System.out.print("."+ i + "." + j);
             }
-            double [] label = new double[5]; // max possible labels... probably will use less!
+            double [] label = new double[4]; // max possible labels... probably will use less!
             label[0] =listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_LABEL_1);
             label[1] =listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_LABEL_2);
             label[2] =listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_LABEL_3);
@@ -245,9 +245,10 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
             for(int j = 0; j < ATAG.CNN_LABELS -1 ; j ++) {
                 labels [j][i] = label[j];
+                System.out.print(" label ");
             }
 
-            labels[ATAG.CNN_LABELS][i] = labelnooutput;
+            labels[ATAG.CNN_LABELS -1 ][i] = labelnooutput;
         }
 
 
@@ -331,7 +332,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
             temp.setLabels(Nd4j.create(labels).transpose());
         }
         catch (Exception e) {
-
+            e.printStackTrace();
         }
         cursor ++;
         return temp;
