@@ -51,7 +51,7 @@ public class ATAGCnn extends  Thread {
 
         homeDir = var.configLocalRoot;
 
-        int nChannels = 1;
+        int nChannels = ATAG.CNN_CHANNELS;
         int outputNum = ATAG.CNN_LABELS;
         int batchSize = ATAG.CNN_BATCH_SIZE;
         int nEpochs = 10;
@@ -85,7 +85,8 @@ public class ATAGCnn extends  Thread {
                 .layer(0, new ConvolutionLayer.Builder(5, 5)
                         .nIn(nChannels)
                         .stride(1, 1)
-                        .nOut(20).dropOut(0.5)
+                        .nOut(20) //20
+                        .dropOut(0.5)
                         .activation("relu")
                         .build())
                 .layer(1, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
@@ -99,7 +100,7 @@ public class ATAGCnn extends  Thread {
                         .activation("softmax")
                         .build())
                 .backprop(true).pretrain(false);
-        new ConvolutionLayerSetup(builder,inputDim,inputDim, 1);
+        new ConvolutionLayerSetup(builder,inputDim,inputDim, nChannels);
 
         MultiLayerConfiguration conf = builder.build();
         final MultiLayerNetwork model = new MultiLayerNetwork(conf);

@@ -41,7 +41,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     private ArrayList<ATAGProcCsv.CsvLine> listLocal;
     private ATAG var;
 
-    private boolean debugMessages = false;
+    private boolean debugMessages = true;
 
     public ATAGCnnDataSet(ArrayList<ATAGProcCsv.CsvLine >  list , ATAG v, int type, boolean train, float split, long seed, int savedCursor) throws Exception {
         super();
@@ -66,17 +66,17 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     public static INDArray convertSIDExSIDE(INDArray in) { return convertSIDExSIDE(in, 0, 0) ;}
 
     public static INDArray convertSIDExSIDE(INDArray in, double x_start, double y_start ) {
-        int transx = (int)(x_start), transy = (int)(y_start);
+        int transx = (int)(x_start) * ATAG.CNN_CHANNELS, transy = (int)(y_start);
 
 
-        double outArray[][] = new double[ATAG.CNN_DIM_SIDE][ATAG.CNN_DIM_SIDE];
-        for (int i  = 0; i < ATAG.CNN_DIM_SIDE; i ++) {
-            for (int j = 0; j < ATAG.CNN_DIM_SIDE; j ++) {
+        double outArray[][] = new double[ATAG.CNN_DIM_SIDE][ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS];
+        for (int i  = 0; i < ATAG.CNN_DIM_SIDE ; i ++) {
+            for (int j = 0; j < ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS; j ++) {
 
                 if (i + transx >=0 && i + transx< in.rows() && j +transy >=0 && j + transy < in.columns()) {
                     if (in.getRow(i+transx).getDouble(j+ transy) > 0.5d) {
 
-                        outArray[(j)][(i)] = 1.0d;
+                        outArray[(i)][(j)] = 1.0d;
                     }
 
                 }
@@ -88,31 +88,51 @@ public class ATAGCnnDataSet  implements DataSetIterator {
         return out.linearView();
     }
 
-    public  INDArray loadImageBMP ( File file) throws Exception {
+    public  INDArray loadImageBMP ( File file, double x_start, double y_start) throws Exception {
         //System.out.println(file.toString());
+        int transx = (int)(x_start) * ATAG.CNN_CHANNELS, transy = (int)(y_start);
+
+
         BufferedImage image = ImageIO.read(file);
 
-        double[][] array2D = new double[image.getWidth()][image.getHeight()];
+        double[][][] array2D = new double[image.getHeight()][image.getWidth() ][ATAG.CNN_CHANNELS];
 
-        for (int xPixel = 0; xPixel < image.getWidth(); xPixel++)
+        double[] array1D = new double[image.getWidth() * image.getHeight() * ATAG.CNN_CHANNELS];
+        for (int yPixel = 0; yPixel < image.getHeight(); yPixel++)
         {
-            for (int yPixel = 0; yPixel < image.getHeight(); yPixel++)
+            for (int xPixel = 0; xPixel < image.getWidth(); xPixel++)
             {
-                int color = image.getRGB(xPixel, yPixel);
+                if (xPixel + transx >=0 && xPixel + transx< image.getWidth() && yPixel +transy >=0 && yPixel + transy < image.getHeight()) {
+                    int color = image.getRGB(xPixel +transx, yPixel + transy);
 
-                //System.out.println(color);
-                int alpha = (color >> 24) & 0xff;
-                int red = (color >> 16) & 0xff;
-                int green = (color >> 8) & 0xff;
-                int blue = (color) & 0xff;
-                if ( (red + green + blue ) / 3 < 128) { // ...dark enough??
-                    array2D[xPixel][yPixel] = 1;
-                } else {
-                    array2D[xPixel][yPixel] = 0; // ?
+                    //System.out.println(color);
+                    int alpha = (color >> 24) & 0xff;
+                    int red = (color >> 16) & 0xff;
+                    int green = (color >> 8) & 0xff;
+                    int blue = (color) & 0xff;
+                    if ((red) < 128) { // ...dark enough??
+                        array2D[yPixel][xPixel][0] = 1;
+                    } else {
+                        array2D[yPixel][xPixel][0] = 0; // ?
+                    }
+                    array1D[yPixel * ATAG.CNN_DIM_SIDE + xPixel * ATAG.CNN_CHANNELS + 0] = array2D[yPixel][xPixel][0];
+                    if ((green) < 128) { // ...dark enough??
+                        array2D[yPixel][xPixel][1] = 1;
+                    } else {
+                        array2D[yPixel][xPixel][1] = 0; // ?
+                    }
+                    array1D[yPixel * ATAG.CNN_DIM_SIDE + xPixel * ATAG.CNN_CHANNELS + 1] = array2D[yPixel][xPixel][1];
+
+                    if ((blue) < 128) { // ...dark enough??
+                        array2D[yPixel][xPixel][2] = 1;
+                    } else {
+                        array2D[yPixel][xPixel][2] = 0; // ?
+                    }
+                    array1D[yPixel * ATAG.CNN_DIM_SIDE + xPixel * ATAG.CNN_CHANNELS + 2] = array2D[yPixel][xPixel][2];
                 }
             }
         }
-        return Nd4j.create(array2D);
+        return Nd4j.create(array1D, new int[] {image.getHeight(),image.getWidth(),ATAG.CNN_CHANNELS});
     }
 
     /*
@@ -150,8 +170,8 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     */
     public void showSquare(INDArray in) {
         INDArray show = in.linearView();
-        for (int i = 0; i < ATAG.CNN_DIM_SIDE; i ++) {
-            for (int j = 0; j < ATAG.CNN_DIM_SIDE; j ++) {
+        for (int i = 0; i < ATAG.CNN_DIM_SIDE ; i ++) {
+            for (int j = 0; j < ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS; j ++) {
                 if (show.getDouble(i * ATAG.CNN_DIM_SIDE + j) > 0.5d) {
                     System.out.print("#");
                 }
@@ -208,12 +228,12 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
             if(debugMessages) System.out.println(filename + " name " + xcoord + "  " + ycoord + " " + ( i + cursor * ATAG.CNN_BATCH_SIZE));
 
-            INDArray arr = loadImageBMP(new File(filename));
-            arr.linearView();
+            INDArray out = loadImageBMP(new File(filename),xcoord,ycoord);
+            out.linearView();
             //System.out.println(arr.toString());
 
-            INDArray out = convertSIDExSIDE(arr, xcoord, ycoord);
-            out.linearView();
+            //INDArray out = convertSIDExSIDE(arr, xcoord, ycoord);
+            //out.linearView();
 
             if (debugMessages) showSquare(out);
 
