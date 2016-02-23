@@ -30,9 +30,9 @@ public class ATAGProcCsv {
     public static final double FACE_MOD_AVG = 1.0d;//3.0d/5.0d;
 
     public static final double FACE_4 = 3000;
-    public static final double FACE_3 = 90;//1500
-    public static final double FACE_2 = 45;//700
-    public static final double FACE_1 = 22;//350
+    public static final double FACE_3 = 60;//90
+    public static final double FACE_2 = 30;//45
+    public static final double FACE_1 = 15;//22
 
     private ATAG var;
     private ArrayList<CsvLine> listSingle;
@@ -57,9 +57,12 @@ public class ATAGProcCsv {
     public void loadCsvStart() {
         loadCsvSingle();
         loadCsvLocal();
+        System.out.println("load done.");
     }
 
     public ArrayList<CsvLine> getLocalList() { return listLocal;}
+
+    public void clearUnusedList() { listSingle = new ArrayList<CsvLine>();}
 
     private void loadCsvSingle() {
         if (debugMessages) System.out.println( "Hello World! -- " + var.configCsvFileSingle );
@@ -266,25 +269,25 @@ public class ATAGProcCsv {
             double labelsize1 = 0,labelsize2 = 0, labelsize3 = 0, labelsize4 = 0, labelnooutput = 0;
 
             ////////////////////////////
-            if (fheight < FACE_1 && fheight > 0) {
+            if (fheight <= FACE_1 && fheight > 0) {
                 labelsize1 = 1;
                 labelsize2 = 0;
                 labelsize3 = 0;
                 labelsize4 = 0;
             }
-            else if(fheight < FACE_2 && fheight > FACE_1) {
+            else if(fheight <= FACE_2 && fheight > FACE_1) {
                 labelsize1 = 0;
                 labelsize2 = 1;
                 labelsize3 = 0;
                 labelsize4 = 0;
             }
-            else if (fheight < FACE_3 && fheight > FACE_2) {
+            else if (fheight <= FACE_3 && fheight > FACE_2) {
                 labelsize1 = 0;
                 labelsize2 = 0;
                 labelsize3 = 1;
                 labelsize4 = 0;
             }
-            else if (fheight < FACE_4 && fheight > FACE_3){
+            else if ( fheight > FACE_3){
                 labelsize1 = 0;
                 labelsize2 = 0;
                 labelsize3 = 0;

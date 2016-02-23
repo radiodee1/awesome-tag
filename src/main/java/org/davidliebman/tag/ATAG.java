@@ -44,7 +44,7 @@ public class ATAG {
 
 
     public static final int CNN_LABELS = 5;
-    public static final int CNN_DIM_SIDE = 40;
+    public static final int CNN_DIM_SIDE = 60;
     public static final int CNN_BATCH_SIZE = 64;
 
     public ATAG () {

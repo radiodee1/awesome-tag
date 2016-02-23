@@ -41,9 +41,9 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     private ArrayList<ATAGProcCsv.CsvLine> listLocal;
     private ATAG var;
 
-    private boolean debugMessages = true;
+    private boolean debugMessages = false;
 
-    public ATAGCnnDataSet(ArrayList<ATAGProcCsv.CsvLine >  list , ATAG v, int type, boolean train, float split, long seed) throws Exception {
+    public ATAGCnnDataSet(ArrayList<ATAGProcCsv.CsvLine >  list , ATAG v, int type, boolean train, float split, long seed, int savedCursor) throws Exception {
         super();
         searchType = type;
         this.seed = seed;
@@ -53,7 +53,8 @@ public class ATAGCnnDataSet  implements DataSetIterator {
         listLocal = list;
         var = v;
 
-
+        cursor = savedCursor;
+        if (cursor > cursorSize) cursor = 0;
         //randomizeList() ;
         splitList();
     }
@@ -305,7 +306,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
     public boolean hasNext() {
         boolean hasnext = false;
-        if (cursor <= cursorSize ) hasnext = true;
+        if (cursor < cursorSize ) hasnext = true;
         return hasnext;
     }
 
