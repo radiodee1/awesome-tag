@@ -41,7 +41,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     private ArrayList<ATAGProcCsv.CsvLine> listLocal;
     private ATAG var;
 
-
+    private boolean debugMessages = true;
 
     public ATAGCnnDataSet(ArrayList<ATAGProcCsv.CsvLine >  list , ATAG v, int type, boolean train, float split, long seed) throws Exception {
         super();
@@ -60,41 +60,13 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
 
 
-    /*
-    public static INDArray convert28x28(INDArray in) {
-        return convert28x28(in, 2.0d);
-    }
 
-
-    public static INDArray convert28x28 (INDArray in , double modifier) {
-        double magx = modifier * 28/128.0d;
-        double magy = modifier * 28/128.0d;
-        int transx = -(int)(28/modifier), transy = -(int)(28/ modifier);
-        double outArray[][] = new double[28][28];
-
-        for (int i  = 0; i < Math.sqrt(in.length()); i ++) {
-            for (int j = 0; j < Math.sqrt(in.length()); j ++) {
-                if (in.getRow(i).getDouble(j) > 0.5d) {
-                    if (i*magx + transx >=0 && i*magx + transx< 28 && j * magy+transy >=0 && j * magy+ transy < 28) {
-                        outArray[(int)(j*magy)+transy][(int)(i*magx) + transx] = 1.0d;
-                    }
-                }
-            }
-        }
-        INDArray out = Nd4j.create(outArray);
-        //out.transpose();
-        //System.out.println(out.toString());
-        return out.linearView();
-    }
-    */
 
     public static INDArray convertSIDExSIDE(INDArray in) { return convertSIDExSIDE(in, 0, 0) ;}
 
     public static INDArray convertSIDExSIDE(INDArray in, double x_start, double y_start ) {
         int transx = (int)(x_start), transy = (int)(y_start);
 
-        //if (transx < 0) transx = 0;
-        //if (transy < 0) transy = 0;
 
         double outArray[][] = new double[ATAG.CNN_DIM_SIDE][ATAG.CNN_DIM_SIDE];
         for (int i  = 0; i < ATAG.CNN_DIM_SIDE; i ++) {
@@ -205,7 +177,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
         listLocal = newList;
         cursorSize = (int)listLocal.size()/ATAG.CNN_BATCH_SIZE;
 
-        System.out.println(listLocal.size() + " size after split");
+        if (debugMessages ) System.out.println(listLocal.size() + " size after split");
 
     }
 
@@ -233,7 +205,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
             xcoord = xcoord - (ATAG.CNN_DIM_SIDE - facew)/2;
             ycoord = ycoord - (ATAG.CNN_DIM_SIDE - faceh)/2;
 
-            System.out.println(filename + " name " + xcoord + "  " + ycoord + " " + ( i + cursor * ATAG.CNN_BATCH_SIZE));
+            if(debugMessages) System.out.println(filename + " name " + xcoord + "  " + ycoord + " " + ( i + cursor * ATAG.CNN_BATCH_SIZE));
 
             INDArray arr = loadImageBMP(new File(filename));
             arr.linearView();
@@ -242,7 +214,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
             INDArray out = convertSIDExSIDE(arr, xcoord, ycoord);
             out.linearView();
 
-            showSquare(out);
+            if (debugMessages) showSquare(out);
 
             for (int j = 0; j < (ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE); j ++) {
                 featureMatrix[j][i] = out.getDouble(j);
@@ -258,10 +230,10 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
             for(int j = 0; j < ATAG.CNN_LABELS -1 ; j ++) {
                 labels [j][i] = label[j];
-                System.out.print(" label=" + label[j]);
+                if (debugMessages) System.out.print(" label=" + label[j]);
             }
 
-            System.out.println(" no-output="+ labelnooutput);
+            if (debugMessages) System.out.println(" no-output="+ labelnooutput);
 
             labels[ATAG.CNN_LABELS -1 ][i] = labelnooutput;
         }

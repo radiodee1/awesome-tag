@@ -47,6 +47,8 @@ public class ATAGProcCsv {
     private double avg_approach_dist = 0;
     private double max_size_vertical = 0;
 
+    private boolean debugMessages = false;
+
     public ATAGProcCsv (ATAG v) {
         var = v;
         r = new Random(System.currentTimeMillis());
@@ -60,7 +62,7 @@ public class ATAGProcCsv {
     public ArrayList<CsvLine> getLocalList() { return listLocal;}
 
     private void loadCsvSingle() {
-        System.out.println( "Hello World! -- " + var.configCsvFileSingle );
+        if (debugMessages) System.out.println( "Hello World! -- " + var.configCsvFileSingle );
 
         if (!(new File(var.configCsvFileSingle)).exists()) {
             return;
@@ -72,7 +74,7 @@ public class ATAGProcCsv {
     }
 
     private void loadCsvLocal() {
-        System.out.println( "Hello World! -- " + var.configCsvLocal );
+        if (debugMessages) System.out.println( "Hello World! -- " + var.configCsvLocal );
 
         if (!(new File(var.configCsvLocal)).exists()) {
             return;
@@ -100,7 +102,7 @@ public class ATAGProcCsv {
             String str;
 
             while ((str = in.readLine()) != null) {
-                System.out.println("out " + str);
+                if (debugMessages) System.out.println("out " + str);
                 CsvLine line = new CsvLine();
                 if (num > 0) {
                     String [] arr = str.split(",");
@@ -134,12 +136,13 @@ public class ATAGProcCsv {
             System.out.println("File Read Error");
         }
 
-        System.out.println(num + " " + csv.size() + "  " + name);
-        for (int i = 0; i < heading.size(); i ++) {
-            System.out.print(heading.get(i) + " - ");
+        if (debugMessages) {
+            System.out.println(num + " " + csv.size() + "  " + name);
+            for (int i = 0; i < heading.size(); i++) {
+                System.out.print(heading.get(i) + " - ");
+            }
+            System.out.println();
         }
-        System.out.println();
-
     }
 
     private void saveAnyCsv(String name, ArrayList<CsvLine> csv,ArrayList<String> heading, int filePosition) {
@@ -193,8 +196,11 @@ public class ATAGProcCsv {
         }
 
         avg_approach_dist = avg_approach_dist / (listLocal.size());
-        System.out.println("average approach dist " + avg_approach_dist);
-        System.out.println("max face height " + max_size_vertical);
+
+        if (debugMessages) {
+            System.out.println("average approach dist " + avg_approach_dist);
+            System.out.println("max face height " + max_size_vertical);
+        }
     }
 
     private void processLine(CsvLine line) {
@@ -345,7 +351,7 @@ public class ATAGProcCsv {
         if (!atmargin) {
             var.configLastImage = var.getStartFolder() + File.separator + next.getFileLocation();
         }
-        System.out.println(var.configLastImage + " next");
+        if (debugMessages) System.out.println(var.configLastImage + " next");
     }
 
     public void getPreviousFilename() {
@@ -371,7 +377,7 @@ public class ATAGProcCsv {
         if (!atmargin) {
             var.configLastImage = var.getStartFolder() + File.separator + next.getFileLocation();
         }
-        System.out.println(var.configLastImage + " prev");
+        if (debugMessages) System.out.println(var.configLastImage + " prev");
     }
 
     class CsvLine {
