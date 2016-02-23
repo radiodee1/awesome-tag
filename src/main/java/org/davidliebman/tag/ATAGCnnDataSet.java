@@ -93,8 +93,8 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     public static INDArray convertSIDExSIDE(INDArray in, double x_start, double y_start ) {
         int transx = (int)(x_start), transy = (int)(y_start);
 
-        if (transx < 0) transx = 0;
-        if (transy < 0) transy = 0;
+        //if (transx < 0) transx = 0;
+        //if (transy < 0) transy = 0;
 
         double outArray[][] = new double[ATAG.CNN_DIM_SIDE][ATAG.CNN_DIM_SIDE];
         for (int i  = 0; i < ATAG.CNN_DIM_SIDE; i ++) {
@@ -126,7 +126,13 @@ public class ATAGCnnDataSet  implements DataSetIterator {
             for (int yPixel = 0; yPixel < image.getHeight(); yPixel++)
             {
                 int color = image.getRGB(xPixel, yPixel);
-                if (color== Color.BLACK.getRGB()) {
+
+                //System.out.println(color);
+                int alpha = (color >> 24) & 0xff;
+                int red = (color >> 16) & 0xff;
+                int green = (color >> 8) & 0xff;
+                int blue = (color) & 0xff;
+                if ( (red + green + blue ) / 3 < 128) { // ...dark enough??
                     array2D[xPixel][yPixel] = 1;
                 } else {
                     array2D[xPixel][yPixel] = 0; // ?
@@ -182,7 +188,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
             }
             System.out.println("--");
         }
-        System.out.println("------------ rows " + show.rows() + " -- cols " + show.columns() + " -------");
+        System.out.println("------------ rows " + show.rows() + " -- cols " + show.columns() + " ---------");
     }
 
 
@@ -216,9 +222,16 @@ public class ATAGCnnDataSet  implements DataSetIterator {
         for(int i = 0; i < ATAG.CNN_BATCH_SIZE; i ++) {
             //System.out.println(list.get(i));
             String filename = var.configRootDatabase + File.separator + listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getFileLocation();
+
+            double facew = listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_WIDTH);
+            double faceh = listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_HEIGHT);
+
             double xcoord = listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_X);
             double ycoord = listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_Y);
 
+            // ...center cnn over image of face
+            xcoord = xcoord - (ATAG.CNN_DIM_SIDE - facew)/2;
+            ycoord = ycoord - (ATAG.CNN_DIM_SIDE - faceh)/2;
 
             System.out.println(filename + " name " + xcoord + "  " + ycoord + " " + ( i + cursor * ATAG.CNN_BATCH_SIZE));
 
@@ -245,8 +258,10 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
             for(int j = 0; j < ATAG.CNN_LABELS -1 ; j ++) {
                 labels [j][i] = label[j];
-                System.out.print(" label ");
+                System.out.print(" label=" + label[j]);
             }
+
+            System.out.println(" no-output="+ labelnooutput);
 
             labels[ATAG.CNN_LABELS -1 ][i] = labelnooutput;
         }
