@@ -181,7 +181,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
             }
             System.out.println("--");
         }
-        System.out.println("------------ rows " + show.rows() + " -- cols " + show.columns() + " ---------");
+        //System.out.println("------------ rows " + show.rows() + " -- cols " + show.columns() + " ---------");
     }
 
 
@@ -229,7 +229,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
             if(debugMessages) System.out.println(filename + " name " + xcoord + "  " + ycoord + " " + ( i + cursor * ATAG.CNN_BATCH_SIZE));
 
             INDArray out = loadImageBMP(new File(filename),xcoord,ycoord);
-            out.linearView();
+            out = out.linearView();
             //System.out.println(arr.toString());
 
             //INDArray out = convertSIDExSIDE(arr, xcoord, ycoord);
@@ -237,7 +237,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
             if (debugMessages) showSquare(out);
 
-            for (int j = 0; j < (ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE); j ++) {
+            for (int j = 0; j < (ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS); j ++) {
                 featureMatrix[j][i] = out.getDouble(j);
                 //System.out.print("."+ i + "." + j);
             }
