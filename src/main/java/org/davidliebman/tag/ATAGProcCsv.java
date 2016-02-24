@@ -11,7 +11,7 @@ public class ATAGProcCsv {
 
     public static final int CSV_POSITION_FILE_LOCATION = 2;
 
-    public static final int NUM_OF_APPROACHES = 2;
+    public static final int NUM_OF_APPROACHES = 1; //2
     public static final int APPROACH_IS_CLOSE = 70;
 
     public static final int FACE_X = 6;
@@ -300,7 +300,7 @@ public class ATAGProcCsv {
                 labelsize4 = 1;
             }
 
-            if (approachdist < approachavg / FACE_MOD_AVG) {
+            if (approachdist <= approachavg / FACE_MOD_AVG && fheight < ATAG.CNN_DIM_SIDE * 1.25) {
                 labelnooutput = 0;
 
 
