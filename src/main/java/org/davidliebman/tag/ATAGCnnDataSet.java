@@ -44,6 +44,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     private boolean debugMessages = false;
     private boolean debugByteOrder = false;
     private boolean debugDontCenter = true;
+    private boolean debugNoThreshold = true;
 
     public ATAGCnnDataSet(ArrayList<ATAGProcCsv.CsvLine >  list , ATAG v, int type, boolean train, float split, long seed, int savedCursor) throws Exception {
         super();
@@ -120,20 +121,32 @@ public class ATAGCnnDataSet  implements DataSetIterator {
                     } else {
                         array2D[yPixel][xPixel][0] = 0; // ?
                     }
-                    array1D[arrayPos1D + 0] = array2D[yPixel][xPixel][0];
                     if ((green) < threshold) { // ...dark enough??
                         array2D[yPixel][xPixel][1] = 1;
                     } else {
                         array2D[yPixel][xPixel][1] = 0; // ?
                     }
-                    array1D[arrayPos1D + 1] = array2D[yPixel][xPixel][1];
 
                     if ((blue) < threshold) { // ...dark enough??
                         array2D[yPixel][xPixel][2] = 1;
                     } else {
                         array2D[yPixel][xPixel][2] = 0; // ?
                     }
-                    array1D[arrayPos1D + 2] = array2D[yPixel][xPixel][2];
+
+                    if (!debugNoThreshold) {
+                        array1D[arrayPos1D + 0] = array2D[yPixel][xPixel][0];
+
+                        array1D[arrayPos1D + 1] = array2D[yPixel][xPixel][1];
+
+                        array1D[arrayPos1D + 2] = array2D[yPixel][xPixel][2];
+                    }
+                    else {
+                        array1D[arrayPos1D + 0] = red / 255.0f;//array2D[yPixel][xPixel][0];
+
+                        array1D[arrayPos1D + 1] = green / 255.0f;//array2D[yPixel][xPixel][1];
+
+                        array1D[arrayPos1D + 2] = blue / 255.0f;//array2D[yPixel][xPixel][2];
+                    }
 
                     if (debugByteOrder) {
                         for (int x = 0; x < ATAG.CNN_CHANNELS; x ++) {
