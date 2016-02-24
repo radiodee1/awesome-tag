@@ -41,7 +41,8 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     private ArrayList<ATAGProcCsv.CsvLine> listLocal;
     private ATAG var;
 
-    private boolean debugMessages = false;
+    private boolean debugMessages = true;
+    private boolean debugByteOrder = false;
 
     public ATAGCnnDataSet(ArrayList<ATAGProcCsv.CsvLine >  list , ATAG v, int type, boolean train, float split, long seed, int savedCursor) throws Exception {
         super();
@@ -62,7 +63,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
 
 
-
+    /*
     public static INDArray convertSIDExSIDE(INDArray in) { return convertSIDExSIDE(in, 0, 0) ;}
 
     public static INDArray convertSIDExSIDE(INDArray in, double x_start, double y_start ) {
@@ -87,6 +88,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
         INDArray out = Nd4j.create(outArray);
         return out.linearView();
     }
+    */
 
     public  INDArray loadImageBMP ( File file, double x_start, double y_start) throws Exception {
 
@@ -105,7 +107,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
                 if (xPixel + transx >=0 && xPixel + transx< image.getWidth() && yPixel +transy >=0 && yPixel + transy < image.getHeight()) {
                     int color = image.getRGB(xPixel +transx, yPixel + transy);
 
-                    int arrayPos1D = yPixel * ATAG.CNN_DIM_SIDE  + xPixel * ATAG.CNN_CHANNELS ;
+                    int arrayPos1D = yPixel * ATAG.CNN_DIM_SIDE  * ATAG.CNN_CHANNELS + xPixel * ATAG.CNN_CHANNELS ;
 
                     int alpha = (color >> 24) & 0xff;
                     int red = (color >> 16) & 0xff;
@@ -131,6 +133,12 @@ public class ATAGCnnDataSet  implements DataSetIterator {
                         array2D[yPixel][xPixel][2] = 0; // ?
                     }
                     array1D[arrayPos1D + 2] = array2D[yPixel][xPixel][2];
+
+                    if (debugByteOrder) {
+                        for (int x = 0; x < ATAG.CNN_CHANNELS; x ++) {
+                            array1D[arrayPos1D + x] = x;
+                        }
+                    }
                 }
             }
         }
@@ -177,8 +185,13 @@ public class ATAGCnnDataSet  implements DataSetIterator {
             for (int j = 0; j < ATAG.CNN_DIM_SIDE ; j ++) {
 
                 for (int k = 0; k < ATAG.CNN_CHANNELS; k ++ ) {
-                    if (show.getDouble(i * ATAG.CNN_DIM_SIDE  + j * ATAG.CNN_CHANNELS + k) > 0.5d) {
-                        System.out.print("#");
+                    if (show.getDouble(i * ATAG.CNN_DIM_SIDE *ATAG.CNN_CHANNELS + j * ATAG.CNN_CHANNELS + k) > 0.5d) {
+                        if (!debugByteOrder) {
+                            System.out.print("#");
+                        }
+                        else {
+                            System.out.print((int)(show.getDouble( i * ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS+ j * ATAG.CNN_CHANNELS + k)));
+                        }
                         noOutput = false;
                     } else {
                         System.out.print(" ");
@@ -188,7 +201,8 @@ public class ATAGCnnDataSet  implements DataSetIterator {
             System.out.println("--");
         }
         //System.out.println("------------ rows " + show.rows() + " -- cols " + show.columns() + " ---------");
-        if (!noOutput) System.out.println("search here.");
+        int testout = (ATAG.CNN_DIM_SIDE - 1 ) * ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS + (ATAG.CNN_DIM_SIDE - 1) * ATAG.CNN_CHANNELS + ATAG.CNN_CHANNELS - 1;
+        if (!noOutput) System.out.println("search here. " + in.columns() + "  " + testout);
     }
 
 

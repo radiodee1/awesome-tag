@@ -46,6 +46,7 @@ public class ATAGProcCsv {
     private Random r;
     private double avg_approach_dist = 0;
     private double max_size_vertical = 0;
+    private boolean grossImageChoice = true;
 
     private boolean debugMessages = false;
 
@@ -237,8 +238,15 @@ public class ATAGProcCsv {
             //approachy = fy + r.nextInt((int)fheight * 2) - fheight;
 
             if (i != 0) {
-                approachx = fx + r.nextInt((int) fwidth) - fwidth / 2.0d;
-                approachy = fy + r.nextInt((int) fheight) - fheight / 2.0d;
+                double changex =  r.nextInt((int) fwidth) - fwidth / 2.0d;
+                double changey =  r.nextInt((int) fheight) - fheight / 2.0d;
+
+                if (grossImageChoice) {
+                    changex = fwidth * (r.nextInt(2) -1 );
+                }
+
+                approachx = fx + changex;
+                approachy = fy + changey;
                 approachdist = Math.sqrt(Math.pow(fx - approachx, 2) + Math.pow(fy - approachy, 2));
             }
             else {
@@ -269,19 +277,19 @@ public class ATAGProcCsv {
             double labelsize1 = 0,labelsize2 = 0, labelsize3 = 0, labelsize4 = 0, labelnooutput = 0;
 
             ////////////////////////////
-            if (fheight <= FACE_1 && fheight > 0) {
+            if ((fheight <= FACE_1 && fheight > 0) || (fheight > FACE_1 && ATAG.CNN_LABELS -1 == 1))  {
                 labelsize1 = 1;
                 labelsize2 = 0;
                 labelsize3 = 0;
                 labelsize4 = 0;
             }
-            else if(fheight <= FACE_2 && fheight > FACE_1) {
+            else if((fheight <= FACE_2 && fheight > FACE_1) || (fheight > FACE_2 && ATAG.CNN_LABELS -1 == 2)) {
                 labelsize1 = 0;
                 labelsize2 = 1;
                 labelsize3 = 0;
                 labelsize4 = 0;
             }
-            else if (fheight <= FACE_3 && fheight > FACE_2) {
+            else if ((fheight <= FACE_3 && fheight > FACE_2) || (fheight > FACE_3 && ATAG.CNN_LABELS -1 == 3)) {
                 labelsize1 = 0;
                 labelsize2 = 0;
                 labelsize3 = 1;
@@ -296,6 +304,8 @@ public class ATAGProcCsv {
 
             if (approachdist < approachavg / FACE_MOD_AVG) {
                 labelnooutput = 0;
+
+
             }
             else {
                 labelnooutput = 1;
