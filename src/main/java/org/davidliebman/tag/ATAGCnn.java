@@ -35,7 +35,7 @@ public class ATAGCnn extends  Thread {
     private ATAG var;
     private ATAGProcCsv proc;
 
-    private boolean doFit = true;
+    private boolean doFit = false;
     private boolean doTest = true;
 
 
@@ -54,7 +54,7 @@ public class ATAGCnn extends  Thread {
         int nChannels = ATAG.CNN_CHANNELS;
         int outputNum = ATAG.CNN_LABELS;
         int batchSize = ATAG.CNN_BATCH_SIZE;
-        int nEpochs = 10;
+        int nEpochs = 1;// 10
         int iterations = 1;
         int seed = 123;
 
@@ -130,17 +130,17 @@ public class ATAGCnn extends  Thread {
                     log.info("*** Completed epoch {} ***", i);
                 }
 
-
-                log.info("Evaluate model.... " + mnistTest.numExamples());
-                Evaluation eval = new Evaluation(outputNum);
-                while (mnistTest.hasNext()) {
-                    DataSet ds = mnistTest.next();
-                    INDArray output = model.output(ds.getFeatureMatrix());
-                    eval.eval(ds.getLabels(), output);
+                if (doTest) {
+                    log.info("Evaluate model.... " + mnistTest.numExamples());
+                    Evaluation eval = new Evaluation(outputNum);
+                    while (mnistTest.hasNext()) {
+                        DataSet ds = mnistTest.next();
+                        INDArray output = model.output(ds.getFeatureMatrix());
+                        eval.eval(ds.getLabels(), output);
+                    }
+                    log.info(eval.stats());
+                    mnistTest.reset();
                 }
-                log.info(eval.stats());
-                mnistTest.reset();
-
             }
             log.info("****************Example finished********************");
         }
@@ -236,7 +236,7 @@ public class ATAGCnn extends  Thread {
 
         }
         catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
