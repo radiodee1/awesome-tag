@@ -43,6 +43,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
     private boolean debugMessages = false;
     private boolean debugByteOrder = false;
+    private boolean debugDontCenter = true;
 
     public ATAGCnnDataSet(ArrayList<ATAGProcCsv.CsvLine >  list , ATAG v, int type, boolean train, float split, long seed, int savedCursor) throws Exception {
         super();
@@ -243,11 +244,13 @@ public class ATAGCnnDataSet  implements DataSetIterator {
             double xcoord = listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_X);
             double ycoord = listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_Y);
 
-            // ...center cnn over image of face
-            xcoord = xcoord - (ATAG.CNN_DIM_SIDE - facew)/2;
-            ycoord = ycoord - (ATAG.CNN_DIM_SIDE - faceh)/2;
+            if (!debugDontCenter) {
+                // ...center cnn over image of face ??
+                xcoord = xcoord - (ATAG.CNN_DIM_SIDE - facew) / 2;
+                ycoord = ycoord - (ATAG.CNN_DIM_SIDE - faceh) / 2;
+            }
 
-            if(debugMessages) System.out.println(filename + " name " + xcoord + "  " + ycoord + " " + ( i + cursor * ATAG.CNN_BATCH_SIZE));
+            if(debugMessages) System.out.println(filename + " name  x=" + xcoord + "  y=" + ycoord + " height=" + faceh + " i=" + ( i + cursor * ATAG.CNN_BATCH_SIZE));
 
             INDArray out = loadImageBMP(new File(filename),xcoord,ycoord);
             out = out.linearView();

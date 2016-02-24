@@ -234,9 +234,6 @@ public class ATAGProcCsv {
                 out.getSpecifications().add(line.getSpecifications().get(j));
             }
 
-            //approachx = fx + r.nextInt((int)fwidth * 2) - fwidth;
-            //approachy = fy + r.nextInt((int)fheight * 2) - fheight;
-
             if (i != 0) {
                 double changex =  r.nextInt((int) fwidth) - fwidth / 2.0d;
                 double changey =  r.nextInt((int) fheight) - fheight / 2.0d;
