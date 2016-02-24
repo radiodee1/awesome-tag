@@ -41,7 +41,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     private ArrayList<ATAGProcCsv.CsvLine> listLocal;
     private ATAG var;
 
-    private boolean debugMessages = true;
+    private boolean debugMessages = false;
     private boolean debugByteOrder = false;
 
     public ATAGCnnDataSet(ArrayList<ATAGProcCsv.CsvLine >  list , ATAG v, int type, boolean train, float split, long seed, int savedCursor) throws Exception {

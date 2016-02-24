@@ -11,7 +11,7 @@ public class ATAGProcCsv {
 
     public static final int CSV_POSITION_FILE_LOCATION = 2;
 
-    public static final int NUM_OF_APPROACHES = 5;
+    public static final int NUM_OF_APPROACHES = 2;
     public static final int APPROACH_IS_CLOSE = 70;
 
     public static final int FACE_X = 6;
@@ -243,6 +243,7 @@ public class ATAGProcCsv {
 
                 if (grossImageChoice) {
                     changex = fwidth * (r.nextInt(2) -1 );
+                    if(changex == 0) changex = fwidth;
                 }
 
                 approachx = fx + changex;
