@@ -66,7 +66,7 @@ public class ATAGCnn extends  Thread {
         DataSetIterator mnistTest = null;
         try {
             mnistTrain = new ATAGCnnDataSet(proc.getLocalList(), var, 0, true, 0.5f, seed, 0);
-            mnistTest = new ATAGCnnDataSet(proc.getLocalList(), var, 0, false, 0.005f, seed , 0);
+            mnistTest = new ATAGCnnDataSet(proc.getLocalList(), var, 0, false, 0.01f, seed , 0);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -113,7 +113,6 @@ public class ATAGCnn extends  Thread {
 
 
         try {
-            log.info("Train model.... " + mnistTrain.numExamples());
 
             if(!doFit) nEpochs = 1;
 
@@ -122,11 +121,14 @@ public class ATAGCnn extends  Thread {
                 if (exitEarly) return;
 
                 if (doFit) {
+                    log.info("Train model.... " + mnistTrain.numExamples());
+
+
                     model.fit(mnistTrain);
                     saveModel(model);
 
+                    log.info("*** Completed epoch {} ***", i);
                 }
-                log.info("*** Completed epoch {} ***", i);
 
 
                 log.info("Evaluate model.... " + mnistTest.numExamples());

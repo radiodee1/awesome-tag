@@ -93,7 +93,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     public  INDArray loadImageBMP ( File file, double x_start, double y_start) throws Exception {
 
         int transx = (int)(x_start) , transy = (int)(y_start);
-        int threshold = 64;//128
+        int threshold = 128;//128
 
         BufferedImage image = ImageIO.read(file);
 
@@ -142,7 +142,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
                 }
             }
         }
-        return Nd4j.create(array1D);//, new int[] {ATAG.CNN_DIM_SIDE,ATAG.CNN_DIM_SIDE, ATAG.CNN_CHANNELS});
+        return Nd4j.create(array1D);//
     }
 
     /*
