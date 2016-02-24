@@ -35,7 +35,7 @@ public class ATAGCnn extends  Thread {
     private ATAG var;
     private ATAGProcCsv proc;
 
-    private boolean doFit = false;
+    private boolean doFit = true;
     private boolean doTest = true;
 
 
@@ -48,6 +48,7 @@ public class ATAGCnn extends  Thread {
     public void run() {
 
 
+        Nd4j.ENFORCE_NUMERICAL_STABILITY =  true;
 
         homeDir = var.configLocalRoot;
 

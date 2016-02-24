@@ -275,7 +275,7 @@ public class ATAGProcCsv {
             double labelsize1 = 0,labelsize2 = 0, labelsize3 = 0, labelsize4 = 0, labelnooutput = 0;
 
             ////////////////////////////
-            if ((fheight <= FACE_1 && fheight > 0) || (fheight > FACE_1 && ATAG.CNN_LABELS -1 == 1))  {
+            if ((fheight <= FACE_1 && fheight > 0) || (fheight > FACE_1 && ATAG.CNN_LABELS -1 <= 1) )  {
                 labelsize1 = 1;
                 labelsize2 = 0;
                 labelsize3 = 0;
