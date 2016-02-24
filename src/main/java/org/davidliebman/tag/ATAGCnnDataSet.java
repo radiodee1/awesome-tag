@@ -41,7 +41,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     private ArrayList<ATAGProcCsv.CsvLine> listLocal;
     private ATAG var;
 
-    private boolean debugMessages = true;
+    private boolean debugMessages = false;
 
     public ATAGCnnDataSet(ArrayList<ATAGProcCsv.CsvLine >  list , ATAG v, int type, boolean train, float split, long seed, int savedCursor) throws Exception {
         super();
@@ -89,50 +89,52 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     }
 
     public  INDArray loadImageBMP ( File file, double x_start, double y_start) throws Exception {
-        //System.out.println(file.toString());
-        int transx = (int)(x_start) * ATAG.CNN_CHANNELS, transy = (int)(y_start);
 
+        int transx = (int)(x_start) , transy = (int)(y_start);
+        int threshold = 64;//128
 
         BufferedImage image = ImageIO.read(file);
 
-        double[][][] array2D = new double[image.getHeight()][image.getWidth() ][ATAG.CNN_CHANNELS];
+        double[][][] array2D = new double[ATAG.CNN_DIM_SIDE][ATAG.CNN_DIM_SIDE ][ATAG.CNN_CHANNELS];
 
-        double[] array1D = new double[image.getWidth() * image.getHeight() * ATAG.CNN_CHANNELS];
-        for (int yPixel = 0; yPixel < image.getHeight(); yPixel++)
+        double[] array1D = new double[ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS];
+        for (int yPixel = 0; yPixel < ATAG.CNN_DIM_SIDE; yPixel++)
         {
-            for (int xPixel = 0; xPixel < image.getWidth(); xPixel++)
+            for (int xPixel = 0; xPixel < ATAG.CNN_DIM_SIDE; xPixel++)
             {
                 if (xPixel + transx >=0 && xPixel + transx< image.getWidth() && yPixel +transy >=0 && yPixel + transy < image.getHeight()) {
                     int color = image.getRGB(xPixel +transx, yPixel + transy);
 
-                    //System.out.println(color);
+                    int arrayPos1D = yPixel * ATAG.CNN_DIM_SIDE  + xPixel * ATAG.CNN_CHANNELS ;
+
                     int alpha = (color >> 24) & 0xff;
                     int red = (color >> 16) & 0xff;
                     int green = (color >> 8) & 0xff;
                     int blue = (color) & 0xff;
-                    if ((red) < 128) { // ...dark enough??
+
+                    if ((red) < threshold) { // ...dark enough??
                         array2D[yPixel][xPixel][0] = 1;
                     } else {
                         array2D[yPixel][xPixel][0] = 0; // ?
                     }
-                    array1D[yPixel * ATAG.CNN_DIM_SIDE + xPixel * ATAG.CNN_CHANNELS + 0] = array2D[yPixel][xPixel][0];
-                    if ((green) < 128) { // ...dark enough??
+                    array1D[arrayPos1D + 0] = array2D[yPixel][xPixel][0];
+                    if ((green) < threshold) { // ...dark enough??
                         array2D[yPixel][xPixel][1] = 1;
                     } else {
                         array2D[yPixel][xPixel][1] = 0; // ?
                     }
-                    array1D[yPixel * ATAG.CNN_DIM_SIDE + xPixel * ATAG.CNN_CHANNELS + 1] = array2D[yPixel][xPixel][1];
+                    array1D[arrayPos1D + 1] = array2D[yPixel][xPixel][1];
 
-                    if ((blue) < 128) { // ...dark enough??
+                    if ((blue) < threshold) { // ...dark enough??
                         array2D[yPixel][xPixel][2] = 1;
                     } else {
                         array2D[yPixel][xPixel][2] = 0; // ?
                     }
-                    array1D[yPixel * ATAG.CNN_DIM_SIDE + xPixel * ATAG.CNN_CHANNELS + 2] = array2D[yPixel][xPixel][2];
+                    array1D[arrayPos1D + 2] = array2D[yPixel][xPixel][2];
                 }
             }
         }
-        return Nd4j.create(array1D, new int[] {image.getHeight(),image.getWidth(),ATAG.CNN_CHANNELS});
+        return Nd4j.create(array1D);//, new int[] {ATAG.CNN_DIM_SIDE,ATAG.CNN_DIM_SIDE, ATAG.CNN_CHANNELS});
     }
 
     /*
@@ -170,18 +172,23 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     */
     public void showSquare(INDArray in) {
         INDArray show = in.linearView();
+        boolean noOutput = true;
         for (int i = 0; i < ATAG.CNN_DIM_SIDE ; i ++) {
-            for (int j = 0; j < ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS; j ++) {
-                if (show.getDouble(i * ATAG.CNN_DIM_SIDE + j) > 0.5d) {
-                    System.out.print("#");
-                }
-                else {
-                    System.out.print(" ");
+            for (int j = 0; j < ATAG.CNN_DIM_SIDE ; j ++) {
+
+                for (int k = 0; k < ATAG.CNN_CHANNELS; k ++ ) {
+                    if (show.getDouble(i * ATAG.CNN_DIM_SIDE  + j * ATAG.CNN_CHANNELS + k) > 0.5d) {
+                        System.out.print("#");
+                        noOutput = false;
+                    } else {
+                        System.out.print(" ");
+                    }
                 }
             }
             System.out.println("--");
         }
         //System.out.println("------------ rows " + show.rows() + " -- cols " + show.columns() + " ---------");
+        if (!noOutput) System.out.println("search here.");
     }
 
 
@@ -209,7 +216,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     public void fillArrays(int cursor) throws Exception {
 
 
-        featureMatrix = new double[ ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE][ ATAG.CNN_BATCH_SIZE];
+        featureMatrix = new double[ ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS][ ATAG.CNN_BATCH_SIZE];
         labels = new double[ATAG.CNN_LABELS][ATAG.CNN_BATCH_SIZE];
 
         for(int i = 0; i < ATAG.CNN_BATCH_SIZE; i ++) {

@@ -35,7 +35,7 @@ public class ATAGCnn extends  Thread {
     private ATAG var;
     private ATAGProcCsv proc;
 
-    private boolean doFit = true;
+    private boolean doFit = false;
     private boolean doTest = true;
 
 
