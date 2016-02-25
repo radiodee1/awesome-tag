@@ -37,6 +37,7 @@ public class ATAGCnn extends  Thread {
 
     private boolean doFit = true;
     private boolean doTest = true;
+    private boolean doLoadSave = true;
 
 
     public   ATAGCnn (ATAG var, ATAGProcCsv proc) throws Exception {
@@ -66,8 +67,8 @@ public class ATAGCnn extends  Thread {
         DataSetIterator mnistTrain = null;
         DataSetIterator mnistTest = null;
         try {
-            mnistTrain = new ATAGCnnDataSet(proc.getLocalList(), var, 0, true, 0.5f, seed, 0);
-            mnistTest = new ATAGCnnDataSet(proc.getLocalList(), var, 0, false, 0.01f, seed , 0);
+            mnistTrain = new ATAGCnnDataSet(proc.getLocalList(), var, 0, false, 0.06f, seed, 0, false);
+            mnistTest = new ATAGCnnDataSet(proc.getLocalList(), var, 0, false, 0.06f, seed , 0, false);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -126,7 +127,7 @@ public class ATAGCnn extends  Thread {
 
 
                     model.fit(mnistTrain);
-                    saveModel(model);
+                    //saveModel(model); // not needed because of shutdown hook
 
                     log.info("*** Completed epoch {} ***", i);
                 }
@@ -166,7 +167,7 @@ public class ATAGCnn extends  Thread {
             File filePath = new File(fileName);
 
             System.out.println("model " + fileName);
-            if (!filePath.exists()) return;
+            if (!filePath.exists() || !doLoadSave) return;
 
             DataInputStream dis = new DataInputStream(new FileInputStream(filePath));
             INDArray newParams = Nd4j.read(dis);
@@ -181,6 +182,7 @@ public class ATAGCnn extends  Thread {
 
     public void saveModel(MultiLayerNetwork m)  {
         try {
+            if (!doLoadSave) return;
             model = m;
             //Write the network parameters:
             System.out.println("start model save");

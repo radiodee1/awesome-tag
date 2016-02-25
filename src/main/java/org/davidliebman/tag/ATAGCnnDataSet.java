@@ -45,16 +45,22 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     private boolean debugByteOrder = false;
     private boolean debugDontCenter = true;
     private boolean debugNoThreshold = true;
+    private boolean debugDoNotSplit = false;
 
-    public ATAGCnnDataSet(ArrayList<ATAGProcCsv.CsvLine >  list , ATAG v, int type, boolean train, float split, long seed, int savedCursor) throws Exception {
+    private int globalOutputCount = 0;
+
+    public ATAGCnnDataSet(ArrayList<ATAGProcCsv.CsvLine >  list , ATAG v, int type, boolean train, float split, long seed, int savedCursor, boolean doNotSplit) throws Exception {
         super();
         searchType = type;
         this.seed = seed;
         trainWithThisSet = train;
         percentForTesting = split;
 
+        debugDoNotSplit = doNotSplit;
         listLocal = list;
         var = v;
+
+        globalOutputCount = 0;
 
         cursor = savedCursor;
         if (cursor > cursorSize) cursor = 0;
@@ -64,33 +70,6 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
 
 
-
-    /*
-    public static INDArray convertSIDExSIDE(INDArray in) { return convertSIDExSIDE(in, 0, 0) ;}
-
-    public static INDArray convertSIDExSIDE(INDArray in, double x_start, double y_start ) {
-        int transx = (int)(x_start) * ATAG.CNN_CHANNELS, transy = (int)(y_start);
-
-
-        double outArray[][] = new double[ATAG.CNN_DIM_SIDE][ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS];
-        for (int i  = 0; i < ATAG.CNN_DIM_SIDE ; i ++) {
-            for (int j = 0; j < ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS; j ++) {
-
-                if (i + transx >=0 && i + transx< in.rows() && j +transy >=0 && j + transy < in.columns()) {
-                    if (in.getRow(i+transx).getDouble(j+ transy) > 0.5d) {
-
-                        outArray[(i)][(j)] = 1.0d;
-                    }
-
-                }
-
-            }
-        }
-
-        INDArray out = Nd4j.create(outArray);
-        return out.linearView();
-    }
-    */
 
     public  INDArray loadImageBMP ( File file, double x_start, double y_start) throws Exception {
 
@@ -216,21 +195,22 @@ public class ATAGCnnDataSet  implements DataSetIterator {
         }
         //System.out.println("------------ rows " + show.rows() + " -- cols " + show.columns() + " ---------");
         int testout = (ATAG.CNN_DIM_SIDE - 1 ) * ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS + (ATAG.CNN_DIM_SIDE - 1) * ATAG.CNN_CHANNELS + ATAG.CNN_CHANNELS - 1;
-        if (!noOutput) System.out.println("search here. " + in.columns() + "  " + testout);
+        if (!noOutput) System.out.println("dimensions here. " + in.columns() + "  " + testout);
     }
 
 
     public void splitList() {
         ArrayList<ATAGProcCsv.CsvLine>  newList = new ArrayList<ATAGProcCsv.CsvLine>();
 
-        if (trainWithThisSet) {
-            newList.addAll(listLocal.subList(0,(int)(listLocal.size() * (1.0 - percentForTesting))));
-        }
-        else {
-            newList.addAll(listLocal.subList(1 + (int)(listLocal.size() * (1.0 - percentForTesting)),listLocal.size()));
-        }
+        if (!debugDoNotSplit) {
+            if (trainWithThisSet) {
+                newList.addAll(listLocal.subList(0, (int) (listLocal.size() * (1.0 - percentForTesting))));
+            } else {
+                newList.addAll(listLocal.subList(1 + (int) (listLocal.size() * (1.0 - percentForTesting)), listLocal.size()));
+            }
+            listLocal = newList;
 
-        listLocal = newList;
+        }
         cursorSize = (int)listLocal.size()/ATAG.CNN_BATCH_SIZE;
 
         if (debugMessages ) System.out.println(listLocal.size() + " size after split");
@@ -242,7 +222,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     }
 
     public void fillArrays(int cursor) throws Exception {
-
+        globalOutputCount = 0;
 
         featureMatrix = new double[ ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS][ ATAG.CNN_BATCH_SIZE];
         labels = new double[ATAG.CNN_LABELS][ATAG.CNN_BATCH_SIZE];
@@ -291,11 +271,22 @@ public class ATAGCnnDataSet  implements DataSetIterator {
                 if (debugMessages) System.out.print(" label=" + label[j]);
             }
 
-            if (debugMessages) System.out.println(" no-output="+ labelnooutput);
+            if (debugMessages) System.out.println(" no-out="+ labelnooutput);
 
             labels[ATAG.CNN_LABELS -1 ][i] = labelnooutput;
+
+            if(debugMessages || true) {
+                if(labelnooutput > 0.5d) {
+                    //System.out.println("no-out");
+                }
+                else {
+                    //System.out.println("here detection");
+                    globalOutputCount ++;
+                }
+            }
         }
 
+        if(debugMessages || true) System.out.println("label totals " + globalOutputCount +" / " + listLocal.size());
 
     }
 

@@ -11,8 +11,9 @@ public class ATAGProcCsv {
 
     public static final int CSV_POSITION_FILE_LOCATION = 2;
 
-    public static final int NUM_OF_APPROACHES = 2; //2
+    public static final int NUM_OF_APPROACHES = 1; //2
     public static final int APPROACH_IS_CLOSE = 70;
+    public static final int NUM_OF_SKIPPED_CONSECUTIVE_NO_OUTPUT = 1;
 
     public static final int FACE_X = 6;
     public static final int FACE_Y = 7;
@@ -46,7 +47,9 @@ public class ATAGProcCsv {
     private Random r;
     private double avg_approach_dist = 0;
     private double max_size_vertical = 0;
+    private int num_positive_output = 0;
     private boolean grossImageChoice = true;
+    private int num_of_skipped_no_output = 0;
 
     private boolean debugMessages = false;
 
@@ -194,16 +197,25 @@ public class ATAGProcCsv {
 
     private void processFile(ArrayList<CsvLine> csv, ArrayList<String> labels) {
         avg_approach_dist = 0;
+        num_positive_output = 0;
+
         listLocal = new ArrayList<CsvLine>();
+
+        listSecond = new ArrayList<CsvLine>();
         for (int i = 0; i < csv.size(); i ++ ) {
             processLine(csv.get(i));
         }
+        for (int i = 0; i < listSecond.size(); i ++) {
+            listLocal.add(listSecond.get(i));
+        }
+        listSecond = null;
 
         avg_approach_dist = avg_approach_dist / (listLocal.size());
 
         if (debugMessages) {
             System.out.println("average approach dist " + avg_approach_dist);
             System.out.println("max face height " + max_size_vertical);
+            System.out.println("num positive outputs " + num_positive_output + " / " + listLocal.size());
         }
     }
 
@@ -275,7 +287,7 @@ public class ATAGProcCsv {
             double labelsize1 = 0,labelsize2 = 0, labelsize3 = 0, labelsize4 = 0, labelnooutput = 0;
 
             ////////////////////////////
-            if ((fheight <= FACE_1 && fheight > 0) || (fheight > FACE_1 && ATAG.CNN_LABELS -1 <= 1) )  {
+            if ((fheight <= FACE_1 && fheight > 0) || (fheight > FACE_1 && ATAG.CNN_LABELS -1 == 1) )  {
                 labelsize1 = 1;
                 labelsize2 = 0;
                 labelsize3 = 0;
@@ -300,9 +312,9 @@ public class ATAGProcCsv {
                 labelsize4 = 1;
             }
 
-            if (approachdist <= approachavg / FACE_MOD_AVG && fheight < ATAG.CNN_DIM_SIDE * 1.25) {
+            if ((approachdist <= approachavg / FACE_MOD_AVG || (ATAG.CNN_LABELS == 1 && approachdist < 1) )&& fheight <= ATAG.CNN_DIM_SIDE * 1.25) {
                 labelnooutput = 0;
-
+                num_positive_output ++;
 
             }
             else {
@@ -320,7 +332,26 @@ public class ATAGProcCsv {
             list.get(i).getSpecifications().add(labelsize4);
             list.get(i).getSpecifications().add(labelnooutput);
 
-            listLocal.add(list.get(i));
+
+
+            if (num_of_skipped_no_output < NUM_OF_SKIPPED_CONSECUTIVE_NO_OUTPUT && labelnooutput > 0.5d) {
+                listLocal.add(list.get(i));
+                num_of_skipped_no_output ++;//= 0;
+            }
+            else if(labelnooutput < 0.5d) {
+                if (num_of_skipped_no_output == NUM_OF_SKIPPED_CONSECUTIVE_NO_OUTPUT) {
+                    listLocal.add(list.get(i));
+                    num_of_skipped_no_output = 0;
+                }
+                else {
+                    listSecond.add(list.get(i));
+                }
+            }
+            else if ( num_of_skipped_no_output >= NUM_OF_SKIPPED_CONSECUTIVE_NO_OUTPUT && listSecond.size() > 0) {
+                listLocal.add(listSecond.get(0));
+                listSecond.remove(0);
+                num_of_skipped_no_output = 0;
+            }
         }
 
 
