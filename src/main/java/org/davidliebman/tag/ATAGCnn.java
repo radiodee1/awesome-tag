@@ -34,7 +34,7 @@ public class ATAGCnn extends  Thread {
     private ATAG var;
     private ATAGProcCsv proc;
 
-    private boolean doFit = true;
+    private boolean doFit = false;
     private boolean doTest = true;
     private boolean doLoadSave = true;
     private boolean doSaveCursor = true;
@@ -61,7 +61,7 @@ public class ATAGCnn extends  Thread {
         int nEpochs = 1;// 10
         int iterations = 1;
         int seed = 123;
-        float testSplit = 0.12f;
+        float testSplit = 0.05f;
 
         split = Integer.valueOf(var.configLastSplit);
 
@@ -169,7 +169,7 @@ public class ATAGCnn extends  Thread {
         }
 
         catch (Exception e) {
-            e.printStackTrace(); // this prints stack trace when thread is interrupted!!
+            //e.printStackTrace(); // this prints stack trace when thread is interrupted!!
         }
     }
 
