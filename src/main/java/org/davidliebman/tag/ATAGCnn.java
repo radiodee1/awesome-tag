@@ -41,6 +41,7 @@ public class ATAGCnn extends  Thread {
     private boolean doSaveCursor = true;
 
     private int cursor = 0;
+    private int split = 0;
 
     public   ATAGCnn (ATAG var, ATAGProcCsv proc) throws Exception {
         this.var = var;
@@ -63,6 +64,7 @@ public class ATAGCnn extends  Thread {
         int seed = 123;
         float testSplit = 0.12f;
 
+
         int inputDim = ATAG.CNN_DIM_SIDE;//80 or 90
 
         log.info("Load data....");
@@ -70,8 +72,8 @@ public class ATAGCnn extends  Thread {
         DataSetIterator mnistTrain = null;
         DataSetIterator mnistTest = null;
         try {
-            mnistTrain = new ATAGCnnDataSet(proc.getLocalList(), var, 0, true, 1.0f - testSplit, seed, 0, true);
-            mnistTest = new ATAGCnnDataSet(proc.getLocalList(), var, 0, false, testSplit, seed , 0, false);
+            mnistTrain = new ATAGCnnDataSet(proc.getLocalList(split), var, 0, true, 1.0f - testSplit, seed, 0, true);
+            mnistTest = new ATAGCnnDataSet(proc.getLocalList(split), var, 0, false, testSplit, seed , 0, false);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -137,6 +139,8 @@ public class ATAGCnn extends  Thread {
                         model.fit(mnistTrain.next(cursor));
                         cursor ++;
                     }
+
+                    split ++;
 
                     //model.fit(mnistTrain);
                     //saveModel(model); // not needed because of shutdown hook
@@ -211,7 +215,10 @@ public class ATAGCnn extends  Thread {
             dos.flush();
             dos.close();
 
-            if (doSaveCursor || doFit) var.writeConfigText(ATAG.DOTFOLDER_SAVED_CURSOR, new Integer(cursor).toString());
+            if (doSaveCursor || doFit) {
+                var.writeConfigText(ATAG.DOTFOLDER_SAVED_CURSOR, new Integer(cursor).toString());
+                var.writeConfigText(ATAG.DOTFOLDER_SAVED_SPLIT, new Integer(split).toString());
+            }
 
             System.out.println("done save model");
         }

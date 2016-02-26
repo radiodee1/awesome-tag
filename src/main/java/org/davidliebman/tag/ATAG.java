@@ -20,6 +20,7 @@ public class ATAG {
     public static final String DOTFOLDER_LOCAL_DATA_CSV = "my_csv_name";
     public static final String DOTFOLDER_LAST_IMAGE = "image_name";
     public static final String DOTFOLDER_SAVED_CURSOR = "saved_cursor";
+    public static final String DOTFOLDER_SAVED_SPLIT = "saved_split";
 
     public static final String DOTFOLDER_SPLIT_START = "split_start";
     public static final String DOTFOLDER_SPLIT_END = "split_end";
@@ -39,6 +40,7 @@ public class ATAG {
     public String configHomeDirectory = "";
 
     public String configLastCursor = "";
+    public String configLastSplit = "";
 
     public String configSlpitStartNum = "";
     public String configSplitStopNum = "";
@@ -52,7 +54,7 @@ public class ATAG {
     public static final String DEFAULT_LOCAL_DATA_FOLDERNAME = "local";
     public static final String DEFAULT_LOCAL_DATA_CSV = "my.csv";
     public static final String DEFAULT_LAST_IMAGE = "image.png";
-    public static final String DEFAULT_SPLIT_COMBINED = "1 10 1 my";
+
 
     public String configRootLocal = "";
 
@@ -178,8 +180,9 @@ public class ATAG {
             throw new Exception();
         }
         configLastCursor = this.readConfigText(DOTFOLDER_SAVED_CURSOR, "0");
+        configLastSplit = this.readConfigText(DOTFOLDER_SAVED_SPLIT, "1");
 
-        if(configLastCursor.contentEquals("")) {
+        if(configLastCursor.contentEquals("") || configLastSplit.contentEquals("")) {
             throw new Exception();
         }
 

@@ -66,6 +66,13 @@ public class ATAGProcCsv {
 
     public ArrayList<CsvLine> getLocalList() { return listLocal;}
 
+    public ArrayList<CsvLine> getLocalList(int split) {
+        String filename = var.getMyCsvFilenameFromBaseString(var.configSplitCSVBasename, String.valueOf(split));
+        loadAnyCsv(filename, listLocal,headingLocal,CSV_POSITION_FILE_LOCATION);
+        return listLocal;
+    }
+
+
     public void clearUnusedList() { listSingle = new ArrayList<CsvLine>();}
 
     private void loadCsvSingle() {
