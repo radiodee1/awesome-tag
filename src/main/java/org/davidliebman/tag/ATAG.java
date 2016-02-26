@@ -19,6 +19,7 @@ public class ATAG {
     public static final String DOTFOLDER_LOCAL_DATA_FOLDERNAME = "local_database";
     public static final String DOTFOLDER_LOCAL_DATA_CSV = "my_csv_name";
     public static final String DOTFOLDER_LAST_IMAGE = "image_name";
+    public static final String DOTFOLDER_SAVED_CURSOR = "saved_cursor";
 
     public String configRootDatabase = "";
     public String configSplitFolderName = "";
@@ -31,6 +32,8 @@ public class ATAG {
     public String configLastImage = "";
 
     public String configHomeDirectory = "";
+
+    public String configLastCursor = "";
 
     public static final String DEFAULT_ROOT_DATABASE = "workspace";
     public static final String DEFAULT_SPLIT_FOLDERNAME = "split10";
@@ -161,6 +164,11 @@ public class ATAG {
         configLastImage = this.readConfigText(DOTFOLDER_LAST_IMAGE, DEFAULT_LAST_IMAGE);
 
         if (configLastImage.contentEquals("")) {
+            throw new Exception();
+        }
+        configLastCursor = this.readConfigText(DOTFOLDER_SAVED_CURSOR, "0");
+
+        if(configLastCursor.contentEquals("")) {
             throw new Exception();
         }
     }

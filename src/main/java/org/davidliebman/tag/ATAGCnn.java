@@ -38,7 +38,9 @@ public class ATAGCnn extends  Thread {
     private boolean doFit = true;
     private boolean doTest = true;
     private boolean doLoadSave = true;
+    private boolean doSaveCursor = true;
 
+    private int cursor = 0;
 
     public   ATAGCnn (ATAG var, ATAGProcCsv proc) throws Exception {
         this.var = var;
@@ -59,6 +61,7 @@ public class ATAGCnn extends  Thread {
         int nEpochs = 1;// 10
         int iterations = 1;
         int seed = 123;
+        float testSplit = 0.12f;
 
         int inputDim = ATAG.CNN_DIM_SIDE;//80 or 90
 
@@ -67,8 +70,8 @@ public class ATAGCnn extends  Thread {
         DataSetIterator mnistTrain = null;
         DataSetIterator mnistTest = null;
         try {
-            mnistTrain = new ATAGCnnDataSet(proc.getLocalList(), var, 0, false, 0.06f, seed, 0, false);
-            mnistTest = new ATAGCnnDataSet(proc.getLocalList(), var, 0, false, 0.06f, seed , 0, false);
+            mnistTrain = new ATAGCnnDataSet(proc.getLocalList(), var, 0, true, 1.0f - testSplit, seed, 0, true);
+            mnistTest = new ATAGCnnDataSet(proc.getLocalList(), var, 0, false, testSplit, seed , 0, false);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -125,8 +128,17 @@ public class ATAGCnn extends  Thread {
                 if (doFit) {
                     log.info("Train model.... " + mnistTrain.numExamples());
 
+                    cursor = Integer.valueOf(var.configLastCursor);
+                    if (cursor > ((ATAGCnnDataSet)mnistTrain).cursorSize()) cursor = 0;
 
-                    model.fit(mnistTrain);
+                    ((ATAGCnnDataSet) mnistTrain).setCursor(cursor);
+
+                    while(mnistTrain.hasNext()) {
+                        model.fit(mnistTrain.next(cursor));
+                        cursor ++;
+                    }
+
+                    //model.fit(mnistTrain);
                     //saveModel(model); // not needed because of shutdown hook
 
                     log.info("*** Completed epoch {} ***", i);
@@ -134,6 +146,10 @@ public class ATAGCnn extends  Thread {
 
                 if (doTest) {
                     log.info("Evaluate model.... " + mnistTest.numExamples());
+
+                    cursor = 0;
+                    doSaveCursor = false;
+
                     Evaluation eval = new Evaluation(outputNum);
                     while (mnistTest.hasNext()) {
                         DataSet ds = mnistTest.next();
@@ -146,8 +162,9 @@ public class ATAGCnn extends  Thread {
             }
             log.info("****************Example finished********************");
         }
+
         catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // this prints stack trace when thread is interrupted!!
         }
     }
 
@@ -185,7 +202,7 @@ public class ATAGCnn extends  Thread {
             if (!doLoadSave) return;
             model = m;
             //Write the network parameters:
-            System.out.println("start model save");
+            System.out.println("start model save, please wait...");
             File filePointer = new File(fileName);
             //OutputStream fos = Files.newOutputStream(Paths.get(fileName));
             FileOutputStream fos = new FileOutputStream(filePointer);
@@ -193,6 +210,9 @@ public class ATAGCnn extends  Thread {
             Nd4j.write(model.params(), dos);
             dos.flush();
             dos.close();
+
+            if (doSaveCursor) var.writeConfigText(ATAG.DOTFOLDER_SAVED_CURSOR, new Integer(cursor).toString());
+
             System.out.println("done save model");
         }
         catch (Exception e) {
@@ -228,6 +248,7 @@ public class ATAGCnn extends  Thread {
                             cnn.saveModel(m);//(cnn.getModel());
                         }
                         //System.exit(0);
+
 
                     } catch (Exception e) {
                         e.printStackTrace();

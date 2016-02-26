@@ -275,30 +275,25 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
             labels[ATAG.CNN_LABELS -1 ][i] = labelnooutput;
 
-            if(debugMessages || true) {
-                if(labelnooutput > 0.5d) {
-                    //System.out.println("no-out");
-                }
-                else {
-                    //System.out.println("here detection");
-                    globalOutputCount ++;
-                }
+            //if(debugMessages || true) {
+            if(labelnooutput > 0.5d) {
+                //System.out.println("no-out");
             }
+            else {
+                //System.out.println("here detection");
+                globalOutputCount ++;
+            }
+            //}
         }
 
-        if(debugMessages || true) System.out.println("label totals " + globalOutputCount +" / " + listLocal.size());
+        if (globalOutputCount != ATAG.CNN_BATCH_SIZE / ATAG.CNN_LABELS) System.exit(0);
+
+        if(debugMessages || true) System.out.println("batch totals " + globalOutputCount +" / " + (ATAG.CNN_BATCH_SIZE) + " size="+ listLocal.size() + " cursor=" + cursor + ","+ cursorSize);
 
     }
 
-    /*
-    public int getCharFromFilename(String in) {
-        int startConst = 6, stopConst = 4;
 
-        String num = in.substring(in.length() - startConst, in.length()-stopConst);
-        int out = Integer.parseInt(num,16);
-        return out;
-    }
-    */
+
 
     @Override
     public String toString() {
@@ -306,6 +301,11 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     }
 
 
+    public void setCursor (int c) {
+        cursor = c;
+        cursorSize = listLocal.size() / ATAG.CNN_BATCH_SIZE;
+        System.out.println("c=" + cursor + " c-size=" + cursorSize);
+    }
 
     public DataSet next(int i) {
         cursor = i;
@@ -341,6 +341,8 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     public int numExamples() {
         return listLocal.size();
     }
+
+    public int cursorSize() {return cursorSize;}
 
     public void setPreProcessor(DataSetPreProcessor dataSetPreProcessor) {
 
