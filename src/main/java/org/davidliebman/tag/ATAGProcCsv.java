@@ -67,6 +67,8 @@ public class ATAGProcCsv {
     public ArrayList<CsvLine> getLocalList() { return listLocal;}
 
     public ArrayList<CsvLine> getLocalList(int split) {
+        if (split < Integer.valueOf(var.configSlpitStartNum) || split > Integer.valueOf(var.configSplitStopNum)) split = 1;
+
         String filename = var.getMyCsvFilenameFromBaseString(var.configSplitCSVBasename, String.valueOf(split));
         loadAnyCsv(filename, listLocal,headingLocal,CSV_POSITION_FILE_LOCATION);
         return listLocal;
@@ -235,7 +237,7 @@ public class ATAGProcCsv {
             processLine(csv.get(i));
         }
         for (int i = 0; i < listSecond.size(); i ++) {
-            listLocal.add(listSecond.get(i));
+            //listLocal.add(listSecond.get(i));
         }
         listSecond = null;
 

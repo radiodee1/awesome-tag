@@ -21,9 +21,8 @@ package org.davidliebman.tag;
         import org.slf4j.Logger;
         import org.slf4j.LoggerFactory;
         import java.io.*;
-/**
- * Created by agibsonccc on 9/16/15.
- */
+
+
 public class ATAGCnn extends  Thread {
     private static final Logger log = LoggerFactory.getLogger(ATAGCnn.class);
 
@@ -35,7 +34,7 @@ public class ATAGCnn extends  Thread {
     private ATAG var;
     private ATAGProcCsv proc;
 
-    private boolean doFit = false;
+    private boolean doFit = true;
     private boolean doTest = true;
     private boolean doLoadSave = true;
     private boolean doSaveCursor = true;
@@ -64,6 +63,7 @@ public class ATAGCnn extends  Thread {
         int seed = 123;
         float testSplit = 0.12f;
 
+        split = Integer.valueOf(var.configLastSplit);
 
         int inputDim = ATAG.CNN_DIM_SIDE;//80 or 90
 
@@ -136,6 +136,7 @@ public class ATAGCnn extends  Thread {
                     ((ATAGCnnDataSet) mnistTrain).setCursor(cursor);
 
                     while(mnistTrain.hasNext()) {
+                        System.out.print(split + " -- ");
                         model.fit(mnistTrain.next(cursor));
                         cursor ++;
                     }
@@ -168,7 +169,7 @@ public class ATAGCnn extends  Thread {
         }
 
         catch (Exception e) {
-            //e.printStackTrace(); // this prints stack trace when thread is interrupted!!
+            e.printStackTrace(); // this prints stack trace when thread is interrupted!!
         }
     }
 
