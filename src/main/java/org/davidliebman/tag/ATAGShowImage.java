@@ -100,7 +100,13 @@ public class ATAGShowImage {
 
         buttonSplit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String out = var.selectFolder("Folder");
+                //String out = var.selectFolder("Folder");
+                String outNum = var.getUserInputString(frame,"Split Number","Enter a starting 'split' number (1 - 10):","1");
+                String out = var.getSplitFolderFromNumber(outNum.trim());
+                if (!outNum.contentEquals("")) {
+                    var.configSlpitStartNum = outNum.trim();
+                    var.writeConfigText(ATAG.DOTFOLDER_SPLIT_START, var.configSlpitStartNum);
+                }
                 if (!out.contentEquals("")) {
                     var.configSplitFolderName = out;
                     var.writeConfigText(ATAG.DOTFOLDER_SPLIT_FOLDER_NAME, var.configSplitFolderName);
@@ -111,7 +117,13 @@ public class ATAGShowImage {
 
         buttonCsvSingle.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String out = var.selectFile("CSV");
+                //String out = var.selectFile("CSV");
+                String outNum = var.getUserInputString(frame,"Split Number","Enter a current 'split' number (1 - 10):","1");
+                String out = var.getSplitFolderFromNumber(outNum.trim());
+                if(!outNum.contentEquals("")) {
+                    var.configSplitCurrentNum = outNum.trim();
+                    var.writeConfigText(ATAG.DOTFOLDER_SPLIT_CURRENT, var.configSplitCurrentNum);
+                }
                 if (!out.contentEquals("")) {
                     var.configCsvFileSingle = out;
                     var.writeConfigText(ATAG.DOTFOLDER_SINGLE_CSV_FILENAME, var.configCsvFileSingle);
@@ -122,9 +134,15 @@ public class ATAGShowImage {
 
         buttonCsvSecond.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String out = var.selectFile("CSV");
+                //String out = var.selectFile("CSV");
+                String outNum = var.getUserInputString(frame,"Split Number","Enter a ending 'split' number (1 - 10):","10");
+                String out = var.getSplitFolderFromNumber(outNum.trim());
+                if(!outNum.contentEquals("")) {
+                    var.configSplitStopNum = outNum.trim();
+                    var.writeConfigText(ATAG.DOTFOLDER_SPLIT_END, var.configSplitStopNum);
+                }
                 if (!out.contentEquals("")) {
-                    var.configCsvSecond = out;
+                    var.configCsvSecond = out.trim();
                     var.writeConfigText(ATAG.DOTFOLDER_SECOND_CSV_FILENAME, var.configCsvSecond);
                     setDisplayText();
                 }
@@ -144,7 +162,14 @@ public class ATAGShowImage {
 
         buttonCsvLocal.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String out = var.selectFile("CSV");
+                String outBasename = var.getUserInputString(frame,"Base Name","Enter a string for a file base name:","my");
+                String out = var.getMyCsvFilenameFromBaseString(outBasename, "#");
+                //String out = var.selectFile("CSV");
+                if(!outBasename.contentEquals("")) {
+                    var.configSplitCSVBasename = outBasename;
+                    var.writeConfigText(ATAG.DOTFOLDER_BASENAME, var.configSplitCSVBasename);
+                }
+
                 if (!out.contentEquals("")) {
                     var.configCsvLocal = out;
                     var.writeConfigText(ATAG.DOTFOLDER_LOCAL_DATA_CSV, var.configCsvLocal);
@@ -205,12 +230,15 @@ public class ATAGShowImage {
 
         splitFolderName.setText(var.configSplitFolderName);
         splitFolderName.setToolTipText(var.configSplitFolderName);
+        buttonSplit.setText("Split Start Num");
 
         csvFileSingle.setText(var.configCsvFileSingle);
         csvFileSingle.setText(var.configCsvFileSingle);
+        buttonCsvSingle.setText("Current Split Num");
 
         csvFileSecond.setText(var.configCsvSecond);
         csvFileSecond.setToolTipText(var.configCsvSecond);
+        buttonCsvSecond.setText("Split End Num");
 
         csvFileLocal.setText(var.configCsvLocal);
         csvFileLocal.setToolTipText(var.configCsvLocal);

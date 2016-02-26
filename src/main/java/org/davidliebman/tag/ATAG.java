@@ -21,6 +21,11 @@ public class ATAG {
     public static final String DOTFOLDER_LAST_IMAGE = "image_name";
     public static final String DOTFOLDER_SAVED_CURSOR = "saved_cursor";
 
+    public static final String DOTFOLDER_SPLIT_START = "split_start";
+    public static final String DOTFOLDER_SPLIT_END = "split_end";
+    public static final String DOTFOLDER_SPLIT_CURRENT = "split_current";
+    public static final String DOTFOLDER_BASENAME = "base_name";
+
     public String configRootDatabase = "";
     public String configSplitFolderName = "";
     public String configCsvFileSingle = "";
@@ -35,6 +40,11 @@ public class ATAG {
 
     public String configLastCursor = "";
 
+    public String configSlpitStartNum = "";
+    public String configSplitStopNum = "";
+    public String configSplitCurrentNum = "";
+    public String configSplitCSVBasename = "";
+
     public static final String DEFAULT_ROOT_DATABASE = "workspace";
     public static final String DEFAULT_SPLIT_FOLDERNAME = "split10";
     public static final String DEFAULT_SINGLE_CSV_FILENAME = "some.csv";
@@ -42,6 +52,7 @@ public class ATAG {
     public static final String DEFAULT_LOCAL_DATA_FOLDERNAME = "local";
     public static final String DEFAULT_LOCAL_DATA_CSV = "my.csv";
     public static final String DEFAULT_LAST_IMAGE = "image.png";
+    public static final String DEFAULT_SPLIT_COMBINED = "1 10 1 my";
 
     public String configRootLocal = "";
 
@@ -171,6 +182,15 @@ public class ATAG {
         if(configLastCursor.contentEquals("")) {
             throw new Exception();
         }
+
+        configSlpitStartNum = this.readConfigText(DOTFOLDER_SPLIT_START,"1");
+        configSplitStopNum = this.readConfigText(DOTFOLDER_SPLIT_END,"10");
+        configSplitCurrentNum = this.readConfigText(DOTFOLDER_SPLIT_CURRENT,"1");
+        configSplitCSVBasename = this.readConfigText(DOTFOLDER_BASENAME,"my");
+
+        if(configSlpitStartNum.contentEquals("") || configSplitStopNum.contentEquals("") || configSplitCurrentNum.contentEquals("") || configSplitCSVBasename.contentEquals("")) {
+            throw new Exception();
+        }
     }
 
     public String selectFolder(String description) {
@@ -234,4 +254,31 @@ public class ATAG {
 
         return returnString;
     }
+
+    public String getUserInputString(JFrame frame, String title, String description, String def) {
+
+        String in = (String)JOptionPane.showInputDialog(
+                frame,
+                description,
+                title,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                def);
+
+        return in;
+    }
+
+    public String getSplitFolderFromNumber(String num) {
+        String out = "";
+        out = configRootDatabase + File.separator + "split" + num + File.separator + "train_" + num + ".csv";
+        return out;
+    }
+
+    public String getMyCsvFilenameFromBaseString(String name, String num) {
+        String out = configLocalRoot + File.separator + name.trim() + "_" + num.trim() + ".csv";
+        return out;
+    }
+
+
 }

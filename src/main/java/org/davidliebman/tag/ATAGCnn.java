@@ -35,7 +35,7 @@ public class ATAGCnn extends  Thread {
     private ATAG var;
     private ATAGProcCsv proc;
 
-    private boolean doFit = true;
+    private boolean doFit = false;
     private boolean doTest = true;
     private boolean doLoadSave = true;
     private boolean doSaveCursor = true;
@@ -164,7 +164,7 @@ public class ATAGCnn extends  Thread {
         }
 
         catch (Exception e) {
-            e.printStackTrace(); // this prints stack trace when thread is interrupted!!
+            //e.printStackTrace(); // this prints stack trace when thread is interrupted!!
         }
     }
 
@@ -211,7 +211,7 @@ public class ATAGCnn extends  Thread {
             dos.flush();
             dos.close();
 
-            if (doSaveCursor) var.writeConfigText(ATAG.DOTFOLDER_SAVED_CURSOR, new Integer(cursor).toString());
+            if (doSaveCursor || doFit) var.writeConfigText(ATAG.DOTFOLDER_SAVED_CURSOR, new Integer(cursor).toString());
 
             System.out.println("done save model");
         }

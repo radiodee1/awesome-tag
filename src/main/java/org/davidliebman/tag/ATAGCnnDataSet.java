@@ -275,7 +275,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
             labels[ATAG.CNN_LABELS -1 ][i] = labelnooutput;
 
-            //if(debugMessages || true) {
+
             if(labelnooutput > 0.5d) {
                 //System.out.println("no-out");
             }
@@ -283,10 +283,10 @@ public class ATAGCnnDataSet  implements DataSetIterator {
                 //System.out.println("here detection");
                 globalOutputCount ++;
             }
-            //}
+
         }
 
-        if (globalOutputCount != ATAG.CNN_BATCH_SIZE / ATAG.CNN_LABELS) System.exit(0);
+        if (globalOutputCount != ATAG.CNN_BATCH_SIZE / ATAG.CNN_LABELS) Thread.currentThread().interrupt();//System.exit(0);
 
         if(debugMessages || true) System.out.println("batch totals " + globalOutputCount +" / " + (ATAG.CNN_BATCH_SIZE) + " size="+ listLocal.size() + " cursor=" + cursor + ","+ cursorSize);
 
