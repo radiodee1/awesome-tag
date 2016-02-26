@@ -189,7 +189,18 @@ public class ATAGShowImage {
         buttonModCsv.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (proc != null) {
-                    proc.saveCsvLocal();
+                    //proc.saveCsvLocal();
+                    try {
+                        int start = Integer.valueOf(var.configSlpitStartNum.trim());
+                        int stop = Integer.valueOf(var.configSplitStopNum.trim());
+                        int keep = Integer.valueOf(var.configSplitCurrentNum.trim());
+                        proc.saveCsvLocal(start,stop,keep);
+                    }
+                    catch (Exception i) {
+                        //do nothing
+                    }
+
+
                 }
             }
         });

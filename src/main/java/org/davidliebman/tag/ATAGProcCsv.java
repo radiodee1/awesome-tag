@@ -69,6 +69,13 @@ public class ATAGProcCsv {
     public void clearUnusedList() { listSingle = new ArrayList<CsvLine>();}
 
     private void loadCsvSingle() {
+        loadCsvSingle(var.configSplitCurrentNum);
+    }
+
+    private void loadCsvSingle(String num) {
+
+        String filename = var.getSplitFolderFromNumber(num);
+
         if (debugMessages) System.out.println( "Hello World! -- " + var.configCsvFileSingle );
 
         if (!(new File(var.configCsvFileSingle)).exists()) {
@@ -77,7 +84,7 @@ public class ATAGProcCsv {
 
         listSingle = new ArrayList<CsvLine>();
         headingSingle = new ArrayList<String>();
-        loadAnyCsv(var.configCsvFileSingle, listSingle,headingSingle, CSV_POSITION_FILE_LOCATION);
+        loadAnyCsv(filename, listSingle,headingSingle, CSV_POSITION_FILE_LOCATION);
     }
 
     private void loadCsvLocal() {
@@ -98,6 +105,21 @@ public class ATAGProcCsv {
         processFile(listSingle,headingSingle);
 
         saveAnyCsv(var.configCsvLocal, listLocal,headingLocal,  CSV_POSITION_FILE_LOCATION);
+    }
+
+    public void saveCsvLocal(int start, int stop, int keep) {
+        ArrayList<CsvLine> list = new ArrayList<CsvLine>();
+        for (int i = start ; i <= stop; i ++) {
+            loadCsvSingle(new Integer(i).toString());
+            processFile(listSingle, headingSingle);
+            if (i == keep ) {
+                list = listLocal;
+            }
+            String filename = var.getMyCsvFilenameFromBaseString(var.configSplitCSVBasename, new Integer(i).toString());
+            saveAnyCsv(filename,listLocal,headingLocal, CSV_POSITION_FILE_LOCATION);
+            System.out.println(i + " " + filename);
+        }
+        listLocal = list;
     }
 
 
