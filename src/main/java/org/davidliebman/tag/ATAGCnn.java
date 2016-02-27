@@ -36,8 +36,9 @@ public class ATAGCnn extends  Thread {
 
     private boolean doFit = false;
     private boolean doTest = true;
-    private boolean doLoadSave = true;
+    private boolean doLoadSaveModel = true;
     private boolean doSaveCursor = true;
+    private boolean doLoadData = true;
 
     private int cursor = 0;
     private int split = 0;
@@ -71,12 +72,14 @@ public class ATAGCnn extends  Thread {
 
         DataSetIterator mnistTrain = null;
         DataSetIterator mnistTest = null;
-        try {
-            mnistTrain = new ATAGCnnDataSet(proc.getLocalList(split), var, 0, true, 1.0f - testSplit, seed, 0, true);
-            mnistTest = new ATAGCnnDataSet(proc.getLocalList(split), var, 0, false, testSplit, seed , 0, false);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+
+        if(doLoadData) {
+            try {
+                mnistTrain = new ATAGCnnDataSet(proc.getLocalList(split), var, 0, true, 1.0f - testSplit, seed, 0, true);
+                mnistTest = new ATAGCnnDataSet(proc.getLocalList(split), var, 0, false, testSplit, seed, 0, false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         log.info("Build model....");
@@ -176,6 +179,10 @@ public class ATAGCnn extends  Thread {
     public MultiLayerNetwork getModel() {return model;}
     public void setModel(MultiLayerNetwork m) {model = m;}
 
+    public void setDoFit(boolean d ) {doFit = d;}
+    public void setDoTest( boolean d) {doTest = d;}
+    public void setDoLoadData(boolean d) {doLoadData = d;}
+
     public void setFileName(String name) {
         this.name = name;
 
@@ -189,7 +196,7 @@ public class ATAGCnn extends  Thread {
             File filePath = new File(fileName);
 
             System.out.println("model " + fileName);
-            if (!filePath.exists() || !doLoadSave) return;
+            if (!filePath.exists() || !doLoadSaveModel) return;
 
             DataInputStream dis = new DataInputStream(new FileInputStream(filePath));
             INDArray newParams = Nd4j.read(dis);
@@ -204,7 +211,7 @@ public class ATAGCnn extends  Thread {
 
     public void saveModel(MultiLayerNetwork m)  {
         try {
-            if (!doLoadSave) return;
+            if (!doLoadSaveModel) return;
             model = m;
             //Write the network parameters:
             System.out.println("start model save, please wait...");

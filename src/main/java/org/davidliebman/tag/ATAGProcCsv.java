@@ -1,5 +1,7 @@
 package org.davidliebman.tag;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
@@ -27,6 +29,7 @@ public class ATAGProcCsv {
     public static final int FACE_LABEL_3 = 15;
     public static final int FACE_LABEL_4 = 16;
     public static final int FACE_LABEL_NO_OUTPUT = 17;
+    public static final int FACE_LIST_TOTAL = 18;
 
     public static final double FACE_MOD_AVG = 1.0d;//3.0d/5.0d;
 
@@ -451,6 +454,54 @@ public class ATAGProcCsv {
             var.configLastImage = var.getStartFolder() + File.separator + next.getFileLocation();
         }
         if (debugMessages) System.out.println(var.configLastImage + " prev");
+    }
+
+    public ArrayList<CsvLine> getPredictListFromImage(String filename) {
+        ArrayList<CsvLine> listPredict = new ArrayList<CsvLine>();
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(new File(filename));
+
+        }
+        catch (Exception e) {e.printStackTrace();}
+
+        int top = 0;
+        int bot = image.getHeight();
+        int left = 0;
+        int right = image.getWidth();
+
+        int spanHorizontal = (right - left) / 8;//ATAG.CNN_DIM_SIDE;
+        int spanVertical = (bot - top) / 8;//ATAG.CNN_DIM_SIDE;
+
+        for (int x = left; x < right; x += spanHorizontal) {
+            for (int y = top; y < bot; y += spanVertical) {
+                ///////////////////////
+                CsvLine row = new CsvLine();
+                for (int i = 0; i < FACE_LIST_TOTAL; i ++) {
+                    row.getSpecifications().add(0.0d);
+                }
+                row.setFileLocation(filename);
+
+                row.getSpecifications().remove(FACE_APPROACH_X);
+                row.getSpecifications().add(FACE_APPROACH_X,(double)x);
+
+                row.getSpecifications().remove(FACE_APPROACH_Y);
+                row.getSpecifications().add(FACE_APPROACH_Y, (double) y);
+
+                row.getSpecifications().remove(FACE_HEIGHT);
+                row.getSpecifications().add(FACE_HEIGHT, (double) ATAG.CNN_DIM_SIDE);
+
+                row.getSpecifications().remove(FACE_WIDTH);
+                row.getSpecifications().add(FACE_WIDTH, (double) ATAG.CNN_DIM_SIDE);
+                ///////////////////////
+
+                listPredict.add(row);
+            }
+        }
+
+        saveAnyCsv(var.configLocalRoot + File.separator + "predict.csv",listPredict,null, CSV_POSITION_FILE_LOCATION);
+
+        return  listPredict;
     }
 
     class CsvLine {

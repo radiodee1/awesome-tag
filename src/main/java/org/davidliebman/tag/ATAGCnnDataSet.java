@@ -229,7 +229,10 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
         for(int i = 0; i < ATAG.CNN_BATCH_SIZE; i ++) {
             //System.out.println(list.get(i));
+            String location = listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getFileLocation();
             String filename = var.configRootDatabase + File.separator + listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getFileLocation();
+
+            if (location.startsWith("/")) filename = location;
 
             double facew = listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_WIDTH);
             double faceh = listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_HEIGHT);

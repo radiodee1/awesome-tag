@@ -239,6 +239,7 @@ public class ATAGShowImage {
         buttonPredict.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //
+                ArrayList<ATAGProcCsv.CsvLine> list = proc.getPredictListFromImage(var.configLastImage);
             }
         });
     }
