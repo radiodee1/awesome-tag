@@ -235,6 +235,12 @@ public class ATAGShowImage {
                 imagePanel.repaint();
             }
         });
+
+        buttonPredict.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                //
+            }
+        });
     }
 
     private void setDisplayText() {
