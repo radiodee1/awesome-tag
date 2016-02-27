@@ -257,10 +257,12 @@ public class ATAGShowImage {
                     INDArray output = model.output(ds.getFeatureMatrix());
                     int size = output.length();
                     System.out.println("size " + size);
+                    size = size / ATAG.CNN_BATCH_SIZE;
                     for (int jj = 0; jj < ATAG.CNN_LABELS; jj ++) {
                         for (int ii = 0; ii < ATAG.CNN_BATCH_SIZE; ii ++) {
                             switch (jj) {
                                 case 0:
+
                                     list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_1);
                                     list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_1, output.getDouble(jj * ATAG.CNN_BATCH_SIZE + ii));
                                     break;

@@ -102,6 +102,7 @@ public class ATAGPanel extends JPanel{
                     }
                     showSizes(listFaces.get(i));
                 }
+                if (showPredictBoxes) System.out.println("list length " + listFaces.size());
 
 
             }

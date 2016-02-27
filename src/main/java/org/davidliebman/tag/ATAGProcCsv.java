@@ -473,8 +473,8 @@ public class ATAGProcCsv {
         int spanHorizontal = (right - left) / 8;//ATAG.CNN_DIM_SIDE;
         int spanVertical = (bot - top) / 8;//ATAG.CNN_DIM_SIDE;
 
-        for (int x = left; x < right; x += spanHorizontal) {
-            for (int y = top; y < bot; y += spanVertical) {
+        for (int x = 0; x < 8; x ++) {
+            for (int y = 0; y < 8; y ++) {
                 ///////////////////////
                 CsvLine row = new CsvLine();
                 for (int i = 0; i < FACE_LIST_TOTAL; i ++) {
@@ -483,10 +483,10 @@ public class ATAGProcCsv {
                 row.setFileLocation(filename);
 
                 row.getSpecifications().remove(FACE_APPROACH_X);
-                row.getSpecifications().add(FACE_APPROACH_X,(double)x);
+                row.getSpecifications().add(FACE_APPROACH_X,(double)x * spanHorizontal);
 
                 row.getSpecifications().remove(FACE_APPROACH_Y);
-                row.getSpecifications().add(FACE_APPROACH_Y, (double) y);
+                row.getSpecifications().add(FACE_APPROACH_Y, (double) y * spanVertical);
 
                 row.getSpecifications().remove(FACE_HEIGHT);
                 row.getSpecifications().add(FACE_HEIGHT, (double) ATAG.CNN_DIM_SIDE);

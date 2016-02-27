@@ -68,12 +68,14 @@ public class ATAGCnn extends  Thread {
 
         int inputDim = ATAG.CNN_DIM_SIDE;//80 or 90
 
-        log.info("Load data....");
 
         DataSetIterator mnistTrain = null;
         DataSetIterator mnistTest = null;
 
         if(doLoadData) {
+            log.info("Load data....");
+
+
             try {
                 mnistTrain = new ATAGCnnDataSet(proc.getLocalList(split), var, 0, true, 1.0f - testSplit, seed, 0, true);
                 mnistTest = new ATAGCnnDataSet(proc.getLocalList(split), var, 0, false, testSplit, seed, 0, false);
