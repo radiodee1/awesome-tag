@@ -85,9 +85,9 @@ public class ATAGProcCsv {
 
         String filename = var.getSplitFolderFromNumber(num);
 
-        if (debugMessages) System.out.println( "Hello World! -- " + var.configCsvFileSingle );
+        if (debugMessages || true) System.out.println( "Hello World! -- " + filename );
 
-        if (!(new File(var.configCsvFileSingle)).exists()) {
+        if (!(new File(filename)).exists()) {
             return;
         }
 

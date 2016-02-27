@@ -36,6 +36,7 @@ public class ATAGShowImage {
     private JButton buttonAddLine;
     private JButton buttonPrevious;
     private JButton buttonNext;
+    private JButton buttonPredict;
 
     private ArrayList<ATAGProcCsv.CsvLine> listFaces;
 
@@ -73,6 +74,8 @@ public class ATAGShowImage {
 
         buttonPrevious = new JButton();
         buttonNext = new JButton();
+
+        buttonPredict = new JButton();
 
         buttonImage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
