@@ -20,6 +20,7 @@ public class ATAGPanel extends JPanel{
     //private double fx,fy,fheight,fwidth;
     private boolean addOutline = false;
     private boolean showBlueFaceBox = false;
+    private boolean showPredictBoxes = false;
 
     public ATAGPanel() {
     }
@@ -52,6 +53,8 @@ public class ATAGPanel extends JPanel{
 
     }
 
+    public void setShowPredictBoxes( boolean p ) {showPredictBoxes = p;}
+
     public void showSizes(ATAGProcCsv.CsvLine line) {
         for (int i = 0; i < line.getSpecifications().size(); i ++) {
             if ( i >= ATAGProcCsv.FACE_LABEL_1){
@@ -65,11 +68,13 @@ public class ATAGPanel extends JPanel{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        boolean foundOutput = false;
         if (image != null) {
             g.drawImage(image, 0, 0, null);
 
             if(addOutline) {
                 for (int i = 0; i < listFaces.size(); i ++) {
+                    foundOutput = false;
                     double fx,fy,fwidth, fheight;
                     fx = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_X);
                     fy = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_Y);
@@ -83,13 +88,18 @@ public class ATAGPanel extends JPanel{
                     System.out.println("add line.");
 
                     g.setColor(Color.GREEN);
-                    if (listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_LABEL_NO_OUTPUT) == 1.0d) {
+                    if (listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_LABEL_NO_OUTPUT) >= 0.5d) {
                         g.setColor(Color.RED);
+                    }
+                    else {
+                        foundOutput = true;
                     }
                     fx = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_X);
                     fy = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_Y);
-                    g.drawRect((int)fx,(int)fy, (int)fwidth, (int) fheight);
 
+                    if (foundOutput || !showPredictBoxes) {
+                        g.drawRect((int) fx, (int) fy, (int) fwidth, (int) fheight);
+                    }
                     showSizes(listFaces.get(i));
                 }
 

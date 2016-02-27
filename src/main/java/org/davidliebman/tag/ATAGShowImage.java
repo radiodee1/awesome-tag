@@ -2,6 +2,10 @@ package org.davidliebman.tag;
 
 
 
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.dataset.DataSet;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -213,6 +217,7 @@ public class ATAGShowImage {
                 if (proc.getLocalList() != null) {
                     listFaces = proc.getFirstMatchByName();
                     ((ATAGPanel)imagePanel).setExtraDataFaces(listFaces);
+                    ((ATAGPanel)imagePanel).setShowPredictBoxes(false);
                     imagePanel.repaint();
                 }
             }
@@ -240,6 +245,53 @@ public class ATAGShowImage {
             public void actionPerformed(ActionEvent e) {
                 //
                 ArrayList<ATAGProcCsv.CsvLine> list = proc.getPredictListFromImage(var.configLastImage);
+                try {
+                    ATAGCnnDataSet predictData = new ATAGCnnDataSet(list, var, 0, true, 0.0f, 0, 0, true);
+                    ATAGCnn cnn = new ATAGCnn(var,proc);
+                    cnn.setDoFit(false); // ensure 'run()' does no training
+                    cnn.setDoTest(false); // ensure 'run()' does no training
+                    cnn.setDoLoadData(false); // ensure 'run()' does no training
+                    cnn.run(); // create model and load biases... on this thread!!
+                    MultiLayerNetwork model = cnn.getModel();
+                    DataSet ds = predictData.next(0);
+                    INDArray output = model.output(ds.getFeatureMatrix());
+                    int size = output.length();
+                    System.out.println("size " + size);
+                    for (int jj = 0; jj < ATAG.CNN_LABELS; jj ++) {
+                        for (int ii = 0; ii < ATAG.CNN_BATCH_SIZE; ii ++) {
+                            switch (jj) {
+                                case 0:
+                                    list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_1);
+                                    list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_1, output.getDouble(jj * ATAG.CNN_BATCH_SIZE + ii));
+                                    break;
+                                case 1:
+                                    list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_2);
+                                    list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_2, output.getDouble(jj * ATAG.CNN_BATCH_SIZE + ii));
+                                    break;
+                                case 3:
+                                    list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_3);
+                                    list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_3, output.getDouble(jj * ATAG.CNN_BATCH_SIZE + ii));
+                                    break;
+                                case 4:
+                                    list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_4);
+                                    list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_4, output.getDouble(jj * ATAG.CNN_BATCH_SIZE + ii));
+                                    break;
+                                default:
+                                    //nothing
+                                    break;
+                            }
+                            list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
+                            list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_NO_OUTPUT, output.getDouble(jj * ATAG.CNN_BATCH_SIZE + ii));
+                        }
+
+
+                    }
+                    ((ATAGPanel)imagePanel).setShowPredictBoxes(true);
+                    ((ATAGPanel)imagePanel).setExtraDataFaces(list);
+                    imagePanel.repaint();
+
+                }
+                catch (Exception i ) {i.printStackTrace();}
             }
         });
     }
