@@ -278,7 +278,7 @@ public class ATAGProcCsv {
         ArrayList<CsvLine> list = new ArrayList<CsvLine>();
 
 
-        if (skipOnHeight < 0.5d) { // note: num_of_approaches must be greater than 1!!
+        if (skipOnHeight < 0.5d) { // note: num_of_approaches must be greater than 1!! (2 is good)
             for (int i = 0; i < NUM_OF_APPROACHES; i++) {
 
                 CsvLine out = new CsvLine();
