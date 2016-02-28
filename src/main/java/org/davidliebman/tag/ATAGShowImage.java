@@ -260,27 +260,28 @@ public class ATAGShowImage {
                     size = size / ATAG.CNN_BATCH_SIZE;
                     for (int jj = 0; jj < ATAG.CNN_LABELS; jj ++) {
                         for (int ii = 0; ii < ATAG.CNN_BATCH_SIZE; ii ++) {
-                            switch (jj) {
-                                case 0:
-
-                                    list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_1);
-                                    list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_1, output.getDouble(jj * ATAG.CNN_BATCH_SIZE + ii));
-                                    break;
-                                case 1:
-                                    list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_2);
-                                    list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_2, output.getDouble(jj * ATAG.CNN_BATCH_SIZE + ii));
-                                    break;
-                                case 3:
-                                    list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_3);
-                                    list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_3, output.getDouble(jj * ATAG.CNN_BATCH_SIZE + ii));
-                                    break;
-                                case 4:
-                                    list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_4);
-                                    list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_4, output.getDouble(jj * ATAG.CNN_BATCH_SIZE + ii));
-                                    break;
-                                default:
-                                    //nothing
-                                    break;
+                            if (jj < ATAG.CNN_LABELS - 1) {
+                                switch (jj) {
+                                    case 0:
+                                        list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_1);
+                                        list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_1, output.getDouble(jj * ATAG.CNN_BATCH_SIZE + ii));
+                                        break;
+                                    case 1:
+                                        list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_2);
+                                        list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_2, output.getDouble(jj * ATAG.CNN_BATCH_SIZE + ii));
+                                        break;
+                                    case 3:
+                                        list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_3);
+                                        list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_3, output.getDouble(jj * ATAG.CNN_BATCH_SIZE + ii));
+                                        break;
+                                    case 4:
+                                        list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_4);
+                                        list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_4, output.getDouble(jj * ATAG.CNN_BATCH_SIZE + ii));
+                                        break;
+                                    default:
+                                        //nothing
+                                        break;
+                                }
                             }
                             list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
                             list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_NO_OUTPUT, output.getDouble(jj * ATAG.CNN_BATCH_SIZE + ii));

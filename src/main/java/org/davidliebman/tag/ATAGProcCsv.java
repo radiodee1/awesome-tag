@@ -13,7 +13,7 @@ public class ATAGProcCsv {
 
     public static final int CSV_POSITION_FILE_LOCATION = 2;
 
-    public static final int NUM_OF_APPROACHES = 1; //2
+    public static final int NUM_OF_APPROACHES = 2; //2
     public static final int APPROACH_IS_CLOSE = 70;
     public static final int NUM_OF_SKIPPED_CONSECUTIVE_NO_OUTPUT = 1;
 
@@ -264,131 +264,125 @@ public class ATAGProcCsv {
         double approachdist = 0;
         double approachavg = 0;
 
+        double skipOnHeight = 0;
 
 
         if(fheight > max_size_vertical) max_size_vertical = fheight;
-
+        if (fheight > ATAG.CNN_DIM_SIDE) skipOnHeight = 1.0d;
 
 
         ArrayList<CsvLine> list = new ArrayList<CsvLine>();
 
-        for (int i = 0; i < NUM_OF_APPROACHES; i ++) {
 
-            CsvLine out = new CsvLine();
-            out.setFileLocation(line.getFileLocation());
-            for (int j = 0; j < line.getSpecifications().size(); j ++) {
-                out.getSpecifications().add(line.getSpecifications().get(j));
-            }
+        if (skipOnHeight > 0.5d) { // note: num_of_approaches must be greater than 1!!
+            for (int i = 0; i < NUM_OF_APPROACHES; i++) {
 
-            if (i != 0) {
-                double changex =  r.nextInt((int) fwidth) - fwidth / 2.0d;
-                double changey =  r.nextInt((int) fheight) - fheight / 2.0d;
-
-                if (grossImageChoice) {
-                    changex = fwidth * (r.nextInt(2) -1 );
-                    if(changex == 0) changex = fwidth;
+                CsvLine out = new CsvLine();
+                out.setFileLocation(line.getFileLocation());
+                for (int j = 0; j < line.getSpecifications().size(); j++) {
+                    out.getSpecifications().add(line.getSpecifications().get(j));
                 }
 
-                approachx = fx + changex;
-                approachy = fy + changey;
-                approachdist = Math.sqrt(Math.pow(fx - approachx, 2) + Math.pow(fy - approachy, 2));
-            }
-            else {
-                approachx = fx;
-                approachy = fy;
-                approachdist = 0;
-            }
+                if (i != 0) {
+                    double changex = r.nextInt((int) fwidth) - fwidth / 2.0d;
+                    double changey = r.nextInt((int) fheight) - fheight / 2.0d;
 
-            avg_approach_dist += approachdist;
-            approachavg += approachdist;
+                    if (grossImageChoice) {
+                        changex = fwidth * (r.nextInt(2) - 1);
+                        if (changex == 0) changex = fwidth;
+                    }
+
+                    approachx = fx + changex;
+                    approachy = fy + changey;
+                    approachdist = Math.sqrt(Math.pow(fx - approachx, 2) + Math.pow(fy - approachy, 2));
+                } else {
+                    approachx = fx;
+                    approachy = fy;
+                    approachdist = 0;
+                }
+
+                avg_approach_dist += approachdist;
+                approachavg += approachdist;
 
 
+                out.getSpecifications().add(approachx);
+                out.getSpecifications().add(approachy);
+                out.getSpecifications().add(approachdist);
+                //out.getSpecifications().add(labelOutput);
 
-            out.getSpecifications().add(approachx);
-            out.getSpecifications().add(approachy);
-            out.getSpecifications().add(approachdist);
-            //out.getSpecifications().add(labelOutput);
-
-            list.add(out);
-        }
-
-        approachavg = approachavg / NUM_OF_APPROACHES;
-
-        for (int i = 0; i< NUM_OF_APPROACHES; i ++) {
-
-            approachdist = list.get(i).getSpecifications().get(FACE_APPROACH_DIST);
-
-            double labelsize1 = 0,labelsize2 = 0, labelsize3 = 0, labelsize4 = 0, labelnooutput = 0;
-
-            ////////////////////////////
-            if ((fheight <= FACE_1 && fheight > 0) || (fheight > FACE_1 && ATAG.CNN_LABELS -1 == 1) )  {
-                labelsize1 = 1;
-                labelsize2 = 0;
-                labelsize3 = 0;
-                labelsize4 = 0;
-            }
-            else if((fheight <= FACE_2 && fheight > FACE_1) || (fheight > FACE_2 && ATAG.CNN_LABELS -1 == 2)) {
-                labelsize1 = 0;
-                labelsize2 = 1;
-                labelsize3 = 0;
-                labelsize4 = 0;
-            }
-            else if ((fheight <= FACE_3 && fheight > FACE_2) || (fheight > FACE_3 && ATAG.CNN_LABELS -1 == 3)) {
-                labelsize1 = 0;
-                labelsize2 = 0;
-                labelsize3 = 1;
-                labelsize4 = 0;
-            }
-            else if ( fheight > FACE_3){
-                labelsize1 = 0;
-                labelsize2 = 0;
-                labelsize3 = 0;
-                labelsize4 = 1;
+                list.add(out);
             }
 
-            if ((approachdist <= approachavg / FACE_MOD_AVG || (ATAG.CNN_LABELS == 1 && approachdist < 1) )&& fheight <= ATAG.CNN_DIM_SIDE * 1.25) {
-                labelnooutput = 0;
-                num_positive_output ++;
-
-            }
-            else {
-                labelnooutput = 1;
-                labelsize1 = 0;
-                labelsize2 = 0;
-                labelsize3 = 0;
-                labelsize4 = 0;
-            }
-            ///////////////////////////
-
-            list.get(i).getSpecifications().add(labelsize1);
-            list.get(i).getSpecifications().add(labelsize2);
-            list.get(i).getSpecifications().add(labelsize3);
-            list.get(i).getSpecifications().add(labelsize4);
-            list.get(i).getSpecifications().add(labelnooutput);
+            approachavg = approachavg / NUM_OF_APPROACHES;
 
 
+            for (int i = 0; i < NUM_OF_APPROACHES; i++) {
 
-            if (num_of_skipped_no_output < NUM_OF_SKIPPED_CONSECUTIVE_NO_OUTPUT && labelnooutput > 0.5d) {
-                listLocal.add(list.get(i));
-                num_of_skipped_no_output ++;//= 0;
-            }
-            else if(labelnooutput < 0.5d) {
-                if (num_of_skipped_no_output == NUM_OF_SKIPPED_CONSECUTIVE_NO_OUTPUT) {
+                approachdist = list.get(i).getSpecifications().get(FACE_APPROACH_DIST);
+
+                double labelsize1 = 0, labelsize2 = 0, labelsize3 = 0, labelsize4 = 0, labelnooutput = 0;
+
+                ////////////////////////////
+                if ((fheight <= FACE_1 && fheight > 0) || (fheight > FACE_1 && ATAG.CNN_LABELS - 1 == 1)) {
+                    labelsize1 = 1;
+                    labelsize2 = 0;
+                    labelsize3 = 0;
+                    labelsize4 = 0;
+                } else if ((fheight <= FACE_2 && fheight > FACE_1) || (fheight > FACE_2 && ATAG.CNN_LABELS - 1 == 2)) {
+                    labelsize1 = 0;
+                    labelsize2 = 1;
+                    labelsize3 = 0;
+                    labelsize4 = 0;
+                } else if ((fheight <= FACE_3 && fheight > FACE_2) || (fheight > FACE_3 && ATAG.CNN_LABELS - 1 == 3)) {
+                    labelsize1 = 0;
+                    labelsize2 = 0;
+                    labelsize3 = 1;
+                    labelsize4 = 0;
+                } else if (fheight > FACE_3) {
+                    labelsize1 = 0;
+                    labelsize2 = 0;
+                    labelsize3 = 0;
+                    labelsize4 = 1;
+                }
+
+                if ((approachdist <= approachavg / FACE_MOD_AVG || (ATAG.CNN_LABELS == 1 && approachdist < 1)) && fheight <= ATAG.CNN_DIM_SIDE * 1.25) {
+                    labelnooutput = 0;
+                    num_positive_output++;
+
+                } else {
+                    labelnooutput = 1;
+                    labelsize1 = 0;
+                    labelsize2 = 0;
+                    labelsize3 = 0;
+                    labelsize4 = 0;
+                }
+                ///////////////////////////
+
+                list.get(i).getSpecifications().add(labelsize1);
+                list.get(i).getSpecifications().add(labelsize2);
+                list.get(i).getSpecifications().add(labelsize3);
+                list.get(i).getSpecifications().add(labelsize4);
+                list.get(i).getSpecifications().add(labelnooutput);
+
+
+                if (num_of_skipped_no_output < NUM_OF_SKIPPED_CONSECUTIVE_NO_OUTPUT && labelnooutput > 0.5d) {
                     listLocal.add(list.get(i));
+                    num_of_skipped_no_output++;//= 0;
+                } else if (labelnooutput < 0.5d) {
+                    if (num_of_skipped_no_output == NUM_OF_SKIPPED_CONSECUTIVE_NO_OUTPUT) {
+                        listLocal.add(list.get(i));
+                        num_of_skipped_no_output = 0;
+                    } else {
+                        listSecond.add(list.get(i));
+                    }
+                } else if (num_of_skipped_no_output >= NUM_OF_SKIPPED_CONSECUTIVE_NO_OUTPUT && listSecond.size() > 0) {
+                    listLocal.add(listSecond.get(0));
+                    listSecond.remove(0);
                     num_of_skipped_no_output = 0;
                 }
-                else {
-                    listSecond.add(list.get(i));
-                }
             }
-            else if ( num_of_skipped_no_output >= NUM_OF_SKIPPED_CONSECUTIVE_NO_OUTPUT && listSecond.size() > 0) {
-                listLocal.add(listSecond.get(0));
-                listSecond.remove(0);
-                num_of_skipped_no_output = 0;
-            }
+
         }
-
-
     }
 
     public ArrayList<CsvLine> getFirstMatchByName() {
