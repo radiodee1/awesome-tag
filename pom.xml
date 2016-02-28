@@ -23,11 +23,11 @@
       <version>0.4-rc3.9-SNAPSHOT</version>
     </dependency>
 
-    <!-- dependency>
+    <dependency>
       <groupId>org.nd4j</groupId>
       <artifactId>nd4j-x86</artifactId>
       <version>0.4-rc3.9-SNAPSHOT</version>
-    </dependency -->
+    </dependency>
 
     <dependency>
       <groupId>org.nd4j</groupId>

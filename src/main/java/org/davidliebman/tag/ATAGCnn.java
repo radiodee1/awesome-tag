@@ -50,7 +50,7 @@ public class ATAGCnn extends  Thread {
     }
 
     public void run() {
-
+        System.setProperty("java.library.path","/usr/local/cuda/lib64");
 
         Nd4j.ENFORCE_NUMERICAL_STABILITY =  true;
 
