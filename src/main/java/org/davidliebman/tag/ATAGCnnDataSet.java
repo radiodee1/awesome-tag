@@ -46,6 +46,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     private boolean debugDontCenter = true;
     private boolean debugNoThreshold = true;
     private boolean debugDoNotSplit = false;
+    private boolean orderAsAlternate = true;
 
     private int globalOutputCount = 0;
 
@@ -90,6 +91,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
                     int arrayPos1D = yPixel * ATAG.CNN_DIM_SIDE  * ATAG.CNN_CHANNELS + xPixel * ATAG.CNN_CHANNELS ;
 
+
                     int alpha = (color >> 24) & 0xff;
                     int red = (color >> 16) & 0xff;
                     int green = (color >> 8) & 0xff;
@@ -120,11 +122,20 @@ public class ATAGCnnDataSet  implements DataSetIterator {
                         array1D[arrayPos1D + 2] = array2D[yPixel][xPixel][2];
                     }
                     else {
-                        array1D[arrayPos1D + 0] = red / 255.0f;//array2D[yPixel][xPixel][0];
+                        if (!orderAsAlternate) {
+                            array1D[arrayPos1D + 0] = red / 255.0f;// here R,G, and B are side by side.
 
-                        array1D[arrayPos1D + 1] = green / 255.0f;//array2D[yPixel][xPixel][1];
+                            array1D[arrayPos1D + 1] = green / 255.0f;
 
-                        array1D[arrayPos1D + 2] = blue / 255.0f;//array2D[yPixel][xPixel][2];
+                            array1D[arrayPos1D + 2] = blue / 255.0f;
+                        }
+                        else {
+                            array1D[ 0 * ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE + yPixel * ATAG.CNN_DIM_SIDE + xPixel] = red / 255.0f;//array2D[yPixel][xPixel][0];
+
+                            array1D[ 1 * ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE + yPixel * ATAG.CNN_DIM_SIDE + xPixel] = green / 255.0f;//array2D[yPixel][xPixel][1];
+
+                            array1D[ 2 * ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE + yPixel * ATAG.CNN_DIM_SIDE + xPixel] = blue / 255.0f;//array2D[yPixel][xPixel][2];
+                        }
                     }
 
                     if (debugByteOrder) {
