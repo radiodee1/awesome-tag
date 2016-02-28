@@ -56,6 +56,7 @@ public class ATAGProcCsv {
     private int num_of_skipped_no_output = 0;
 
     private boolean debugMessages = false;
+    private boolean doSkipOnHeight = true;
 
     public ATAGProcCsv (ATAG v) {
         var = v;
@@ -271,13 +272,13 @@ public class ATAGProcCsv {
 
 
         if (fheight > max_size_vertical) max_size_vertical = fheight;
-        if (fheight > ATAG.CNN_DIM_SIDE * SIZE_TOO_BIG) skipOnHeight = 1.0d;
+        if (fheight > ATAG.CNN_DIM_SIDE * SIZE_TOO_BIG && doSkipOnHeight) skipOnHeight = 1.0d;
 
 
         ArrayList<CsvLine> list = new ArrayList<CsvLine>();
 
 
-        if (skipOnHeight > 0.5d) { // note: num_of_approaches must be greater than 1!!
+        if (skipOnHeight < 0.5d) { // note: num_of_approaches must be greater than 1!!
             for (int i = 0; i < NUM_OF_APPROACHES; i++) {
 
                 CsvLine out = new CsvLine();
