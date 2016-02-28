@@ -12,6 +12,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <nd4j.version>0.4-rc3.9-SNAPSHOT</nd4j.version>
   </properties>
 
 
@@ -20,20 +21,26 @@
     <dependency>
       <groupId>org.deeplearning4j</groupId>
       <artifactId>deeplearning4j-core</artifactId>
-      <version>0.4-rc3.9-SNAPSHOT</version>
+      <version>${nd4j.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.nd4j</groupId>
       <artifactId>nd4j-x86</artifactId>
-      <version>0.4-rc3.9-SNAPSHOT</version>
+      <version>${nd4j.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.nd4j</groupId>
       <artifactId>nd4j-jcublas-7.5</artifactId>
-      <version>0.4-rc3.9-SNAPSHOT</version>
+      <version>${nd4j.version}</version>
     </dependency>
+
+    <!-- dependency>
+      <groupId>org.nd4j</groupId>
+      <artifactId>jcuda</artifactId>
+      <version>6.5</version>
+    </dependency -->
 
 
     <dependency>
