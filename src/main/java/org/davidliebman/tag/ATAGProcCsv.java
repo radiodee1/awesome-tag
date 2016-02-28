@@ -16,6 +16,7 @@ public class ATAGProcCsv {
     public static final int NUM_OF_APPROACHES = 2; //2
     public static final int APPROACH_IS_CLOSE = 70;
     public static final int NUM_OF_SKIPPED_CONSECUTIVE_NO_OUTPUT = 1;
+    public static final double SIZE_TOO_BIG = 1.25d;
 
     public static final int FACE_X = 6;
     public static final int FACE_Y = 7;
@@ -242,6 +243,7 @@ public class ATAGProcCsv {
         for (int i = 0; i < listSecond.size(); i ++) {
             //listLocal.add(listSecond.get(i));
         }
+        int num_held = listSecond.size();
         listSecond = null;
 
         avg_approach_dist = avg_approach_dist / (listLocal.size());
@@ -250,6 +252,7 @@ public class ATAGProcCsv {
             System.out.println("average approach dist " + avg_approach_dist);
             System.out.println("max face height " + max_size_vertical);
             System.out.println("num positive outputs " + num_positive_output + " / " + listLocal.size());
+            System.out.println("num held " + num_held);
         }
     }
 
@@ -267,8 +270,8 @@ public class ATAGProcCsv {
         double skipOnHeight = 0;
 
 
-        if(fheight > max_size_vertical) max_size_vertical = fheight;
-        if (fheight > ATAG.CNN_DIM_SIDE) skipOnHeight = 1.0d;
+        if (fheight > max_size_vertical) max_size_vertical = fheight;
+        if (fheight > ATAG.CNN_DIM_SIDE * SIZE_TOO_BIG) skipOnHeight = 1.0d;
 
 
         ArrayList<CsvLine> list = new ArrayList<CsvLine>();
@@ -345,7 +348,7 @@ public class ATAGProcCsv {
                     labelsize4 = 1;
                 }
 
-                if ((approachdist <= approachavg / FACE_MOD_AVG || (ATAG.CNN_LABELS == 1 && approachdist < 1)) && fheight <= ATAG.CNN_DIM_SIDE * 1.25) {
+                if ((approachdist <= approachavg / FACE_MOD_AVG || (ATAG.CNN_LABELS == 1 && approachdist < 1)) && fheight <= ATAG.CNN_DIM_SIDE * SIZE_TOO_BIG) {
                     labelnooutput = 0;
                     num_positive_output++;
 
