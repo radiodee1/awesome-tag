@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: org.nd4j:canova-data-image:0.0.0.15-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/nd4j/canova-data-image/0.0.0.15-SNAPSHOT/canova-data-image-0.0.0.15-SNAPSHOT.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/nd4j/canova-data-image/0.0.0.15-SNAPSHOT/canova-data-image-0.0.0.15-20160229.010850-83.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/org/nd4j/canova-data-image/0.0.0.15-SNAPSHOT/canova-data-image-0.0.0.15-SNAPSHOT-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/nd4j/canova-data-image/0.0.0.15-SNAPSHOT/canova-data-image-0.0.0.15-20160229.010850-83-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/nd4j/canova-data-image/0.0.0.15-SNAPSHOT/canova-data-image-0.0.0.15-SNAPSHOT-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/nd4j/canova-data-image/0.0.0.15-SNAPSHOT/canova-data-image-0.0.0.15-20160229.010850-83-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

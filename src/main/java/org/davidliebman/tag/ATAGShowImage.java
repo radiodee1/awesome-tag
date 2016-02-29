@@ -50,6 +50,7 @@ public class ATAGShowImage {
     JFrame frame ;
 
     private boolean debugConsecOutput = false;
+    private MultiLayerNetwork model = null;
 
 
     private void createUIComponents() {
@@ -249,12 +250,17 @@ public class ATAGShowImage {
                 ArrayList<ATAGProcCsv.CsvLine> list = proc.getPredictListFromImage(var.configLastImage);
                 try {
                     ATAGCnnDataSet predictData = new ATAGCnnDataSet(list, var, 0, true, 0.0f, 0, 0, true);
-                    ATAGCnn cnn = new ATAGCnn(var,proc);
-                    cnn.setDoFit(false); // ensure 'run()' does no training
-                    cnn.setDoTest(false); // ensure 'run()' does no training
-                    cnn.setDoLoadData(false); // ensure 'run()' does no training
-                    cnn.run(); // create model and load biases... on this thread!!
-                    MultiLayerNetwork model = cnn.getModel();
+
+                    if (model == null) {
+
+                        ATAGCnn cnn = new ATAGCnn(var,proc);
+                        cnn.setDoFit(false); // ensure 'run()' does no training
+                        cnn.setDoTest(false); // ensure 'run()' does no training
+                        cnn.setDoLoadData(false); // ensure 'run()' does no training
+                        cnn.run(); // create model and load biases... on this thread!!
+
+                        model = cnn.getModel();
+                    }
                     DataSet ds = predictData.next(0);
                     INDArray output = model.output(ds.getFeatureMatrix());
                     int size = output.length();
