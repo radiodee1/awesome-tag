@@ -263,9 +263,11 @@ public class ATAGShowImage {
                     }
                     DataSet ds = predictData.next(0);
                     INDArray output = model.output(ds.getFeatureMatrix());
+
                     int size = output.length();
                     System.out.println("size " + size);
-                    size = size / ATAG.CNN_BATCH_SIZE; // what too do with this??
+                    size = size / ATAG.CNN_BATCH_SIZE; // what to do with this??
+
                     for (int jj = 0; jj < ATAG.CNN_LABELS; jj ++) {
                         for (int ii = 0; ii < ATAG.CNN_BATCH_SIZE; ii ++) {
                             int labelIndexNumbered = 0;
