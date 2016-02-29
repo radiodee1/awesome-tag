@@ -34,7 +34,7 @@ public class ATAGCnn extends  Thread {
     private ATAG var;
     private ATAGProcCsv proc;
 
-    private boolean doFit = true;
+    private boolean doFit = false;
     private boolean doTest = true;
     private boolean doLoadSaveModel = true;
     private boolean doSaveCursor = true;
@@ -62,11 +62,11 @@ public class ATAGCnn extends  Thread {
         int nEpochs = 1;// 10
         int iterations = 1;
         int seed = 123;
-        float testSplit = 0.05f;
+        float testSplit = 0.025f;
 
         split = Integer.valueOf(var.configLastSplit);
 
-        int inputDim = ATAG.CNN_DIM_SIDE;//80 or 90
+        int inputDim = ATAG.CNN_DIM_SIDE;//60 or 90
 
 
         DataSetIterator mnistTrain = null;
@@ -78,7 +78,7 @@ public class ATAGCnn extends  Thread {
 
             try {
                 mnistTrain = new ATAGCnnDataSet(proc.getLocalList(split), var, 0, true, 1.0f - testSplit, seed, 0, true);
-                mnistTest = new ATAGCnnDataSet(proc.getLocalList(split), var, 0, false, testSplit, seed, 0, false);
+                mnistTest = new ATAGCnnDataSet(proc.getLocalList(1), var, 0, false, testSplit, seed, 0, false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -168,9 +168,11 @@ public class ATAGCnn extends  Thread {
                     }
                     log.info(eval.stats());
                     mnistTest.reset();
+
+                    System.out.println("end of cnn op");
+
                 }
             }
-            log.info("****************Example finished********************");
         }
 
         catch (Exception e) {
