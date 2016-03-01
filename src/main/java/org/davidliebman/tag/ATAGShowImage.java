@@ -252,7 +252,7 @@ public class ATAGShowImage {
                 try {
                     ATAGCnnDataSet predictData = new ATAGCnnDataSet(list, var, 0, true, 0.0f, 0, 0, true);
 
-                    if (model == null) {
+                    if (model == null || true) {
 
                         ATAGCnn cnn = new ATAGCnn(var,proc);
                         cnn.setDoFit(false); // ensure 'run()' does no training

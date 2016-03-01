@@ -94,7 +94,7 @@ public class ATAGCnn extends  Thread {
                 .weightInit(WeightInit.XAVIER)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .updater(Updater.NESTEROVS).momentum(0.9)
-                .list(5)
+                .list(4)
                 .layer(0, new ConvolutionLayer.Builder(5, 5)
                         .nIn(nChannels)
                         .stride(1, 1)

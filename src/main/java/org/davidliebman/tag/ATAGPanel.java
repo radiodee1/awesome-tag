@@ -92,6 +92,10 @@ public class ATAGPanel extends JPanel{
                         g.setColor(Color.RED);
                     }
                     else {
+                        //foundOutput = true;
+                    }
+                    if (listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_LABEL_1) >= 0.5d) {
+                        g.setColor(Color.GREEN);
                         foundOutput = true;
                     }
                     fx = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_X);
