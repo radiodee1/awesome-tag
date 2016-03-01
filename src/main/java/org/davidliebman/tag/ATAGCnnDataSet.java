@@ -300,7 +300,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
         }
 
-        if (globalOutputCount != ATAG.CNN_BATCH_SIZE / ATAG.CNN_LABELS && globalOutputCount != ATAG.CNN_BATCH_SIZE)  Thread.currentThread().interrupt();//System.exit(0);
+        //if (globalOutputCount != ATAG.CNN_BATCH_SIZE / ATAG.CNN_LABELS && globalOutputCount != ATAG.CNN_BATCH_SIZE)  Thread.currentThread().interrupt();//System.exit(0);
 
         if(debugMessages || true) System.out.println("batch totals " + globalOutputCount +"/" + (ATAG.CNN_BATCH_SIZE) + " size="+ listLocal.size() + " cursor=" + cursor + "/"+ cursorSize);
 

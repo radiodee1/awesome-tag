@@ -134,6 +134,12 @@ public class ATAGProcCsv {
             System.out.println(i + " " + filename);
         }
         listLocal = list;
+
+        //clear saved cursor and split num
+        var.configLastCursor = "0";
+        var.configLastSplit = "1";
+        var.writeConfigText(ATAG.DOTFOLDER_SAVED_CURSOR, var.configLastCursor);
+        var.writeConfigText(ATAG.DOTFOLDER_SAVED_SPLIT, var.configLastSplit);
     }
 
 
@@ -228,7 +234,7 @@ public class ATAGProcCsv {
         }
 
 
-        System.out.println("done save");
+        System.out.println("done save csv");
     }
 
     private void processFile(ArrayList<CsvLine> csv, ArrayList<String> labels) {

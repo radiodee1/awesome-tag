@@ -52,6 +52,7 @@ public class ATAGShowImage {
     private boolean debugConsecOutput = false;
     private MultiLayerNetwork model = null;
 
+    private ATAGCnn cnnThread = null;
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
@@ -257,6 +258,7 @@ public class ATAGShowImage {
                         cnn.setDoFit(false); // ensure 'run()' does no training
                         cnn.setDoTest(false); // ensure 'run()' does no training
                         cnn.setDoLoadData(false); // ensure 'run()' does no training
+                        cnn.setDoLoadSaveModel(false);
                         cnn.run(); // create model and load biases... on this thread!!
 
                         model = cnn.getModel();
@@ -319,6 +321,70 @@ public class ATAGShowImage {
                 catch (Exception i ) {i.printStackTrace();}
             }
         });
+
+        buttonTrainCNN.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                model = null;
+                if (cnnThread != null&& cnnThread.isAlive()) {
+                    // TERMINATE AND SET TO NULL
+                    cnnThread.interrupt();
+                    System.out.println("just interrupted");
+                    try {
+                        cnnThread.join();
+                        System.out.println("just joined");
+                        cnnThread = null;
+                    }
+                    catch (Exception i) {
+                        i.printStackTrace();
+                    }
+                }
+                else {
+                    // CREATE INSTANCE AND RUN
+                    try {
+
+                        cnnThread = new ATAGCnn(var, proc);
+                        cnnThread.setDoLoadData(true); //ATAGCnnDataSet.java
+                        cnnThread.setDoTest(false);
+                        cnnThread.setDoFit(true);
+                        cnnThread.setDoLoadSaveModel(true);
+                        cnnThread.start();
+                    }
+                    catch (Exception i) {i.printStackTrace();}
+
+                }
+            }
+        });
+
+        buttonTestCNN.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                model = null;
+                if (cnnThread != null && cnnThread.isAlive()) {
+                    // TERMINATE AND SET TO NULL
+                    cnnThread.interrupt();
+                    System.out.println("just interrupted");
+                    try {
+                        cnnThread.join();
+                        System.out.println("just joined");
+                        cnnThread = null;
+                    }
+                    catch (Exception i) {i.printStackTrace();}
+                }
+                else {
+                    // CREATE INSTANCE AND RUN
+                    try {
+
+                        cnnThread = new ATAGCnn(var, proc);
+                        cnnThread.setDoLoadData(true); //ATAGCnnDataSet.java
+                        cnnThread.setDoTest(true);
+                        cnnThread.setDoFit(false);
+                        cnnThread.setDoLoadSaveModel(false);
+                        cnnThread.start();
+                    }
+                    catch (Exception i) {i.printStackTrace();}
+
+                }
+            }
+        });
     }
 
     private void setDisplayText() {
@@ -364,6 +430,7 @@ public class ATAGShowImage {
 
         var = v;
         proc = p;
+        proc.loadCsvStart();
         setDisplayText();
         imagePanel.repaint();
     }

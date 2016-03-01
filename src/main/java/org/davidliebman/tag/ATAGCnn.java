@@ -34,7 +34,7 @@ public class ATAGCnn extends  Thread {
     private ATAG var;
     private ATAGProcCsv proc;
 
-    private boolean doFit = true;
+    private boolean doFit = false;
     private boolean doTest = true;
     private boolean doLoadSaveModel = true;
     private boolean doSaveCursor = true;
@@ -177,6 +177,7 @@ public class ATAGCnn extends  Thread {
 
         catch (Exception e) {
             //e.printStackTrace(); // this prints stack trace when thread is interrupted!!
+            saveModel(model);
         }
     }
 
@@ -186,6 +187,7 @@ public class ATAGCnn extends  Thread {
     public void setDoFit(boolean d ) {doFit = d;}
     public void setDoTest( boolean d) {doTest = d;}
     public void setDoLoadData(boolean d) {doLoadData = d;}
+    public void setDoLoadSaveModel( boolean d) { doLoadSaveModel = d;}
 
     public void setFileName(String name) {
         this.name = name;
