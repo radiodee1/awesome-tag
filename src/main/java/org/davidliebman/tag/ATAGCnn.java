@@ -39,6 +39,7 @@ public class ATAGCnn extends  Thread {
     private boolean doLoadSaveModel = true;
     private boolean doSaveCursor = true;
     private boolean doLoadData = true;
+    private boolean modelSaved = false;
 
     private int cursor = 0;
     private int split = 0;
@@ -93,11 +94,11 @@ public class ATAGCnn extends  Thread {
                 .weightInit(WeightInit.XAVIER)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .updater(Updater.NESTEROVS).momentum(0.9)
-                .list(4)
+                .list(5)
                 .layer(0, new ConvolutionLayer.Builder(5, 5)
                         .nIn(nChannels)
                         .stride(1, 1)
-                        .nOut(20) //20
+                        .nOut(30) //20
                         .dropOut(0.5)
                         .activation("relu")
                         .build())
@@ -107,6 +108,8 @@ public class ATAGCnn extends  Thread {
                         .build())
                 .layer(2, new DenseLayer.Builder().activation("relu")
                         .nOut(1000).build()) // 500
+                //.layer(3, new DenseLayer.Builder().activation("relu")
+                //        .nOut(500).build()) // 500
                 .layer(3, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
                         .nOut(outputNum)
                         .activation("softmax")
@@ -135,6 +138,7 @@ public class ATAGCnn extends  Thread {
                 if (doFit) {
                     log.info("Train model.... " + mnistTrain.numExamples());
 
+                    modelSaved = false;
                     cursor = Integer.valueOf(var.configLastCursor);
                     if (cursor > ((ATAGCnnDataSet)mnistTrain).cursorSize()) cursor = 0;
 
@@ -237,8 +241,11 @@ public class ATAGCnn extends  Thread {
             Nd4j.write(model.params(), dos);
             dos.flush();
             dos.close();
+            modelSaved = true;
 
             if (doSaveCursor || doFit) {
+                var.configLastCursor = new Integer(cursor).toString();
+                var.configLastSplit = new Integer(split).toString();
                 var.writeConfigText(ATAG.DOTFOLDER_SAVED_CURSOR, new Integer(cursor).toString());
                 var.writeConfigText(ATAG.DOTFOLDER_SAVED_SPLIT, new Integer(split).toString());
             }
@@ -252,6 +259,7 @@ public class ATAGCnn extends  Thread {
 
     public void setExitEarly(boolean in) {exitEarly = in;}
     public boolean getDoFit() {return doFit;}
+    public boolean getModelSaved() {return modelSaved;}
 
     public static void main(String [] args) {
 

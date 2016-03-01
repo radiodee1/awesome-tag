@@ -420,7 +420,7 @@ public class ATAGShowImage {
 
     }
 
-
+    public ATAGCnn getCnnThread() {return cnnThread;}
 
 
     public   ATAGShowImage(ATAG v, ATAGProcCsv p) {
