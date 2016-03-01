@@ -378,7 +378,7 @@ public class ATAGShowImage {
                         cnnThread.setDoLoadData(true); //ATAGCnnDataSet.java
                         cnnThread.setDoTest(true);
                         cnnThread.setDoFit(false);
-                        cnnThread.setDoLoadSaveModel(false);
+                        cnnThread.setDoLoadSaveModel(true); // load and save!
                         cnnThread.setExitEarly(false);
                         cnnThread.start();
                     }

@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: org.nd4j:nd4j-api:0.4-rc3.9-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/nd4j/nd4j-api/0.4-rc3.9-SNAPSHOT/nd4j-api-0.4-rc3.9-20160227.001840-169.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/nd4j/nd4j-api/0.4-rc3.9-SNAPSHOT/nd4j-api-0.4-rc3.9-20160301.065841-179.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/org/nd4j/nd4j-api/0.4-rc3.9-SNAPSHOT/nd4j-api-0.4-rc3.9-20160227.001840-169-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/nd4j/nd4j-api/0.4-rc3.9-SNAPSHOT/nd4j-api-0.4-rc3.9-20160301.065841-179-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/nd4j/nd4j-api/0.4-rc3.9-SNAPSHOT/nd4j-api-0.4-rc3.9-20160227.001840-169-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/nd4j/nd4j-api/0.4-rc3.9-SNAPSHOT/nd4j-api-0.4-rc3.9-20160301.065841-179-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

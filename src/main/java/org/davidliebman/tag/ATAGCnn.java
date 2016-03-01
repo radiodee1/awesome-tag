@@ -226,7 +226,7 @@ public class ATAGCnn extends  Thread {
 
     public void saveModel(MultiLayerNetwork m)  {
         try {
-            if (!doLoadSaveModel) return;
+            if (!doLoadSaveModel || !doFit) return;
             model = m;
             //Write the network parameters:
             System.out.println("start model save, please wait...");
