@@ -130,7 +130,7 @@ public class ATAGCnn extends  Thread {
 
             model.setListeners(new ScoreIterationListener(1));
             for (int i = 0; i < nEpochs; i++) {
-                if (exitEarly) return;
+                if (exitEarly) throw new Exception();
 
                 if (doFit) {
                     log.info("Train model.... " + mnistTrain.numExamples());
@@ -144,6 +144,8 @@ public class ATAGCnn extends  Thread {
                         System.out.print(split + " -- ");
                         model.fit(mnistTrain.next(cursor));
                         cursor ++;
+                        if (exitEarly) throw new Exception();
+
                     }
 
                     split ++;
@@ -162,9 +164,14 @@ public class ATAGCnn extends  Thread {
 
                     Evaluation eval = new Evaluation(outputNum);
                     while (mnistTest.hasNext()) {
+
                         DataSet ds = mnistTest.next();
+                        if (exitEarly) throw new Exception();
+
                         INDArray output = model.output(ds.getFeatureMatrix());
                         eval.eval(ds.getLabels(), output);
+                        if (exitEarly) throw new Exception();
+
                     }
                     log.info(eval.stats());
                     mnistTest.reset();
@@ -172,6 +179,7 @@ public class ATAGCnn extends  Thread {
                     System.out.println("end of cnn op");
 
                 }
+                saveModel(model);
             }
         }
 
@@ -188,6 +196,7 @@ public class ATAGCnn extends  Thread {
     public void setDoTest( boolean d) {doTest = d;}
     public void setDoLoadData(boolean d) {doLoadData = d;}
     public void setDoLoadSaveModel( boolean d) { doLoadSaveModel = d;}
+
 
     public void setFileName(String name) {
         this.name = name;

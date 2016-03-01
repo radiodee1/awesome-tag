@@ -327,7 +327,7 @@ public class ATAGShowImage {
                 model = null;
                 if (cnnThread != null&& cnnThread.isAlive()) {
                     // TERMINATE AND SET TO NULL
-                    cnnThread.interrupt();
+                    cnnThread.setExitEarly(true);
                     System.out.println("just interrupted");
                     try {
                         cnnThread.join();
@@ -347,6 +347,7 @@ public class ATAGShowImage {
                         cnnThread.setDoTest(false);
                         cnnThread.setDoFit(true);
                         cnnThread.setDoLoadSaveModel(true);
+                        cnnThread.setExitEarly(false);
                         cnnThread.start();
                     }
                     catch (Exception i) {i.printStackTrace();}
@@ -360,7 +361,7 @@ public class ATAGShowImage {
                 model = null;
                 if (cnnThread != null && cnnThread.isAlive()) {
                     // TERMINATE AND SET TO NULL
-                    cnnThread.interrupt();
+                    cnnThread.setExitEarly(true);
                     System.out.println("just interrupted");
                     try {
                         cnnThread.join();
@@ -378,6 +379,7 @@ public class ATAGShowImage {
                         cnnThread.setDoTest(true);
                         cnnThread.setDoFit(false);
                         cnnThread.setDoLoadSaveModel(false);
+                        cnnThread.setExitEarly(false);
                         cnnThread.start();
                     }
                     catch (Exception i) {i.printStackTrace();}

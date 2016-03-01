@@ -74,6 +74,8 @@ public class ATAGProcCsv {
     public ArrayList<CsvLine> getLocalList(int split) {
         if (split < Integer.valueOf(var.configSlpitStartNum) || split > Integer.valueOf(var.configSplitStopNum)) split = 1;
 
+        listLocal = new ArrayList<CsvLine>();
+        headingLocal = new ArrayList<String>();
         String filename = var.getMyCsvFilenameFromBaseString(var.configSplitCSVBasename, String.valueOf(split));
         loadAnyCsv(filename, listLocal,headingLocal,CSV_POSITION_FILE_LOCATION);
         return listLocal;
