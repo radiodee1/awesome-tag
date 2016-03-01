@@ -424,7 +424,7 @@ public class ATAGShowImage {
 
 
     public   ATAGShowImage(ATAG v, ATAGProcCsv p) {
-        frame = new JFrame("ATAGShowImage");
+        frame = new JFrame("Awesome Tag");
         frame.setContentPane(formPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
