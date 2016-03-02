@@ -50,7 +50,7 @@ public class ATAGShowImage {
     JFrame frame ;
 
     private boolean debugConsecOutput = false;
-    private MultiLayerNetwork model = null;
+    //private MultiLayerNetwork model = null;
 
     private ATAGCnn cnnThread = null;
 
@@ -252,7 +252,8 @@ public class ATAGShowImage {
                 try {
                     ATAGCnnDataSet predictData = new ATAGCnnDataSet(list, var, 0, true, 0.0f, 0, 0, true);
 
-                    if (model == null || true) {
+                    MultiLayerNetwork model = null;
+                    if ( true) {
 
                         ATAGCnn cnn = new ATAGCnn(var,proc);
                         cnn.setDoFit(false); // ensure 'run()' does no training
@@ -324,7 +325,7 @@ public class ATAGShowImage {
 
         buttonTrainCNN.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                model = null;
+                //model = null;
                 if (cnnThread != null&& cnnThread.isAlive()) {
                     // TERMINATE AND SET TO NULL
                     cnnThread.setExitEarly(true);
@@ -358,11 +359,14 @@ public class ATAGShowImage {
 
         buttonTestCNN.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                model = null;
+                //model = null;
+
                 if (cnnThread != null && cnnThread.isAlive()) {
                     // TERMINATE AND SET TO NULL
+                    ((ATAGPanel)imagePanel).standardOutReset();
                     cnnThread.setExitEarly(true);
                     System.out.println("just interrupted");
+                    imagePanel.repaint();
                     try {
                         cnnThread.join();
                         System.out.println("just joined");
@@ -372,6 +376,7 @@ public class ATAGShowImage {
                 }
                 else {
                     // CREATE INSTANCE AND RUN
+                    ((ATAGPanel)imagePanel).standardOutDisplay();
                     try {
 
                         cnnThread = new ATAGCnn(var, proc);
@@ -437,6 +442,7 @@ public class ATAGShowImage {
         imagePanel.repaint();
 
         frame.setIconImage(Toolkit.getDefaultToolkit().getImage("bigsmilered.png"));
+        frame.setName("Awesome Tag");
     }
 
 

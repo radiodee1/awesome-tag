@@ -4,7 +4,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -16,17 +16,82 @@ public class ATAGPanel extends JPanel{
     private BufferedImage image;
 
     private ArrayList<ATAGProcCsv.CsvLine> listFaces;
+    private ByteArrayOutputStream baos = null;
+    private JTextArea textField = null;
+    private JScrollPane scrollPane = null;
+
+    private Thread textThread = null;
 
     //private double fx,fy,fheight,fwidth;
     private boolean addOutline = false;
     private boolean showBlueFaceBox = false;
     private boolean showPredictBoxes = false;
+    private boolean showStandartOut = false;
 
     public ATAGPanel() {
     }
 
     public ATAGPanel(String im) {
         setFilename(im);
+    }
+
+    public void standardOutDisplay() {
+        showStandartOut = true;
+        baos = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(baos));
+        textField = new JTextArea("text",20,20);
+        scrollPane = new JScrollPane(textField, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        //setLayout(new BoxLayout(this,BoxLayout.X_AXIS));
+        //BoundedRangeModel brm = textField.getHorizontalVisibility();
+        //scrollBar.setModel(brm);
+        add(scrollPane,BoxLayout.X_AXIS);
+        scrollPane.setBackground(Color.WHITE);
+        //add(scrollBar);
+
+
+
+        textThread = new Thread() {
+            public void run() {
+                // do stuff
+                int len = 0;// baos.size();
+
+                while ( baos.size() > len || true) {
+                    try {
+                        if (len != baos.size()) {
+                            textField.setText(baos.toString());
+                            len = baos.size();
+                            //System.out.println("x");
+                            System.out.flush();
+                            baos.flush();
+                        }
+
+                    }
+                    catch (Exception e) {
+                        standardOutReset();
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        textThread.start();
+
+        try {
+            baos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //textField.setText(baos.toString());
+        revalidate();
+    }
+
+    public void standardOutReset() {
+        showStandartOut = false;
+        if (textThread != null && textThread.isAlive()) textThread.interrupt();
+        //ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
+        this.remove(scrollPane);
+        revalidate();
+        //this.remove(0);
     }
 
     public void setFilename(String im) {
@@ -69,7 +134,8 @@ public class ATAGPanel extends JPanel{
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         boolean foundOutput = false;
-        if (image != null) {
+        if (image != null && ! showStandartOut) {
+            setBackground(Color.LIGHT_GRAY);
             g.drawImage(image, 0, 0, null);
 
             if(addOutline) {
@@ -111,5 +177,9 @@ public class ATAGPanel extends JPanel{
 
             }
         }
+        else {
+            setBackground(Color.WHITE);
+        }
+
     }
 }
