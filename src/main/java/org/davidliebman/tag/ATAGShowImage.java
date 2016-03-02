@@ -435,6 +435,8 @@ public class ATAGShowImage {
         proc.loadCsvStart();
         setDisplayText();
         imagePanel.repaint();
+
+        frame.setIconImage(Toolkit.getDefaultToolkit().getImage("bigsmilered.png"));
     }
 
 
