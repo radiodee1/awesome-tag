@@ -28,6 +28,8 @@ public class ATAGPanel extends JPanel{
     private boolean showPredictBoxes = false;
     private boolean showStandartOut = false;
 
+    private int textSizeW = 45, textSizeH = 27;
+
     public ATAGPanel() {
     }
 
@@ -39,26 +41,15 @@ public class ATAGPanel extends JPanel{
         showStandartOut = true;
         baos = new ByteArrayOutputStream();
         System.setOut(new PrintStream(baos));
-        textField = new JTextArea("text", 30,40);
+        textField = new JTextArea("text", textSizeH,textSizeW);
         textField.setLineWrap(true);
         textField.setWrapStyleWord(true);
-        scrollPane = new JScrollPane( ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        GridBagLayout gridBagLayout = new GridBagLayout();
-        GridBagConstraints gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.fill = GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1;
-        gridBagConstraints.weighty = 1;
-        gridBagLayout.setConstraints(textField,gridBagConstraints);
-        //gridBagLayout.addLayoutComponent(textField,gridBagConstraints);
-        scrollPane.add(textField, gridBagLayout);
+        //textField.setPreferredSize(null);
+        scrollPane = new JScrollPane( textField,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        //setLayout(new BoxLayout(this,BoxLayout.X_AXIS));
-        //BoundedRangeModel brm = textField.getHorizontalVisibility();
-        //scrollBar.setModel(brm);
-        add(scrollPane);//,BorderLayout.CENTER);
+
+        add(scrollPane,BorderLayout.WEST);
         scrollPane.setBackground(Color.WHITE);
-        //add(scrollBar);
-
 
 
         textThread = new Thread() {
@@ -96,15 +87,22 @@ public class ATAGPanel extends JPanel{
         }
         //textField.setText(baos.toString());
         revalidate();
+
+        while ( false && textField.getWidth() < this.getWidth() - 10) {
+            textSizeW ++;
+            textField.setColumns(textSizeW);
+            revalidate();
+        }
     }
 
     public void standardOutReset() {
         showStandartOut = false;
         if (textThread != null && textThread.isAlive()) textThread.interrupt();
-        //ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
         System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
         this.remove(scrollPane);
         revalidate();
+        repaint();
         //this.remove(0);
     }
 

@@ -124,6 +124,8 @@ public class ATAGCnn extends  Thread {
         this.model = model;
         setFileName(this.name);
 
+        if (exitEarly) return;
+
         loadModel(model);
 
 

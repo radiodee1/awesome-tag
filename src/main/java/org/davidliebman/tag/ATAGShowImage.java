@@ -52,6 +52,9 @@ public class ATAGShowImage {
     private boolean debugConsecOutput = false;
     //private MultiLayerNetwork model = null;
 
+    //private boolean trainFinished = false, trainStarted = false;
+    //private boolean testFinished = false, testStarted = false;
+
     private ATAGCnn cnnThread = null;
 
     private void createUIComponents() {
@@ -248,6 +251,7 @@ public class ATAGShowImage {
         buttonPredict.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //
+                frame.setTitle("Please Wait...");
                 ArrayList<ATAGProcCsv.CsvLine> list = proc.getPredictListFromImage(var.configLastImage);
                 try {
                     ATAGCnnDataSet predictData = new ATAGCnnDataSet(list, var, 0, true, 0.0f, 0, 0, true);
@@ -317,6 +321,7 @@ public class ATAGShowImage {
                     ((ATAGPanel)imagePanel).setShowPredictBoxes(true);
                     ((ATAGPanel)imagePanel).setExtraDataFaces(list);
                     imagePanel.repaint();
+                    frame.setTitle("Awesome Tag");
 
                 }
                 catch (Exception i ) {i.printStackTrace();}
@@ -333,16 +338,28 @@ public class ATAGShowImage {
                     try {
                         cnnThread.join();
                         System.out.println("just joined");
-                        cnnThread = null;
+                        ((ATAGPanel)imagePanel).standardOutReset();
+                        frame.setTitle("Awesome Tag");
+                        //cnnThread = null;
+                        //trainFinished = true;
                     }
                     catch (Exception i) {
                         i.printStackTrace();
                     }
                 }
-                else {
+                else if (cnnThread != null && (! cnnThread.isAlive() ||cnnThread.getState() == Thread.State.WAITING)) {
+                    ((ATAGPanel)imagePanel).standardOutReset();
+                    cnnThread = null;
+                    frame.setTitle("Awesome Tag");
+                }
+                else
+                {
                     // CREATE INSTANCE AND RUN
+                    ((ATAGPanel)imagePanel).standardOutDisplay();
+                    frame.setTitle("TRAIN");
                     try {
-
+                        //trainFinished = false;
+                        //trainStarted = true;
                         cnnThread = new ATAGCnn(var, proc);
                         cnnThread.setDoLoadData(true); //ATAGCnnDataSet.java
                         cnnThread.setDoTest(false);
@@ -361,24 +378,37 @@ public class ATAGShowImage {
             public void actionPerformed(ActionEvent e) {
                 //model = null;
 
+
                 if (cnnThread != null && cnnThread.isAlive()) {
                     // TERMINATE AND SET TO NULL
-                    ((ATAGPanel)imagePanel).standardOutReset();
                     cnnThread.setExitEarly(true);
                     System.out.println("just interrupted");
                     imagePanel.repaint();
                     try {
                         cnnThread.join();
                         System.out.println("just joined");
-                        cnnThread = null;
+                        //cnnThread = null;
+                        ((ATAGPanel)imagePanel).standardOutReset();
+                        frame.setTitle("Awesome Tag");
+                        //testFinished = true;
+                        //testStarted = false;
                     }
                     catch (Exception i) {i.printStackTrace();}
                 }
-                else {
+                else if ( cnnThread != null && (! cnnThread.isAlive() ||cnnThread.getState() == Thread.State.WAITING)) {
+                    ((ATAGPanel)imagePanel).standardOutReset();
+                    cnnThread = null;
+                    frame.setTitle("Awesome Tag");
+                    //testStarted = false;
+                    //testFinished = false;
+                }
+                else  {
                     // CREATE INSTANCE AND RUN
                     ((ATAGPanel)imagePanel).standardOutDisplay();
+                    frame.setTitle("TEST");
                     try {
-
+                        //testFinished = false;
+                        //testStarted = true;
                         cnnThread = new ATAGCnn(var, proc);
                         cnnThread.setDoLoadData(true); //ATAGCnnDataSet.java
                         cnnThread.setDoTest(true);
