@@ -39,12 +39,23 @@ public class ATAGPanel extends JPanel{
         showStandartOut = true;
         baos = new ByteArrayOutputStream();
         System.setOut(new PrintStream(baos));
-        textField = new JTextArea("text",20,20);
-        scrollPane = new JScrollPane(textField, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        textField = new JTextArea("text", 30,40);
+        textField.setLineWrap(true);
+        textField.setWrapStyleWord(true);
+        scrollPane = new JScrollPane( ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        GridBagLayout gridBagLayout = new GridBagLayout();
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.weighty = 1;
+        gridBagLayout.setConstraints(textField,gridBagConstraints);
+        //gridBagLayout.addLayoutComponent(textField,gridBagConstraints);
+        scrollPane.add(textField, gridBagLayout);
+
         //setLayout(new BoxLayout(this,BoxLayout.X_AXIS));
         //BoundedRangeModel brm = textField.getHorizontalVisibility();
         //scrollBar.setModel(brm);
-        add(scrollPane,BoxLayout.X_AXIS);
+        add(scrollPane);//,BorderLayout.CENTER);
         scrollPane.setBackground(Color.WHITE);
         //add(scrollBar);
 
@@ -64,7 +75,10 @@ public class ATAGPanel extends JPanel{
                             System.out.flush();
                             baos.flush();
                         }
-
+                        Thread.sleep(2000);
+                    }
+                    catch (InterruptedException e) {
+                        //e.printStackTrace();
                     }
                     catch (Exception e) {
                         standardOutReset();
