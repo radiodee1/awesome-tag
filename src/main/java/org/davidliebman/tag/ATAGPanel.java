@@ -68,7 +68,11 @@ public class ATAGPanel extends JPanel{
                             System.out.flush();
                             baos.flush();
                             revalidate();
-                            scrollPane.getVerticalScrollBar().setValue((int) ATAGPanel.this.getPreferredSize().getHeight());
+                            scrollPane.getVerticalScrollBar().setValue( (int) (ATAGPanel.this.getPreferredSize().getHeight() + textField.getPreferredSize().getHeight()));
+                            //int heigt = (int) ATAGPanel.this.getPreferredSize().getHeight();
+                            //Rectangle rectangle = new Rectangle(0,heigt,10,10);
+                            //ATAGPanel.this.scrollRectToVisible(rectangle);
+
                         }
                         Thread.sleep(2000);
                     }
