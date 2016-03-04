@@ -155,6 +155,7 @@ public class ATAGCnn extends  Thread {
                     }
 
                     split ++;
+                    cursor = 0;
 
                     //model.fit(mnistTrain);
                     //saveModel(model); // not needed because of shutdown hook

@@ -335,7 +335,7 @@ public class ATAGShowImage {
                     try {
                         cnnThread.join();
                         System.out.println("just joined");
-                        ((ATAGPanel)imagePanel).standardOutReset();
+                        ((ATAGPanel)imagePanel).standardOutReset(false);
                         frame.setTitle("Awesome Tag");
 
 

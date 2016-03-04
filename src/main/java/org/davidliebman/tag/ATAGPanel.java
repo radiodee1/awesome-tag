@@ -76,6 +76,7 @@ public class ATAGPanel extends JPanel{
                     }
                     catch (InterruptedException e) {
                         //e.printStackTrace();
+
                     }
                     catch (Exception e) {
                         standardOutReset();
@@ -88,7 +89,7 @@ public class ATAGPanel extends JPanel{
 
         /*
         try {
-            //baos.close();
+            baos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -100,18 +101,24 @@ public class ATAGPanel extends JPanel{
     }
 
     public void standardOutReset() {
+        standardOutReset(true);
+    }
+
+    public void standardOutReset( boolean repaint) {
         showStandartOut = false;
         if (textThread != null && textThread.isAlive()) textThread.interrupt();
+        /*
         try {
-            baos.close();
+            if (baos != null) baos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        baos = null;//new ByteArrayOutputStream();
+        */
+        //baos = null;//new ByteArrayOutputStream();
         System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
         this.remove(scrollPane);
         revalidate();
-        repaint();
+        if (repaint) repaint();
         //this.remove(0);
     }
 
