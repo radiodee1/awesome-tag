@@ -19,6 +19,7 @@ public class ATAGPanel extends JPanel{
     private ByteArrayOutputStream baos = null;
     private JTextArea textField = null;
     private JScrollPane scrollPane = null;
+    //private JScrollBar scrollBar = null;
 
     private Thread textThread = null;
 
@@ -28,7 +29,7 @@ public class ATAGPanel extends JPanel{
     private boolean showPredictBoxes = false;
     private boolean showStandartOut = false;
 
-    private int textSizeW = 45, textSizeH = 27;
+    private int textSizeW = 44, textSizeH = 27;
 
     public ATAGPanel() {
     }
@@ -57,7 +58,8 @@ public class ATAGPanel extends JPanel{
                 // do stuff
                 int len = 0;// baos.size();
 
-                while ( baos.size() > len || true) {
+
+                while ( true) {
                     try {
                         if (len != baos.size()) {
                             textField.setText(baos.toString());
@@ -65,6 +67,8 @@ public class ATAGPanel extends JPanel{
                             //System.out.println("x");
                             System.out.flush();
                             baos.flush();
+                            revalidate();
+                            scrollPane.getVerticalScrollBar().setValue((int) ATAGPanel.this.getPreferredSize().getHeight());
                         }
                         Thread.sleep(2000);
                     }
@@ -88,11 +92,7 @@ public class ATAGPanel extends JPanel{
         //textField.setText(baos.toString());
         revalidate();
 
-        while ( false && textField.getWidth() < this.getWidth() - 10) {
-            textSizeW ++;
-            textField.setColumns(textSizeW);
-            revalidate();
-        }
+
     }
 
     public void standardOutReset() {
