@@ -42,7 +42,7 @@ public class ATAGPanel extends JPanel{
         showStandartOut = true;
         baos = new ByteArrayOutputStream();
         System.setOut(new PrintStream(baos));
-        textField = new JTextArea("text", textSizeH,textSizeW);
+        textField = new JTextArea("text output here...", textSizeH,textSizeW);
         textField.setLineWrap(true);
         textField.setWrapStyleWord(true);
         //textField.setPreferredSize(null);
@@ -69,9 +69,7 @@ public class ATAGPanel extends JPanel{
                             baos.flush();
                             revalidate();
                             scrollPane.getVerticalScrollBar().setValue( (int) (ATAGPanel.this.getPreferredSize().getHeight() + textField.getPreferredSize().getHeight()));
-                            //int heigt = (int) ATAGPanel.this.getPreferredSize().getHeight();
-                            //Rectangle rectangle = new Rectangle(0,heigt,10,10);
-                            //ATAGPanel.this.scrollRectToVisible(rectangle);
+
 
                         }
                         Thread.sleep(2000);
@@ -88,11 +86,13 @@ public class ATAGPanel extends JPanel{
         };
         textThread.start();
 
+        /*
         try {
-            baos.close();
+            //baos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        */
         //textField.setText(baos.toString());
         revalidate();
 
@@ -102,7 +102,12 @@ public class ATAGPanel extends JPanel{
     public void standardOutReset() {
         showStandartOut = false;
         if (textThread != null && textThread.isAlive()) textThread.interrupt();
-
+        try {
+            baos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        baos = null;//new ByteArrayOutputStream();
         System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
         this.remove(scrollPane);
         revalidate();
