@@ -25,7 +25,7 @@ public class ATAGPanel extends JPanel{
 
     //private double fx,fy,fheight,fwidth;
     private boolean addOutline = false;
-    private boolean showBlueFaceBox = false;
+    private boolean showBlueFaceBox = true;
     private boolean showPredictBoxes = false;
     private boolean showStandartOut = false;
 
@@ -169,9 +169,17 @@ public class ATAGPanel extends JPanel{
                     fwidth = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_WIDTH);
                     fheight = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_HEIGHT);
 
-                    if(showBlueFaceBox) {
+                    double xcoord = 0, ycoord = 0;
+                    if (showBlueFaceBox && !showPredictBoxes) {
+                        // ...center cnn over image of face ??
+                        xcoord = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_X);
+                        ycoord = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_Y);
+
+                        xcoord = xcoord - (ATAG.CNN_DIM_SIDE - fwidth) / 2;
+                        ycoord = ycoord - (ATAG.CNN_DIM_SIDE - fheight) / 2;
+
                         g.setColor(Color.blue);
-                        g.drawRect((int) fx, (int) fy, (int) fwidth, (int) fheight);
+                        g.drawRect((int) xcoord, (int) ycoord, (int) ATAG.CNN_DIM_SIDE, (int) ATAG.CNN_DIM_SIDE);
                     }
                     System.out.println("add line.");
 
