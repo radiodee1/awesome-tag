@@ -264,7 +264,7 @@ public class ATAGShowImage {
                     ATAGCnnDataSet predictData = new ATAGCnnDataSet(predictList, var, 0, true, 0.0f, 0, 0, true);
 
                     //MultiLayerNetwork model = null;
-
+                    ((ATAGPanel) imagePanel).setShowPredictBoxes(true);
 
                     cnnThread = new ATAGCnn(var,proc);
                     cnnThread.setDoFit(false); // ensure 'run()' does no training
@@ -523,6 +523,7 @@ public class ATAGShowImage {
             }
             else {
                 ((ATAGPanel) imagePanel).standardOutReset();
+                ((ATAGPanel) imagePanel).setShowPredictBoxes(false);
             }
             frame.setTitle("Awesome Tag");
             waitDialogHide();
