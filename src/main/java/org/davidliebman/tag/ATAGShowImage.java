@@ -50,7 +50,10 @@ public class ATAGShowImage {
     JFrame frame ;
 
     private boolean debugConsecOutput = false;
-    //private MultiLayerNetwork model = null;
+
+    private ATAGShowImageDialog dialog = null;
+
+    private SwingWorker<Object,Object> dialogThread = null;
 
     private ATAGCnn cnnThread = null;
 
@@ -193,6 +196,9 @@ public class ATAGShowImage {
             public void actionPerformed(ActionEvent e) {
                 if (proc != null) {
                     //proc.loadCsvStart();
+                    //dialog = new ATAGShowImageDialog(frame);
+                    //dialog.setVisible(true);
+                    waitDialogShow();
                 }
             }
         });
@@ -249,6 +255,7 @@ public class ATAGShowImage {
             public void actionPerformed(ActionEvent e) {
                 //
                 frame.setTitle("Please Wait...");
+                waitDialogShow();
                 ArrayList<ATAGProcCsv.CsvLine> list = proc.getPredictListFromImage(var.configLastImage);
                 try {
                     ATAGCnnDataSet predictData = new ATAGCnnDataSet(list, var, 0, true, 0.0f, 0, 0, true);
@@ -319,6 +326,7 @@ public class ATAGShowImage {
                     ((ATAGPanel)imagePanel).setExtraDataFaces(list);
                     imagePanel.repaint();
                     frame.setTitle("Awesome Tag");
+                    waitDialogHide();
 
                 }
                 catch (Exception i ) {i.printStackTrace();}
@@ -330,14 +338,18 @@ public class ATAGShowImage {
                 //model = null;
                 if (cnnThread != null&& cnnThread.isAlive()) {
                     // TERMINATE AND SET TO NULL
+                    frame.setTitle("Wait...");
+
                     cnnThread.setExitEarly(true);
+                    waitDialogShow();
+
                     System.out.println("just interrupted");
                     try {
                         cnnThread.join();
                         System.out.println("just joined");
                         ((ATAGPanel)imagePanel).standardOutReset(false);
                         frame.setTitle("Awesome Tag");
-
+                        waitDialogHide();
 
                     }
                     catch (Exception i) {
@@ -377,7 +389,10 @@ public class ATAGShowImage {
 
                 if (cnnThread != null && cnnThread.isAlive()) {
                     // TERMINATE AND SET TO NULL
+                    frame.setTitle("Wait...");
                     cnnThread.setExitEarly(true);
+                    waitDialogShow();
+
                     System.out.println("just interrupted");
                     imagePanel.repaint();
                     try {
@@ -386,7 +401,7 @@ public class ATAGShowImage {
 
                         ((ATAGPanel)imagePanel).standardOutReset();
                         frame.setTitle("Awesome Tag");
-
+                        waitDialogHide();
 
                     }
                     catch (Exception i) {i.printStackTrace();}
@@ -418,6 +433,44 @@ public class ATAGShowImage {
                 }
             }
         });
+    }
+
+    private void waitDialogShow() {
+
+        //dialogThread = new StartDialog();
+        //dialogThread.execute();
+        if (dialog == null) dialog = new ATAGShowImageDialog(frame);
+        dialog.setVisible(true);
+        /*
+        if (SwingUtilities.isEventDispatchThread() ) {
+            if (dialog == null) dialog = new ATAGShowImageDialog(frame);
+            //dialog.setVisible(true);
+        }
+        else {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    dialog = new ATAGShowImageDialog(frame);
+                    //dialog.setVisible(true);
+                }
+            });
+        }
+        */
+
+
+    }
+
+    private void waitDialogHide() {
+        if (dialogThread != null && dialogThread.getState() == SwingWorker.StateValue.STARTED) {
+            dialog.setVisible(false);
+            dialogThread.cancel(true);
+            dialogThread = null;
+        }
+
+        if (dialog != null) {
+            dialog.setVisible(false);
+
+            dialog = null;
+        }
     }
 
     private void setDisplayText() {
@@ -471,7 +524,29 @@ public class ATAGShowImage {
         frame.setName("Awesome Tag");
     }
 
+    class StartDialog extends SwingWorker<Object,Object> {
 
+        @Override
+        protected Object doInBackground() throws Exception {
+
+            if (dialog == null) dialog = new ATAGShowImageDialog(frame);
+            dialog.setVisible(true);
+            /*
+            if (SwingUtilities.isEventDispatchThread() ) {
+
+            }
+            else {
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        dialog = new ATAGShowImageDialog(frame);
+                        dialog.setVisible(true);
+                    }
+                });
+            }
+            */
+            return null;
+        }
+    }
 
 
 }
