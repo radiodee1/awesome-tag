@@ -33,9 +33,12 @@ public class ATAGCnn extends  Thread {
     String fileName = "";
     private ATAG var;
     private ATAGProcCsv proc;
+    private ATAGCnnDataSet predictData;
+    private INDArray output;
 
     private boolean doFit = false;
     private boolean doTest = true;
+    private boolean doPredict = false;
     private boolean doLoadSaveModel = true;
     private boolean doSaveCursor = true;
     private boolean doLoadData = true;
@@ -74,7 +77,7 @@ public class ATAGCnn extends  Thread {
         DataSetIterator mnistTest = null;
 
         if(doLoadData) {
-            log.info("Load data....");
+            log.info("Load csv data....");
 
 
             try {
@@ -186,6 +189,13 @@ public class ATAGCnn extends  Thread {
                     System.out.println("end of cnn op");
 
                 }
+
+                if(doPredict) {
+                    System.out.println("predict...");
+                    DataSet ds = predictData.next(0);
+                    output = model.output(ds.getFeatureMatrix());
+
+                }
                 saveModel(model);
             }
         }
@@ -197,13 +207,15 @@ public class ATAGCnn extends  Thread {
     }
 
     public MultiLayerNetwork getModel() {return model;}
+    public INDArray getPredictOutput () {return output;}
     public void setModel(MultiLayerNetwork m) {model = m;}
+    public void setPredictData( ATAGCnnDataSet d ) {predictData = d;}
 
     public void setDoFit(boolean d ) {doFit = d;}
     public void setDoTest( boolean d) {doTest = d;}
     public void setDoLoadData(boolean d) {doLoadData = d;}
     public void setDoLoadSaveModel( boolean d) { doLoadSaveModel = d;}
-
+    public void setDoPredict( boolean d) {doPredict = d;}
 
     public void setFileName(String name) {
         this.name = name;

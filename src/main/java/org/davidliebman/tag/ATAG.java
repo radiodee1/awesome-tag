@@ -64,6 +64,11 @@ public class ATAG {
     public static final int CNN_BATCH_SIZE = 64;
     public static final int CNN_CHANNELS = 3;
 
+    public static final int THREAD_TRAIN = 1;
+    public static final int THREAD_TEST = 2;
+    public static final int THREAD_PREDICT = 3;
+    public static final int THREAD_NONE = 0;
+
     public ATAG () {
 
         try {

@@ -56,6 +56,8 @@ public class ATAGShowImage {
     private SwingWorker<Object,Object> dialogThread = null;
 
     private ATAGCnn cnnThread = null;
+    private int threadType = 0;
+    private ArrayList<ATAGProcCsv.CsvLine> predictList;
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
@@ -254,79 +256,29 @@ public class ATAGShowImage {
         buttonPredict.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //
+                threadType = ATAG.THREAD_PREDICT;
                 frame.setTitle("Please Wait...");
                 waitDialogShow();
-                ArrayList<ATAGProcCsv.CsvLine> list = proc.getPredictListFromImage(var.configLastImage);
+                predictList = proc.getPredictListFromImage(var.configLastImage);
                 try {
-                    ATAGCnnDataSet predictData = new ATAGCnnDataSet(list, var, 0, true, 0.0f, 0, 0, true);
+                    ATAGCnnDataSet predictData = new ATAGCnnDataSet(predictList, var, 0, true, 0.0f, 0, 0, true);
 
-                    MultiLayerNetwork model = null;
-                    if ( true) {
-
-                        ATAGCnn cnn = new ATAGCnn(var,proc);
-                        cnn.setDoFit(false); // ensure 'run()' does no training
-                        cnn.setDoTest(false); // ensure 'run()' does no training
-                        cnn.setDoLoadData(false); // ensure 'run()' does no training
-                        cnn.setDoLoadSaveModel(false);
-                        cnn.run(); // create model and load biases... on this thread!!
-
-                        model = cnn.getModel();
-                    }
-                    DataSet ds = predictData.next(0);
-                    INDArray output = model.output(ds.getFeatureMatrix());
-
-                    int size = output.length();
-                    System.out.println("size " + size);
-                    size = size / ATAG.CNN_BATCH_SIZE; // what to do with this??
-
-                    for (int jj = 0; jj < ATAG.CNN_LABELS; jj ++) {
-                        for (int ii = 0; ii < ATAG.CNN_BATCH_SIZE; ii ++) {
-                            int labelIndexNumbered = 0;
-                            //int labelIndexNoOutput = 0;
-
-                            if (debugConsecOutput) {
-                                labelIndexNumbered = ii * ATAG.CNN_LABELS + jj;
-                            }
-                            else {
-                                labelIndexNumbered = jj * ATAG.CNN_BATCH_SIZE + ii;
-
-                            }
-                            if (jj < ATAG.CNN_LABELS - 1) {
-                                switch (jj) {
-                                    case 0:
-                                        list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_1);
-                                        list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_1, output.getDouble(labelIndexNumbered));
-                                        break;
-                                    case 1:
-                                        list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_2);
-                                        list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_2, output.getDouble(labelIndexNumbered));
-                                        break;
-                                    case 3:
-                                        list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_3);
-                                        list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_3, output.getDouble(labelIndexNumbered));
-                                        break;
-                                    case 4:
-                                        list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_4);
-                                        list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_4, output.getDouble(labelIndexNumbered));
-                                        break;
-                                    default:
-                                        //nothing
-                                        break;
-                                }
-                            }
-                            else {
-                                list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
-                                list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_NO_OUTPUT, output.getDouble(labelIndexNumbered));
-                            }
-                        }
+                    //MultiLayerNetwork model = null;
 
 
-                    }
-                    ((ATAGPanel)imagePanel).setShowPredictBoxes(true);
-                    ((ATAGPanel)imagePanel).setExtraDataFaces(list);
-                    imagePanel.repaint();
-                    frame.setTitle("Awesome Tag");
-                    waitDialogHide();
+                    cnnThread = new ATAGCnn(var,proc);
+                    cnnThread.setDoFit(false); // ensure 'run()' does no training
+                    cnnThread.setDoTest(false); // ensure 'run()' does no training
+                    cnnThread.setDoLoadData(false); // ensure 'run()' does no training
+                    cnnThread.setDoLoadSaveModel(false);
+                    cnnThread.setDoPredict(true);
+                    cnnThread.setPredictData(predictData);
+                    cnnThread.start(); // create model and load biases... on this thread!!
+
+                        //model = cnn.getModel();
+                    dialogThread = new StartDialog();
+                    dialogThread.execute();
+
 
                 }
                 catch (Exception i ) {i.printStackTrace();}
@@ -335,7 +287,7 @@ public class ATAGShowImage {
 
         buttonTrainCNN.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //model = null;
+                threadType = ATAG.THREAD_TRAIN;
                 if (cnnThread != null&& cnnThread.isAlive()) {
                     // TERMINATE AND SET TO NULL
                     frame.setTitle("Wait...");
@@ -345,20 +297,7 @@ public class ATAGShowImage {
 
                     dialogThread = new StartDialog();
                     dialogThread.execute();
-                    /*
-                    System.out.println("just interrupted");
-                    try {
-                        cnnThread.join();
-                        System.out.println("just joined");
-                        ((ATAGPanel)imagePanel).standardOutReset(false);
-                        frame.setTitle("Awesome Tag");
-                        waitDialogHide();
 
-                    }
-                    catch (Exception i) {
-                        i.printStackTrace();
-                    }
-                    */
                 }
                 else if (cnnThread != null && (! cnnThread.isAlive() ||cnnThread.getState() == Thread.State.WAITING)) {
                     ((ATAGPanel)imagePanel).standardOutReset();
@@ -388,7 +327,7 @@ public class ATAGShowImage {
 
         buttonTestCNN.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //model = null;
+                threadType = ATAG.THREAD_TEST;
 
 
                 if (cnnThread != null && cnnThread.isAlive()) {
@@ -398,21 +337,7 @@ public class ATAGShowImage {
                     waitDialogShow();
                     dialogThread = new StartDialog();
                     dialogThread.execute();
-                    /*
-                    System.out.println("just interrupted");
-                    imagePanel.repaint();
-                    try {
-                        cnnThread.join();
-                        System.out.println("just joined");
 
-                        ((ATAGPanel)imagePanel).standardOutReset();
-                        frame.setTitle("Awesome Tag");
-                        waitDialogHide();
-
-                    }
-                    catch (Exception i) {i.printStackTrace();}
-
-                    */
                 }
                 else if ( cnnThread != null && (! cnnThread.isAlive() ||cnnThread.getState() == Thread.State.WAITING)) {
                     ((ATAGPanel)imagePanel).standardOutReset();
@@ -443,27 +368,65 @@ public class ATAGShowImage {
         });
     }
 
+    private void renderPredictionOnScreen( INDArray output) {
+        ArrayList<ATAGProcCsv.CsvLine> list = predictList;
+        if (list == null || list.size() < 1) return;
+        for (int jj = 0; jj < ATAG.CNN_LABELS; jj ++) {
+            for (int ii = 0; ii < ATAG.CNN_BATCH_SIZE; ii ++) {
+                int labelIndexNumbered = 0;
+                //int labelIndexNoOutput = 0;
+
+                if (debugConsecOutput) {
+                    labelIndexNumbered = ii * ATAG.CNN_LABELS + jj;
+                }
+                else {
+                    labelIndexNumbered = jj * ATAG.CNN_BATCH_SIZE + ii;
+
+                }
+                if (jj < ATAG.CNN_LABELS - 1) {
+                    switch (jj) {
+                        case 0:
+                            list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_1);
+                            list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_1, output.getDouble(labelIndexNumbered));
+                            break;
+                        case 1:
+                            list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_2);
+                            list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_2, output.getDouble(labelIndexNumbered));
+                            break;
+                        case 3:
+                            list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_3);
+                            list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_3, output.getDouble(labelIndexNumbered));
+                            break;
+                        case 4:
+                            list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_4);
+                            list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_4, output.getDouble(labelIndexNumbered));
+                            break;
+                        default:
+                            //nothing
+                            break;
+                    }
+                }
+                else {
+                    list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
+                    list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_NO_OUTPUT, output.getDouble(labelIndexNumbered));
+                }
+            }
+
+
+        }
+        ((ATAGPanel)imagePanel).setShowPredictBoxes(true);
+        ((ATAGPanel)imagePanel).setExtraDataFaces(list);
+        imagePanel.repaint();
+        frame.setTitle("Awesome Tag");
+        waitDialogHide();
+    }
+
     private void waitDialogShow() {
 
         //dialogThread = new StartDialog();
         //dialogThread.execute();
         if (dialog == null) dialog = new ATAGShowImageDialog(frame);
         dialog.setVisible(true);
-        /*
-        if (SwingUtilities.isEventDispatchThread() ) {
-            if (dialog == null) dialog = new ATAGShowImageDialog(frame);
-            //dialog.setVisible(true);
-        }
-        else {
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    dialog = new ATAGShowImageDialog(frame);
-                    //dialog.setVisible(true);
-                }
-            });
-        }
-        */
-
 
     }
 
@@ -506,6 +469,8 @@ public class ATAGShowImage {
 
         programName.setText(var.configLastImage);
         programName.setToolTipText(var.configLastImage);
+
+        buttonLoadCsv.setText("More Config");
 
         ((ATAGPanel)imagePanel).setFilename(var.configLastImage);
 
@@ -551,7 +516,14 @@ public class ATAGShowImage {
         @Override
         protected void done() {
             super.done();
-            ((ATAGPanel)imagePanel).standardOutReset();
+
+            if(threadType == ATAG.THREAD_PREDICT) {
+                INDArray output = cnnThread.getPredictOutput();
+                renderPredictionOnScreen(output);
+            }
+            else {
+                ((ATAGPanel) imagePanel).standardOutReset();
+            }
             frame.setTitle("Awesome Tag");
             waitDialogHide();
 

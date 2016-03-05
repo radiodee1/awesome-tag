@@ -107,16 +107,10 @@ public class ATAGPanel extends JPanel{
     public void standardOutReset( boolean repaint) {
         showStandartOut = false;
         if (textThread != null && textThread.isAlive()) textThread.interrupt();
-        /*
-        try {
-            if (baos != null) baos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        */
+
         //baos = null;//new ByteArrayOutputStream();
         System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
-        this.remove(scrollPane);
+        if (scrollPane != null) this.remove(scrollPane);
         revalidate();
         if (repaint) repaint();
         //this.remove(0);
