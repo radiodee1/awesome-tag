@@ -60,9 +60,10 @@ public class ATAG {
 
 
     public static final int CNN_LABELS = 2;
-    public static final int CNN_DIM_SIDE = 60;
+    public static final int CNN_DIM_SIDE = 28; //60
     public static final int CNN_BATCH_SIZE = 64;
     public static final int CNN_CHANNELS = 3;
+    public static final int CNN_DIM_PIXELS = 56; //60
 
     public static final int THREAD_TRAIN = 1;
     public static final int THREAD_TEST = 2;

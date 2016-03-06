@@ -175,11 +175,11 @@ public class ATAGPanel extends JPanel{
                         xcoord = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_X);
                         ycoord = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_Y);
 
-                        xcoord = xcoord - (ATAG.CNN_DIM_SIDE - fwidth) / 2;
-                        ycoord = ycoord - (ATAG.CNN_DIM_SIDE - fheight) / 2;
+                        xcoord = xcoord - (ATAG.CNN_DIM_PIXELS - fwidth) / 2;
+                        ycoord = ycoord - (ATAG.CNN_DIM_PIXELS - fheight) / 2;
 
                         g.setColor(Color.blue);
-                        g.drawRect((int) xcoord, (int) ycoord, (int) ATAG.CNN_DIM_SIDE, (int) ATAG.CNN_DIM_SIDE);
+                        g.drawRect((int) xcoord, (int) ycoord, (int) ATAG.CNN_DIM_PIXELS, (int) ATAG.CNN_DIM_PIXELS);
                     }
                     System.out.println("add line.");
 

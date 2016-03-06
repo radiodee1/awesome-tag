@@ -47,6 +47,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     private boolean debugNoThreshold = true;
     private boolean debugDoNotSplit = false;
     private boolean orderAsAlternate = true;
+    private boolean debugOneChannelForDisplay = true;
 
     private int globalOutputCount = 0;
 
@@ -76,6 +77,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
         int transx = (int)(x_start) , transy = (int)(y_start);
         int threshold = 128;//128
+        float mag = ATAG.CNN_DIM_PIXELS /(float) ATAG.CNN_DIM_SIDE;
 
         BufferedImage image = ImageIO.read(file);
 
@@ -86,8 +88,9 @@ public class ATAGCnnDataSet  implements DataSetIterator {
         {
             for (int xPixel = 0; xPixel < ATAG.CNN_DIM_SIDE; xPixel++)
             {
-                if (xPixel + transx >=0 && xPixel + transx< image.getWidth() && yPixel +transy >=0 && yPixel + transy < image.getHeight()) {
-                    int color = image.getRGB(xPixel +transx, yPixel + transy);
+                if (xPixel * mag + transx >=0 && xPixel* mag + transx< image.getWidth() && yPixel * mag +transy >=0 && yPixel * mag + transy < image.getHeight()) {
+
+                    int color = image.getRGB((int)(xPixel *mag +transx ), (int)(yPixel * mag + transy));
 
                     int arrayPos1D = yPixel * ATAG.CNN_DIM_SIDE  * ATAG.CNN_CHANNELS + xPixel * ATAG.CNN_CHANNELS ;
 
@@ -115,11 +118,20 @@ public class ATAGCnnDataSet  implements DataSetIterator {
                     }
 
                     if (!debugNoThreshold) {
-                        array1D[arrayPos1D + 0] = array2D[yPixel][xPixel][0];
+                        if (!orderAsAlternate) {
+                            array1D[arrayPos1D + 0] = array2D[yPixel][xPixel][0];
 
-                        array1D[arrayPos1D + 1] = array2D[yPixel][xPixel][1];
+                            array1D[arrayPos1D + 1] = array2D[yPixel][xPixel][1];
 
-                        array1D[arrayPos1D + 2] = array2D[yPixel][xPixel][2];
+                            array1D[arrayPos1D + 2] = array2D[yPixel][xPixel][2];
+                        }
+                        else {
+                            array1D[ 0 * ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE + yPixel * ATAG.CNN_DIM_SIDE + xPixel] = array2D[yPixel][xPixel][0];//array2D[yPixel][xPixel][0];
+
+                            array1D[ 1 * ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE + yPixel * ATAG.CNN_DIM_SIDE + xPixel] = array2D[yPixel][xPixel][1];//array2D[yPixel][xPixel][1];
+
+                            array1D[ 2 * ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE + yPixel * ATAG.CNN_DIM_SIDE + xPixel] = array2D[yPixel][xPixel][2];//array2D[yPixel][xPixel][2];
+                        }
                     }
                     else {
                         if (!orderAsAlternate) {
@@ -185,16 +197,23 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     public void showSquare(INDArray in) {
         INDArray show = in.linearView();
         boolean noOutput = true;
+        int channelsForDisplay = 0;
+        if (debugOneChannelForDisplay) {
+            channelsForDisplay = 1;
+        }
+        else {
+            channelsForDisplay = ATAG.CNN_CHANNELS;
+        }
         for (int i = 0; i < ATAG.CNN_DIM_SIDE ; i ++) {
             for (int j = 0; j < ATAG.CNN_DIM_SIDE ; j ++) {
 
-                for (int k = 0; k < ATAG.CNN_CHANNELS; k ++ ) {
-                    if (show.getDouble(i * ATAG.CNN_DIM_SIDE *ATAG.CNN_CHANNELS + j * ATAG.CNN_CHANNELS + k) > 0.5d) {
+                for (int k = 0; k < channelsForDisplay; k ++ ) {
+                    if (show.getDouble(i * ATAG.CNN_DIM_SIDE * channelsForDisplay + j * channelsForDisplay + k) > 0.5d) {
                         if (!debugByteOrder) {
                             System.out.print("#");
                         }
                         else {
-                            System.out.print((int)(show.getDouble( i * ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS+ j * ATAG.CNN_CHANNELS + k)));
+                            //System.out.print((int)(show.getDouble( i * ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS+ j * ATAG.CNN_CHANNELS + k)));
                         }
                         noOutput = false;
                     } else {

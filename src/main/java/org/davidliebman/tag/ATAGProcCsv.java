@@ -280,7 +280,7 @@ public class ATAGProcCsv {
 
 
         if (fheight > max_size_vertical) max_size_vertical = fheight;
-        if (fheight > ATAG.CNN_DIM_SIDE * SIZE_TOO_BIG && doSkipOnHeight) skipOnHeight = 1.0d;
+        if (fheight > ATAG.CNN_DIM_PIXELS * SIZE_TOO_BIG && doSkipOnHeight) skipOnHeight = 1.0d;
 
 
         ArrayList<CsvLine> list = new ArrayList<CsvLine>();
@@ -357,7 +357,7 @@ public class ATAGProcCsv {
                     labelsize4 = 1;
                 }
 
-                if ((approachdist <= approachavg / FACE_MOD_AVG || (ATAG.CNN_LABELS == 1 && approachdist < 1)) && fheight <= ATAG.CNN_DIM_SIDE * SIZE_TOO_BIG) {
+                if ((approachdist <= approachavg / FACE_MOD_AVG || (ATAG.CNN_LABELS == 1 && approachdist < 1)) && fheight <= ATAG.CNN_DIM_PIXELS * SIZE_TOO_BIG) {
                     labelnooutput = 0;
                     num_positive_output++;
 
@@ -495,10 +495,10 @@ public class ATAGProcCsv {
                 row.getSpecifications().add(FACE_APPROACH_Y, (double) y * spanVertical);
 
                 row.getSpecifications().remove(FACE_HEIGHT);
-                row.getSpecifications().add(FACE_HEIGHT, (double) ATAG.CNN_DIM_SIDE);
+                row.getSpecifications().add(FACE_HEIGHT, (double) ATAG.CNN_DIM_PIXELS);
 
                 row.getSpecifications().remove(FACE_WIDTH);
-                row.getSpecifications().add(FACE_WIDTH, (double) ATAG.CNN_DIM_SIDE);
+                row.getSpecifications().add(FACE_WIDTH, (double) ATAG.CNN_DIM_PIXELS);
                 ///////////////////////
 
                 listPredict.add(row);
