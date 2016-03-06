@@ -369,12 +369,15 @@ public class ATAGShowImage {
     }
 
     private void renderPredictionOnScreen( INDArray output) {
+
         ArrayList<ATAGProcCsv.CsvLine> list = predictList;
+
         if (list == null || list.size() < 1) return;
+
         for (int jj = 0; jj < ATAG.CNN_LABELS; jj ++) {
             for (int ii = 0; ii < ATAG.CNN_BATCH_SIZE; ii ++) {
                 int labelIndexNumbered = 0;
-                //int labelIndexNoOutput = 0;
+                int location = ii;// (ATAG.CNN_BATCH_SIZE - 1) - ii;
 
                 if (debugConsecOutput) {
                     labelIndexNumbered = ii * ATAG.CNN_LABELS + jj;
@@ -386,20 +389,20 @@ public class ATAGShowImage {
                 if (jj < ATAG.CNN_LABELS - 1) {
                     switch (jj) {
                         case 0:
-                            list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_1);
-                            list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_1, output.getDouble(labelIndexNumbered));
+                            list.get(location).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_1);
+                            list.get(location).getSpecifications().add(ATAGProcCsv.FACE_LABEL_1, output.getDouble(labelIndexNumbered));
                             break;
                         case 1:
-                            list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_2);
-                            list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_2, output.getDouble(labelIndexNumbered));
+                            list.get(location).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_2);
+                            list.get(location).getSpecifications().add(ATAGProcCsv.FACE_LABEL_2, output.getDouble(labelIndexNumbered));
                             break;
                         case 3:
-                            list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_3);
-                            list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_3, output.getDouble(labelIndexNumbered));
+                            list.get(location).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_3);
+                            list.get(location).getSpecifications().add(ATAGProcCsv.FACE_LABEL_3, output.getDouble(labelIndexNumbered));
                             break;
                         case 4:
-                            list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_4);
-                            list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_4, output.getDouble(labelIndexNumbered));
+                            list.get(location).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_4);
+                            list.get(location).getSpecifications().add(ATAGProcCsv.FACE_LABEL_4, output.getDouble(labelIndexNumbered));
                             break;
                         default:
                             //nothing
@@ -407,8 +410,8 @@ public class ATAGShowImage {
                     }
                 }
                 else {
-                    list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
-                    list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_NO_OUTPUT, output.getDouble(labelIndexNumbered));
+                    list.get(location).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
+                    list.get(location).getSpecifications().add(ATAGProcCsv.FACE_LABEL_NO_OUTPUT, output.getDouble(labelIndexNumbered));
                 }
             }
 

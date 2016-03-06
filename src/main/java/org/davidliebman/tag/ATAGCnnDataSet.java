@@ -75,6 +75,10 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
     public  INDArray loadImageBMP ( File file, double x_start, double y_start) throws Exception {
 
+        double[] array1D = new double[ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS];
+
+        if (!file.exists()) return Nd4j.create(array1D);
+
         int transx = (int)(x_start) , transy = (int)(y_start);
         int threshold = 128;//128
         float mag = ATAG.CNN_DIM_PIXELS /(float) ATAG.CNN_DIM_SIDE;
@@ -83,7 +87,6 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
         double[][][] array2D = new double[ATAG.CNN_DIM_SIDE][ATAG.CNN_DIM_SIDE ][ATAG.CNN_CHANNELS];
 
-        double[] array1D = new double[ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS];
         for (int yPixel = 0; yPixel < ATAG.CNN_DIM_SIDE; yPixel++)
         {
             for (int xPixel = 0; xPixel < ATAG.CNN_DIM_SIDE; xPixel++)
