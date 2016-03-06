@@ -24,9 +24,6 @@ package org.davidliebman.tag;
 public class ATAGCnnDataSet  implements DataSetIterator {
 
 
-
-    //ArrayList<String> list = new ArrayList<String>();
-
     int searchType = 0;
     long seed = 0;
     int cursor = 0;
@@ -34,7 +31,6 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
     float percentForTesting = 0.20f;
 
-    boolean trainWithThisSet = true;
 
     double [][] featureMatrix;
     double [][] labels;
@@ -48,6 +44,8 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     private boolean debugDoNotSplit = false;
     private boolean orderAsAlternate = true;
     private boolean debugOneChannelForDisplay = true;
+
+    boolean trainWithThisSet = true;
 
     private int globalOutputCount = 0;
 

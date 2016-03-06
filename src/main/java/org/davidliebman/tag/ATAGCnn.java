@@ -101,7 +101,7 @@ public class ATAGCnn extends  Thread {
                 .layer(0, new ConvolutionLayer.Builder(5, 5)
                         .nIn(nChannels)
                         .stride(1, 1)
-                        .nOut(20) //20 or 30
+                        .nOut(30) //20 or 30
                         .dropOut(0.5)
                         .activation("relu")
                         .build())
