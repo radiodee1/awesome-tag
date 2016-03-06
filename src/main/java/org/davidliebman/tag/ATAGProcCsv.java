@@ -247,6 +247,7 @@ public class ATAGProcCsv {
 
         listSecond = new ArrayList<CsvLine>();
         for (int i = 0; i < csv.size(); i ++ ) {
+            System.out.print("i=" + i + " ");
             processLine(csv.get(i));
         }
         for (int i = 0; i < listSecond.size(); i ++) {
@@ -278,6 +279,7 @@ public class ATAGProcCsv {
 
         double skipOnHeight = 0;
 
+        boolean aproachNeedsRepeat = true;
 
         if (fheight > max_size_vertical) max_size_vertical = fheight;
         if (fheight > ATAG.CNN_DIM_PIXELS * SIZE_TOO_BIG && doSkipOnHeight) skipOnHeight = 1.0d;
@@ -296,17 +298,30 @@ public class ATAGProcCsv {
                 }
 
                 if (i != 0) {
-                    double changex = r.nextInt((int) fwidth) - fwidth / 2.0d;
-                    double changey = r.nextInt((int) fheight) - fheight / 2.0d;
 
-                    if (grossImageChoice) {
-                        changex = fwidth * (r.nextInt(2) - 1);
-                        if (changex == 0) changex = fwidth;
+                    aproachNeedsRepeat = true;
+
+                    int j = 0;
+                    while (aproachNeedsRepeat && j< 20) {
+
+                        double changex = r.nextInt((int) ATAG.CNN_DIM_PIXELS) - ATAG.CNN_DIM_PIXELS / 2.0d;
+                        double changey = r.nextInt((int) ATAG.CNN_DIM_PIXELS) - ATAG.CNN_DIM_PIXELS / 2.0d;
+
+                        if (grossImageChoice) {
+                            changex = (ATAG.CNN_DIM_PIXELS + r.nextInt(ATAG.CNN_DIM_PIXELS * 2)  ) * (r.nextInt(2) - 1);
+                            if (changex == 0) changex = ATAG.CNN_DIM_PIXELS + 2;
+                        }
+
+                        approachx = fx + changex;
+                        approachy = fy + changey;
+                        approachdist = Math.sqrt(Math.pow(fx - approachx, 2) + Math.pow(fy - approachy, 2));
+
+                        //check if approach is good...
+                        aproachNeedsRepeat =  getApproachNeedsRepeat( (int)approachx,(int) approachy, line.getFileLocation());
+                        j++;
+                        if (debugMessages || true) System.out.println(j + " a=" + aproachNeedsRepeat);
                     }
 
-                    approachx = fx + changex;
-                    approachy = fy + changey;
-                    approachdist = Math.sqrt(Math.pow(fx - approachx, 2) + Math.pow(fy - approachy, 2));
                 } else {
                     approachx = fx;
                     approachy = fy;
@@ -397,18 +412,57 @@ public class ATAGProcCsv {
         }
     }
 
-    public ArrayList<CsvLine> getFirstMatchByName() {
+    private boolean getApproachNeedsRepeat( int x, int y, String name) {
+
+        boolean test = false;
+
+        ArrayList<CsvLine> listCheck = getFirstMatchByName( name,listSingle );
+
+        BoundingBox a = new BoundingBox(x,y, ATAG.CNN_DIM_PIXELS, ATAG.CNN_DIM_PIXELS);
+
+        for (int i = 0; i < listCheck.size(); i ++) {
+            double xx =  listCheck.get(i).getSpecifications().get(FACE_X);
+            double yy =  listCheck.get(i).getSpecifications().get(FACE_Y);
+
+            double width = listCheck.get(i).getSpecifications().get(FACE_WIDTH);
+            double height = listCheck.get(i).getSpecifications().get(FACE_HEIGHT);
+
+            double changex = (ATAG.CNN_DIM_PIXELS - width ) / 2.0f;
+            double changey = (ATAG.CNN_DIM_PIXELS - height) / 2.0f;
+
+            xx = xx - changex;
+            yy = yy - changey;
+
+            if (((int) xx) != x && ((int) yy) != y) {
+                BoundingBox b = new BoundingBox((int) xx, (int) yy, ATAG.CNN_DIM_PIXELS, ATAG.CNN_DIM_PIXELS);
+                boolean out = collisionSimple(a, b);
+
+                if (debugMessages) System.out.println(name + " " + xx + " " + yy + " " + out);
+                if (out) test = true;
+            }
+        }
+
+        return test;
+    }
+
+    public  ArrayList<CsvLine> getFirstMatchByName() {
+        return getFirstMatchByName(var.configLastImage, listLocal);
+    }
+
+    public ArrayList<CsvLine> getFirstMatchByName( String name, ArrayList<CsvLine> chosenList) {
         ArrayList<CsvLine> list = new ArrayList<CsvLine>();
 
         CsvLine line = new CsvLine();
-        for (int i = 0; i < listLocal.size(); i ++) {
-            if(var.configLastImage.toLowerCase().endsWith(listLocal.get(i).getFileLocation().toLowerCase())) {
-                line = listLocal.get(i);
+        for (int i = 0; i < chosenList.size(); i ++) {
+            if(name.toLowerCase().endsWith(chosenList.get(i).getFileLocation().toLowerCase())) {
+                line = chosenList.get(i);
                 list.add(line);
             }
         }
         return list;
     }
+
+
 
     public void getNextFilename() {
         //CsvLine line = new CsvLine();
@@ -510,6 +564,131 @@ public class ATAGProcCsv {
         return  listPredict;
     }
 
+
+    private boolean collisionSimple(BoundingBox boxA, BoundingBox boxB) {
+        int x[] = {0,0,0,0};
+        int y[]= {0,0,0,0};
+        int i, j;
+        boolean test = false;
+        boolean outsideTest, insideTest;
+
+        x[0] = boxA.left;
+        y[0] = boxA.top;
+
+        x[1] = boxA.right;
+        y[1] = boxA.top;
+
+        x[2] = boxA.left;
+        y[2] = boxA.bottom;
+
+        x[3] = boxA.right;
+        y[3] = boxA.bottom;
+        for (i = 0; i < 4; i ++) {
+            // is one point inside the other bounding box??
+            if (x[i] <= boxB.right && x[i] >= boxB.left && y[i] <= boxB.bottom && y[i] >= boxB.top ) {
+                // are all other points outside the other bounding box??
+                outsideTest = false;
+
+                for (j = 0; j < 4 ; j ++) {
+                    if (j != i ) {
+                        if (!(x[j] <= boxB.right && x[j] >= boxB.left && y[j] <= boxB.bottom && y[j] >= boxB.top) ) {
+                            outsideTest = true;
+
+                        }
+                    }
+                }
+                if(outsideTest) {
+                    test = true;
+
+                }
+                // is a second point inside the bounding box??
+                insideTest = false;
+                for (j = 0; j < 4 ; j ++) {
+                    if (j != i ) {
+                        if ((x[j] <= boxB.right && x[j] >= boxB.left && y[j] <= boxB.bottom && y[j] >= boxB.top) ) {
+                            insideTest = true;
+
+                        }
+                    }
+                }
+                if(insideTest) {
+                    test = true;
+
+                }
+
+                /////////////////////////
+            }
+        }
+        if (!test) return collisionHelper(boxA, boxB);
+        else return true;
+    }
+
+    /**
+     *	Used for overall collision testing.
+     */
+
+    private boolean collisionHelper(BoundingBox boxA, BoundingBox boxB) {
+        int x[] = {0,0,0,0};
+        int y[] = {0,0,0,0};
+        int i,j;
+        boolean test = false;
+        boolean outsideTest, insideTest;
+
+        x[0] = boxB.left;
+        y[0] = boxB.top;
+
+        x[1] = boxB.right;
+        y[1] = boxB.top;
+
+        x[2] = boxB.left;
+        y[2] = boxB.bottom;
+
+        x[3] = boxB.right;
+        y[3] = boxB.bottom;
+        for (i = 0; i < 4; i ++) {
+            // is one point inside the other bounding box??
+            if (x[i] <= boxA.right && x[i] >= boxA.left && y[i] <= boxA.bottom && y[i] >= boxA.top ) {
+
+
+                // are all other points outside the other bounding box??
+                outsideTest = false;
+
+                for (j = 0; j < 4 ; j ++) {
+                    if (j != i ) {
+                        if (!(x[j] <= boxA.right && x[j] >= boxA.left && y[j] <= boxA.bottom && y[j] >= boxA.top) ) {
+                            outsideTest = true;
+
+                        }
+                    }
+                }
+                if(outsideTest) {
+                    test = true;
+
+                }
+                // is a second point inside the bounding box??
+                insideTest = false;
+                for (j = 0; j < 4 ; j ++) {
+                    if (j != i ) {
+                        if ((x[j] <= boxA.right && x[j] >= boxA.left && y[j] <= boxA.bottom && y[j] >= boxA.top) ) {
+                            insideTest = true;
+
+                        }
+                    }
+                }
+                if(insideTest) {
+                    test = true;
+
+                }
+
+
+                //////////////////////////
+            }
+        }
+
+        return test;
+    }
+
+
     class CsvLine {
         String fileLocation;
         ArrayList<Double> specifications = new ArrayList<Double>();
@@ -528,6 +707,17 @@ public class ATAGProcCsv {
 
         public void setSpecifications(ArrayList<Double> specifications) {
             this.specifications = specifications;
+        }
+    }
+
+    class BoundingBox {
+        public int left,right,top,bottom;
+
+        public BoundingBox ( int x, int y, int width, int height) {
+            left = x;
+            right = x + width;
+            top = y;
+            bottom = y + height;
         }
     }
 }

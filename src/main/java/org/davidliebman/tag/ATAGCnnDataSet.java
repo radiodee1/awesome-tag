@@ -272,8 +272,8 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
             if (!debugDontCenter) {
                 // ...center cnn over image of face ??
-                xcoord = xcoord - (ATAG.CNN_DIM_SIDE - facew) / 2;
-                ycoord = ycoord - (ATAG.CNN_DIM_SIDE - faceh) / 2;
+                xcoord = xcoord - (ATAG.CNN_DIM_PIXELS - facew) / 2;
+                ycoord = ycoord - (ATAG.CNN_DIM_PIXELS - faceh) / 2;
             }
 
             if(debugMessages) System.out.println(filename + " name  x=" + xcoord + "  y=" + ycoord + " height=" + faceh + " i=" + ( i + cursor * ATAG.CNN_BATCH_SIZE));
