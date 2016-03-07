@@ -28,7 +28,7 @@ public class ATAGCnn extends  Thread {
 
     private boolean exitEarly = false;
     MultiLayerNetwork model;
-    String name = "lenet_rc38_faces";
+    String name = ATAG.DEFAULT_BIASES_NAME;
     String homeDir = "";
     String fileName = "";
     private ATAG var;

@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -197,10 +198,25 @@ public class ATAGShowImage {
         buttonLoadCsv.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (proc != null) {
-                    //proc.loadCsvStart();
-                    //dialog = new ATAGShowImageDialog(frame);
-                    //dialog.setVisible(true);
-                    //waitDialogShow();
+                    var.configLastCursor = "0";
+                    var.configLastSplit = "1";
+                    var.writeConfigText(ATAG.DOTFOLDER_SAVED_CURSOR, var.configLastCursor);
+                    var.writeConfigText(ATAG.DOTFOLDER_SAVED_SPLIT, var.configLastSplit);
+
+                    Object[] options = {"ERASE", "KEEP"};
+                    int n = JOptionPane.showOptionDialog(frame,
+                            "The cursor has been reset. Do you want to erase the biases?",
+                            "Clear Previous Data",
+                            JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            options,
+                            options[1]);
+
+                    if (n == 0) {
+                        File file = new File(var.configLocalRoot + File.separator + ATAG.DEFAULT_BIASES_NAME + ".bin");
+                        if (file.exists()) file.delete();
+                    }
                 }
             }
         });
@@ -473,7 +489,7 @@ public class ATAGShowImage {
         programName.setText(var.configLastImage);
         programName.setToolTipText(var.configLastImage);
 
-        buttonLoadCsv.setText("More Config");
+        buttonLoadCsv.setText("Reset Cursor");
 
         ((ATAGPanel)imagePanel).setFilename(var.configLastImage);
 
@@ -523,6 +539,10 @@ public class ATAGShowImage {
             if(threadType == ATAG.THREAD_PREDICT) {
                 INDArray output = cnnThread.getPredictOutput();
                 renderPredictionOnScreen(output);
+            }
+            else if (threadType == ATAG.THREAD_TRAIN) {
+                ((ATAGPanel) imagePanel).standardOutReset(false);
+                //((ATAGPanel) imagePanel).setShowPredictBoxes(false);
             }
             else {
                 ((ATAGPanel) imagePanel).standardOutReset();
