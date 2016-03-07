@@ -287,6 +287,7 @@ public class ATAGShowImage {
                     cnnThread.setDoTest(false); // ensure 'run()' does no training
                     cnnThread.setDoLoadData(false); // ensure 'run()' does no training
                     cnnThread.setDoLoadSaveModel(true); // ... must load!!
+                    cnnThread.setExitEarly(false);
                     cnnThread.setDoPredict(true);
                     cnnThread.setPredictData(predictData);
                     cnnThread.start(); // create model and load biases... on this thread!!
