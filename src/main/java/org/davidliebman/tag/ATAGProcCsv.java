@@ -196,7 +196,7 @@ public class ATAGProcCsv {
         }
     }
 
-    private void saveAnyCsv(String name, ArrayList<CsvLine> csv,ArrayList<String> heading, int filePosition) {
+    public void saveAnyCsv(String name, ArrayList<CsvLine> csv,ArrayList<String> heading, int filePosition) {
         try {
             String out = "";
 

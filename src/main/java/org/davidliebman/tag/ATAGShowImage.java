@@ -286,7 +286,7 @@ public class ATAGShowImage {
                     cnnThread.setDoFit(false); // ensure 'run()' does no training
                     cnnThread.setDoTest(false); // ensure 'run()' does no training
                     cnnThread.setDoLoadData(false); // ensure 'run()' does no training
-                    cnnThread.setDoLoadSaveModel(false);
+                    cnnThread.setDoLoadSaveModel(true); // ... must load!!
                     cnnThread.setDoPredict(true);
                     cnnThread.setPredictData(predictData);
                     cnnThread.start(); // create model and load biases... on this thread!!
@@ -433,6 +433,9 @@ public class ATAGShowImage {
 
 
         }
+        proc.saveAnyCsv(var.configLocalRoot + File.separator + "predict.csv",list,null, ATAGProcCsv.CSV_POSITION_FILE_LOCATION);
+
+
         ((ATAGPanel)imagePanel).setShowPredictBoxes(true);
         ((ATAGPanel)imagePanel).setExtraDataFaces(list);
         imagePanel.repaint();
