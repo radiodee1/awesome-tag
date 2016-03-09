@@ -199,7 +199,7 @@ public class ATAGShowImage {
             public void actionPerformed(ActionEvent e) {
                 if (proc != null) {
                     var.configLastCursor = "0";
-                    var.configLastSplit = "1";
+                    var.configLastSplit = var.configSlpitStartNum;
                     var.writeConfigText(ATAG.DOTFOLDER_SAVED_CURSOR, var.configLastCursor);
                     var.writeConfigText(ATAG.DOTFOLDER_SAVED_SPLIT, var.configLastSplit);
 
