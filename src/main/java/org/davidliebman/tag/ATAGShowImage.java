@@ -392,7 +392,7 @@ public class ATAGShowImage {
         if (list == null || list.size() < 1) return;
 
         for (int jj = 0; jj < ATAG.CNN_LABELS; jj ++) {
-            for (int ii = 0; ii < ATAG.CNN_BATCH_SIZE; ii ++) {
+            for (int ii = 0; ii < predictList.size(); ii ++) {
                 int labelIndexNumbered = 0;
                 int location = ii;// (ATAG.CNN_BATCH_SIZE - 1) - ii;
 
@@ -400,7 +400,7 @@ public class ATAGShowImage {
                     labelIndexNumbered = ii * ATAG.CNN_LABELS + jj;
                 }
                 else {
-                    labelIndexNumbered = jj * ATAG.CNN_BATCH_SIZE + ii;
+                    labelIndexNumbered = jj * predictList.size() + ii;
 
                 }
                 if (jj < ATAG.CNN_LABELS - 1) {

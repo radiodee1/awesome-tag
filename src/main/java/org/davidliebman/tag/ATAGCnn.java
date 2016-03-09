@@ -192,9 +192,27 @@ public class ATAGCnn extends  Thread {
 
                 if(doPredict) {
                     System.out.println("predict...");
-                    DataSet ds = predictData.next(0);
-                    output = model.output(ds.getFeatureMatrix());
 
+                    double [][] smallArray = new double[predictData.cursorSize * ATAG.CNN_BATCH_SIZE][2];
+
+                    INDArray small = null;
+
+                    while (predictData.hasNext()) {
+                        DataSet ds = predictData.next();
+                        small = model.output(ds.getFeatureMatrix());
+
+                        //System.out.println("len="+ small.shape().length);
+                        //for (int ii = 0; ii < small.shape().length; ii ++) {System.out.println("num=" + small.shape()[ii]);}
+
+                        for (int jj = 0; jj < small.rows(); jj ++) {
+                            System.out.println(jj + " jj");
+                            smallArray[jj * predictData.cursor()][0] = small.getDouble(jj,0);
+                            smallArray[jj * predictData.cursor()][1] = small.getDouble(jj,1);
+                        }
+
+                    }
+                    output = Nd4j.create(smallArray);
+                    //output = small;
                 }
                 saveModel(model);
             }
