@@ -36,8 +36,8 @@ public class ATAGCnn extends  Thread {
     private ATAGCnnDataSet predictData;
     private INDArray output;
 
-    private boolean doFit = false;
-    private boolean doTest = true;
+    private boolean doFit = true;
+    private boolean doTest = false;
     private boolean doPredict = false;
     private boolean doLoadSaveModel = true;
     private boolean doSaveCursor = true;
@@ -294,10 +294,10 @@ public class ATAGCnn extends  Thread {
                         cnn.setExitEarly(true);
                         MultiLayerNetwork m = cnn.getModel();
                         boolean fit = cnn.getDoFit();
-                        cnn.interrupt();
+                        //cnn.interrupt();
 
                         if (fit) {
-
+                            cnn.setExitEarly(true);
                             cnn.saveModel(m);//(cnn.getModel());
                         }
                         //System.exit(0);
