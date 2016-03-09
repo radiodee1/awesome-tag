@@ -302,10 +302,10 @@ public class ATAGProcCsv {
                     aproachNeedsRepeat = true;
 
                     int j = 0;
-                    while (aproachNeedsRepeat && j< 20) {
+                    while (aproachNeedsRepeat && j< 100) { // 20
 
                         double changex = r.nextInt((int) ATAG.CNN_DIM_PIXELS) - ATAG.CNN_DIM_PIXELS / 2.0d;
-                        double changey = r.nextInt((int) ATAG.CNN_DIM_PIXELS) - ATAG.CNN_DIM_PIXELS / 2.0d;
+                        double changey = r.nextInt((int) ATAG.CNN_DIM_PIXELS * 2) - ATAG.CNN_DIM_PIXELS ;
 
                         if (grossImageChoice) {
                             changex = (ATAG.CNN_DIM_PIXELS + r.nextInt(ATAG.CNN_DIM_PIXELS * 2)  ) * (r.nextInt(2) - 1);
@@ -420,7 +420,8 @@ public class ATAGProcCsv {
 
         BoundingBox a = new BoundingBox(x,y, ATAG.CNN_DIM_PIXELS, ATAG.CNN_DIM_PIXELS);
 
-        for (int i = 0; i < listCheck.size(); i ++) {
+        int i = 0;
+        for (i = 0; i < listCheck.size(); i ++) {
             double xx =  listCheck.get(i).getSpecifications().get(FACE_X);
             double yy =  listCheck.get(i).getSpecifications().get(FACE_Y);
 
@@ -438,7 +439,10 @@ public class ATAGProcCsv {
                 boolean out = collisionSimple(a, b);
 
                 if (debugMessages) System.out.println(name + " " + xx + " " + yy + " " + out);
-                if (out) test = true;
+                if (out) {
+                    test = true;
+                    i = listCheck.size();
+                }
             }
         }
 
