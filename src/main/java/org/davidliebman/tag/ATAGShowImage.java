@@ -388,6 +388,7 @@ public class ATAGShowImage {
     private void renderPredictionOnScreen( INDArray output) {
 
         ArrayList<ATAGProcCsv.CsvLine> list = predictList;
+        //output.linearView();
 
         if (list == null || list.size() < 1) return;
 
