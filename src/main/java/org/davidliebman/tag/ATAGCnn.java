@@ -207,7 +207,7 @@ public class ATAGCnn extends  Thread {
                         //for (int ii = 0; ii < small.shape().length; ii ++) {System.out.println("num=" + small.shape()[ii]);}
 
                         for (int jj = 0; jj < small.rows(); jj ++) {
-                            System.out.println(jj + " jj " + (predictData.cursor()-1));
+                            //System.out.println(jj + " jj " + (predictData.cursor()-1));
                             smallArray[jj + small.rows() * (predictData.cursor()-1)][0] = small.getDouble(jj,0);
                             smallArray[jj + small.rows() * (predictData.cursor()-1)][1] = small.getDouble(jj,1);
                         }
