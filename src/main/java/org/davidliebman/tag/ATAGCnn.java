@@ -5,10 +5,7 @@ package org.davidliebman.tag;
         import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
         import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
         import org.deeplearning4j.nn.conf.Updater;
-        import org.deeplearning4j.nn.conf.layers.ConvolutionLayer;
-        import org.deeplearning4j.nn.conf.layers.DenseLayer;
-        import org.deeplearning4j.nn.conf.layers.OutputLayer;
-        import org.deeplearning4j.nn.conf.layers.SubsamplingLayer;
+        import org.deeplearning4j.nn.conf.layers.*;
         import org.deeplearning4j.nn.conf.layers.setup.ConvolutionLayerSetup;
         import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
         import org.deeplearning4j.nn.weights.WeightInit;
@@ -97,7 +94,7 @@ public class ATAGCnn extends  Thread {
                 .weightInit(WeightInit.XAVIER)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .updater(Updater.NESTEROVS).momentum(0.9)
-                .list(4)
+                .list(5)
                 .layer(0, new ConvolutionLayer.Builder(5, 5)
                         .nIn(nChannels)
                         .stride(1, 1)
@@ -111,9 +108,14 @@ public class ATAGCnn extends  Thread {
                         .build())
                 .layer(2, new DenseLayer.Builder().activation("relu")
                         .nOut(1000).build()) // 500
-                //.layer(3, new DenseLayer.Builder().activation("relu")
-                //        .nOut(500).build()) // 500
-                .layer(3, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                .layer(3, new RBM.Builder(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)
+                        .k(1)
+                        .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
+                        .activation("relu")
+                        .nIn(1000)
+                        .nOut(500).build()) // 500
+                .layer(4, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                        .nIn(500)
                         .nOut(outputNum)
                         .activation("softmax")
                         .build())
@@ -221,7 +223,7 @@ public class ATAGCnn extends  Thread {
         }
 
         catch (Exception e) {
-            //e.printStackTrace(); // this prints stack trace when thread is interrupted!!
+            e.printStackTrace(); // this prints stack trace when thread is interrupted!!
             saveModel(model);
         }
     }
