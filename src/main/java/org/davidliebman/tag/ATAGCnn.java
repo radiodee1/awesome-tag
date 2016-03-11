@@ -223,7 +223,7 @@ public class ATAGCnn extends  Thread {
         }
 
         catch (Exception e) {
-            e.printStackTrace(); // this prints stack trace when thread is interrupted!!
+            //e.printStackTrace(); // this prints stack trace when thread is interrupted!!
             saveModel(model);
         }
     }
