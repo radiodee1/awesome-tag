@@ -169,8 +169,7 @@ public class ATAGPanel extends JPanel{
                 for (int i = 0; i < listFaces.size(); i ++) {
                     foundOutput = false;
                     double fx,fy,fwidth, fheight;
-                    //fx = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_X);
-                    //fy = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_Y);
+
                     fwidth = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_WIDTH);
                     fheight = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_HEIGHT);
 
