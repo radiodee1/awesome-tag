@@ -94,7 +94,7 @@ public class ATAGCnn extends  Thread {
                 .weightInit(WeightInit.XAVIER)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .updater(Updater.NESTEROVS).momentum(0.9)
-                .list(5)
+                .list(7)
                 .layer(0, new ConvolutionLayer.Builder(5, 5)
                         .nIn(nChannels)
                         .stride(1, 1)
@@ -106,16 +106,26 @@ public class ATAGCnn extends  Thread {
                         .kernelSize(2,2)
                         .stride(2,2)
                         .build())
-                .layer(2, new DenseLayer.Builder().activation("relu")
-                        .nOut(1000).build()) // 500
-                .layer(3, new RBM.Builder(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)
+                .layer(2, new ConvolutionLayer.Builder(5, 5)
+                        .stride(1, 1)
+                        .nOut(20) //20 or 30
+                        .dropOut(0.5)
+                        .activation("relu")
+                        .build())
+                .layer(3, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
+                        .kernelSize(2,2)
+                        .stride(2,2)
+                        .build())
+                .layer(4, new DenseLayer.Builder().activation("relu")
+                        .nOut(500).build()) // 1000
+                .layer(5, new RBM.Builder(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)
                         .k(1)
                         .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
                         .activation("relu")
-                        .nIn(1000)
-                        .nOut(500).build()) // 500
-                .layer(4, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-                        .nIn(500)
+                        .nIn(500) // 1000
+                        .nOut(250).build()) // 500
+                .layer(6, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                        .nIn(250) // 500
                         .nOut(outputNum)
                         .activation("softmax")
                         .build())
@@ -130,6 +140,9 @@ public class ATAGCnn extends  Thread {
         setFileName(this.name);
 
         if (exitEarly) return;
+
+        int num = model.getnLayers();
+        for (int ii = 0; ii < num; ii ++) System.out.println( ii + " layers dim1=" + model.getLayer(ii).numParams()  );
 
         loadModel(model);
 
