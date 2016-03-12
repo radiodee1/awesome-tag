@@ -89,11 +89,13 @@ public class ATAGCnn extends  Thread {
         MultiLayerConfiguration.Builder builder = new NeuralNetConfiguration.Builder()
                 .seed(seed)
                 .iterations(iterations)
-                .regularization(true).l2(0.0005)
-                .learningRate(0.01) // 0.01
+                .regularization(true)
+                .l2(0.0005)
+                .learningRate(0.001) // 0.01
                 .weightInit(WeightInit.XAVIER)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
-                .updater(Updater.NESTEROVS).momentum(0.9)
+                .updater(Updater.NESTEROVS)
+                .momentum(0.9)
                 .list(7)
                 .layer(0, new ConvolutionLayer.Builder(5, 5)
                         .nIn(nChannels)
