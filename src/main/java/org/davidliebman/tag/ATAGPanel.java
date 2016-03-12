@@ -31,6 +31,8 @@ public class ATAGPanel extends JPanel{
 
     private int textSizeW = 44, textSizeH = 27;
 
+    public static final double SURENESS = 0.7d;
+
     public ATAGPanel() {
     }
 
@@ -187,13 +189,13 @@ public class ATAGPanel extends JPanel{
                     System.out.println("add line.");
 
                     g.setColor(Color.GREEN);
-                    if (listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_LABEL_NO_OUTPUT) >= 0.5d) {
+                    if (listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_LABEL_NO_OUTPUT) >= SURENESS) {
                         g.setColor(Color.RED);
                     }
                     else {
                         //foundOutput = true;
                     }
-                    if (listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_LABEL_1) >= 0.5d) {
+                    if (listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_LABEL_1) >= SURENESS) {
                         g.setColor(Color.GREEN);
                         foundOutput = true;
                     }
