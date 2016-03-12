@@ -40,12 +40,13 @@ public class ATAGPanel extends JPanel{
 
     public void standardOutDisplay() {
         showStandartOut = true;
-        baos = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(baos));
+
+
         textField = new JTextArea("text output here...", textSizeH,textSizeW);
         textField.setLineWrap(true);
         textField.setWrapStyleWord(true);
-        //textField.setPreferredSize(null);
+
+
         scrollPane = new JScrollPane( textField,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 
@@ -57,6 +58,8 @@ public class ATAGPanel extends JPanel{
             public void run() {
                 // do stuff
                 int len = 0;// baos.size();
+                baos = new ByteArrayOutputStream();
+                System.setOut(new PrintStream(baos));
 
 
                 while ( true) {

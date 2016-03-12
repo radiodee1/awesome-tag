@@ -67,7 +67,7 @@ public class ATAGCnn extends  Thread {
 
         split = Integer.valueOf(var.configLastSplit);
 
-        int inputDim = ATAG.CNN_DIM_SIDE;//60 or 90
+        int inputDim = ATAG.CNN_DIM_SIDE;//60 or 56
 
 
         DataSetIterator mnistTrain = null;
@@ -141,8 +141,8 @@ public class ATAGCnn extends  Thread {
 
         if (exitEarly) return;
 
-        int num = model.getnLayers();
-        for (int ii = 0; ii < num; ii ++) System.out.println( ii + " layers dim1=" + model.getLayer(ii).numParams()  );
+
+        for (int ii = 0; ii < model.getnLayers(); ii ++) System.out.println( ii + " layers dim1=" + model.getLayer(ii).numParams()  );
 
         loadModel(model);
 
