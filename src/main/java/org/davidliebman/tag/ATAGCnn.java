@@ -90,7 +90,7 @@ public class ATAGCnn extends  Thread {
                 .seed(seed)
                 .iterations(iterations)
                 .regularization(true).l2(0.0005)
-                .learningRate(0.001)
+                .learningRate(0.01) // 0.01
                 .weightInit(WeightInit.XAVIER)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .updater(Updater.NESTEROVS).momentum(0.9)
@@ -116,16 +116,19 @@ public class ATAGCnn extends  Thread {
                         .kernelSize(2,2)
                         .stride(2,2)
                         .build())
-                .layer(4, new DenseLayer.Builder().activation("relu")
-                        .nOut(500).build()) // 1000
+                .layer(4, new DenseLayer.Builder()
+                        .activation("relu")
+                        .nOut(1000) // 500
+                        .build())
                 .layer(5, new RBM.Builder(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)
                         .k(1)
                         .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
                         .activation("relu")
-                        .nIn(500) // 1000
-                        .nOut(250).build()) // 500
+                        .nIn(1000) // 500
+                        .nOut(1000) // 250
+                        .build())
                 .layer(6, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-                        .nIn(250) // 500
+                        .nIn(1000) // 250
                         .nOut(outputNum)
                         .activation("softmax")
                         .build())
@@ -151,7 +154,10 @@ public class ATAGCnn extends  Thread {
 
             if(!doFit) nEpochs = 1;
 
-            model.setListeners(new ScoreIterationListener(1));
+            ScoreIterationListener listener = new ScoreIterationListener(1);
+
+
+            model.setListeners(listener);
             for (int i = 0; i < nEpochs; i++) {
                 if (exitEarly) throw new Exception();
 
@@ -167,6 +173,7 @@ public class ATAGCnn extends  Thread {
                     while(mnistTrain.hasNext()) {
                         System.out.print(split + " -- ");
                         model.fit(mnistTrain.next(cursor));
+
                         cursor ++;
                         if (exitEarly) throw new Exception();
 

@@ -54,7 +54,7 @@ public class ATAG {
     public static final String DEFAULT_LOCAL_DATA_FOLDERNAME = "local";
     public static final String DEFAULT_LOCAL_DATA_CSV = "my.csv";
     public static final String DEFAULT_LAST_IMAGE = "image.png";
-    public static final String DEFAULT_BIASES_NAME = "lenet-rbm-conv2_rc38_faces";
+    public static final String DEFAULT_BIASES_NAME = "lenet-rbm-conv2-consistent_rc38_faces";
 
 
     public String configRootLocal = "";
