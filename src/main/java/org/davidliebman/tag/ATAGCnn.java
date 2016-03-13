@@ -7,6 +7,7 @@ package org.davidliebman.tag;
         import org.deeplearning4j.nn.conf.Updater;
         import org.deeplearning4j.nn.conf.layers.*;
         import org.deeplearning4j.nn.conf.layers.setup.ConvolutionLayerSetup;
+        import org.deeplearning4j.nn.conf.stepfunctions.StepFunction;
         import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
         import org.deeplearning4j.nn.weights.WeightInit;
         import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
@@ -155,7 +156,7 @@ public class ATAGCnn extends  Thread {
         if (exitEarly) return;
 
 
-        for (int ii = 0; ii < model.getnLayers(); ii ++) System.out.println( ii + " layers dim=" + model.getLayer(ii).numParams()  );
+        for (int ii = 0; ii < model.getnLayers(); ii ++) System.out.println( ii + " layer dim=" + model.getLayer(ii).numParams()  );
 
         loadModel(model);
 
