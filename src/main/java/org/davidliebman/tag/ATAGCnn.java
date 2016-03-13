@@ -96,11 +96,11 @@ public class ATAGCnn extends  Thread {
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .updater(Updater.NESTEROVS)
                 .momentum(0.9)
-                .list(7)
+                .list(5)
                 .layer(0, new ConvolutionLayer.Builder(5, 5)
                         .nIn(nChannels)
                         .stride(1, 1)
-                        .nOut(50) //20 or 30, 40
+                        .nOut(80) //50
                         .dropOut(0.5)
                         .activation("relu")
                         .build())
@@ -108,29 +108,19 @@ public class ATAGCnn extends  Thread {
                         .kernelSize(2,2)
                         .stride(2,2)
                         .build())
-                .layer(2, new ConvolutionLayer.Builder(5, 5)
-                        .nIn(nChannels)
-                        .stride(1, 1)
-                        .nOut(40) //20 or 30, 20
-                        .dropOut(0.5)
-                        .activation("relu")
-                        .build())
-                .layer(3, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
-                        .kernelSize(2,2)
-                        .stride(2,2)
-                        .build())
-                .layer(4, new DenseLayer.Builder()
+
+                .layer(2, new DenseLayer.Builder()
                         .activation("relu")
                         .nOut(1000) // 500
                         .build())
-                .layer(5, new RBM.Builder(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)
+                .layer(3, new RBM.Builder(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)
                         .k(1)
                         .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
                         .activation("relu")
                         .nIn(1000) // 500
                         .nOut(1000) // 250
                         .build())
-                .layer(6, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                .layer(4, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
                         .nIn(1000) // 250
                         .nOut(outputNum)
                         .activation("softmax")

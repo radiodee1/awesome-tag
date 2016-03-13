@@ -52,7 +52,8 @@ public class ATAGPanel extends JPanel{
 
 
         scrollPane = new JScrollPane( textField,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
+        baos = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(baos));
 
         add(scrollPane,BorderLayout.WEST);
         scrollPane.setBackground(Color.WHITE);
@@ -62,8 +63,7 @@ public class ATAGPanel extends JPanel{
             @Override
             protected Object doInBackground() throws Exception {
                 int len = 0;// baos.size();
-                baos = new ByteArrayOutputStream();
-                System.setOut(new PrintStream(baos));
+
                 boolean loop = true;
 
                 while ( loop) {
@@ -122,7 +122,7 @@ public class ATAGPanel extends JPanel{
 
     public void standardOutReset( boolean repaint) {
         showStandartOut = false;
-        if (worker != null && !worker.isDone()) worker.cancel(true);// .interrupt();
+        if (worker != null ) worker.cancel(true);// .interrupt();
 
         //baos = null;//new ByteArrayOutputStream();
         System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
