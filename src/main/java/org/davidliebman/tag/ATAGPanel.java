@@ -5,7 +5,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by dave on 2/20/16.
@@ -21,7 +22,8 @@ public class ATAGPanel extends JPanel{
     private JScrollPane scrollPane = null;
     //private JScrollBar scrollBar = null;
 
-    private Thread textThread = null;
+
+    private SwingWorker<Object,Object> worker = null;
 
     //private double fx,fy,fheight,fwidth;
     private boolean addOutline = false;
@@ -49,32 +51,36 @@ public class ATAGPanel extends JPanel{
         textField.setWrapStyleWord(true);
 
 
-        scrollPane = new JScrollPane( textField,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane = new JScrollPane( textField,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 
         add(scrollPane,BorderLayout.WEST);
         scrollPane.setBackground(Color.WHITE);
 
 
-        textThread = new Thread() {
-            public void run() {
-                // do stuff
+
+
+
+
+        worker = new SwingWorker<Object, Object>() {
+            @Override
+            protected Object doInBackground() throws Exception {
                 int len = 0;// baos.size();
                 baos = new ByteArrayOutputStream();
                 System.setOut(new PrintStream(baos));
+                boolean loop = true;
 
-
-                while ( true) {
+                while ( loop) {
                     try {
                         if (len != baos.size()) {
-                            textField.setText(baos.toString());
+                            //textField.setText(baos.toString());
                             len = baos.size();
                             //System.out.println("x");
                             System.out.flush();
                             baos.flush();
-                            revalidate();
-                            scrollPane.getVerticalScrollBar().setValue( (int) (ATAGPanel.this.getPreferredSize().getHeight() + textField.getPreferredSize().getHeight()));
-
+                            //revalidate();
+                            //scrollPane.getVerticalScrollBar().setValue( (int) (ATAGPanel.this.getPreferredSize().getHeight() + textField.getPreferredSize().getHeight()));
+                            publish();
 
                         }
                         Thread.sleep(2000);
@@ -88,10 +94,19 @@ public class ATAGPanel extends JPanel{
                         e.printStackTrace();
                     }
                 }
+                return null;
+            }
+
+            @Override
+            protected void process(List<Object> chunks) {
+                super.process(chunks);
+                textField.setText(baos.toString());
+                scrollPane.getVerticalScrollBar().setValue( (int) (ATAGPanel.this.getPreferredSize().getHeight() + textField.getPreferredSize().getHeight()));
+                revalidate();
             }
         };
-        textThread.start();
 
+        worker.execute();
         /*
         try {
             baos.close();
@@ -111,7 +126,7 @@ public class ATAGPanel extends JPanel{
 
     public void standardOutReset( boolean repaint) {
         showStandartOut = false;
-        if (textThread != null && textThread.isAlive()) textThread.interrupt();
+        if (worker != null && !worker.isDone()) worker.cancel(true);// .interrupt();
 
         //baos = null;//new ByteArrayOutputStream();
         System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));

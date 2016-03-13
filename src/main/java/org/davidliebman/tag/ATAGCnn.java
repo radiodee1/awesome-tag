@@ -33,8 +33,8 @@ public class ATAGCnn extends  Thread {
     private ATAGCnnDataSet predictData;
     private INDArray output;
 
-    private boolean doFit = true;
-    private boolean doTest = false;
+    private boolean doFit = false;
+    private boolean doTest = true;
     private boolean doPredict = false;
     private boolean doLoadSaveModel = true;
     private boolean doSaveCursor = true;
@@ -100,7 +100,7 @@ public class ATAGCnn extends  Thread {
                 .layer(0, new ConvolutionLayer.Builder(5, 5)
                         .nIn(nChannels)
                         .stride(1, 1)
-                        .nOut(40) //20 or 30
+                        .nOut(50) //20 or 30, 40
                         .dropOut(0.5)
                         .activation("relu")
                         .build())
@@ -111,7 +111,7 @@ public class ATAGCnn extends  Thread {
                 .layer(2, new ConvolutionLayer.Builder(5, 5)
                         .nIn(nChannels)
                         .stride(1, 1)
-                        .nOut(20) //20 or 30
+                        .nOut(40) //20 or 30, 20
                         .dropOut(0.5)
                         .activation("relu")
                         .build())
@@ -148,7 +148,7 @@ public class ATAGCnn extends  Thread {
         if (exitEarly) return;
 
 
-        for (int ii = 0; ii < model.getnLayers(); ii ++) System.out.println( ii + " layers dim1=" + model.getLayer(ii).numParams()  );
+        for (int ii = 0; ii < model.getnLayers(); ii ++) System.out.println( ii + " layers dim=" + model.getLayer(ii).numParams()  );
 
         loadModel(model);
 
@@ -175,6 +175,7 @@ public class ATAGCnn extends  Thread {
 
                     while(mnistTrain.hasNext()) {
                         System.out.print(split + " -- ");
+
                         model.fit(mnistTrain.next(cursor));
 
                         cursor ++;
