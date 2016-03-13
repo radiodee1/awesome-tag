@@ -10,6 +10,7 @@ package org.davidliebman.tag;
         import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
         import org.deeplearning4j.nn.weights.WeightInit;
         import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+
         import org.nd4j.linalg.api.ndarray.INDArray;
         import org.nd4j.linalg.dataset.DataSet;
         import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
@@ -33,7 +34,7 @@ public class ATAGCnn extends  Thread {
     private ATAGCnnDataSet predictData;
     private INDArray output;
 
-    private boolean doFit = false;
+    private boolean doFit = true;
     private boolean doTest = true;
     private boolean doPredict = false;
     private boolean doLoadSaveModel = true;
@@ -91,12 +92,13 @@ public class ATAGCnn extends  Thread {
                 .iterations(iterations)
                 .regularization(true)
                 .l2(0.0005)
-                .learningRate(0.001) // 0.01
+                .learningRate(0.01) // 0.01
                 .weightInit(WeightInit.XAVIER)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
+                //.optimizationAlgo(OptimizationAlgorithm.LBFGS)
                 .updater(Updater.NESTEROVS)
                 .momentum(0.9)
-                .list(5)
+                .list(6)
                 .layer(0, new ConvolutionLayer.Builder(5, 5)
                         .nIn(nChannels)
                         .stride(1, 1)
@@ -109,19 +111,34 @@ public class ATAGCnn extends  Thread {
                         .stride(2,2)
                         .build())
 
+
                 .layer(2, new DenseLayer.Builder()
                         .activation("relu")
                         .nOut(1000) // 500
                         .build())
+
                 .layer(3, new RBM.Builder(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)
                         .k(1)
                         .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
+                        .updater(Updater.ADAGRAD)
+                        .dropOut(0.5)
                         .activation("relu")
                         .nIn(1000) // 500
-                        .nOut(1000) // 250
+                        .nOut(700) // 250
                         .build())
-                .layer(4, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-                        .nIn(1000) // 250
+
+
+                .layer(4, new RBM.Builder(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)
+                        .k(1)
+                        .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
+                        .updater(Updater.ADAGRAD)
+                        .dropOut(0.5)
+                        .activation("relu")
+                        .nIn(700) // 500
+                        .nOut(700) // 250
+                        .build())
+                .layer(5, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                        .nIn(700) // 250
                         .nOut(outputNum)
                         .activation("softmax")
                         .build())
