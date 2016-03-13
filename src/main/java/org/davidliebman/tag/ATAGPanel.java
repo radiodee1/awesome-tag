@@ -58,10 +58,6 @@ public class ATAGPanel extends JPanel{
         scrollPane.setBackground(Color.WHITE);
 
 
-
-
-
-
         worker = new SwingWorker<Object, Object>() {
             @Override
             protected Object doInBackground() throws Exception {

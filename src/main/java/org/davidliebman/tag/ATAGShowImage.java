@@ -308,7 +308,7 @@ public class ATAGShowImage {
                 if (cnnThread != null&& cnnThread.isAlive()) {
                     // TERMINATE AND SET TO NULL
                     frame.setTitle("Wait...");
-
+                    buttonTrainCNN.setText("Wait");
                     cnnThread.setExitEarly(true);
                     waitDialogShow();
 
@@ -316,16 +316,19 @@ public class ATAGShowImage {
                     dialogThread.execute();
 
                 }
-                else if (cnnThread != null && (! cnnThread.isAlive() ||cnnThread.getState() == Thread.State.WAITING)) {
+                else if ( threadType == ATAG.THREAD_TRAIN && cnnThread != null && (! cnnThread.isAlive() ||cnnThread.getState() == Thread.State.WAITING)) {
                     ((ATAGPanel)imagePanel).standardOutReset();
                     cnnThread = null;
                     frame.setTitle("Awesome Tag");
+                    setDisplayText();
                 }
                 else
                 {
                     // CREATE INSTANCE AND RUN
                     ((ATAGPanel)imagePanel).standardOutDisplay();
                     frame.setTitle("TRAIN");
+                    buttonTrainCNN.setText("Interrupt");
+
                     try {
 
                         cnnThread = new ATAGCnn(var, proc);
@@ -350,23 +353,26 @@ public class ATAGShowImage {
                 if (cnnThread != null && cnnThread.isAlive()) {
                     // TERMINATE AND SET TO NULL
                     frame.setTitle("Wait...");
+                    buttonTestCNN.setText("Wait");
                     cnnThread.setExitEarly(true);
                     waitDialogShow();
                     dialogThread = new StartDialog();
                     dialogThread.execute();
 
                 }
-                else if ( cnnThread != null && (! cnnThread.isAlive() ||cnnThread.getState() == Thread.State.WAITING)) {
+                else if ( threadType == ATAG.THREAD_TEST && cnnThread != null && (! cnnThread.isAlive() ||cnnThread.getState() == Thread.State.WAITING)) {
                     ((ATAGPanel)imagePanel).standardOutReset();
                     cnnThread = null;
                     frame.setTitle("Awesome Tag");
-
+                    setDisplayText();
 
                 }
                 else  {
                     // CREATE INSTANCE AND RUN
                     ((ATAGPanel)imagePanel).standardOutDisplay();
                     frame.setTitle("TEST");
+                    buttonTestCNN.setText("Interrupt");
+
                     try {
 
 
@@ -502,6 +508,9 @@ public class ATAGShowImage {
 
         buttonLoadCsv.setText("Reset Cursor");
 
+        buttonTestCNN.setText("Test CNN");
+        buttonTrainCNN.setText("Train CNN");
+
         ((ATAGPanel)imagePanel).setFilename(var.configLastImage);
 
 
@@ -554,10 +563,12 @@ public class ATAGShowImage {
             else if (threadType == ATAG.THREAD_TRAIN) {
                 ((ATAGPanel) imagePanel).standardOutReset(false);
                 //((ATAGPanel) imagePanel).setShowPredictBoxes(false);
+                buttonTrainCNN.setText("Clear");
             }
-            else {
+            else if (threadType == ATAG.THREAD_TEST){
                 ((ATAGPanel) imagePanel).standardOutReset();
-                ((ATAGPanel) imagePanel).setShowPredictBoxes(false);
+                //((ATAGPanel) imagePanel).setShowPredictBoxes(false);
+                buttonTestCNN.setText("Clear");
             }
             frame.setTitle("Awesome Tag");
             waitDialogHide();
