@@ -99,7 +99,7 @@ public class ATAGCnn extends  Thread {
                 //.optimizationAlgo(OptimizationAlgorithm.LBFGS)
                 .updater(Updater.NESTEROVS)
                 .momentum(0.9)
-                .list(6)
+                .list(5)
                 .layer(0, new ConvolutionLayer.Builder(5, 5)
                         .nIn(nChannels)
                         .stride(1, 1)
@@ -120,7 +120,7 @@ public class ATAGCnn extends  Thread {
 
                 .layer(3, new RBM.Builder(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)
                         .k(1)
-                        .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
+                        .lossFunction(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
                         .updater(Updater.ADAGRAD)
                         .dropOut(0.5)
                         .activation("relu")
@@ -128,17 +128,18 @@ public class ATAGCnn extends  Thread {
                         .nOut(700) // 250
                         .build())
 
-
-                .layer(4, new RBM.Builder(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)
-                        .k(1)
-                        .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
-                        .updater(Updater.ADAGRAD)
+                /*
+                .layer(4, new DenseLayer.Builder() //(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)
+                        //.k(1)
+                        //.lossFunction(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                        //.updater(Updater.ADAGRAD)
                         .dropOut(0.5)
                         .activation("relu")
                         .nIn(700) // 500
-                        .nOut(700) // 250
+                        .nOut(100) // 250
                         .build())
-                .layer(5, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                */
+                .layer(4, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
                         .nIn(700) // 250
                         .nOut(outputNum)
                         .activation("softmax")
