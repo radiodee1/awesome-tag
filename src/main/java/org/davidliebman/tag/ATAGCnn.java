@@ -97,6 +97,7 @@ public class ATAGCnn extends  Thread {
                 .weightInit(WeightInit.XAVIER)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 //.optimizationAlgo(OptimizationAlgorithm.LBFGS)
+
                 .updater(Updater.ADAGRAD)
                 .momentum(0.9)
                 .list(5)
@@ -134,7 +135,7 @@ public class ATAGCnn extends  Thread {
 
                 .layer(3, new RBM.Builder(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)//, RBM.VisibleUnit.GAUSSIAN)
                         .k(1)
-                        .lossFunction(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)//mcxent
+                        .lossFunction(LossFunctions.LossFunction.RMSE_XENT)//mcxent
                         //.updater(Updater.ADAGRAD)
                         .dropOut(0.5)
                         .activation("relu")
@@ -312,6 +313,7 @@ public class ATAGCnn extends  Thread {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(homeDir + File.separator + this.name + ".updater.bin"));
             org.deeplearning4j.nn.api.Updater updater;
             updater = (org.deeplearning4j.nn.api.Updater) ois.readObject();
+            ois.close(); //??
             model.setUpdater(updater);
 
             System.out.println("done load model");
@@ -338,6 +340,8 @@ public class ATAGCnn extends  Thread {
             ///// updater /////
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(homeDir + File.separator + this.name +".updater.bin"));
             oos.writeObject(model.getUpdater());
+            oos.flush();
+            oos.close();
 
             modelSaved = true;
 
