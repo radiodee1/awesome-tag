@@ -40,7 +40,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     private boolean debugMessages = false;
     private boolean debugByteOrder = false;
     private boolean debugDontCenter = false;
-    private boolean debugNoThreshold = true;
+    private boolean debugNoThreshold = false;
     private boolean debugDoNotSplit = false;
     private boolean orderAsAlternate = true;
     private boolean debugOneChannelForDisplay = true;

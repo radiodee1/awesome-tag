@@ -97,7 +97,7 @@ public class ATAGCnn extends  Thread {
                 .weightInit(WeightInit.XAVIER)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 //.optimizationAlgo(OptimizationAlgorithm.LBFGS)
-                .updater(Updater.NESTEROVS)
+                .updater(Updater.ADAGRAD)
                 .momentum(0.9)
                 .list(5)
                 .layer(0, new ConvolutionLayer.Builder(5, 5)
@@ -128,17 +128,17 @@ public class ATAGCnn extends  Thread {
 
                 .layer(2, new DenseLayer.Builder()
                         .activation("relu")
-                        .nOut(500) // 500
+                        .nOut(150) // 500
                         .build())
 
 
                 .layer(3, new RBM.Builder(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)//, RBM.VisibleUnit.GAUSSIAN)
                         .k(1)
-                        .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
+                        .lossFunction(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)//mcxent
                         //.updater(Updater.ADAGRAD)
                         .dropOut(0.5)
                         .activation("relu")
-                        .nIn(500) // 500
+                        .nIn(150) // 500
                         .nOut(75) // 250
                         .build())
                 /*
