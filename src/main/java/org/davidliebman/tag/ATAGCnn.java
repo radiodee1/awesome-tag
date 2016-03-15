@@ -99,7 +99,7 @@ public class ATAGCnn extends  Thread {
                 //.optimizationAlgo(OptimizationAlgorithm.LBFGS)
                 .updater(Updater.NESTEROVS)
                 .momentum(0.9)
-                .list(5)
+                .list(6)
                 .layer(0, new ConvolutionLayer.Builder(5, 5)
                         .nIn(nChannels)
                         .stride(1, 1)
@@ -111,13 +111,24 @@ public class ATAGCnn extends  Thread {
                         .kernelSize(2,2)
                         .stride(2,2)
                         .build())
-
-
-                .layer(2, new DenseLayer.Builder()
+                .layer(2, new ConvolutionLayer.Builder(5, 5)
+                        //.nIn(nChannels)
+                        .stride(1, 1)
+                        .nOut(50) //50
+                        .dropOut(0.5)
                         .activation("relu")
-                        .nOut(1000) // 500
+                        .build())
+                .layer(3, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
+                        .kernelSize(2,2)
+                        .stride(2,2)
                         .build())
 
+                .layer(4, new DenseLayer.Builder()
+                        .activation("relu")
+                        .nOut(700) // 500
+                        .build())
+
+                /*
                 .layer(3, new RBM.Builder(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)
                         .k(1)
                         .lossFunction(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
@@ -128,7 +139,7 @@ public class ATAGCnn extends  Thread {
                         .nOut(700) // 250
                         .build())
 
-                /*
+
                 .layer(4, new DenseLayer.Builder() //(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)
                         //.k(1)
                         //.lossFunction(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
@@ -139,7 +150,7 @@ public class ATAGCnn extends  Thread {
                         .nOut(100) // 250
                         .build())
                 */
-                .layer(4, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                .layer(5, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
                         .nIn(700) // 250
                         .nOut(outputNum)
                         .activation("softmax")
@@ -186,6 +197,8 @@ public class ATAGCnn extends  Thread {
                         System.out.print(split + " -- ");
 
                         model.fit(mnistTrain.next(cursor));
+
+                        //System.out.println(model.f1Score(mnistTrain.next(cursor)));
 
                         cursor ++;
                         if (exitEarly) throw new Exception();
