@@ -216,6 +216,8 @@ public class ATAGShowImage {
                     if (n == 0) {
                         File file = new File(var.configLocalRoot + File.separator + ATAG.DEFAULT_BIASES_NAME + ".bin");
                         if (file.exists()) file.delete();
+                        File file2 = new File(var.configLocalRoot + File.separator + ATAG.DEFAULT_BIASES_NAME + ".updater.bin");
+                        if (file2.exists()) file2.delete();
                     }
                 }
             }
@@ -510,6 +512,9 @@ public class ATAGShowImage {
 
         buttonTestCNN.setText("Test CNN");
         buttonTrainCNN.setText("Train CNN");
+
+        buttonNext.setText("Next Pic");
+        buttonPrevious.setText("Prev Pic");
 
         ((ATAGPanel)imagePanel).setFilename(var.configLastImage);
 

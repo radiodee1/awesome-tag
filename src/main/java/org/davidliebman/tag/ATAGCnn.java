@@ -99,11 +99,11 @@ public class ATAGCnn extends  Thread {
                 //.optimizationAlgo(OptimizationAlgorithm.LBFGS)
                 .updater(Updater.NESTEROVS)
                 .momentum(0.9)
-                .list(6)
+                .list(5)
                 .layer(0, new ConvolutionLayer.Builder(5, 5)
                         .nIn(nChannels)
                         .stride(1, 1)
-                        .nOut(80) //50
+                        .nOut(40) //50
                         .dropOut(0.5)
                         .activation("relu")
                         .build())
@@ -111,6 +111,7 @@ public class ATAGCnn extends  Thread {
                         .kernelSize(2,2)
                         .stride(2,2)
                         .build())
+                /*
                 .layer(2, new ConvolutionLayer.Builder(5, 5)
                         //.nIn(nChannels)
                         .stride(1, 1)
@@ -118,27 +119,29 @@ public class ATAGCnn extends  Thread {
                         .dropOut(0.5)
                         .activation("relu")
                         .build())
+
                 .layer(3, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
                         .kernelSize(2,2)
                         .stride(2,2)
                         .build())
+                */
 
-                .layer(4, new DenseLayer.Builder()
+                .layer(2, new DenseLayer.Builder()
                         .activation("relu")
-                        .nOut(700) // 500
+                        .nOut(500) // 500
                         .build())
 
-                /*
-                .layer(3, new RBM.Builder(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)
+
+                .layer(3, new RBM.Builder(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)//, RBM.VisibleUnit.GAUSSIAN)
                         .k(1)
-                        .lossFunction(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-                        .updater(Updater.ADAGRAD)
+                        .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
+                        //.updater(Updater.ADAGRAD)
                         .dropOut(0.5)
                         .activation("relu")
-                        .nIn(1000) // 500
-                        .nOut(700) // 250
+                        .nIn(500) // 500
+                        .nOut(75) // 250
                         .build())
-
+                /*
 
                 .layer(4, new DenseLayer.Builder() //(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)
                         //.k(1)
@@ -150,8 +153,8 @@ public class ATAGCnn extends  Thread {
                         .nOut(100) // 250
                         .build())
                 */
-                .layer(5, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-                        .nIn(700) // 250
+                .layer(4, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                        .nIn(75) // 250
                         .nOut(outputNum)
                         .activation("softmax")
                         .build())
@@ -168,7 +171,7 @@ public class ATAGCnn extends  Thread {
         if (exitEarly) return;
 
 
-        for (int ii = 0; ii < model.getnLayers(); ii ++) System.out.println( ii + " layer dim=" + model.getLayer(ii).numParams()  );
+        for (int ii = 0; ii < model.getnLayers(); ii ++) System.out.println( ii + " layer dim=" + model.getLayer(ii).numParams() );//+ " = " + model.getLayer(ii).getParam("bias").toString() );
 
         loadModel(model);
 
@@ -304,6 +307,13 @@ public class ATAGCnn extends  Thread {
             INDArray newParams = Nd4j.read(dis);
             dis.close();
             model.setParameters(newParams);
+
+            ///// updater /////
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(homeDir + File.separator + this.name + ".updater.bin"));
+            org.deeplearning4j.nn.api.Updater updater;
+            updater = (org.deeplearning4j.nn.api.Updater) ois.readObject();
+            model.setUpdater(updater);
+
             System.out.println("done load model");
         }
         catch (Exception e) {
@@ -324,6 +334,11 @@ public class ATAGCnn extends  Thread {
             Nd4j.write(model.params(), dos);
             dos.flush();
             dos.close();
+
+            ///// updater /////
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(homeDir + File.separator + this.name +".updater.bin"));
+            oos.writeObject(model.getUpdater());
+
             modelSaved = true;
 
             if (doSaveCursor || doFit) {
