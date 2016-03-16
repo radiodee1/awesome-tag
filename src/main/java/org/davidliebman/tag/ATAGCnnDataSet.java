@@ -40,7 +40,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     private boolean debugMessages = false;
     private boolean debugByteOrder = false;
     private boolean debugDontCenter = false;
-    private boolean debugNoThreshold = false;
+    private boolean debugNoThreshold = true;
     private boolean debugDoNotSplit = false;
     private boolean orderAsAlternate = true;
     private boolean debugOneChannelForDisplay = true;
@@ -79,6 +79,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
         int transx = (int)(x_start) , transy = (int)(y_start);
         int threshold = 128;//128
+        float colordiv = 128.0f; // produce a num between 0 and 2... change to 255.0f for num between 0 and 1
         float mag = ATAG.CNN_DIM_PIXELS /(float) ATAG.CNN_DIM_SIDE;
 
         BufferedImage image = ImageIO.read(file);
@@ -136,18 +137,18 @@ public class ATAGCnnDataSet  implements DataSetIterator {
                     }
                     else {
                         if (!orderAsAlternate) {
-                            array1D[arrayPos1D + 0] = red / 255.0f;// here R,G, and B are side by side.
+                            array1D[arrayPos1D + 0] = red / colordiv;// here R,G, and B are side by side.
 
-                            array1D[arrayPos1D + 1] = green / 255.0f;
+                            array1D[arrayPos1D + 1] = green / colordiv;
 
-                            array1D[arrayPos1D + 2] = blue / 255.0f;
+                            array1D[arrayPos1D + 2] = blue / colordiv;
                         }
                         else {
-                            array1D[ 0 * ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE + yPixel * ATAG.CNN_DIM_SIDE + xPixel] = red / 255.0f;//array2D[yPixel][xPixel][0];
+                            array1D[ 0 * ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE + yPixel * ATAG.CNN_DIM_SIDE + xPixel] = red / colordiv;//
 
-                            array1D[ 1 * ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE + yPixel * ATAG.CNN_DIM_SIDE + xPixel] = green / 255.0f;//array2D[yPixel][xPixel][1];
+                            array1D[ 1 * ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE + yPixel * ATAG.CNN_DIM_SIDE + xPixel] = green / colordiv;//
 
-                            array1D[ 2 * ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE + yPixel * ATAG.CNN_DIM_SIDE + xPixel] = blue / 255.0f;//array2D[yPixel][xPixel][2];
+                            array1D[ 2 * ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE + yPixel * ATAG.CNN_DIM_SIDE + xPixel] = blue / colordiv;//
                         }
                     }
 
