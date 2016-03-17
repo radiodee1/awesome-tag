@@ -104,7 +104,7 @@ public class ATAGCnn extends  Thread {
                 .layer(0, new ConvolutionLayer.Builder(5, 5)
                         .nIn(nChannels)
                         .stride(1, 1)
-                        .nOut(100) //50
+                        .nOut(80) //80
                         .dropOut(0.5)
                         .activation("relu")
                         .build())
@@ -129,7 +129,7 @@ public class ATAGCnn extends  Thread {
 
                 .layer(2, new DenseLayer.Builder()
                         .activation("relu")
-                        .nOut(600) // 676
+                        .nOut(600) // 600
                         .build())
 
 
@@ -139,7 +139,7 @@ public class ATAGCnn extends  Thread {
                         //.updater(Updater.ADAGRAD)
                         .dropOut(0.5)
                         .activation("relu")
-                        .nIn(600) // 676
+                        .nIn(600) // 600
                         .nOut(200) // 250
                         .build())
                 /*
@@ -353,6 +353,7 @@ public class ATAGCnn extends  Thread {
             }
 
             System.out.println("done save model");
+            System.out.println();
         }
         catch (Exception e) {
             e.printStackTrace();
