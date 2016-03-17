@@ -14,7 +14,7 @@ package org.davidliebman.tag;
         import java.io.File;
         import java.io.IOException;
         import java.nio.file.*;
-        import java.nio.file.attribute.BasicFileAttributes;
+        //import java.nio.file.attribute.BasicFileAttributes;
         import java.util.*;
         import java.util.List;
 
@@ -79,7 +79,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
         int transx = (int)(x_start) , transy = (int)(y_start);
         int threshold = 128;//128
-        float colordiv = 128.0f; // produce a num between 0 and 2... change to 255.0f for num between 0 and 1
+        float colordiv = 255.0f; // produce a num between 0 and 2... change to 255.0f for num between 0 and 1
         float mag = ATAG.CNN_DIM_PIXELS /(float) ATAG.CNN_DIM_SIDE;
 
         BufferedImage image = ImageIO.read(file);

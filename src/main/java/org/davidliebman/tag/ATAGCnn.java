@@ -140,7 +140,7 @@ public class ATAGCnn extends  Thread {
                         .dropOut(0.5)
                         .activation("relu")
                         .nIn(600) // 676
-                        .nOut(100) // 250
+                        .nOut(200) // 250
                         .build())
                 /*
 
@@ -155,7 +155,7 @@ public class ATAGCnn extends  Thread {
                         .build())
                 */
                 .layer(4, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-                        .nIn(100) // 250
+                        .nIn(200) // 250
                         .nOut(outputNum)
                         .activation("softmax")
                         .build())
