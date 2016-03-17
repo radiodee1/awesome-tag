@@ -104,7 +104,7 @@ public class ATAGCnn extends  Thread {
                 .layer(0, new ConvolutionLayer.Builder(5, 5)
                         .nIn(nChannels)
                         .stride(1, 1)
-                        .nOut(40) //50
+                        .nOut(100) //50
                         .dropOut(0.5)
                         .activation("relu")
                         .build())
@@ -129,7 +129,7 @@ public class ATAGCnn extends  Thread {
 
                 .layer(2, new DenseLayer.Builder()
                         .activation("relu")
-                        .nOut(150) // 500
+                        .nOut(600) // 676
                         .build())
 
 
@@ -139,8 +139,8 @@ public class ATAGCnn extends  Thread {
                         //.updater(Updater.ADAGRAD)
                         .dropOut(0.5)
                         .activation("relu")
-                        .nIn(150) // 500
-                        .nOut(75) // 250
+                        .nIn(600) // 676
+                        .nOut(100) // 250
                         .build())
                 /*
 
@@ -155,7 +155,7 @@ public class ATAGCnn extends  Thread {
                         .build())
                 */
                 .layer(4, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-                        .nIn(75) // 250
+                        .nIn(100) // 250
                         .nOut(outputNum)
                         .activation("softmax")
                         .build())
