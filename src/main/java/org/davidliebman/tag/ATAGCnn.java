@@ -72,6 +72,7 @@ public class ATAGCnn extends  Thread {
 
         int inputDim = ATAG.CNN_DIM_SIDE;//60 or 56
 
+        setFileName(this.name);
 
         DataSetIterator mnistTrain = null;
         DataSetIterator mnistTest = null;
@@ -174,7 +175,7 @@ public class ATAGCnn extends  Thread {
 
             model.init();
 
-            setFileName(this.name);
+            //setFileName(this.name);
 
             if (exitEarly) return;
 
@@ -301,7 +302,6 @@ public class ATAGCnn extends  Thread {
 
     public void setFileName(String name) {
         this.name = name;
-
         fileName = homeDir + File.separator + name +".bin";
     }
 
