@@ -164,10 +164,10 @@ public class ATAGCnn extends  Thread {
         new ConvolutionLayerSetup(builder,inputDim,inputDim, nChannels);
 
         MultiLayerConfiguration conf = builder.build();
-        final MultiLayerNetwork model = new MultiLayerNetwork(conf);
+        final MultiLayerNetwork modelNew = new MultiLayerNetwork(conf);
         model.init();
 
-        this.model = model;
+        this.model = modelNew;
         setFileName(this.name);
 
         if (exitEarly) return;
