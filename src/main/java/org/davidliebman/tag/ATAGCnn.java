@@ -100,7 +100,7 @@ public class ATAGCnn extends  Thread {
 
                 .updater(Updater.ADAGRAD)
                 .momentum(0.9)
-                .list(5)
+                .list(4)
                 .layer(0, new ConvolutionLayer.Builder(5, 5)
                         .nIn(nChannels)
                         .stride(1, 1)
@@ -132,6 +132,7 @@ public class ATAGCnn extends  Thread {
                         .nOut(600) // 600
                         .build())
 
+                /*
 
                 .layer(3, new RBM.Builder(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)//, RBM.VisibleUnit.GAUSSIAN)
                         .k(1)
@@ -142,7 +143,7 @@ public class ATAGCnn extends  Thread {
                         .nIn(600) // 600
                         .nOut(200) // 250
                         .build())
-                /*
+
 
                 .layer(4, new DenseLayer.Builder() //(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)
                         //.k(1)
@@ -154,8 +155,8 @@ public class ATAGCnn extends  Thread {
                         .nOut(100) // 250
                         .build())
                 */
-                .layer(4, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-                        .nIn(200) // 250
+                .layer(3, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                        .nIn(600) // 250
                         .nOut(outputNum)
                         .activation("softmax")
                         .build())

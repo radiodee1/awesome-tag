@@ -530,7 +530,6 @@ public class ATAGShowImage {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
-        frame.setName("Awesome Tag");
 
         var = v;
         proc = p;
