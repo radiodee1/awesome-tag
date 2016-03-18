@@ -44,6 +44,8 @@ public class ATAGCnn extends  Thread {
     private boolean doGenerateNewModel = true;
     private boolean modelSaved = false;
 
+    private double learningRate = 0.01;
+
     private int cursor = 0;
     private int split = 0;
 
@@ -92,13 +94,15 @@ public class ATAGCnn extends  Thread {
         ////
         if (doGenerateNewModel) {
 
+            scheduleLearningRate();
+
             log.info("Build model....");
             MultiLayerConfiguration.Builder builder = new NeuralNetConfiguration.Builder()
                     .seed(seed)
                     .iterations(iterations)
                     .regularization(true)
                     .l2(0.0005)
-                    .learningRate(0.0005) // 0.01
+                    .learningRate(learningRate) // 0.01 or 0.0005
                     .weightInit(WeightInit.XAVIER)
                     .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                     //.optimizationAlgo(OptimizationAlgorithm.LBFGS)
@@ -306,6 +310,10 @@ public class ATAGCnn extends  Thread {
         fileName = homeDir + File.separator + name +".bin";
     }
 
+    private void scheduleLearningRate () {
+        if (split > 1) learningRate = 0.0005;
+        else learningRate = 0.01;
+    }
 
     public void loadModel(MultiLayerNetwork m ) {
         try {
