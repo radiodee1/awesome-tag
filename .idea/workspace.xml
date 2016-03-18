@@ -82,8 +82,8 @@
       <file leaf-file-name="ATAGShowImage.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGShowImage.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1007">
-              <caret line="292" column="58" selection-start-line="292" selection-start-column="58" selection-end-line="292" selection-end-column="58" />
+            <state relative-caret-position="658">
+              <caret line="601" column="0" selection-start-line="601" selection-start-column="0" selection-end-line="601" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -92,7 +92,7 @@
       <file leaf-file-name="ATAGCnn.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnn.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="298">
+            <state relative-caret-position="-2222">
               <caret line="138" column="22" selection-start-line="138" selection-start-column="22" selection-end-line="138" selection-end-column="22" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -512,13 +512,6 @@
       <option name="presentableId" value="Default" />
       <updated>1455820400608</updated>
     </task>
-    <task id="LOCAL-00070" summary="working on Jpanel and stdout">
-      <created>1457030457999</created>
-      <option name="number" value="00070" />
-      <option name="presentableId" value="LOCAL-00070" />
-      <option name="project" value="LOCAL" />
-      <updated>1457030458000</updated>
-    </task>
     <task id="LOCAL-00071" summary="working on Jpanel and stdout">
       <created>1457030664708</created>
       <option name="number" value="00071" />
@@ -855,7 +848,14 @@
       <option name="project" value="LOCAL" />
       <updated>1458323942217</updated>
     </task>
-    <option name="localTasksCounter" value="119" />
+    <task id="LOCAL-00119" summary="try to eliminate some waiting for model to load">
+      <created>1458324357151</created>
+      <option name="number" value="00119" />
+      <option name="presentableId" value="LOCAL-00119" />
+      <option name="project" value="LOCAL" />
+      <updated>1458324357151</updated>
+    </task>
+    <option name="localTasksCounter" value="120" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1370,7 +1370,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnn.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
+        <state relative-caret-position="-2222">
           <caret line="138" column="22" selection-start-line="138" selection-start-column="22" selection-end-line="138" selection-end-column="22" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -1380,8 +1380,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGShowImage.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1007">
-          <caret line="292" column="58" selection-start-line="292" selection-start-column="58" selection-end-line="292" selection-end-column="58" />
+        <state relative-caret-position="658">
+          <caret line="601" column="0" selection-start-line="601" selection-start-column="0" selection-end-line="601" selection-end-column="0" />
           <folding />
         </state>
       </provider>

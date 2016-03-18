@@ -298,7 +298,7 @@ public class ATAGShowImage {
                     cnnThread.setDoFit(false); // ensure 'run()' does no training
                     cnnThread.setDoTest(false); // ensure 'run()' does no training
                     cnnThread.setDoLoadData(false); // ensure 'run()' does no training
-                    cnnThread.setDoLoadSaveModel(true); // ... must load!!
+                    //cnnThread.setDoLoadSaveModel(true); // ... must load!!
                     cnnThread.setExitEarly(false);
                     cnnThread.setDoPredict(true);
                     cnnThread.setPredictData(predictData);
@@ -594,7 +594,11 @@ public class ATAGShowImage {
                 //((ATAGPanel) imagePanel).setShowPredictBoxes(false);
                 buttonTestCNN.setText("Clear");
             }
-            model = cnnThread.getModel();
+
+            MultiLayerNetwork mod = cnnThread.getModel();
+            if(mod != null) {
+                model = mod;
+            }
 
             frame.setTitle("Awesome Tag");
             waitDialogHide();
