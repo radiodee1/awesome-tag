@@ -311,7 +311,7 @@ public class ATAGCnn extends  Thread {
     }
 
     private void scheduleLearningRate () {
-        if (split > 1) learningRate = 0.0005;
+        if (split > 1) learningRate = 0.01;// 0.0005;
         else learningRate = 0.01;
     }
 

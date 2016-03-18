@@ -279,6 +279,11 @@ public class ATAGShowImage {
                 //
                 threadType = ATAG.THREAD_PREDICT;
                 frame.setTitle("Please Wait...");
+                if (cnnThread != null && (! cnnThread.isAlive() ||cnnThread.getState() == Thread.State.WAITING)) {
+                    ((ATAGPanel)imagePanel).standardOutReset();
+                    cnnThread = null;
+                    setDisplayText();
+                }
                 waitDialogShow();
                 predictList = proc.getPredictListFromImage(var.configLastImage);
                 try {
