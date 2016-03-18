@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="5489a63c-bba6-456e-bd0e-b6f3efb611ce" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnn.java" afterPath="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnn.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGShowImage.java" afterPath="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGShowImage.java" />
     </list>
     <ignored path="awesome-desktop-tag.iws" />
@@ -83,8 +82,8 @@
       <file leaf-file-name="ATAGShowImage.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGShowImage.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="658">
-              <caret line="589" column="0" selection-start-line="589" selection-start-column="0" selection-end-line="589" selection-end-column="0" />
+            <state relative-caret-position="-1007">
+              <caret line="292" column="58" selection-start-line="292" selection-start-column="58" selection-end-line="292" selection-end-column="58" />
               <folding />
             </state>
           </provider>
@@ -513,13 +512,6 @@
       <option name="presentableId" value="Default" />
       <updated>1455820400608</updated>
     </task>
-    <task id="LOCAL-00069" summary="working on Jpanel and stdout">
-      <created>1456960739785</created>
-      <option name="number" value="00069" />
-      <option name="presentableId" value="LOCAL-00069" />
-      <option name="project" value="LOCAL" />
-      <updated>1456960739786</updated>
-    </task>
     <task id="LOCAL-00070" summary="working on Jpanel and stdout">
       <created>1457030457999</created>
       <option name="number" value="00070" />
@@ -856,7 +848,14 @@
       <option name="project" value="LOCAL" />
       <updated>1458318060180</updated>
     </task>
-    <option name="localTasksCounter" value="118" />
+    <task id="LOCAL-00118" summary="try to eliminate some waiting for model to load">
+      <created>1458323942217</created>
+      <option name="number" value="00118" />
+      <option name="presentableId" value="LOCAL-00118" />
+      <option name="project" value="LOCAL" />
+      <updated>1458323942217</updated>
+    </task>
+    <option name="localTasksCounter" value="119" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -925,7 +924,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="what if png or jpeg is corrupted?" />
     <MESSAGE value="reset cursor and erase biases option" />
     <MESSAGE value="fix one predict() error -- model didnt load" />
     <MESSAGE value="little fix for renamed button 'clear cursor'" />
@@ -950,7 +948,8 @@
     <MESSAGE value="increase num of nodes at most levels" />
     <MESSAGE value="change num of nodes at most levels" />
     <MESSAGE value="change model init name" />
-    <option name="LAST_COMMIT_MESSAGE" value="change model init name" />
+    <MESSAGE value="try to eliminate some waiting for model to load" />
+    <option name="LAST_COMMIT_MESSAGE" value="try to eliminate some waiting for model to load" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1381,8 +1380,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGShowImage.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="658">
-          <caret line="589" column="0" selection-start-line="589" selection-start-column="0" selection-end-line="589" selection-end-column="0" />
+        <state relative-caret-position="-1007">
+          <caret line="292" column="58" selection-start-line="292" selection-start-column="58" selection-end-line="292" selection-end-column="58" />
           <folding />
         </state>
       </provider>

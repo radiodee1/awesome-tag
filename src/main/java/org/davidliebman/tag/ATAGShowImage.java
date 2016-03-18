@@ -290,6 +290,10 @@ public class ATAGShowImage {
                     if (model != null) {
                         cnnThread.setDoGenerateNewModel(false);
                         cnnThread.setModel(model);
+                        cnnThread.setDoLoadSaveModel(false);
+                    }
+                    else {
+                        cnnThread.setDoLoadSaveModel(true);
                     }
                     cnnThread.setDoFit(false); // ensure 'run()' does no training
                     cnnThread.setDoTest(false); // ensure 'run()' does no training
@@ -389,11 +393,15 @@ public class ATAGShowImage {
                         if(model != null) {
                             cnnThread.setDoGenerateNewModel(false);
                             cnnThread.setModel(model);
+                            cnnThread.setDoLoadSaveModel(false);
+                        }
+                        else {
+                            cnnThread.setDoLoadSaveModel(true);
                         }
                         cnnThread.setDoLoadData(true); //ATAGCnnDataSet.java
                         cnnThread.setDoTest(true);
                         cnnThread.setDoFit(false);
-                        cnnThread.setDoLoadSaveModel(true); // load and save!
+                        //cnnThread.setDoLoadSaveModel(true); // load and save!
                         cnnThread.setExitEarly(false);
                         cnnThread.start();
                     }
