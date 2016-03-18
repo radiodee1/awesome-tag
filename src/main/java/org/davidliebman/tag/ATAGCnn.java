@@ -41,6 +41,7 @@ public class ATAGCnn extends  Thread {
     private boolean doLoadSaveModel = true;
     private boolean doSaveCursor = true;
     private boolean doLoadData = true;
+    private boolean doGenerateNewModel = true;
     private boolean modelSaved = false;
 
     private int cursor = 0;
@@ -87,97 +88,104 @@ public class ATAGCnn extends  Thread {
             }
         }
 
-        log.info("Build model....");
-        MultiLayerConfiguration.Builder builder = new NeuralNetConfiguration.Builder()
-                .seed(seed)
-                .iterations(iterations)
-                .regularization(true)
-                .l2(0.0005)
-                .learningRate(0.01) // 0.01
-                .weightInit(WeightInit.XAVIER)
-                .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
-                //.optimizationAlgo(OptimizationAlgorithm.LBFGS)
+        ////
+        if (doGenerateNewModel) {
 
-                .updater(Updater.ADAGRAD)
-                .momentum(0.9)
-                .list(4)
-                .layer(0, new ConvolutionLayer.Builder(5, 5)
-                        .nIn(nChannels)
-                        .stride(1, 1)
-                        .nOut(80) //80
-                        .dropOut(0.5)
-                        .activation("relu")
-                        .build())
-                .layer(1, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
-                        .kernelSize(2,2)
-                        .stride(2,2)
-                        .build())
-                /*
-                .layer(2, new ConvolutionLayer.Builder(5, 5)
-                        //.nIn(nChannels)
-                        .stride(1, 1)
-                        .nOut(50) //50
-                        .dropOut(0.5)
-                        .activation("relu")
-                        .build())
+            log.info("Build model....");
+            MultiLayerConfiguration.Builder builder = new NeuralNetConfiguration.Builder()
+                    .seed(seed)
+                    .iterations(iterations)
+                    .regularization(true)
+                    .l2(0.0005)
+                    .learningRate(0.01) // 0.01
+                    .weightInit(WeightInit.XAVIER)
+                    .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
+                    //.optimizationAlgo(OptimizationAlgorithm.LBFGS)
 
-                .layer(3, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
-                        .kernelSize(2,2)
-                        .stride(2,2)
-                        .build())
-                */
+                    .updater(Updater.ADAGRAD)
+                    .momentum(0.9)
+                    .list(4)
+                    .layer(0, new ConvolutionLayer.Builder(5, 5)
+                            .nIn(nChannels)
+                            .stride(1, 1)
+                            .nOut(80) //80
+                            .dropOut(0.5)
+                            .activation("relu")
+                            .build())
+                    .layer(1, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
+                            .kernelSize(2, 2)
+                            .stride(2, 2)
+                            .build())
+                    /*
+                    .layer(2, new ConvolutionLayer.Builder(5, 5)
+                            //.nIn(nChannels)
+                            .stride(1, 1)
+                            .nOut(50) //50
+                            .dropOut(0.5)
+                            .activation("relu")
+                            .build())
 
-                .layer(2, new DenseLayer.Builder()
-                        .activation("relu")
-                        .nOut(600) // 600
-                        .build())
+                    .layer(3, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
+                            .kernelSize(2,2)
+                            .stride(2,2)
+                            .build())
+                    */
 
-                /*
+                    .layer(2, new DenseLayer.Builder()
+                            .activation("relu")
+                            .nOut(600) // 600
+                            .build())
 
-                .layer(3, new RBM.Builder(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)//, RBM.VisibleUnit.GAUSSIAN)
-                        .k(1)
-                        .lossFunction(LossFunctions.LossFunction.RMSE_XENT)//mcxent
-                        //.updater(Updater.ADAGRAD)
-                        .dropOut(0.5)
-                        .activation("relu")
-                        .nIn(600) // 600
-                        .nOut(200) // 250
-                        .build())
-
-
-                .layer(4, new DenseLayer.Builder() //(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)
-                        //.k(1)
-                        //.lossFunction(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-                        //.updater(Updater.ADAGRAD)
-                        .dropOut(0.5)
-                        .activation("relu")
-                        .nIn(700) // 500
-                        .nOut(100) // 250
-                        .build())
-                */
-                .layer(3, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-                        .nIn(600) // 250
-                        .nOut(outputNum)
-                        .activation("softmax")
-                        .build())
-                .backprop(true).pretrain(false);
-        new ConvolutionLayerSetup(builder,inputDim,inputDim, nChannels);
-
-        MultiLayerConfiguration conf = builder.build();
-        final MultiLayerNetwork modelNew = new MultiLayerNetwork(conf);
-        model.init();
-
-        this.model = modelNew;
-        setFileName(this.name);
-
-        if (exitEarly) return;
+                    /*
+                    .layer(3, new RBM.Builder(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)//, RBM.VisibleUnit.GAUSSIAN)
+                            .k(1)
+                            .lossFunction(LossFunctions.LossFunction.RMSE_XENT)//mcxent
+                            //.updater(Updater.ADAGRAD)
+                            .dropOut(0.5)
+                            .activation("relu")
+                            .nIn(600) // 600
+                            .nOut(200) // 250
+                            .build())
 
 
-        for (int ii = 0; ii < model.getnLayers(); ii ++) System.out.println( ii + " layer dim=" + model.getLayer(ii).numParams() );//+ " = " + model.getLayer(ii).getParam("bias").toString() );
+                    .layer(4, new DenseLayer.Builder() //(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)
+                            //.k(1)
+                            //.lossFunction(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                            //.updater(Updater.ADAGRAD)
+                            .dropOut(0.5)
+                            .activation("relu")
+                            .nIn(700) // 500
+                            .nOut(100) // 250
+                            .build())
+                    */
 
-        loadModel(model);
+                    .layer(3, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                            .nIn(600) // 250
+                            .nOut(outputNum)
+                            .activation("softmax")
+                            .build())
+                    .backprop(true).pretrain(false);
+            new ConvolutionLayerSetup(builder, inputDim, inputDim, nChannels);
+
+            MultiLayerConfiguration conf = builder.build();
+            final MultiLayerNetwork modelNew = new MultiLayerNetwork(conf);
+
+            this.model = modelNew;
+
+            model.init();
+
+            setFileName(this.name);
+
+            if (exitEarly) return;
 
 
+            for (int ii = 0; ii < model.getnLayers(); ii++)
+                System.out.println(ii + " layer dim=" + model.getLayer(ii).numParams());//+ " = " + model.getLayer(ii).getParam("bias").toString() );
+
+            loadModel(model);
+
+        }
+        ////
         try {
 
             if(!doFit) nEpochs = 1;
@@ -289,6 +297,7 @@ public class ATAGCnn extends  Thread {
     public void setDoLoadData(boolean d) {doLoadData = d;}
     public void setDoLoadSaveModel( boolean d) { doLoadSaveModel = d;}
     public void setDoPredict( boolean d) {doPredict = d;}
+    public void setDoGenerateNewModel( boolean d) {doGenerateNewModel = d;}
 
     public void setFileName(String name) {
         this.name = name;

@@ -60,6 +60,8 @@ public class ATAGShowImage {
     private int threadType = 0;
     private ArrayList<ATAGProcCsv.CsvLine> predictList;
 
+    private MultiLayerNetwork model = null;
+
     private void createUIComponents() {
         // TODO: place custom component creation code here
         databaseRoot = new JLabel();
@@ -285,6 +287,10 @@ public class ATAGShowImage {
                     ((ATAGPanel) imagePanel).setShowPredictBoxes(true);
 
                     cnnThread = new ATAGCnn(var,proc);
+                    if (model != null) {
+                        cnnThread.setDoGenerateNewModel(false);
+                        cnnThread.setModel(model);
+                    }
                     cnnThread.setDoFit(false); // ensure 'run()' does no training
                     cnnThread.setDoTest(false); // ensure 'run()' does no training
                     cnnThread.setDoLoadData(false); // ensure 'run()' does no training
@@ -334,6 +340,7 @@ public class ATAGShowImage {
                     try {
 
                         cnnThread = new ATAGCnn(var, proc);
+                        cnnThread.setDoGenerateNewModel(true);
                         cnnThread.setDoLoadData(true); //ATAGCnnDataSet.java
                         cnnThread.setDoTest(false);
                         cnnThread.setDoFit(true);
@@ -379,6 +386,10 @@ public class ATAGShowImage {
 
 
                         cnnThread = new ATAGCnn(var, proc);
+                        if(model != null) {
+                            cnnThread.setDoGenerateNewModel(false);
+                            cnnThread.setModel(model);
+                        }
                         cnnThread.setDoLoadData(true); //ATAGCnnDataSet.java
                         cnnThread.setDoTest(true);
                         cnnThread.setDoFit(false);
@@ -575,6 +586,8 @@ public class ATAGShowImage {
                 //((ATAGPanel) imagePanel).setShowPredictBoxes(false);
                 buttonTestCNN.setText("Clear");
             }
+            model = cnnThread.getModel();
+
             frame.setTitle("Awesome Tag");
             waitDialogHide();
 
