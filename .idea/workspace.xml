@@ -4,6 +4,7 @@
     <list default="true" id="5489a63c-bba6-456e-bd0e-b6f3efb611ce" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnn.java" afterPath="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnn.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGShowImage.java" afterPath="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGShowImage.java" />
     </list>
     <ignored path="awesome-desktop-tag.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -79,21 +80,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ATAGShowImage.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ATAGShowImage.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGShowImage.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-356">
-              <caret line="67" column="0" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
+            <state relative-caret-position="227">
+              <caret line="53" column="35" selection-start-line="53" selection-start-column="20" selection-end-line="53" selection-end-column="35" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ATAGCnn.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ATAGCnn.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnn.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="268">
-              <caret line="303" column="25" selection-start-line="303" selection-start-column="25" selection-end-line="303" selection-end-column="25" />
+            <state relative-caret-position="163">
+              <caret line="100" column="40" selection-start-line="100" selection-start-column="40" selection-end-line="100" selection-end-column="40" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -163,8 +164,8 @@
         <option value="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnnDataSet.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAG.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGShowImage.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnn.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGShowImage.java" />
       </list>
     </option>
   </component>
@@ -512,13 +513,6 @@
       <option name="presentableId" value="Default" />
       <updated>1455820400608</updated>
     </task>
-    <task id="LOCAL-00072" summary="fix auto scroll to bottom of textField">
-      <created>1457122840456</created>
-      <option name="number" value="00072" />
-      <option name="presentableId" value="LOCAL-00072" />
-      <option name="project" value="LOCAL" />
-      <updated>1457122840457</updated>
-    </task>
     <task id="LOCAL-00073" summary="fix auto scroll to bottom of textField">
       <created>1457126387641</created>
       <option name="number" value="00073" />
@@ -855,7 +849,14 @@
       <option name="project" value="LOCAL" />
       <updated>1458326826775</updated>
     </task>
-    <option name="localTasksCounter" value="121" />
+    <task id="LOCAL-00121" summary="try to eliminate some waiting for model to load">
+      <created>1458328314923</created>
+      <option name="number" value="00121" />
+      <option name="presentableId" value="LOCAL-00121" />
+      <option name="project" value="LOCAL" />
+      <updated>1458328314923</updated>
+    </task>
+    <option name="localTasksCounter" value="122" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1368,21 +1369,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGShowImage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-356">
-          <caret line="67" column="0" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnn.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="268">
-          <caret line="303" column="25" selection-start-line="303" selection-start-column="25" selection-end-line="303" selection-end-column="25" />
+        <state relative-caret-position="163">
+          <caret line="100" column="40" selection-start-line="100" selection-start-column="40" selection-end-line="100" selection-end-column="40" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGShowImage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="227">
+          <caret line="53" column="35" selection-start-line="53" selection-start-column="20" selection-end-line="53" selection-end-column="35" />
+          <folding />
         </state>
       </provider>
     </entry>

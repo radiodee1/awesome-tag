@@ -51,6 +51,7 @@ public class ATAGShowImage {
     JFrame frame ;
 
     private boolean debugConsecOutput = false;
+    private boolean debugReuseModel = false;
 
     private ATAGShowImageDialog dialog = null;
 
@@ -290,6 +291,7 @@ public class ATAGShowImage {
                     if (model != null) {
                         cnnThread.setDoGenerateNewModel(false);
                         cnnThread.setModel(model);
+                        cnnThread.init();
                         cnnThread.setDoLoadSaveModel(false);
                     }
                     else {
@@ -393,6 +395,7 @@ public class ATAGShowImage {
                         if(model != null) {
                             cnnThread.setDoGenerateNewModel(false);
                             cnnThread.setModel(model);
+                            cnnThread.init();
                             cnnThread.setDoLoadSaveModel(false);
                         }
                         else {
@@ -596,7 +599,7 @@ public class ATAGShowImage {
             }
 
             MultiLayerNetwork mod = cnnThread.getModel();
-            if(mod != null) {
+            if(debugReuseModel && mod != null) {
                 model = mod;
             }
 

@@ -98,7 +98,7 @@ public class ATAGCnn extends  Thread {
                     .iterations(iterations)
                     .regularization(true)
                     .l2(0.0005)
-                    .learningRate(0.01) // 0.01
+                    .learningRate(0.0005) // 0.01
                     .weightInit(WeightInit.XAVIER)
                     .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                     //.optimizationAlgo(OptimizationAlgorithm.LBFGS)
@@ -299,6 +299,7 @@ public class ATAGCnn extends  Thread {
     public void setDoLoadSaveModel( boolean d) { doLoadSaveModel = d;}
     public void setDoPredict( boolean d) {doPredict = d;}
     public void setDoGenerateNewModel( boolean d) {doGenerateNewModel = d;}
+    public void init() {model.init();}
 
     public void setFileName(String name) {
         this.name = name;
