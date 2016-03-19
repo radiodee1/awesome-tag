@@ -247,6 +247,12 @@ public class ATAGShowImage {
 
         buttonAddLine.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if (cnnThread != null && (! cnnThread.isAlive() ||cnnThread.getState() == Thread.State.WAITING)) {
+                    ((ATAGPanel)imagePanel).standardOutReset();
+                    cnnThread = null;
+                    setDisplayText();
+                    imagePanel.repaint();
+                }
                 if (proc.getLocalList() != null) {
                     listFaces = proc.getFirstMatchByName();
                     ((ATAGPanel)imagePanel).setExtraDataFaces(listFaces);
@@ -258,6 +264,11 @@ public class ATAGShowImage {
 
         buttonPrevious.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if (cnnThread != null && (! cnnThread.isAlive() ||cnnThread.getState() == Thread.State.WAITING)) {
+                    ((ATAGPanel)imagePanel).standardOutReset();
+                    cnnThread = null;
+                    setDisplayText();
+                }
                 proc.getPreviousFilename();
                 var.writeConfigText(ATAG.DOTFOLDER_LAST_IMAGE, var.configLastImage);
                 setDisplayText();
@@ -267,6 +278,11 @@ public class ATAGShowImage {
 
         buttonNext.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if (cnnThread != null && (! cnnThread.isAlive() ||cnnThread.getState() == Thread.State.WAITING)) {
+                    ((ATAGPanel)imagePanel).standardOutReset();
+                    cnnThread = null;
+                    setDisplayText();
+                }
                 proc.getNextFilename();
                 var.writeConfigText(ATAG.DOTFOLDER_LAST_IMAGE, var.configLastImage);
                 setDisplayText();
@@ -555,6 +571,13 @@ public class ATAGShowImage {
         frame = new JFrame("Awesome Tag");
         frame.setContentPane(formPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        /*
+        Dimension preferredSize = new Dimension(-1,-1);
+        imagePanel.setPreferredSize(preferredSize);
+        ((ATAGPanel)imagePanel).standardOutDisplay();
+        */
+        
         frame.pack();
         frame.setVisible(true);
 
