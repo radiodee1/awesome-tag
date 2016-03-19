@@ -89,6 +89,9 @@ public class ATAGPanel extends JPanel{
                         standardOutReset();
                         e.printStackTrace();
                     }
+                    finally {
+                        publish();
+                    }
                 }
                 return null;
             }
