@@ -75,7 +75,7 @@ public class ATAGPanel extends JPanel{
                             System.out.flush();
                             baos.flush();
                             //revalidate();
-                            //scrollPane.getVerticalScrollBar().setValue( (int) (ATAGPanel.this.getPreferredSize().getHeight() + textField.getPreferredSize().getHeight()));
+
                             publish();
 
                         }
