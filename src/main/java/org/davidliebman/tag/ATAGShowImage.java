@@ -258,6 +258,22 @@ public class ATAGShowImage {
                     ((ATAGPanel)imagePanel).setExtraDataFaces(listFaces);
                     ((ATAGPanel)imagePanel).setShowPredictBoxes(false);
                     imagePanel.repaint();
+
+                    Object[] options = {"PRINT", "SKIP"};
+                    int n = JOptionPane.showOptionDialog(frame,
+                            "The square for face outlines can be printed to text output.",
+                            "Show Data",
+                            JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            options,
+                            options[1]);
+
+                    if (n == 0) {
+                        proc.printListToStandardOut(listFaces);
+                    }
+
+
                 }
             }
         });

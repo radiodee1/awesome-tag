@@ -1,5 +1,7 @@
 package org.davidliebman.tag;
 
+import org.nd4j.linalg.api.ndarray.INDArray;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -422,7 +424,7 @@ public class ATAGProcCsv {
 
         boolean test = false;
 
-        ArrayList<CsvLine> listCheck = getFirstMatchByName( name,listSingle );
+        ArrayList<CsvLine> listCheck = getFirstMatchByName( name , listSingle );
 
         BoundingBox a = new BoundingBox(x,y, dim_side, dim_side);
 
@@ -574,6 +576,26 @@ public class ATAGProcCsv {
         return  listPredict;
     }
 
+    public void printListToStandardOut(ArrayList<CsvLine> list) {
+        if (list.size() == 0) return;
+
+        for (int i = 0; i < list.size(); i ++) {
+            CsvLine line = list.get(i);
+            double x = line.getSpecifications().get(FACE_APPROACH_X);
+            double y = line.getSpecifications().get(FACE_APPROACH_Y);
+            double h = line.getSpecifications().get(FACE_HEIGHT);
+
+            try {
+
+                String filename = var.configRootDatabase + File.separator + line.getFileLocation();
+
+                INDArray out = ATAGCnnDataSet.loadImageBMP(new File(filename),x,y,h);
+                System.out.println(line.getFileLocation());
+                ATAGCnnDataSet.showSquare(out);
+            }
+            catch (Exception e) {e.printStackTrace();}
+        }
+    }
 
     private boolean collisionSimple(BoundingBox boxA, BoundingBox boxB) {
         int x[] = {0,0,0,0};

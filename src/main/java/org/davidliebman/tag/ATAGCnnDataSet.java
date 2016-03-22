@@ -34,13 +34,13 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     private ArrayList<ATAGProcCsv.CsvLine> listLocal;
     private ATAG var;
 
-    private boolean debugMessages = false;
-    private boolean debugByteOrder = false;
+    private boolean debugMessages = true;
+    private static boolean debugByteOrder = false;
     private boolean debugDontCenter = true; // only if we are restricting the size of face to ATAG.CNN_DIM_PIXELS !!
-    private boolean debugNoThreshold = true;
+    private static boolean debugNoThreshold = true;
     private boolean debugDoNotSplit = false;
-    private boolean orderAsAlternate = true;
-    private boolean debugOneChannelForDisplay = true;
+    private static boolean orderAsAlternate = true;
+    private static boolean debugOneChannelForDisplay = true;
 
     boolean trainWithThisSet = true;
 
@@ -71,7 +71,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
 
 
-    public  INDArray loadImageBMP ( File file, double x_start, double y_start, double dim_side) throws Exception {
+    public  static INDArray loadImageBMP ( File file, double x_start, double y_start, double dim_side) throws Exception {
 
         double[] array1D = new double[ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS];
 
@@ -196,7 +196,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
     }
     */
-    public void showSquare(INDArray in) {
+    public static void showSquare(INDArray in) {
         INDArray show = in.linearView();
         boolean noOutput = true;
         int channelsForDisplay = 0;
