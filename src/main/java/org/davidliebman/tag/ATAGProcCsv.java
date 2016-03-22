@@ -446,6 +446,10 @@ public class ATAGProcCsv {
                 BoundingBox b = new BoundingBox((int) xx, (int) yy, (int) height, (int) height);
                 boolean out = collisionSimple(a, b);
 
+                if (x+ dim_side < 0 || y+ dim_side < 0) { // floating off at left of frame...
+                    out = true;
+                }
+
                 if (debugMessages) System.out.println(name + " " + xx + " " + yy + " " + out);
                 if (out) {
                     test = true;

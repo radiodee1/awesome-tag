@@ -34,7 +34,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     private ArrayList<ATAGProcCsv.CsvLine> listLocal;
     private ATAG var;
 
-    private boolean debugMessages = true;
+    private boolean debugMessages = false;
     private static boolean debugByteOrder = false;
     private boolean debugDontCenter = true; // only if we are restricting the size of face to ATAG.CNN_DIM_PIXELS !!
     private static boolean debugNoThreshold = true;
