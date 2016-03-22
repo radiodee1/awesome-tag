@@ -328,7 +328,7 @@ public class ATAGShowImage {
                     if (model != null) {
                         cnnThread.setDoGenerateNewModel(false);
                         cnnThread.setModel(model);
-                        cnnThread.init();
+                        //cnnThread.init();
                         cnnThread.setDoLoadSaveModel(false);
                     }
                     else {
@@ -432,7 +432,7 @@ public class ATAGShowImage {
                         if(model != null) {
                             cnnThread.setDoGenerateNewModel(false);
                             cnnThread.setModel(model);
-                            cnnThread.init();
+                            //cnnThread.init();
                             cnnThread.setDoLoadSaveModel(false);
                         }
                         else {

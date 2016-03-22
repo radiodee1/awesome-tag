@@ -319,7 +319,9 @@ public class ATAGCnn extends  Thread {
     public void setDoLoadSaveModel( boolean d) { doLoadSaveModel = d;}
     public void setDoPredict( boolean d) {doPredict = d;}
     public void setDoGenerateNewModel( boolean d) {doGenerateNewModel = d;}
-    public void init() {model.init();}
+    public void init() {
+        //model.init();
+    }
 
     public void setFileName(String name) {
         this.name = name;
