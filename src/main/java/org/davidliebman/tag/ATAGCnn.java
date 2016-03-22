@@ -63,8 +63,13 @@ public class ATAGCnn extends  Thread {
     public void run() {
         //System.setProperty("java.library.path","/usr/local/cuda/lib64");
 
-        String newPath = System.getProperty("java.library.path") + ":/usr/local/cuda/lib64:/usr/local/cuda/bin";
-        System.setProperty("java.library.path", newPath);
+        String pathAddition = ":/usr/local/cuda/lib64:/usr/local/cuda/bin";
+        String oldPath = System.getProperty("java.library.path");
+
+        if (! oldPath.endsWith(pathAddition)) {
+            String newPath = oldPath + pathAddition;
+            System.setProperty("java.library.path", newPath);
+        }
         System.out.println(System.getProperty("java.library.path"));
 
         Nd4j.ENFORCE_NUMERICAL_STABILITY =  true;
