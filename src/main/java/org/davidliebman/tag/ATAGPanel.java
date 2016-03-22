@@ -30,6 +30,7 @@ public class ATAGPanel extends JPanel{
     private boolean showBlueFaceBox = true;
     private boolean showPredictBoxes = false;
     private boolean showStandartOut = false;
+    private boolean showAllLines = false;
 
     private int textSizeW = 44, textSizeH = 27;
 
@@ -160,6 +161,7 @@ public class ATAGPanel extends JPanel{
     }
 
     public void setShowPredictBoxes( boolean p ) {showPredictBoxes = p;}
+    public void setShowAllLines(boolean a) {showAllLines = a;}
 
     public void showSizes(ATAGProcCsv.CsvLine line) {
         for (int i = 0; i < line.getSpecifications().size(); i ++) {
@@ -208,7 +210,7 @@ public class ATAGPanel extends JPanel{
                     else {
                         //foundOutput = true;
                     }
-                    if (listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_LABEL_1) >= SURENESS) {
+                    if (listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_LABEL_1) >= SURENESS || showAllLines) {
                         g.setColor(Color.GREEN);
                         foundOutput = true;
                     }

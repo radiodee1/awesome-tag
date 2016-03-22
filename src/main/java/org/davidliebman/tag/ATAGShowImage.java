@@ -4,7 +4,6 @@ package org.davidliebman.tag;
 
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.dataset.DataSet;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,6 +51,7 @@ public class ATAGShowImage {
 
     private boolean debugConsecOutput = false;
     private boolean debugReuseModel = false;
+    private boolean debugShowRawPredictList = false;
 
     private ATAGShowImageDialog dialog = null;
 
@@ -496,7 +496,16 @@ public class ATAGShowImage {
 
 
         ((ATAGPanel)imagePanel).setShowPredictBoxes(true);
-        ((ATAGPanel)imagePanel).setExtraDataFaces(list);
+        if (debugShowRawPredictList) {
+
+            predictList = proc.getPredictListFromImage(var.configLastImage);
+            ((ATAGPanel)imagePanel).setShowAllLines(true);
+            ((ATAGPanel)imagePanel).setExtraDataFaces(predictList);
+        }
+        else {
+            ((ATAGPanel)imagePanel).setExtraDataFaces(list);
+
+        }
         imagePanel.repaint();
         frame.setTitle("Awesome Tag");
         waitDialogHide();

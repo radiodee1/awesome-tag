@@ -13,6 +13,7 @@ import org.deeplearning4j.nn.conf.layers.setup.ConvolutionLayerSetup;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+//import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
@@ -45,6 +46,7 @@ public class ATAGCnn extends  Thread {
     private boolean doLoadData = true;
     private boolean doGenerateNewModel = true;
     private boolean doScheduledLearningChange = false;
+    private boolean doUseSerializerLoad = false;
     private boolean modelSaved = false;
 
     private double learningRate = 0.01;
@@ -332,18 +334,22 @@ public class ATAGCnn extends  Thread {
             System.out.println("model " + fileName);
             if (!filePath.exists() || !doLoadSaveModel) return;
 
-            DataInputStream dis = new DataInputStream(new FileInputStream(filePath));
-            INDArray newParams = Nd4j.read(dis);
-            dis.close();
-            model.setParameters(newParams);
+            if (doUseSerializerLoad) {
+                //model = ModelSerializer.restoreMultiLayerNetwork(filePath);
+            }
+            else {
+                DataInputStream dis = new DataInputStream(new FileInputStream(filePath));
+                INDArray newParams = Nd4j.read(dis);
+                dis.close();
+                model.setParameters(newParams);
 
-            ///// updater /////
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(homeDir + File.separator + this.name + ".updater.bin"));
-            org.deeplearning4j.nn.api.Updater updater;
-            updater = (org.deeplearning4j.nn.api.Updater) ois.readObject();
-            ois.close(); //??
-            model.setUpdater(updater);
-
+                ///// updater /////
+                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(homeDir + File.separator + this.name + ".updater.bin"));
+                org.deeplearning4j.nn.api.Updater updater;
+                updater = (org.deeplearning4j.nn.api.Updater) ois.readObject();
+                ois.close(); //??
+                model.setUpdater(updater);
+            }
             System.out.println("done load model");
         }
         catch (Exception e) {
@@ -357,20 +363,24 @@ public class ATAGCnn extends  Thread {
             model = m;
             //Write the network parameters:
             System.out.println("start model save, please wait...");
+
             File filePointer = new File(fileName);
-            //OutputStream fos = Files.newOutputStream(Paths.get(fileName));
-            FileOutputStream fos = new FileOutputStream(filePointer);
-            DataOutputStream dos = new DataOutputStream(fos);
-            Nd4j.write(model.params(), dos);
-            dos.flush();
-            dos.close();
+            if(doUseSerializerLoad) {
+                //ModelSerializer.writeModel(model, filePointer,true);
+            }
+            else {
+                FileOutputStream fos = new FileOutputStream(filePointer);
+                DataOutputStream dos = new DataOutputStream(fos);
+                Nd4j.write(model.params(), dos);
+                dos.flush();
+                dos.close();
 
-            ///// updater /////
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(homeDir + File.separator + this.name +".updater.bin"));
-            oos.writeObject(model.getUpdater());
-            oos.flush();
-            oos.close();
-
+                ///// updater /////
+                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(homeDir + File.separator + this.name + ".updater.bin"));
+                oos.writeObject(model.getUpdater());
+                oos.flush();
+                oos.close();
+            }
             modelSaved = true;
 
             if (doSaveCursor || doFit) {

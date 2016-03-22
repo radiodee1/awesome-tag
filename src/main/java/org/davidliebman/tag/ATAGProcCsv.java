@@ -534,8 +534,8 @@ public class ATAGProcCsv {
         int left = 0;
         int right = image.getWidth();
 
-        int spanHorizontal = (right - left) / 8;//ATAG.CNN_DIM_SIDE;
-        int spanVertical = (bot - top) / 8;//ATAG.CNN_DIM_SIDE;
+        int spanHorizontal = ((right - left) - ATAG.CNN_DIM_PIXELS) / 7;//ATAG.CNN_DIM_SIDE;
+        int spanVertical = ((bot - top) - ATAG.CNN_DIM_PIXELS) / 7;//ATAG.CNN_DIM_SIDE;
 
         for (int x = 0; x < 8; x ++) {
             for (int y = 0; y < 8; y ++) {
@@ -547,7 +547,7 @@ public class ATAGProcCsv {
                 row.setFileLocation(filename);
 
                 row.getSpecifications().remove(FACE_APPROACH_X);
-                row.getSpecifications().add(FACE_APPROACH_X,(double)x * spanHorizontal);
+                row.getSpecifications().add(FACE_APPROACH_X,(double) x * spanHorizontal);
 
                 row.getSpecifications().remove(FACE_APPROACH_Y);
                 row.getSpecifications().add(FACE_APPROACH_Y, (double) y * spanVertical);
