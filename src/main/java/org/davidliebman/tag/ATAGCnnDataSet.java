@@ -2,21 +2,18 @@ package org.davidliebman.tag;
 
 
         import org.nd4j.linalg.api.ndarray.INDArray;
-        import org.nd4j.linalg.dataset.DataSet;
-        import org.nd4j.linalg.dataset.SplitTestAndTrain;
-        import org.nd4j.linalg.dataset.api.DataSetPreProcessor;
-        import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
-        import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.dataset.api.DataSetPreProcessor;
+import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
+import org.nd4j.linalg.factory.Nd4j;
 
-        import javax.imageio.ImageIO;
-        import java.awt.*;
-        import java.awt.image.BufferedImage;
-        import java.io.File;
-        import java.io.IOException;
-        import java.nio.file.*;
-        //import java.nio.file.attribute.BasicFileAttributes;
-        import java.util.*;
-        import java.util.List;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+//import java.nio.file.attribute.BasicFileAttributes;
 
 /**
  * Created by dave on 1/21/16.
@@ -39,7 +36,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
     private boolean debugMessages = false;
     private boolean debugByteOrder = false;
-    private boolean debugDontCenter = false;
+    private boolean debugDontCenter = true; // only if we are restricting the size of face to ATAG.CNN_DIM_PIXELS !!
     private boolean debugNoThreshold = true;
     private boolean debugDoNotSplit = false;
     private boolean orderAsAlternate = true;
@@ -68,10 +65,13 @@ public class ATAGCnnDataSet  implements DataSetIterator {
         splitList();
     }
 
+    public INDArray loadImageBMP (File file, double x, double y ) throws Exception {
+        return loadImageBMP(file, x, y, ATAG.CNN_DIM_PIXELS);
+    }
 
 
 
-    public  INDArray loadImageBMP ( File file, double x_start, double y_start) throws Exception {
+    public  INDArray loadImageBMP ( File file, double x_start, double y_start, double dim_side) throws Exception {
 
         double[] array1D = new double[ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS];
 
@@ -80,7 +80,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
         int transx = (int)(x_start) , transy = (int)(y_start);
         int threshold = 128;//128
         float colordiv = 255.0f; // produce a num between 0 and 2... change to 255.0f for num between 0 and 1
-        float mag = ATAG.CNN_DIM_PIXELS /(float) ATAG.CNN_DIM_SIDE;
+        float mag = (float) dim_side /(float) ATAG.CNN_DIM_SIDE;
 
         BufferedImage image = ImageIO.read(file);
 
@@ -274,13 +274,13 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
             if (!debugDontCenter) {
                 // ...center cnn over image of face ??
-                xcoord = xcoord - (ATAG.CNN_DIM_PIXELS - facew) / 2;
-                ycoord = ycoord - (ATAG.CNN_DIM_PIXELS - faceh) / 2;
+                //xcoord = xcoord - (ATAG.CNN_DIM_PIXELS - facew) / 2;
+                //ycoord = ycoord - (ATAG.CNN_DIM_PIXELS - faceh) / 2;
             }
 
             if(debugMessages) System.out.println(filename + " name  x=" + xcoord + "  y=" + ycoord + " height=" + faceh + " i=" + ( i + cursor * ATAG.CNN_BATCH_SIZE));
 
-            INDArray out = loadImageBMP(new File(filename),xcoord,ycoord);
+            INDArray out = loadImageBMP(new File(filename), xcoord, ycoord, faceh);
             out = out.linearView();
             //System.out.println(arr.toString());
 

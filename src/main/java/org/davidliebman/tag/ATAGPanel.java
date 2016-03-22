@@ -34,7 +34,7 @@ public class ATAGPanel extends JPanel{
 
     private int textSizeW = 44, textSizeH = 27;
 
-    public static final double SURENESS = 0.7d;
+    public static final double SURENESS = 0.7d;//0.7d;
 
     public ATAGPanel() {
     }
@@ -195,11 +195,11 @@ public class ATAGPanel extends JPanel{
                         xcoord = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_X);
                         ycoord = listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_Y);
 
-                        xcoord = xcoord - (ATAG.CNN_DIM_PIXELS - fwidth) / 2;
-                        ycoord = ycoord - (ATAG.CNN_DIM_PIXELS - fheight) / 2;
+                        //xcoord = xcoord - (ATAG.CNN_DIM_PIXELS - fwidth) / 2;
+                        //ycoord = ycoord - (ATAG.CNN_DIM_PIXELS - fheight) / 2;
 
                         g.setColor(Color.blue);
-                        g.drawRect((int) xcoord, (int) ycoord, (int) ATAG.CNN_DIM_PIXELS, (int) ATAG.CNN_DIM_PIXELS);
+                        g.drawRect((int) xcoord, (int) ycoord, (int) fwidth , (int) fheight );//ATAG.CNN_DIM_PIXELS, (int) ATAG.CNN_DIM_PIXELS);
                     }
                     System.out.println("add line.");
 

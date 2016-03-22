@@ -16,7 +16,7 @@ public class ATAGProcCsv {
     public static final int NUM_OF_APPROACHES = 2; //2
     public static final int APPROACH_IS_CLOSE = 70;
     public static final int NUM_OF_SKIPPED_CONSECUTIVE_NO_OUTPUT = 1;
-    public static final double SIZE_TOO_BIG = 1.25d;
+    public static final double SIZE_TOO_BIG = 4.0d;//1.25d;
 
     public static final int FACE_X = 6;
     public static final int FACE_Y = 7;
@@ -277,6 +277,8 @@ public class ATAGProcCsv {
         double approachdist = 0;
         double approachavg = 0;
 
+        double dim_size = fheight;
+
         double skipOnHeight = 0;
 
         boolean aproachNeedsRepeat = true;
@@ -304,12 +306,12 @@ public class ATAGProcCsv {
                     int j = 0;
                     while (aproachNeedsRepeat && j< 100) { // 20
 
-                        double changex = r.nextInt((int) ATAG.CNN_DIM_PIXELS) - ATAG.CNN_DIM_PIXELS / 2.0d;
-                        double changey = r.nextInt((int) ATAG.CNN_DIM_PIXELS * 2) - ATAG.CNN_DIM_PIXELS ;
+                        double changex = r.nextInt((int) dim_size) - dim_size / 2.0d;
+                        double changey = r.nextInt((int) dim_size * 2) - dim_size ;
 
                         if (grossImageChoice) {
-                            changex = (ATAG.CNN_DIM_PIXELS + r.nextInt(ATAG.CNN_DIM_PIXELS * 2)  ) * (r.nextInt(2) - 1);
-                            if (changex == 0) changex = ATAG.CNN_DIM_PIXELS + 2;
+                            changex = (dim_size + r.nextInt((int)dim_size * 2)  ) * (r.nextInt(2) - 1);
+                            if (changex == 0) changex = dim_size + 2;
                         }
 
                         approachx = fx + changex;
@@ -317,7 +319,7 @@ public class ATAGProcCsv {
                         approachdist = Math.sqrt(Math.pow(fx - approachx, 2) + Math.pow(fy - approachy, 2));
 
                         //check if approach is good...
-                        aproachNeedsRepeat =  getApproachNeedsRepeat( (int)approachx,(int) approachy, line.getFileLocation());
+                        aproachNeedsRepeat =  getApproachNeedsRepeat( (int)approachx,(int) approachy,(int)dim_size, line.getFileLocation());
                         j++;
                         if (debugMessages || true) System.out.println(j + " a=" + aproachNeedsRepeat);
                     }
@@ -413,12 +415,16 @@ public class ATAGProcCsv {
     }
 
     private boolean getApproachNeedsRepeat( int x, int y, String name) {
+        return  getApproachNeedsRepeat(x,y,  ATAG.CNN_DIM_PIXELS, name);
+    }
+
+    private boolean getApproachNeedsRepeat( int x, int y,int dim_side, String name) {
 
         boolean test = false;
 
         ArrayList<CsvLine> listCheck = getFirstMatchByName( name,listSingle );
 
-        BoundingBox a = new BoundingBox(x,y, ATAG.CNN_DIM_PIXELS, ATAG.CNN_DIM_PIXELS);
+        BoundingBox a = new BoundingBox(x,y, dim_side, dim_side);
 
         int i = 0;
         for (i = 0; i < listCheck.size(); i ++) {
@@ -428,14 +434,14 @@ public class ATAGProcCsv {
             double width = listCheck.get(i).getSpecifications().get(FACE_WIDTH);
             double height = listCheck.get(i).getSpecifications().get(FACE_HEIGHT);
 
-            double changex = (ATAG.CNN_DIM_PIXELS - width ) / 2.0f;
-            double changey = (ATAG.CNN_DIM_PIXELS - height) / 2.0f;
+            double changex = (dim_side - width ) / 2.0f;
+            double changey = (dim_side - height) / 2.0f;
 
             xx = xx - changex;
             yy = yy - changey;
 
             if (((int) xx) != x && ((int) yy) != y) {
-                BoundingBox b = new BoundingBox((int) xx, (int) yy, ATAG.CNN_DIM_PIXELS, ATAG.CNN_DIM_PIXELS);
+                BoundingBox b = new BoundingBox((int) xx, (int) yy, (int) height, (int) height);
                 boolean out = collisionSimple(a, b);
 
                 if (debugMessages) System.out.println(name + " " + xx + " " + yy + " " + out);

@@ -38,7 +38,7 @@ public class ATAGCnn extends  Thread {
     private ATAGCnnDataSet predictData;
     private INDArray output;
 
-    private boolean doFit = true;
+    private boolean doFit = false;
     private boolean doTest = true;
     private boolean doPredict = false;
     private boolean doLoadSaveModel = true;
