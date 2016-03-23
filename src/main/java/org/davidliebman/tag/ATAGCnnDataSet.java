@@ -272,9 +272,9 @@ public class ATAGCnnDataSet  implements DataSetIterator {
             double xcoord = listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_X);
             double ycoord = listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_APPROACH_Y);
 
-            if (!debugDontCenter) {
+            if (faceh > facew) {
                 // ...center cnn over image of face ??
-                //xcoord = xcoord - (ATAG.CNN_DIM_PIXELS - facew) / 2;
+                xcoord = xcoord - (faceh - facew) / 2;
                 //ycoord = ycoord - (ATAG.CNN_DIM_PIXELS - faceh) / 2;
             }
 
