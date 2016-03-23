@@ -210,10 +210,9 @@ public class ATAGCnn extends  Thread {
 
             if(!doFit) nEpochs = 1;
 
-            ScoreIterationListener listener = new ScoreIterationListener(1);
 
+            model.setListeners(new ScoreIterationListener(1));
 
-            model.setListeners(listener);
             for (int i = 0; i < nEpochs; i++) {
                 if (exitEarly) throw new Exception();
 
@@ -350,12 +349,16 @@ public class ATAGCnn extends  Thread {
                 dis.close();
                 model.setParameters(newParams);
 
+                model.setListeners(new ScoreIterationListener(1));
+
                 ///// updater /////
                 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(homeDir + File.separator + this.name + ".updater.bin"));
                 org.deeplearning4j.nn.api.Updater updater;
                 updater = (org.deeplearning4j.nn.api.Updater) ois.readObject();
                 ois.close(); //??
                 model.setUpdater(updater);
+
+
             }
             System.out.println("done load model");
         }
