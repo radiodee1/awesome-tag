@@ -255,6 +255,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
     public void fillArrays(int cursor) throws Exception {
         globalOutputCount = 0;
+        double[] array1D = new double[ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS];
 
         featureMatrix = new double[ ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE * ATAG.CNN_CHANNELS][ ATAG.CNN_BATCH_SIZE];
         labels = new double[ATAG.CNN_LABELS][ATAG.CNN_BATCH_SIZE];
@@ -280,7 +281,14 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
             if(debugMessages) System.out.println(filename + " name  x=" + xcoord + "  y=" + ycoord + " height=" + faceh + " i=" + ( i + cursor * ATAG.CNN_BATCH_SIZE));
 
-            INDArray out = loadImageBMP(new File(filename), xcoord, ycoord, faceh);
+            File file = new File(filename);
+
+            INDArray out = Nd4j.create(array1D);
+            if (file.exists() && !file.isDirectory()) {
+                System.out.println(filename);
+                //INDArray
+                out = loadImageBMP(file, xcoord, ycoord, faceh);
+            }
             out = out.linearView();
             //System.out.println(arr.toString());
 

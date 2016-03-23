@@ -257,6 +257,7 @@ public class ATAGShowImage {
                     listFaces = proc.getFirstMatchByName();
                     ((ATAGPanel)imagePanel).setExtraDataFaces(listFaces);
                     ((ATAGPanel)imagePanel).setShowPredictBoxes(false);
+                    predictList = null;
                     imagePanel.repaint();
 
                     Object[] options = {"PRINT", "SKIP"};
@@ -288,6 +289,7 @@ public class ATAGShowImage {
                 proc.getPreviousFilename();
                 var.writeConfigText(ATAG.DOTFOLDER_LAST_IMAGE, var.configLastImage);
                 setDisplayText();
+                predictList = null;
                 imagePanel.repaint();
             }
         });
@@ -302,6 +304,7 @@ public class ATAGShowImage {
                 proc.getNextFilename();
                 var.writeConfigText(ATAG.DOTFOLDER_LAST_IMAGE, var.configLastImage);
                 setDisplayText();
+                predictList = null;
                 imagePanel.repaint();
             }
         });
@@ -316,8 +319,32 @@ public class ATAGShowImage {
                     cnnThread = null;
                     setDisplayText();
                 }
+
+                Object[] options = {"STAGE 2", "STAGE 1"};
+                int n = JOptionPane.showOptionDialog(frame,
+                        "Stage 1 is general interest, Stage 2 is Monte Carlo investigation.",
+                        "Predict",
+                        JOptionPane.YES_NO_CANCEL_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        options,
+                        options[1]);
+
                 waitDialogShow();
-                predictList = proc.getPredictListFromImage(var.configLastImage);
+                if (n == 0) {
+                    if (predictList != null || true) {
+                        predictList = proc.sortAreaOfInterestAndCompilePredictList(predictList, var.configLastImage);
+                        ((ATAGPanel)imagePanel).setShowAllLines(false);
+
+                    }
+                }
+                else {
+                    predictList = proc.getPredictListFromImage(var.configLastImage);
+                    ((ATAGPanel)imagePanel).setShowAllLines(false);
+                }
+
+                //waitDialogShow();
+                //predictList = proc.getPredictListFromImage(var.configLastImage);
                 try {
                     ATAGCnnDataSet predictData = new ATAGCnnDataSet(predictList, var, 0, true, 0.0f, 0, 0, true);
 

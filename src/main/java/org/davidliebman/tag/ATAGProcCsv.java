@@ -19,6 +19,7 @@ public class ATAGProcCsv {
     public static final int APPROACH_IS_CLOSE = 70;
     public static final int NUM_OF_SKIPPED_CONSECUTIVE_NO_OUTPUT = 1;
     public static final double SIZE_TOO_BIG = 4.0d;//1.25d;
+    public static final double SIZE_TOO_SMALL = 0.5d;
 
     public static final int FACE_X = 6;
     public static final int FACE_Y = 7;
@@ -40,6 +41,8 @@ public class ATAGProcCsv {
     public static final double FACE_3 = 60;//90
     public static final double FACE_2 = 30;//45
     public static final double FACE_1 = 15;//22
+
+    public static final int FACE_MONTE_CARLO_NUM = 16;//batch size
 
     private ATAG var;
     private ArrayList<CsvLine> listSingle;
@@ -578,6 +581,87 @@ public class ATAGProcCsv {
         saveAnyCsv(var.configLocalRoot + File.separator + "predict.csv",listPredict,null, CSV_POSITION_FILE_LOCATION);
 
         return  listPredict;
+    }
+
+    public ArrayList<CsvLine> sortAreaOfInterestAndCompilePredictList(ArrayList<CsvLine> in, String filename_in) {
+        ArrayList<CsvLine> list = new ArrayList<CsvLine>();
+        if (in == null || in.size() == 0) {
+            in = new ArrayList<CsvLine>();
+            CsvLine line = new CsvLine();
+            line.setFileLocation(filename_in);
+            for(int j = 0; j < FACE_LIST_TOTAL; j ++ ) {
+                line.getSpecifications().add(0.0d);
+            }
+            line.getSpecifications().remove(FACE_HEIGHT);
+            line.getSpecifications().add(FACE_HEIGHT,(double) ATAG.CNN_DIM_PIXELS);
+            line.getSpecifications().remove(FACE_LABEL_1);
+            line.getSpecifications().add(FACE_LABEL_1, ATAGPanel.SURENESS);
+            in.add(line);
+        }
+
+        int in_size = in.size();
+        for (int i = 0; i < in_size; i ++) {
+            if(in.get(i).getSpecifications().get(FACE_LABEL_1) >= ATAGPanel.SURENESS) {
+                double x = in.get(i).getSpecifications().get(FACE_APPROACH_X);
+                double y = in.get(i).getSpecifications().get(FACE_APPROACH_Y);
+                double size = in.get(i).getSpecifications().get(FACE_HEIGHT);
+                String filename = in.get(i).getFileLocation();
+                list.addAll(getPredictListForAreaOfInterest( (int)x, (int)y, (int)size, filename ));
+            }
+        }
+
+        if (list.size() % ATAG.CNN_BATCH_SIZE != 0) {
+            for (int i = 0; i < FACE_MONTE_CARLO_NUM; i ++) {
+                CsvLine l = new CsvLine();
+                for (int j = 0; j < FACE_LIST_TOTAL; j ++) {
+                    l.getSpecifications().add(0.0d);
+                }
+                l.setFileLocation("");
+                list.add(l);
+            }
+        }
+
+        return list;
+    }
+
+    public ArrayList<CsvLine> getPredictListForAreaOfInterest(int x, int y, int size, String filename) {
+
+        double base = size * SIZE_TOO_SMALL; // smallest
+        double increment = (size * SIZE_TOO_BIG - size * SIZE_TOO_SMALL) / (double) FACE_MONTE_CARLO_NUM;
+
+        ArrayList<CsvLine> list = new ArrayList<CsvLine>();
+
+        for (int i = 0; i < FACE_MONTE_CARLO_NUM; i ++) {
+
+            CsvLine line = new CsvLine();
+
+            for(int j = 0; j < FACE_LIST_TOTAL; j ++) {
+                line.getSpecifications().add(0.0d);
+            }
+
+            line.setFileLocation(filename);
+
+            double new_size = base + increment * i;
+            double new_x = r.nextInt((int)(size * SIZE_TOO_BIG * 2)) - SIZE_TOO_BIG * size;
+            double new_y = r.nextInt((int)(size * SIZE_TOO_BIG * 2)) - SIZE_TOO_BIG * size;
+
+            line.getSpecifications().remove(FACE_APPROACH_X);
+            line.getSpecifications().add(FACE_APPROACH_X,(double) x + new_x);
+
+            line.getSpecifications().remove(FACE_APPROACH_Y);
+            line.getSpecifications().add(FACE_APPROACH_Y, (double) y + new_y);
+
+            line.getSpecifications().remove(FACE_HEIGHT);
+            line.getSpecifications().add(FACE_HEIGHT,  new_size);
+
+            line.getSpecifications().remove(FACE_WIDTH);
+            line.getSpecifications().add(FACE_WIDTH,  new_size);
+            ///////////////////////
+
+            list.add(line);
+        }
+
+        return list;
     }
 
     public void printListToStandardOut(ArrayList<CsvLine> list) {
