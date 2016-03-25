@@ -182,39 +182,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
         return out;
     }
 
-    /*
-    public void randomizeList() {
 
-        Random r = new Random(seed);
-        ArrayList<String> newList = new ArrayList<String>();
-
-        OneHotOutput output = new OneHotOutput(searchType);
-        int startConst = 6, stopConst = 4;
-
-        for (int i = 0; i < list.size(); i ++) {
-            String num = list.get(i).substring(list.get(i).length() - startConst, list.get(i).length()-stopConst);
-            //System.out.println(num);
-            if (output.getMemberNumber(num) != -1) {
-                newList.add(list.get(i));
-            }
-        }
-
-        list = newList;
-        newList = new ArrayList<String>();
-        int size = list.size();
-        for (int i = 0; i < size; i ++) {
-
-            //System.out.println(list.get(i));
-            int choose = r.nextInt(list.size());
-            newList.add(list.get(choose));
-            list.remove(choose);
-        }
-
-        list = newList;
-
-
-    }
-    */
     public static void showSquare(INDArray in) {
         INDArray show = in.linearView();
         boolean noOutput = true;

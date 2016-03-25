@@ -3,10 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="5489a63c-bba6-456e-bd0e-b6f3efb611ce" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAG.java" afterPath="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAG.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnn.java" afterPath="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnn.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnnDataSet.java" afterPath="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnnDataSet.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGProcCsv.java" afterPath="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGProcCsv.java" />
     </list>
     <ignored path="awesome-desktop-tag.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -117,8 +114,8 @@
       <file leaf-file-name="ATAGCnnDataSet.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnnDataSet.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="287">
-              <caret line="179" column="10" selection-start-line="179" selection-start-column="10" selection-end-line="179" selection-end-column="10" />
+            <state relative-caret-position="182">
+              <caret line="184" column="4" selection-start-line="184" selection-start-column="4" selection-end-line="184" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -523,13 +520,6 @@
       <option name="presentableId" value="Default" />
       <updated>1455820400608</updated>
     </task>
-    <task id="LOCAL-00089" summary="messing with snapshot rc3.9">
-      <created>1457545315624</created>
-      <option name="number" value="00089" />
-      <option name="presentableId" value="LOCAL-00089" />
-      <option name="project" value="LOCAL" />
-      <updated>1457545315625</updated>
-    </task>
     <task id="LOCAL-00090" summary="some csv changes">
       <created>1457553651157</created>
       <option name="number" value="00090" />
@@ -866,7 +856,14 @@
       <option name="project" value="LOCAL" />
       <updated>1458911336180</updated>
     </task>
-    <option name="localTasksCounter" value="138" />
+    <task id="LOCAL-00138" summary="add mirrorTrain method">
+      <created>1458928318617</created>
+      <option name="number" value="00138" />
+      <option name="presentableId" value="LOCAL-00138" />
+      <option name="project" value="LOCAL" />
+      <updated>1458928318619</updated>
+    </task>
+    <option name="localTasksCounter" value="139" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -935,7 +932,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add 3rd channel to second cnn" />
     <MESSAGE value="add 3rd channel to second cnn -- add sureness of 0.7d" />
     <MESSAGE value="switch from Thread to SwingWorker" />
     <MESSAGE value="remove one cnn layer" />
@@ -960,7 +956,8 @@
     <MESSAGE value="add scoreIterationListener" />
     <MESSAGE value="different detection schemes" />
     <MESSAGE value="spacing" />
-    <option name="LAST_COMMIT_MESSAGE" value="spacing" />
+    <MESSAGE value="add mirrorTrain method" />
+    <option name="LAST_COMMIT_MESSAGE" value="add mirrorTrain method" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1361,8 +1358,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnnDataSet.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="287">
-          <caret line="179" column="10" selection-start-line="179" selection-start-column="10" selection-end-line="179" selection-end-column="10" />
+        <state relative-caret-position="182">
+          <caret line="184" column="4" selection-start-line="184" selection-start-column="4" selection-end-line="184" selection-end-column="4" />
           <folding />
         </state>
       </provider>
