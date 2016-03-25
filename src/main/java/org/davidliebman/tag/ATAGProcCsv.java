@@ -65,6 +65,8 @@ public class ATAGProcCsv {
     private boolean debugMessages = false;
     private boolean doSkipOnHeight = true;
     private boolean doMoveMonteCarlo = true;
+    private boolean doNoRepeat = true;
+    private boolean doOverlappingRepeat = true;
 
     public ATAGProcCsv (ATAG v) {
         var = v;
@@ -326,8 +328,13 @@ public class ATAGProcCsv {
                         approachy = fy + changey;
                         approachdist = Math.sqrt(Math.pow(fx - approachx, 2) + Math.pow(fy - approachy, 2));
 
-                        //check if approach is good...
-                        aproachNeedsRepeat =  getApproachNeedsRepeat( (int)approachx,(int) approachy,(int)dim_size, line.getFileLocation());
+                        if(doNoRepeat) {
+                            aproachNeedsRepeat = false;
+                        }
+                        else {
+                            //check if approach is good...
+                            aproachNeedsRepeat = getApproachNeedsRepeat((int) approachx, (int) approachy, (int) dim_size, line.getFileLocation());
+                        }
                         j++;
                         if (debugMessages || true) System.out.println(j + " a=" + aproachNeedsRepeat);
                     }
@@ -428,7 +435,7 @@ public class ATAGProcCsv {
 
     private boolean getApproachNeedsRepeat( int x, int y,int dim_side, String name) {
 
-        boolean test = false;
+        boolean test = doOverlappingRepeat;//false;
 
         ArrayList<CsvLine> listCheck = getFirstMatchByName( name , listSingle );
 
@@ -453,14 +460,17 @@ public class ATAGProcCsv {
                 boolean out = collisionSimple(a, b);
 
                 if (x+ dim_side < 0 || y+ dim_side < 0) { // floating off at left of frame...
-                    out = true;
+                    test = true;
                 }
 
                 if (debugMessages) System.out.println(name + " " + xx + " " + yy + " " + out);
                 if (out) {
-                    test = true;
+
+                    test =!doOverlappingRepeat;// true;
                     i = listCheck.size();
                 }
+
+
             }
         }
 
