@@ -135,20 +135,7 @@ public class ATAGCnn extends  Thread {
                             .kernelSize(2, 2)
                             .stride(2, 2)
                             .build())
-                    /*
-                    .layer(2, new ConvolutionLayer.Builder(5, 5)
-                            //.nIn(nChannels)
-                            .stride(1, 1)
-                            .nOut(50) //50
-                            .dropOut(0.5)
-                            .activation("relu")
-                            .build())
 
-                    .layer(3, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
-                            .kernelSize(2,2)
-                            .stride(2,2)
-                            .build())
-                    */
 
                     .layer(2, new DenseLayer.Builder()
                             .activation("relu")
@@ -301,7 +288,7 @@ public class ATAGCnn extends  Thread {
         }
 
         catch (Exception e) {
-            e.printStackTrace(); // this prints stack trace when thread is interrupted!!
+            //e.printStackTrace(); // this prints stack trace when thread is interrupted!!
             saveModel(model);
         }
     }
@@ -340,7 +327,7 @@ public class ATAGCnn extends  Thread {
             if (!filePath.exists() || !doLoadSaveModel) return;
 
             if (doUseSerializerLoad) {
-                //model = ModelSerializer.restoreMultiLayerNetwork(filePath);
+                //model = org.deeplearning4j.util.ModelSerializer.restoreMultiLayerNetwork(filePath);
             }
             else {
                 DataInputStream dis = new DataInputStream(new FileInputStream(filePath));
@@ -375,7 +362,7 @@ public class ATAGCnn extends  Thread {
 
             File filePointer = new File(fileName);
             if(doUseSerializerLoad) {
-                //ModelSerializer.writeModel(model, filePointer,true);
+                //org.deeplearning4j.util.ModelSerializer.writeModel(model, filePointer,true);
             }
             else {
                 FileOutputStream fos = new FileOutputStream(filePointer);

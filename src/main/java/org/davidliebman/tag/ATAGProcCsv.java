@@ -42,7 +42,9 @@ public class ATAGProcCsv {
     public static final double FACE_2 = 30;//45
     public static final double FACE_1 = 15;//22
 
-    public static final int FACE_MONTE_CARLO_NUM = 16;//batch size
+    public static final int MONTE_CARLO_NUM = 8;//batch size 16
+    public static final double MONTE_CARLO_SIZE_TOO_BIG = 1.50d; //4.0
+    public static final double MONTE_CARLO_SIZE_TOO_SMALL = 0.75d; //0.5
 
     private ATAG var;
     private ArrayList<CsvLine> listSingle;
@@ -62,6 +64,7 @@ public class ATAGProcCsv {
 
     private boolean debugMessages = false;
     private boolean doSkipOnHeight = true;
+    private boolean doMoveMonteCarlo = true;
 
     public ATAGProcCsv (ATAG v) {
         var = v;
@@ -610,15 +613,15 @@ public class ATAGProcCsv {
             }
         }
 
-        if (list.size() % ATAG.CNN_BATCH_SIZE != 0) {
-            for (int i = 0; i < FACE_MONTE_CARLO_NUM; i ++) {
-                CsvLine l = new CsvLine();
-                for (int j = 0; j < FACE_LIST_TOTAL; j ++) {
-                    l.getSpecifications().add(0.0d);
-                }
-                l.setFileLocation("");
-                list.add(l);
+        while (list.size() % ATAG.CNN_BATCH_SIZE != 0) { // if
+            //for (int i = 0; i < MONTE_CARLO_NUM; i ++) {
+            CsvLine l = new CsvLine();
+            for (int j = 0; j < FACE_LIST_TOTAL; j ++) {
+                l.getSpecifications().add(0.0d);
             }
+            l.setFileLocation("");
+            list.add(l);
+            //}
         }
 
         return list;
@@ -626,12 +629,12 @@ public class ATAGProcCsv {
 
     public ArrayList<CsvLine> getPredictListForAreaOfInterest(int x, int y, int size, String filename) {
 
-        double base = size * SIZE_TOO_SMALL; // smallest
-        double increment = (size * SIZE_TOO_BIG - size * SIZE_TOO_SMALL) / (double) FACE_MONTE_CARLO_NUM;
+        double base = size * MONTE_CARLO_SIZE_TOO_SMALL; // smallest
+        double increment = (size * MONTE_CARLO_SIZE_TOO_BIG - size * MONTE_CARLO_SIZE_TOO_SMALL) / (double) MONTE_CARLO_NUM;
 
         ArrayList<CsvLine> list = new ArrayList<CsvLine>();
 
-        for (int i = 0; i < FACE_MONTE_CARLO_NUM; i ++) {
+        for (int i = 0; i < MONTE_CARLO_NUM; i ++) {
 
             CsvLine line = new CsvLine();
 
@@ -642,9 +645,16 @@ public class ATAGProcCsv {
             line.setFileLocation(filename);
 
             double new_size = base + increment * i;
-            double new_x = r.nextInt((int)(size * SIZE_TOO_BIG * 2)) - SIZE_TOO_BIG * size;
-            double new_y = r.nextInt((int)(size * SIZE_TOO_BIG * 2)) - SIZE_TOO_BIG * size;
+            double new_x, new_y;
 
+            if (doMoveMonteCarlo) {
+                new_x = r.nextInt((int) (size * MONTE_CARLO_SIZE_TOO_BIG * 2)) - MONTE_CARLO_SIZE_TOO_BIG * size;
+                new_y = r.nextInt((int) (size * MONTE_CARLO_SIZE_TOO_BIG * 2)) - MONTE_CARLO_SIZE_TOO_BIG * size;
+            }
+            else {
+                new_x = - ((new_size - ATAG.CNN_DIM_PIXELS) / 2);
+                new_y = - ((new_size - ATAG.CNN_DIM_PIXELS) / 2);
+            }
             line.getSpecifications().remove(FACE_APPROACH_X);
             line.getSpecifications().add(FACE_APPROACH_X,(double) x + new_x);
 

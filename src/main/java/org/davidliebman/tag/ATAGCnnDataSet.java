@@ -163,6 +163,25 @@ public class ATAGCnnDataSet  implements DataSetIterator {
         return Nd4j.create(array1D);//
     }
 
+
+    private INDArray mirrorTrain(INDArray in) {
+        in.linearView();
+
+        double [] zarray = new double[ATAG.CNN_DIM_SIDE*ATAG.CNN_DIM_SIDE*ATAG.CNN_CHANNELS];
+
+
+        for(int c = 0; c < ATAG.CNN_CHANNELS; c ++) {
+            for (int i = 0; i < ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE; i ++) {
+                int frame = c * ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE;
+                zarray[frame + i] = in.getDouble(frame + (ATAG.CNN_DIM_SIDE * ATAG.CNN_DIM_SIDE) - i - 1 );
+            }
+        }
+
+        //System.out.println("mirror");
+        INDArray out = Nd4j.create(zarray);
+        return out;
+    }
+
     /*
     public void randomizeList() {
 
@@ -279,15 +298,27 @@ public class ATAGCnnDataSet  implements DataSetIterator {
                 //ycoord = ycoord - (ATAG.CNN_DIM_PIXELS - faceh) / 2;
             }
 
+            double [] label = new double[4]; // max possible labels... probably will use less!
+            label[0] =listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_LABEL_1);
+            label[1] =listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_LABEL_2);
+            label[2] =listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_LABEL_3);
+            label[3] =listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_LABEL_4);
+            double labelnooutput =listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
+
+
+
             if(debugMessages) System.out.println(filename + " name  x=" + xcoord + "  y=" + ycoord + " height=" + faceh + " i=" + ( i + cursor * ATAG.CNN_BATCH_SIZE));
 
             File file = new File(filename);
 
             INDArray out = Nd4j.create(array1D);
             if (file.exists() && !file.isDirectory()) {
-                System.out.println(filename);
+                //System.out.println(filename);
                 //INDArray
                 out = loadImageBMP(file, xcoord, ycoord, faceh);
+                if (labelnooutput > ATAGPanel.SURENESS && ATAG.CNN_MIRROR_TRAIN) {
+                    out = mirrorTrain(out);
+                }
             }
             out = out.linearView();
             //System.out.println(arr.toString());
@@ -301,13 +332,6 @@ public class ATAGCnnDataSet  implements DataSetIterator {
                 featureMatrix[j][i] = out.getDouble(j);
                 //System.out.print("."+ i + "." + j);
             }
-            double [] label = new double[4]; // max possible labels... probably will use less!
-            label[0] =listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_LABEL_1);
-            label[1] =listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_LABEL_2);
-            label[2] =listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_LABEL_3);
-            label[3] =listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_LABEL_4);
-            double labelnooutput =listLocal.get(i + cursor * ATAG.CNN_BATCH_SIZE).getSpecifications().get(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
-
 
             for(int j = 0; j < ATAG.CNN_LABELS -1 ; j ++) {
                 labels [j][i] = label[j];
