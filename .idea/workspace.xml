@@ -39,9 +39,11 @@
       <file leaf-file-name="ATAGProcCsv.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGProcCsv.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="497">
-              <caret line="467" column="50" selection-start-line="467" selection-start-column="31" selection-end-line="467" selection-end-column="50" />
-              <folding />
+            <state relative-caret-position="-103">
+              <caret line="456" column="42" selection-start-line="456" selection-start-column="20" selection-end-line="456" selection-end-column="42" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -59,9 +61,13 @@
       <file leaf-file-name="ATAG.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAG.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
+            <state relative-caret-position="960">
               <caret line="67" column="56" selection-start-line="67" selection-start-column="56" selection-end-line="67" selection-end-column="56" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#3191#3192#0" expanded="false" />
+                <element signature="e#3260#3261#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -118,10 +124,11 @@
       <file leaf-file-name="ATAGCnn.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnn.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="201">
+            <state relative-caret-position="4035">
               <caret line="290" column="14" selection-start-line="290" selection-start-column="14" selection-end-line="290" selection-end-column="14" />
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#15058#15707#0" expanded="false" />
+                <element signature="e#15706#15707#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -146,9 +153,30 @@
       <file leaf-file-name="ATAGCnnDataSet.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnnDataSet.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-973">
+            <state relative-caret-position="2610">
               <caret line="184" column="0" selection-start-line="184" selection-start-column="0" selection-end-line="184" selection-end-column="0" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#8616#8637#0" expanded="false" />
+                <element signature="e#9221#9222#0" expanded="false" />
+                <element signature="e#9275#9276#0" expanded="false" />
+                <element signature="e#13589#13590#0" expanded="false" />
+                <element signature="e#13628#13629#0" expanded="false" />
+                <element signature="e#13939#13940#0" expanded="false" />
+                <element signature="e#13978#13979#0" expanded="false" />
+                <element signature="e#14011#14012#0" expanded="false" />
+                <element signature="e#14080#14081#0" expanded="false" />
+                <element signature="e#14275#14276#0" expanded="false" />
+                <element signature="e#14301#14302#0" expanded="false" />
+                <element signature="e#14327#14328#0" expanded="false" />
+                <element signature="e#14351#14352#0" expanded="false" />
+                <element signature="e#14378#14379#0" expanded="false" />
+                <element signature="e#14407#14408#0" expanded="false" />
+                <element signature="e#14439#14440#0" expanded="false" />
+                <element signature="e#14478#14479#0" expanded="false" />
+                <element signature="e#14650#14651#0" expanded="false" />
+                <element signature="e#14677#14678#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -552,13 +580,6 @@
       <option name="presentableId" value="Default" />
       <updated>1455820400608</updated>
     </task>
-    <task id="LOCAL-00092" summary="two iters for predict">
-      <created>1457632086789</created>
-      <option name="number" value="00092" />
-      <option name="presentableId" value="LOCAL-00092" />
-      <option name="project" value="LOCAL" />
-      <updated>1457632086790</updated>
-    </task>
     <task id="LOCAL-00093" summary="two iters for predict">
       <created>1457636792014</created>
       <option name="number" value="00093" />
@@ -895,7 +916,14 @@
       <option name="project" value="LOCAL" />
       <updated>1458930035687</updated>
     </task>
-    <option name="localTasksCounter" value="141" />
+    <task id="LOCAL-00141" summary="mod and save takes forever">
+      <created>1458943378422</created>
+      <option name="number" value="00141" />
+      <option name="presentableId" value="LOCAL-00141" />
+      <option name="project" value="LOCAL" />
+      <updated>1458943378422</updated>
+    </task>
+    <option name="localTasksCounter" value="142" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -964,7 +992,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="remove one cnn layer" />
     <MESSAGE value="two rbm layers" />
     <MESSAGE value="one rbm layer" />
     <MESSAGE value="save updater/load updater" />
@@ -989,7 +1016,8 @@
     <MESSAGE value="add mirrorTrain method" />
     <MESSAGE value="remove some commenting" />
     <MESSAGE value="first version of doOverlappingRepeat" />
-    <option name="LAST_COMMIT_MESSAGE" value="first version of doOverlappingRepeat" />
+    <MESSAGE value="mod and save takes forever" />
+    <option name="LAST_COMMIT_MESSAGE" value="mod and save takes forever" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1024,7 +1052,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="158" column="0" selection-start-line="158" selection-start-column="0" selection-end-line="158" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#3191#3192#0" expanded="false" />
+            <element signature="e#3260#3261#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1094,7 +1126,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="158" column="93" selection-start-line="158" selection-start-column="93" selection-end-line="158" selection-end-column="93" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#3191#3192#0" expanded="false" />
+            <element signature="e#3260#3261#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1460,35 +1496,63 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAG.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
+        <state relative-caret-position="960">
           <caret line="67" column="56" selection-start-line="67" selection-start-column="56" selection-end-line="67" selection-end-column="56" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#3191#3192#0" expanded="false" />
+            <element signature="e#3260#3261#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnn.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
+        <state relative-caret-position="4035">
           <caret line="290" column="14" selection-start-line="290" selection-start-column="14" selection-end-line="290" selection-end-column="14" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#15058#15707#0" expanded="false" />
+            <element signature="e#15706#15707#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnnDataSet.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-973">
+        <state relative-caret-position="2610">
           <caret line="184" column="0" selection-start-line="184" selection-start-column="0" selection-end-line="184" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#8616#8637#0" expanded="false" />
+            <element signature="e#9221#9222#0" expanded="false" />
+            <element signature="e#9275#9276#0" expanded="false" />
+            <element signature="e#13589#13590#0" expanded="false" />
+            <element signature="e#13628#13629#0" expanded="false" />
+            <element signature="e#13939#13940#0" expanded="false" />
+            <element signature="e#13978#13979#0" expanded="false" />
+            <element signature="e#14011#14012#0" expanded="false" />
+            <element signature="e#14080#14081#0" expanded="false" />
+            <element signature="e#14275#14276#0" expanded="false" />
+            <element signature="e#14301#14302#0" expanded="false" />
+            <element signature="e#14327#14328#0" expanded="false" />
+            <element signature="e#14351#14352#0" expanded="false" />
+            <element signature="e#14378#14379#0" expanded="false" />
+            <element signature="e#14407#14408#0" expanded="false" />
+            <element signature="e#14439#14440#0" expanded="false" />
+            <element signature="e#14478#14479#0" expanded="false" />
+            <element signature="e#14650#14651#0" expanded="false" />
+            <element signature="e#14677#14678#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGProcCsv.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="497">
-          <caret line="467" column="50" selection-start-line="467" selection-start-column="31" selection-end-line="467" selection-end-column="50" />
-          <folding />
+        <state relative-caret-position="-103">
+          <caret line="456" column="42" selection-start-line="456" selection-start-column="20" selection-end-line="456" selection-end-column="42" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
