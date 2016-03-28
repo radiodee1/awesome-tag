@@ -61,14 +61,14 @@ public class ATAGProcCsv {
     private double avg_approach_dist = 0;
     private double max_size_vertical = 0;
     private int num_positive_output = 0;
-    private boolean grossImageChoice = false;
     private int num_of_skipped_no_output = 0;
 
     private boolean debugMessages = false;
+    private boolean doGrossImageChoice = true;
     private boolean doSkipOnHeight = true;
     private boolean doMoveMonteCarlo = true;
-    private boolean doNoRepeat = true;
-    private boolean doOverlappingRepeat = true;
+    private boolean doNoRepeat = false;
+    private boolean doOverlappingRepeat = false;
 
     public ATAGProcCsv (ATAG v) {
         var = v;
@@ -334,7 +334,7 @@ public class ATAGProcCsv {
                         double changex = r.nextInt((int) dim_size) - dim_size / 2.0d;
                         double changey = r.nextInt((int) (dim_size * 2 * (3.0f / 4.0f))) - dim_size * (3.0f / 4.0f) ;
 
-                        if (grossImageChoice) {
+                        if (doGrossImageChoice) {
                             changex = (dim_size + r.nextInt((int)dim_size * 2)  ) * (r.nextInt(2) - 1);
                             if (changex == 0) changex = dim_size + 2;
                         }

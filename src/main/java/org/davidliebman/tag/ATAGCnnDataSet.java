@@ -41,6 +41,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
     private boolean debugDoNotSplit = false;
     private static boolean orderAsAlternate = true;
     private static boolean debugOneChannelForDisplay = true;
+    private boolean doMirrorTrain = ATAG.CNN_MIRROR_TRAIN;
 
     boolean trainWithThisSet = true;
 
@@ -284,7 +285,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
                 //System.out.println(filename);
                 //INDArray
                 out = loadImageBMP(file, xcoord, ycoord, faceh);
-                if (labelnooutput > ATAGPanel.SURENESS && ATAG.CNN_MIRROR_TRAIN) {
+                if (labelnooutput > ATAGPanel.SURENESS && doMirrorTrain) {
                     out = mirrorTrain(out);
                 }
             }
@@ -327,7 +328,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
 
     }
 
-
+    public void setDoMirrorTrain ( boolean m ) {doMirrorTrain = m;}
 
 
     @Override

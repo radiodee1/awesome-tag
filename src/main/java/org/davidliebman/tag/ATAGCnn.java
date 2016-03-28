@@ -8,7 +8,6 @@ import org.deeplearning4j.nn.conf.Updater;
 import org.deeplearning4j.nn.conf.layers.ConvolutionLayer;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
-import org.deeplearning4j.nn.conf.layers.SubsamplingLayer;
 import org.deeplearning4j.nn.conf.layers.setup.ConvolutionLayerSetup;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
@@ -123,7 +122,7 @@ public class ATAGCnn extends  Thread {
 
                     .updater(Updater.ADAGRAD)
                     .momentum(0.9)
-                    .list(4)
+                    .list(3)
                     .layer(0, new ConvolutionLayer.Builder(5, 5)
                             .nIn(nChannels)
                             .stride(1, 1)
@@ -131,13 +130,14 @@ public class ATAGCnn extends  Thread {
                             .dropOut(0.5)
                             .activation("relu")
                             .build())
+                    /*
                     .layer(1, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
                             .kernelSize(2, 2)
                             .stride(2, 2)
                             .build())
+                    */
 
-
-                    .layer(2, new DenseLayer.Builder()
+                    .layer(1, new DenseLayer.Builder()
                             .activation("relu")
                             .nOut(600) // 600
                             .build())
@@ -165,7 +165,7 @@ public class ATAGCnn extends  Thread {
                             .build())
                     */
 
-                    .layer(3, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                    .layer(2, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
                             .nIn(600) // 250
                             .nOut(outputNum)
                             .activation("softmax")
@@ -235,6 +235,8 @@ public class ATAGCnn extends  Thread {
 
                 if (doTest) {
                     log.info("Evaluate model.... " + mnistTest.numExamples());
+
+                    ((ATAGCnnDataSet)mnistTest).setDoMirrorTrain(false);
 
                     cursor = 0;
                     doSaveCursor = false;

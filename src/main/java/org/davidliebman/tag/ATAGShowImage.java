@@ -435,8 +435,10 @@ public class ATAGShowImage {
                     buttonTestCNN.setText("Wait");
                     cnnThread.setExitEarly(true);
                     waitDialogShow();
-                    dialogThread = new StartDialog();
-                    dialogThread.execute();
+                    if (dialogThread == null) {
+                        dialogThread = new StartDialog();
+                        dialogThread.execute();
+                    }
 
                 }
                 else if ( threadType == ATAG.THREAD_TEST && cnnThread != null && (! cnnThread.isAlive() ||cnnThread.getState() == Thread.State.WAITING)) {
@@ -471,6 +473,8 @@ public class ATAGShowImage {
                         //cnnThread.setDoLoadSaveModel(true); // load and save!
                         cnnThread.setExitEarly(false);
                         cnnThread.start();
+                        dialogThread = new StartDialog();
+                        dialogThread.execute();
                     }
                     catch (Exception i) {i.printStackTrace();}
 
@@ -612,7 +616,7 @@ public class ATAGShowImage {
         buttonPrevious.setText("Prev Pic");
 
         ((ATAGPanel)imagePanel).setFilename(var.configLastImage);
-
+        dialogThread = null;
 
     }
 
@@ -649,8 +653,11 @@ public class ATAGShowImage {
         protected Object doInBackground() throws Exception {
 
             try {
+                //if (threadType != ATAG.THREAD_TEST || true) {
                 cnnThread.join();
                 System.out.println("just joined");
+
+                //}
 
 
 
@@ -673,7 +680,7 @@ public class ATAGShowImage {
                 buttonTrainCNN.setText("Clear");
             }
             else if (threadType == ATAG.THREAD_TEST){
-                ((ATAGPanel) imagePanel).standardOutReset();
+                //((ATAGPanel) imagePanel).standardOutReset(false);
                 //((ATAGPanel) imagePanel).setShowPredictBoxes(false);
                 buttonTestCNN.setText("Clear");
             }
