@@ -19,7 +19,7 @@ public class ATAGProcCsv {
     public static final int APPROACH_IS_CLOSE = 70;
     public static final int NUM_OF_SKIPPED_CONSECUTIVE_NO_OUTPUT = 1;
     public static final double SIZE_TOO_BIG = 4.0d;//1.25d;
-    public static final double SIZE_TOO_SMALL = 0.5d;
+    public static final double SIZE_TOO_SMALL = 0.80d;
 
     public static final int FACE_X = 6;
     public static final int FACE_Y = 7;
@@ -104,7 +104,7 @@ public class ATAGProcCsv {
 
         String filename = var.getSplitFolderFromNumber(num);
 
-        if (debugMessages || true) System.out.println( "Hello World! -- " + filename );
+        if (debugMessages || true) System.out.println( "Load single -- " + filename );
 
         if (!(new File(filename)).exists()) {
             return;
@@ -116,7 +116,7 @@ public class ATAGProcCsv {
     }
 
     private void loadCsvLocal() {
-        if (debugMessages) System.out.println( "Hello World! -- " + var.configCsvLocal );
+        if (debugMessages) System.out.println( "Load local -- " + var.configCsvLocal );
 
         if (!(new File(var.configCsvLocal)).exists()) {
             return;
@@ -258,6 +258,9 @@ public class ATAGProcCsv {
         listLocal = new ArrayList<CsvLine>();
 
         listSecond = new ArrayList<CsvLine>();
+
+        System.out.println(csv.size());
+
         for (int i = 0; i < csv.size(); i ++ ) {
             System.out.print("i=" + i + " ");
             processLine(csv.get(i));
@@ -297,6 +300,7 @@ public class ATAGProcCsv {
 
         if (fheight > max_size_vertical) max_size_vertical = fheight;
         if (fheight > ATAG.CNN_DIM_PIXELS * SIZE_TOO_BIG && doSkipOnHeight) skipOnHeight = 1.0d;
+        if (fheight < ATAG.CNN_DIM_PIXELS * SIZE_TOO_SMALL && doSkipOnHeight) skipOnHeight = 1.0d;
         ////////////////////////
         String filename = var.configRootDatabase + File.separator + line.getFileLocation();
 
@@ -309,6 +313,7 @@ public class ATAGProcCsv {
 
         int bot = image.getHeight();
         int right = image.getWidth();
+
 
         ////////////////////////
 
@@ -343,6 +348,7 @@ public class ATAGProcCsv {
                         approachy = fy + changey;
                         approachdist = Math.sqrt(Math.pow(fx - approachx, 2) + Math.pow(fy - approachy, 2));
 
+
                         if(doNoRepeat) {
                             aproachNeedsRepeat = false;
                             if(approachx < 0 || approachx + dim_size > right || approachy < 0 || approachy + dim_size > bot) {
@@ -351,7 +357,9 @@ public class ATAGProcCsv {
                         }
                         else {
                             //check if approach is good...
-                            aproachNeedsRepeat = getApproachNeedsRepeat((int) approachx, (int) approachy, (int) dim_size, line.getFileLocation());
+                            //System.out.println(" here ");
+
+                            aproachNeedsRepeat = getApproachNeedsRepeat((int) approachx, (int) approachy, (int) dim_size, right, bot, line.getFileLocation());
                         }
                         j++;
                         if (debugMessages || true) System.out.println(j + " a=" + aproachNeedsRepeat);
@@ -459,24 +467,25 @@ public class ATAGProcCsv {
     }
     */
 
-    private boolean getApproachNeedsRepeat( int x, int y,int dim_side, String name) {
+    private boolean getApproachNeedsRepeat( int x, int y,int dim_side,double img_width, double img_height, String name) {
 
-        boolean test = false;
+        boolean test = false;// doOverlappingRepeat;
 
         ArrayList<CsvLine> listCheck = getFirstMatchByName( name , listSingle );
 
+
         BoundingBox a = new BoundingBox(x,y, dim_side, dim_side);
 
-        int i = 0;
-        for (i = 0; i < listCheck.size(); i ++) {
+        //int i = 0;
+        for (int i = 0; i < listCheck.size(); i ++) {
             double xx =  listCheck.get(i).getSpecifications().get(FACE_X);
             double yy =  listCheck.get(i).getSpecifications().get(FACE_Y);
 
             double width = listCheck.get(i).getSpecifications().get(FACE_WIDTH);
             double height = listCheck.get(i).getSpecifications().get(FACE_HEIGHT);
 
-            double img_height = listCheck.get(i).getSpecifications().get(FACE_DIM_HEIGHT);
-            double img_width = listCheck.get(i).getSpecifications().get(FACE_DIM_WIDTH);
+            //double img_height = listCheck.get(i).getSpecifications().get(FACE_DIM_HEIGHT);
+            //double img_width = listCheck.get(i).getSpecifications().get(FACE_DIM_WIDTH);
 
             double changex = (dim_side - width ) / 2.0f;
             double changey = (dim_side - height) / 2.0f;
@@ -484,15 +493,19 @@ public class ATAGProcCsv {
             xx = xx - changex;
             yy = yy - changey;
 
-            if (((int) xx) != x && ((int) yy) != y) {
+            //System.out.println(" dim " + img_height + " " + img_width);
+
+            if ( true){//((int) xx) != x && ((int) yy) != y) {
                 BoundingBox b = new BoundingBox((int) xx, (int) yy, (int) height, (int) height);
                 boolean out = collisionSimple(a, b);
 
-                if (x+ dim_side < 0 || y+ dim_side < 0 || x+width > img_width || y + height > img_height) { // floating off at left of frame...
+                //System.out.println(listCheck.size());
+
+                if (x < 0 || y < 0 || x+width > img_width || y + height > img_height) { // floating off at left of frame...
                     out = ! doOverlappingRepeat;
                 }
 
-                if (debugMessages) System.out.println(name + " " + xx + " " + yy + " " + out);
+                if (debugMessages ) System.out.println(name + " " + xx + " " + yy + " " + out);
                 // this part may not be right!!
                 test = out ^ ! doOverlappingRepeat; // XOR
                 if (test) {
@@ -502,6 +515,7 @@ public class ATAGProcCsv {
 
 
             }
+
         }
 
         return test;

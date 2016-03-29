@@ -65,7 +65,7 @@ public class ATAG {
     public static final int CNN_BATCH_SIZE = 32; //64
     public static final int CNN_CHANNELS = 3;
     public static final int CNN_DIM_PIXELS = 56; //60
-    public static final boolean CNN_MIRROR_TRAIN = true;
+    public static final boolean CNN_MIRROR_TRAIN = false;
 
     public static final int THREAD_TRAIN = 1;
     public static final int THREAD_TEST = 2;
