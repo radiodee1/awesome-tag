@@ -606,11 +606,17 @@ public class ATAGProcCsv {
         int left = 0;
         int right = image.getWidth();
 
-        int spanHorizontal = ((right - left) - ATAG.CNN_DIM_PIXELS) / 7;//ATAG.CNN_DIM_SIDE;
-        int spanVertical = ((bot - top) - ATAG.CNN_DIM_PIXELS) / 7;//ATAG.CNN_DIM_SIDE;
+        int limHorizontal = (int)(right / (float)ATAG.CNN_DIM_PIXELS);
+        int limVertical = (int)(bot /(float) ATAG.CNN_DIM_PIXELS);
 
-        for (int x = 0; x < 8; x ++) {
-            for (int y = 0; y < 8; y ++) {
+        int spanHorizontal = ((right - left) - ATAG.CNN_DIM_PIXELS) / (limHorizontal - 1);//ATAG.CNN_DIM_SIDE;
+        int spanVertical = ((bot - top) - ATAG.CNN_DIM_PIXELS) / (limVertical -1);//ATAG.CNN_DIM_SIDE;
+
+
+        System.out.println("lim x=" + limHorizontal + " y=" + limVertical);
+
+        for (int x = 0; x < limHorizontal; x ++) {
+            for (int y = 0; y < limVertical; y ++) {
                 ///////////////////////
                 CsvLine row = new CsvLine();
                 for (int i = 0; i < FACE_LIST_TOTAL; i ++) {
@@ -633,6 +639,17 @@ public class ATAGProcCsv {
 
                 listPredict.add(row);
             }
+        }
+
+        while (listPredict.size() % ATAG.CNN_BATCH_SIZE != 0 || listPredict.size() == 0) { // if
+            //for (int i = 0; i < MONTE_CARLO_NUM; i ++) {
+            CsvLine l = new CsvLine();
+            for (int j = 0; j < FACE_LIST_TOTAL; j ++) {
+                l.getSpecifications().add(0.0d);
+            }
+            l.setFileLocation("");
+            listPredict.add(l);
+            //}
         }
 
         saveAnyCsv(var.configLocalRoot + File.separator + "predict.csv",listPredict,null, CSV_POSITION_FILE_LOCATION);
