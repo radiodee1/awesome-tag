@@ -64,6 +64,7 @@ public class ATAGProcCsv {
     private int num_of_skipped_no_output = 0;
 
     private boolean debugMessages = false;
+    private boolean doLoadAllFiles = true;
     private boolean doGrossImageChoice = true;
     private boolean doSkipOnHeight = true;
     private boolean doMoveMonteCarlo = true;
@@ -96,6 +97,8 @@ public class ATAGProcCsv {
 
     public void clearUnusedList() { listSingle = new ArrayList<CsvLine>();}
 
+    public void setDoLoadAllFiles( boolean d) { doLoadAllFiles = d;}
+
     private void loadCsvSingle() {
         loadCsvSingle(var.configSplitCurrentNum);
     }
@@ -113,6 +116,19 @@ public class ATAGProcCsv {
         listSingle = new ArrayList<CsvLine>();
         headingSingle = new ArrayList<String>();
         loadAnyCsv(filename, listSingle,headingSingle, CSV_POSITION_FILE_LOCATION);
+
+        if (doLoadAllFiles) {
+            ArrayList<CsvLine> temp = new ArrayList<CsvLine>();
+            ArrayList<String> heading = new ArrayList<String>();
+
+            String filename2 = var.getSplitTestFolderFromNumber(num);
+
+            if (!(new File(filename2)).exists() || (new File(filename2)).isDirectory()) return;
+
+            loadAnyCsv(filename2,temp,heading, CSV_POSITION_FILE_LOCATION);
+            System.out.println("extra "+temp.size());
+            listSingle.addAll(temp);
+        }
     }
 
     private void loadCsvLocal() {
@@ -305,14 +321,26 @@ public class ATAGProcCsv {
         String filename = var.configRootDatabase + File.separator + line.getFileLocation();
 
         BufferedImage image = null;
+        int bot = 0;
+        int right = 0;
+
         try {
-            image = ImageIO.read(new File(filename));
+            File file = new File(filename);
+            if (!file.exists() || file.isDirectory()) {
+                System.out.println(filename);
+                skipOnHeight = 1.0d;
+            }
+            image = ImageIO.read(file);
+            bot = image.getHeight();
+            right = image.getWidth();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
 
         }
-        catch (Exception e) {e.printStackTrace();}
 
-        int bot = image.getHeight();
-        int right = image.getWidth();
+        //int bot = image.getHeight();
+        //int right = image.getWidth();
 
 
         ////////////////////////
@@ -461,11 +489,8 @@ public class ATAGProcCsv {
         }
     }
 
-    /*
-    private boolean getApproachNeedsRepeat( int x, int y, String name) {
-        return  getApproachNeedsRepeat(x,y,  ATAG.CNN_DIM_PIXELS, name);
-    }
-    */
+
+
 
     private boolean getApproachNeedsRepeat( int x, int y,int dim_side,double img_width, double img_height, String name) {
 
@@ -606,8 +631,8 @@ public class ATAGProcCsv {
         int left = 0;
         int right = image.getWidth();
 
-        int limHorizontal = (int)(right / (float)ATAG.CNN_DIM_PIXELS);
-        int limVertical = (int)(bot /(float) ATAG.CNN_DIM_PIXELS);
+        int limHorizontal = (int)Math.ceil(right / (float)ATAG.CNN_DIM_PIXELS);
+        int limVertical = (int)Math.ceil(bot /(float) ATAG.CNN_DIM_PIXELS);
 
         int spanHorizontal = ((right - left) - ATAG.CNN_DIM_PIXELS) / (limHorizontal - 1);//ATAG.CNN_DIM_SIDE;
         int spanVertical = ((bot - top) - ATAG.CNN_DIM_PIXELS) / (limVertical -1);//ATAG.CNN_DIM_SIDE;

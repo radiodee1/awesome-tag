@@ -3,7 +3,6 @@ package org.davidliebman.tag;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.*;
 import java.io.*;
 
 
@@ -278,6 +277,12 @@ public class ATAG {
                 def);
 
         return in;
+    }
+
+    public String getSplitTestFolderFromNumber(String num) {
+        String out = "";
+        out = configRootDatabase + File.separator + "split" + num + File.separator + "test_" + num + ".csv";
+        return out;
     }
 
     public String getSplitFolderFromNumber(String num) {

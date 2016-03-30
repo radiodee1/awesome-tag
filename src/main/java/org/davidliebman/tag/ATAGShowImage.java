@@ -230,6 +230,24 @@ public class ATAGShowImage {
             public void actionPerformed(ActionEvent e) {
                 if (proc != null) {
                     //proc.saveCsvLocal();
+                    Object[] options = {"Train and Test", "Train Only"};
+                    int n = JOptionPane.showOptionDialog(frame,
+                            "Train only or train and test?",
+                            "Choose File",
+                            JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            options,
+                            options[1]);
+
+                    if (n == 0) {
+
+                        proc.setDoLoadAllFiles(true);
+                    }
+                    else {
+                        proc.setDoLoadAllFiles(false);
+                    }
+
                     try {
                         int start = Integer.valueOf(var.configSlpitStartNum.trim());
                         int stop = Integer.valueOf(var.configSplitStopNum.trim());
@@ -320,9 +338,9 @@ public class ATAGShowImage {
                     setDisplayText();
                 }
 
-                Object[] options = {"STAGE 2", "STAGE 1"};
+                Object[] options = {"Random: 2", "Even: 1"};
                 int n = JOptionPane.showOptionDialog(frame,
-                        "Stage 1 is general interest, Stage 2 is Monte Carlo investigation.",
+                        "Even (1) is general interest, Random (2) is for following-up #1.",
                         "Predict",
                         JOptionPane.YES_NO_CANCEL_OPTION,
                         JOptionPane.QUESTION_MESSAGE,
