@@ -84,7 +84,7 @@ public class ATAGCnnDataSet  implements DataSetIterator {
         float mag = (float) dim_side /(float) ATAG.CNN_DIM_SIDE;
         //mag = (float)ATAG.CNN_DIM_SIDE /(float) dim_side;// /(float) ATAG.CNN_DIM_SIDE;
 
-        System.out.println("mag " + mag + " dim-side "+ dim_side);
+        if (false) System.out.println("mag " + mag + " dim-side "+ dim_side);
 
         BufferedImage image = ImageIO.read(file);
 

@@ -53,17 +53,17 @@ public class ATAG {
     public static final String DEFAULT_LOCAL_DATA_FOLDERNAME = "local";
     public static final String DEFAULT_LOCAL_DATA_CSV = "my.csv";
     public static final String DEFAULT_LAST_IMAGE = "image.png";
-    public static final String DEFAULT_BIASES_NAME = "lenet-conv1-rc38-dup-faces";
+    public static final String DEFAULT_BIASES_NAME = "lenet-conv1-rc38-dup80-faces";
 
 
     public String configRootLocal = "";
 
 
     public static final int CNN_LABELS = 2;
-    public static final int CNN_DIM_SIDE = 56; //60
-    public static final int CNN_BATCH_SIZE = 32; //64
+    public static final int CNN_DIM_SIDE = 80; //60
+    public static final int CNN_BATCH_SIZE = 16; //64
     public static final int CNN_CHANNELS = 3;
-    public static final int CNN_DIM_PIXELS = 56; //60
+    public static final int CNN_DIM_PIXELS = 80; //60
     public static final boolean CNN_MIRROR_TRAIN = false;
 
     public static final int THREAD_TRAIN = 1;
