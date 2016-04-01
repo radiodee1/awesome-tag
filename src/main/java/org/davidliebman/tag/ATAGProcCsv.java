@@ -712,8 +712,9 @@ public class ATAGProcCsv {
                 double x = in.get(i).getSpecifications().get(FACE_APPROACH_X);
                 double y = in.get(i).getSpecifications().get(FACE_APPROACH_Y);
                 double size = in.get(i).getSpecifications().get(FACE_HEIGHT);
+                int group = in.get(i).getGroupID();
                 String filename = in.get(i).getFileLocation();
-                list.addAll(getPredictListForAreaOfInterest( (int)x, (int)y, (int)size, filename ));
+                list.addAll(getPredictListForAreaOfInterest( (int)x, (int)y, (int)size, group, filename ));
             }
         }
 
@@ -731,7 +732,7 @@ public class ATAGProcCsv {
         return list;
     }
 
-    public ArrayList<CsvLine> getPredictListForAreaOfInterest(int x, int y, int size, String filename) {
+    public ArrayList<CsvLine> getPredictListForAreaOfInterest(int x, int y, int size, int group, String filename) {
 
         double base = size * MONTE_CARLO_SIZE_TOO_SMALL; // smallest
         double increment = (size * MONTE_CARLO_SIZE_TOO_BIG - size * MONTE_CARLO_SIZE_TOO_SMALL) / (double) MONTE_CARLO_NUM;
@@ -771,6 +772,8 @@ public class ATAGProcCsv {
 
             line.getSpecifications().remove(FACE_WIDTH);
             line.getSpecifications().add(FACE_WIDTH,  new_size);
+
+            line.setGroupID(group);
             ///////////////////////
 
             list.add(line);

@@ -50,7 +50,8 @@ public class ATAGShowImage {
     JFrame frame ;
 
     private boolean debugConsecOutput = false;
-    private boolean debugReuseModel = false; // false for training!!
+    private boolean debugReuseModel = true; // false for training!!
+    private boolean debugReuseModelForTraining = false;
     private boolean debugShowRawPredictList = false;
     private boolean doSortPredictList = false;
 
@@ -373,7 +374,7 @@ public class ATAGShowImage {
                     ((ATAGPanel) imagePanel).setShowPredictBoxes(true);
 
                     cnnThread = new ATAGCnn(var,proc);
-                    if (model != null) {
+                    if (model != null && debugReuseModel) {
                         cnnThread.setDoGenerateNewModel(false);
                         cnnThread.setModel(model);
                         //cnnThread.init();
@@ -479,7 +480,7 @@ public class ATAGShowImage {
 
 
                         cnnThread = new ATAGCnn(var, proc);
-                        if(model != null) {
+                        if(model != null && debugReuseModel) {
                             cnnThread.setDoGenerateNewModel(false);
                             cnnThread.setModel(model);
                             //cnnThread.init();
@@ -584,39 +585,60 @@ public class ATAGShowImage {
 
         if (list == null || list.size() <= 1) return list;
 
-        int ii = 0;
+        //int ii = 0;
         //
+        int last_group = 0;
 
-        for (int i = 1; i < list.size(); i ++) {
+        for (int g = 0; g < list.size(); g ++) {
+            int gg = list.get(g).getGroupID();
+            int ii = g;
 
-            double sureness_1 = list.get(ii).getSpecifications().get(ATAGProcCsv.FACE_LABEL_1);
-            double sureness_2 = list.get(i).getSpecifications().get(ATAGProcCsv.FACE_LABEL_1);
+            System.out.println("group " + gg);
 
-            double no_out_1 = list.get(ii).getSpecifications().get(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
-            double no_out_2 = list.get(i).getSpecifications().get(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
+            if (list.get(ii).getSpecifications().get(ATAGProcCsv.FACE_LABEL_1) > ATAGPanel.SURENESS) {
+                for (int i = 0; i < list.size(); i++) {
 
-            //System.out.println("vals " + sureness_1 + " " + sureness_2);
+                    if (gg == list.get(ii).getGroupID() && gg == list.get(i).getGroupID()) {
 
-            boolean choose = sureness_1 > sureness_2 ;
-            //choose = no_out_1 < no_out_2;
+                        double sureness_1 = list.get(ii).getSpecifications().get(ATAGProcCsv.FACE_LABEL_1);
+                        double sureness_2 = list.get(i).getSpecifications().get(ATAGProcCsv.FACE_LABEL_1);
 
-            if (list.get(ii).getGroupID() == list.get(i).getGroupID()) {
-                if (choose) {
-                    list.get(i).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_1);
-                    list.get(i).getSpecifications().add(ATAGProcCsv.FACE_LABEL_1, 0.0d);
-                    list.get(i).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
-                    list.get(i).getSpecifications().add(ATAGProcCsv.FACE_LABEL_NO_OUTPUT, 1.0d);
-                } else {
-                    list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_1);
-                    list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_1, 0.0d);
-                    list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
-                    list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_NO_OUTPUT, 1.0d);
+                        //double no_out_1 = list.get(ii).getSpecifications().get(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
+                        //double no_out_2 = list.get(i).getSpecifications().get(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
 
-                    ii = i;
+
+                        //System.out.println("vals " + sureness_2 + " " + no_out_2);
+
+                        boolean choose = sureness_1 > sureness_2;
+                        //boolean choose_lesser = no_out_1 > no_out_2;
+
+                        //System.out.print(list.get(i).getGroupID() + " ");
+                        if (choose) {
+                            // change the lower...
+                            list.get(i).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_1);
+                            list.get(i).getSpecifications().add(ATAGProcCsv.FACE_LABEL_1, 0.0d);
+                            list.get(i).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
+                            list.get(i).getSpecifications().add(ATAGProcCsv.FACE_LABEL_NO_OUTPUT, 1.0d);
+                            //System.out.println("changing i " + i);
+
+                        } else {//if (sureness_1 <= sureness_2){
+                            // change the lower...
+                            if(ii != i) {
+                                list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_1);
+                                list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_1, 0.0d);
+                                list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
+                                list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_NO_OUTPUT, 1.0d);
+                            }
+                            //System.out.println("changing ii " + ii);
+                            ii = i;
+                            last_group = list.get(ii).getGroupID();
+                        }
+                    }
                 }
             }
         }
-        System.out.println("chosen "+ ii);
+
+        //System.out.println("chosen "+ ii + " group " + last_group);
         return list;
     }
 

@@ -31,6 +31,7 @@ public class ATAGPanel extends JPanel{
     private boolean showPredictBoxes = false;
     private boolean showStandartOut = false;
     private boolean showAllLines = false;
+    private boolean debugMessages = false;
 
     private int textSizeW = 44, textSizeH = 27;
 
@@ -201,7 +202,7 @@ public class ATAGPanel extends JPanel{
                         g.setColor(Color.blue);
                         g.drawRect((int) xcoord, (int) ycoord, (int) fwidth , (int) fheight );//ATAG.CNN_DIM_PIXELS, (int) ATAG.CNN_DIM_PIXELS);
                     }
-                    System.out.println("add line.");
+                    //System.out.println("add line.");
 
                     g.setColor(Color.GREEN);
                     if (listFaces.get(i).getSpecifications().get(ATAGProcCsv.FACE_LABEL_NO_OUTPUT) >= SURENESS) {
@@ -220,7 +221,7 @@ public class ATAGPanel extends JPanel{
                     if (foundOutput || !showPredictBoxes) {
                         g.drawRect((int) fx, (int) fy, (int) fwidth, (int) fheight);
                     }
-                    showSizes(listFaces.get(i));
+                    if (debugMessages) showSizes(listFaces.get(i));
                 }
                 if (showPredictBoxes) System.out.println("list length " + listFaces.size());
 
