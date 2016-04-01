@@ -585,12 +585,9 @@ public class ATAGShowImage {
         if (list == null || list.size() <= 1) return list;
 
         int ii = 0;
-        //ATAGProcCsv.CsvLine line1 = list.get(0);
+        //
 
         for (int i = 1; i < list.size(); i ++) {
-
-            //ATAGProcCsv.CsvLine line2 = list.get(i);
-            //ATAGProcCsv.CsvLine line1 = list.get(ii);
 
             double sureness_1 = list.get(ii).getSpecifications().get(ATAGProcCsv.FACE_LABEL_1);
             double sureness_2 = list.get(i).getSpecifications().get(ATAGProcCsv.FACE_LABEL_1);
@@ -601,23 +598,23 @@ public class ATAGShowImage {
             //System.out.println("vals " + sureness_1 + " " + sureness_2);
 
             boolean choose = sureness_1 > sureness_2 ;
-            choose = no_out_1 < no_out_2;
+            //choose = no_out_1 < no_out_2;
 
-            if (choose) {
-                list.get(i).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_1);
-                list.get(i).getSpecifications().add(ATAGProcCsv.FACE_LABEL_1,0.0d);
-                list.get(i).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
-                list.get(i).getSpecifications().add(ATAGProcCsv.FACE_LABEL_NO_OUTPUT, 1.0d);
-            }
-            else {  // if (sureness_1 <= sureness_2){
-                list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_1);
-                list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_1,0.0d);
-                list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
-                list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_NO_OUTPUT, 1.0d);
-                //line1 = list.get(i);
-                ii = i;
-            }
+            if (list.get(ii).getGroupID() == list.get(i).getGroupID()) {
+                if (choose) {
+                    list.get(i).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_1);
+                    list.get(i).getSpecifications().add(ATAGProcCsv.FACE_LABEL_1, 0.0d);
+                    list.get(i).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
+                    list.get(i).getSpecifications().add(ATAGProcCsv.FACE_LABEL_NO_OUTPUT, 1.0d);
+                } else {
+                    list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_1);
+                    list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_1, 0.0d);
+                    list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
+                    list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_NO_OUTPUT, 1.0d);
 
+                    ii = i;
+                }
+            }
         }
         System.out.println("chosen "+ ii);
         return list;

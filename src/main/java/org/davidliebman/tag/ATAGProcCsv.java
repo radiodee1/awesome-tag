@@ -665,6 +665,9 @@ public class ATAGProcCsv {
 
                 row.getSpecifications().remove(FACE_WIDTH);
                 row.getSpecifications().add(FACE_WIDTH, (double) dim_pixels);
+
+
+                row.setGroupID(x * limVertical + y);
                 ///////////////////////
 
                 listPredict.add(row);
@@ -923,7 +926,10 @@ public class ATAGProcCsv {
 
     class CsvLine {
         String fileLocation;
+
         ArrayList<Double> specifications = new ArrayList<Double>();
+
+        private int groupID;
 
         public String getFileLocation() {
             return fileLocation;
@@ -940,6 +946,10 @@ public class ATAGProcCsv {
         public void setSpecifications(ArrayList<Double> specifications) {
             this.specifications = specifications;
         }
+
+        public void setGroupID(int g) {groupID = g;}
+
+        public int getGroupID() {return groupID;}
     }
 
     class BoundingBox {
