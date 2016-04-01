@@ -45,7 +45,7 @@ public class ATAGProcCsv {
     public static final double FACE_1 = 15;//22
 
     public static final int MONTE_CARLO_NUM = 8;//batch size 16
-    public static final double MONTE_CARLO_SIZE_TOO_BIG = 1.50d; //4.0
+    public static final double MONTE_CARLO_SIZE_TOO_BIG = 3.50d; //4.0
     public static final double MONTE_CARLO_SIZE_TOO_SMALL = 0.75d; //0.5
 
     private ATAG var;
@@ -62,12 +62,14 @@ public class ATAGProcCsv {
     private double max_size_vertical = 0;
     private int num_positive_output = 0;
     private int num_of_skipped_no_output = 0;
+    private int dim_screen_search = 0;
 
     private boolean debugMessages = false;
     private boolean doLoadAllFiles = true;
     private boolean doGrossImageChoice = true;
     private boolean doSkipOnHeight = true;
-    private boolean doMoveMonteCarlo = true;
+    private boolean doMoveMonteCarlo = false;
+    private boolean doSizeMonteCarlo = true;
     private boolean doNoRepeat = false;
     private boolean doOverlappingRepeat = false;
 
@@ -617,7 +619,7 @@ public class ATAGProcCsv {
         if (debugMessages) System.out.println(var.configLastImage + " prev");
     }
 
-    public ArrayList<CsvLine> getPredictListFromImage(String filename) {
+    public ArrayList<CsvLine> getPredictListFromImage(String filename , int dim_pixels) {
         ArrayList<CsvLine> listPredict = new ArrayList<CsvLine>();
         BufferedImage image = null;
         try {
@@ -626,16 +628,19 @@ public class ATAGProcCsv {
         }
         catch (Exception e) {e.printStackTrace();}
 
+        dim_screen_search = dim_pixels;
+        //dim_pixels = ATAG.CNN_DIM_PIXELS;
+
         int top = 0;
         int bot = image.getHeight();
         int left = 0;
         int right = image.getWidth();
 
-        int limHorizontal = (int)Math.ceil(right / (float)ATAG.CNN_DIM_PIXELS);
-        int limVertical = (int)Math.ceil(bot /(float) ATAG.CNN_DIM_PIXELS);
+        int limHorizontal = (int)Math.ceil(right / (float)dim_pixels);
+        int limVertical = (int)Math.ceil(bot /(float) dim_pixels);
 
-        int spanHorizontal = ((right - left) - ATAG.CNN_DIM_PIXELS) / (limHorizontal - 1);//ATAG.CNN_DIM_SIDE;
-        int spanVertical = ((bot - top) - ATAG.CNN_DIM_PIXELS) / (limVertical -1);//ATAG.CNN_DIM_SIDE;
+        int spanHorizontal = ((right - left) - dim_pixels) / (limHorizontal - 1);//ATAG.CNN_DIM_SIDE;
+        int spanVertical = ((bot - top) - dim_pixels) / (limVertical -1);//ATAG.CNN_DIM_SIDE;
 
 
         System.out.println("lim x=" + limHorizontal + " y=" + limVertical);
@@ -656,10 +661,10 @@ public class ATAGProcCsv {
                 row.getSpecifications().add(FACE_APPROACH_Y, (double) y * spanVertical);
 
                 row.getSpecifications().remove(FACE_HEIGHT);
-                row.getSpecifications().add(FACE_HEIGHT, (double) ATAG.CNN_DIM_PIXELS);
+                row.getSpecifications().add(FACE_HEIGHT, (double) dim_pixels);
 
                 row.getSpecifications().remove(FACE_WIDTH);
-                row.getSpecifications().add(FACE_WIDTH, (double) ATAG.CNN_DIM_PIXELS);
+                row.getSpecifications().add(FACE_WIDTH, (double) dim_pixels);
                 ///////////////////////
 
                 listPredict.add(row);
@@ -667,14 +672,14 @@ public class ATAGProcCsv {
         }
 
         while (listPredict.size() % ATAG.CNN_BATCH_SIZE != 0 || listPredict.size() == 0) { // if
-            //for (int i = 0; i < MONTE_CARLO_NUM; i ++) {
+            //
             CsvLine l = new CsvLine();
             for (int j = 0; j < FACE_LIST_TOTAL; j ++) {
                 l.getSpecifications().add(0.0d);
             }
             l.setFileLocation("");
             listPredict.add(l);
-            //}
+            //
         }
 
         saveAnyCsv(var.configLocalRoot + File.separator + "predict.csv",listPredict,null, CSV_POSITION_FILE_LOCATION);
@@ -710,14 +715,14 @@ public class ATAGProcCsv {
         }
 
         while (list.size() % ATAG.CNN_BATCH_SIZE != 0 || list.size() == 0) { // if
-            //for (int i = 0; i < MONTE_CARLO_NUM; i ++) {
+            //
             CsvLine l = new CsvLine();
             for (int j = 0; j < FACE_LIST_TOTAL; j ++) {
                 l.getSpecifications().add(0.0d);
             }
             l.setFileLocation("");
             list.add(l);
-            //}
+            //
         }
 
         return list;
@@ -741,15 +746,16 @@ public class ATAGProcCsv {
             line.setFileLocation(filename);
 
             double new_size = base + increment * i;
-            double new_x, new_y;
+            double new_x = 0, new_y = 0;
 
             if (doMoveMonteCarlo) {
                 new_x = r.nextInt((int) (size * MONTE_CARLO_SIZE_TOO_BIG * 2)) - MONTE_CARLO_SIZE_TOO_BIG * size;
                 new_y = r.nextInt((int) (size * MONTE_CARLO_SIZE_TOO_BIG * 2)) - MONTE_CARLO_SIZE_TOO_BIG * size;
             }
-            else {
-                new_x = - ((new_size - ATAG.CNN_DIM_PIXELS) / 2);
-                new_y = - ((new_size - ATAG.CNN_DIM_PIXELS) / 2);
+            if (doSizeMonteCarlo) {
+                if (dim_screen_search == 0) dim_screen_search = (int) (ATAG.CNN_DIM_PIXELS * 0.5d);
+                new_x = new_x - ((new_size - dim_screen_search) / 2);
+                new_y = new_y - ((new_size - dim_screen_search) / 2);
             }
             line.getSpecifications().remove(FACE_APPROACH_X);
             line.getSpecifications().add(FACE_APPROACH_X,(double) x + new_x);

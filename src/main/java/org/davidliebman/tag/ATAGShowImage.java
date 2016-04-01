@@ -50,8 +50,9 @@ public class ATAGShowImage {
     JFrame frame ;
 
     private boolean debugConsecOutput = false;
-    private boolean debugReuseModel = false;
+    private boolean debugReuseModel = false; // false for training!!
     private boolean debugShowRawPredictList = false;
+    private boolean doSortPredictList = false;
 
     private ATAGShowImageDialog dialog = null;
 
@@ -338,9 +339,9 @@ public class ATAGShowImage {
                     setDisplayText();
                 }
 
-                Object[] options = {"Random: 2", "Even: 1"};
+                Object[] options = {"Improve: 2", "Even: 1"};
                 int n = JOptionPane.showOptionDialog(frame,
-                        "Even (1) is general interest, Random (2) is for following-up #1.",
+                        "Even (1) is general interest, Improve (2) is for following-up #1.",
                         "Predict",
                         JOptionPane.YES_NO_CANCEL_OPTION,
                         JOptionPane.QUESTION_MESSAGE,
@@ -357,13 +358,15 @@ public class ATAGShowImage {
                     }
                 }
                 else {
-                    predictList = proc.getPredictListFromImage(var.configLastImage);
+                    predictList = proc.getPredictListFromImage(var.configLastImage, (int)(ATAG.CNN_DIM_PIXELS * 0.5f));
                     ((ATAGPanel)imagePanel).setShowAllLines(false);
+                    doSortPredictList = false;
                 }
 
                 //waitDialogShow();
                 //predictList = proc.getPredictListFromImage(var.configLastImage);
                 try {
+
                     ATAGCnnDataSet predictData = new ATAGCnnDataSet(predictList, var, 0, true, 0.0f, 0, 0, true);
 
                     //MultiLayerNetwork model = null;
@@ -563,7 +566,7 @@ public class ATAGShowImage {
         ((ATAGPanel)imagePanel).setShowPredictBoxes(true);
         if (debugShowRawPredictList) {
 
-            predictList = proc.getPredictListFromImage(var.configLastImage);
+            predictList = proc.getPredictListFromImage(var.configLastImage, (int)(ATAG.CNN_DIM_PIXELS * 0.5f));
             ((ATAGPanel)imagePanel).setShowAllLines(true);
             ((ATAGPanel)imagePanel).setExtraDataFaces(predictList);
         }
@@ -574,6 +577,50 @@ public class ATAGShowImage {
         imagePanel.repaint();
         frame.setTitle("Awesome Tag");
         waitDialogHide();
+    }
+
+    private ArrayList<ATAGProcCsv.CsvLine> pickBestFromPredictList(ArrayList<ATAGProcCsv.CsvLine> list) {
+        //
+
+        if (list == null || list.size() <= 1) return list;
+
+        int ii = 0;
+        //ATAGProcCsv.CsvLine line1 = list.get(0);
+
+        for (int i = 1; i < list.size(); i ++) {
+
+            //ATAGProcCsv.CsvLine line2 = list.get(i);
+            //ATAGProcCsv.CsvLine line1 = list.get(ii);
+
+            double sureness_1 = list.get(ii).getSpecifications().get(ATAGProcCsv.FACE_LABEL_1);
+            double sureness_2 = list.get(i).getSpecifications().get(ATAGProcCsv.FACE_LABEL_1);
+
+            double no_out_1 = list.get(ii).getSpecifications().get(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
+            double no_out_2 = list.get(i).getSpecifications().get(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
+
+            //System.out.println("vals " + sureness_1 + " " + sureness_2);
+
+            boolean choose = sureness_1 > sureness_2 ;
+            choose = no_out_1 < no_out_2;
+
+            if (choose) {
+                list.get(i).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_1);
+                list.get(i).getSpecifications().add(ATAGProcCsv.FACE_LABEL_1,0.0d);
+                list.get(i).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
+                list.get(i).getSpecifications().add(ATAGProcCsv.FACE_LABEL_NO_OUTPUT, 1.0d);
+            }
+            else {  // if (sureness_1 <= sureness_2){
+                list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_1);
+                list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_1,0.0d);
+                list.get(ii).getSpecifications().remove(ATAGProcCsv.FACE_LABEL_NO_OUTPUT);
+                list.get(ii).getSpecifications().add(ATAGProcCsv.FACE_LABEL_NO_OUTPUT, 1.0d);
+                //line1 = list.get(i);
+                ii = i;
+            }
+
+        }
+        System.out.println("chosen "+ ii);
+        return list;
     }
 
     private void waitDialogShow() {
@@ -689,8 +736,11 @@ public class ATAGShowImage {
             super.done();
 
             if(threadType == ATAG.THREAD_PREDICT) {
+
                 INDArray output = cnnThread.getPredictOutput();
                 renderPredictionOnScreen(output);
+                if(doSortPredictList) predictList = pickBestFromPredictList(predictList);
+                doSortPredictList = true;
             }
             else if (threadType == ATAG.THREAD_TRAIN) {
                 ((ATAGPanel) imagePanel).standardOutReset(false);
