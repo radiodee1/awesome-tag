@@ -2,7 +2,7 @@
 
 This is a java application for detecting faces in pictures using convolutional neural networks. It should be noted that the app doesn't work. 
 
-## SOURCES
+### SOURCES
 
 The sources for the images was the NIST IJB-A dataset. The NIST pictures are part of a contest, but are free to download if you register with them. There are thousands of pictures, and several csv files with label data. In each picture faces are identified and this data can be used to train your program.
 
@@ -10,7 +10,7 @@ The software libraries used in the program are from a company called Skymind. Th
 
 I used the linux operating system, java 8, and the IntelliJ IDE. Training for weights and biases for the neural network have to be re-learned every time the project is installed. This is because they are too big to save with the code. There are no weight and bias files online for this project.
 
-## SETUP
+### SETUP
 
 You have to get a copy of the NIST IJB-A dataset. This is a 14G download. You also need to unpack the tar g-zip file, so you need something like 28G free. Then make sure InteliJ-IDE is installed. Download the 'awesome-tag' java repository from github.com and open the project using the IDE. You should launch the GUI launcher, the file called ATAGShowImage.java. You can also try launching the `launch_rc38_cpu.sh` file. You may be able to launch the file this way without the IDE.
 
@@ -25,3 +25,11 @@ After setting up your csv file you can start training. Click the 'Reset Cursor' 
 Loading and saving the neural network takes from five to ten minutes. When you click the 'Train CNN' button once the program will attempt to load the model. Then it will automatically start the training process. If you click the button again the neural network will stop training and will start the save process. You will see a dialog box on screen with a cycling progress bar until the save process has stopped. Again, this takes five to ten minutes. After it has stopped you can close the app or move on to testing or prediction. It takes several hours of training to get any results at all. The idea here is to let you do that training in smaller segments. You can force the program to stop during the save operation, but you are likely to corrupt your weight and bias files and thereby loose any learning that you have completed up to that point.
 
 Clicking the 'Test CNN' button will allow you to test the accuracy of you CNN against your own csv file data. Clicking the 'Predict' button will attempt to find faces in the currently selected image. Both these operations take time. Though you may be able to train your network to the level of 75 or 80 percent, the process employed by the 'Predict' mechanism does not identify images properly. This is the reason that the project will not be developed further.
+
+### PREDICTION
+
+The current 'Prediction' scheme is a two stage operation. First you click the "Prediction" button and choose the "EVEN" option from the two options presented. Then you wait for the first stage, the "EVEN" stage to complete. When it's done you see the image on the screen with some superimposed boxes on it. This is stage 1. Then click the "Prediction" button again and choose the "IMPROVE" option. Again you must wait a long time. After this is done you see the final result on the screen.
+
+The "EVEN" operation devides the picture into evenly spaced boxes and runs them through the neural network. When this is done you get separate "areas of interest". These areas of interest are the boxes you see superimposed on the screen after the first "Prediction" phase.
+
+The "IMPROVE" operation takes the areas of interest and searches for a box size that most clearly looks like a face. It takes each area-of-interest box seperately and in that location tries out eight boxes of different sizes to see which produces the best score.
