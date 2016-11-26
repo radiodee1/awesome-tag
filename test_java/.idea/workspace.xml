@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="5489a63c-bba6-456e-bd0e-b6f3efb611ce" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGProcCsv.java" afterPath="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGProcCsv.java" />
     </list>
     <ignored path="awesome-desktop-tag.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -35,35 +36,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ATAGProcCsv.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ATAGProcCsv.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGProcCsv.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="11475">
-              <caret line="775" column="33" selection-start-line="775" selection-start-column="33" selection-end-line="775" selection-end-column="33" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#3684#3685#0" expanded="false" />
-                <element signature="e#3740#3741#0" expanded="false" />
-                <element signature="e#4278#4287#0" expanded="false" />
-                <element signature="e#4344#4352#0" expanded="false" />
-                <element signature="e#5405#5414#0" expanded="false" />
-                <element signature="e#12090#12099#0" expanded="false" />
-                <element signature="e#20120#20121#0" expanded="false" />
-                <element signature="e#20194#20195#0" expanded="false" />
-                <element signature="e#20341#20350#0" expanded="false" />
-                <element signature="e#22545#22554#0" expanded="false" />
-                <element signature="e#25145#25154#0" expanded="false" />
-                <element signature="e#27151#27160#0" expanded="false" />
-                <element signature="e#33260#33268#0" expanded="false" />
-                <element signature="e#33343#33344#0" expanded="false" />
-                <element signature="e#33386#33387#0" expanded="false" />
-                <element signature="e#33446#33447#0" expanded="false" />
-                <element signature="e#33502#33503#0" expanded="false" />
-                <element signature="e#33558#33559#0" expanded="false" />
-                <element signature="e#33603#33604#0" expanded="false" />
-                <element signature="e#33678#33679#0" expanded="false" />
-                <element signature="e#33738#33739#0" expanded="false" />
-              </folding>
+            <state relative-caret-position="343">
+              <caret line="639" column="36" selection-start-line="639" selection-start-column="36" selection-end-line="639" selection-end-column="36" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -92,12 +70,44 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ATAGShowImage.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ATAGShowImage.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGShowImage.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="101">
+            <state relative-caret-position="9015">
               <caret line="639" column="0" selection-start-line="639" selection-start-column="0" selection-end-line="639" selection-end-column="0" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#2986#3425#0" expanded="false" />
+                <element signature="e#3424#3425#0" expanded="false" />
+                <element signature="e#3466#3878#0" expanded="false" />
+                <element signature="e#3877#3878#0" expanded="false" />
+                <element signature="e#3920#4761#0" expanded="false" />
+                <element signature="e#4760#4761#0" expanded="false" />
+                <element signature="e#4807#5645#0" expanded="false" />
+                <element signature="e#5644#5645#0" expanded="false" />
+                <element signature="e#5691#6518#0" expanded="false" />
+                <element signature="e#6517#6518#0" expanded="false" />
+                <element signature="e#6562#6971#0" expanded="false" />
+                <element signature="e#6970#6971#0" expanded="false" />
+                <element signature="e#7016#7848#0" expanded="false" />
+                <element signature="e#7847#7848#0" expanded="false" />
+                <element signature="e#7892#9267#0" expanded="false" />
+                <element signature="e#9266#9267#0" expanded="false" />
+                <element signature="e#9310#10665#0" expanded="false" />
+                <element signature="e#10664#10665#0" expanded="false" />
+                <element signature="e#10709#12094#0" expanded="false" />
+                <element signature="e#12093#12094#0" expanded="false" />
+                <element signature="e#12139#12752#0" expanded="false" />
+                <element signature="e#12751#12752#0" expanded="false" />
+                <element signature="e#12793#13402#0" expanded="false" />
+                <element signature="e#13401#13402#0" expanded="false" />
+                <element signature="e#13446#16691#0" expanded="false" />
+                <element signature="e#16690#16691#0" expanded="false" />
+                <element signature="e#16736#18515#0" expanded="false" />
+                <element signature="e#18514#18515#0" expanded="false" />
+                <element signature="e#18559#20909#0" expanded="false" />
+                <element signature="e#20908#20909#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -208,9 +218,9 @@
         <option value="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnnDataSet.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAG.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGCnn.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGProcCsv.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGPanel.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGShowImage.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGProcCsv.java" />
       </list>
     </option>
   </component>
@@ -922,13 +932,11 @@
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32767764" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23329799" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32908705" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -937,13 +945,15 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39915073" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32767764" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23329799" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32908705" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39915073" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -1054,7 +1064,39 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#2986#3425#0" expanded="false" />
+            <element signature="e#3424#3425#0" expanded="false" />
+            <element signature="e#3466#3878#0" expanded="false" />
+            <element signature="e#3877#3878#0" expanded="false" />
+            <element signature="e#3920#4761#0" expanded="false" />
+            <element signature="e#4760#4761#0" expanded="false" />
+            <element signature="e#4807#5645#0" expanded="false" />
+            <element signature="e#5644#5645#0" expanded="false" />
+            <element signature="e#5691#6518#0" expanded="false" />
+            <element signature="e#6517#6518#0" expanded="false" />
+            <element signature="e#6562#6971#0" expanded="false" />
+            <element signature="e#6970#6971#0" expanded="false" />
+            <element signature="e#7016#7848#0" expanded="false" />
+            <element signature="e#7847#7848#0" expanded="false" />
+            <element signature="e#7892#9267#0" expanded="false" />
+            <element signature="e#9266#9267#0" expanded="false" />
+            <element signature="e#9310#10665#0" expanded="false" />
+            <element signature="e#10664#10665#0" expanded="false" />
+            <element signature="e#10709#12094#0" expanded="false" />
+            <element signature="e#12093#12094#0" expanded="false" />
+            <element signature="e#12139#12752#0" expanded="false" />
+            <element signature="e#12751#12752#0" expanded="false" />
+            <element signature="e#12793#13402#0" expanded="false" />
+            <element signature="e#13401#13402#0" expanded="false" />
+            <element signature="e#13446#16691#0" expanded="false" />
+            <element signature="e#16690#16691#0" expanded="false" />
+            <element signature="e#16736#18515#0" expanded="false" />
+            <element signature="e#18514#18515#0" expanded="false" />
+            <element signature="e#18559#20909#0" expanded="false" />
+            <element signature="e#20908#20909#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1096,7 +1138,39 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#2986#3425#0" expanded="false" />
+            <element signature="e#3424#3425#0" expanded="false" />
+            <element signature="e#3466#3878#0" expanded="false" />
+            <element signature="e#3877#3878#0" expanded="false" />
+            <element signature="e#3920#4761#0" expanded="false" />
+            <element signature="e#4760#4761#0" expanded="false" />
+            <element signature="e#4807#5645#0" expanded="false" />
+            <element signature="e#5644#5645#0" expanded="false" />
+            <element signature="e#5691#6518#0" expanded="false" />
+            <element signature="e#6517#6518#0" expanded="false" />
+            <element signature="e#6562#6971#0" expanded="false" />
+            <element signature="e#6970#6971#0" expanded="false" />
+            <element signature="e#7016#7848#0" expanded="false" />
+            <element signature="e#7847#7848#0" expanded="false" />
+            <element signature="e#7892#9267#0" expanded="false" />
+            <element signature="e#9266#9267#0" expanded="false" />
+            <element signature="e#9310#10665#0" expanded="false" />
+            <element signature="e#10664#10665#0" expanded="false" />
+            <element signature="e#10709#12094#0" expanded="false" />
+            <element signature="e#12093#12094#0" expanded="false" />
+            <element signature="e#12139#12752#0" expanded="false" />
+            <element signature="e#12751#12752#0" expanded="false" />
+            <element signature="e#12793#13402#0" expanded="false" />
+            <element signature="e#13401#13402#0" expanded="false" />
+            <element signature="e#13446#16691#0" expanded="false" />
+            <element signature="e#16690#16691#0" expanded="false" />
+            <element signature="e#16736#18515#0" expanded="false" />
+            <element signature="e#18514#18515#0" expanded="false" />
+            <element signature="e#18559#20909#0" expanded="false" />
+            <element signature="e#20908#20909#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1340,14 +1414,14 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGShowImage.form">
-      <provider selected="true" editor-type-id="ui-designer">
-        <state />
-      </provider>
       <provider editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
+      </provider>
+      <provider selected="true" editor-type-id="ui-designer">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/AppTest.java">
@@ -1419,37 +1493,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGProcCsv.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="11475">
-          <caret line="775" column="33" selection-start-line="775" selection-start-column="33" selection-end-line="775" selection-end-column="33" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#3684#3685#0" expanded="false" />
-            <element signature="e#3740#3741#0" expanded="false" />
-            <element signature="e#4278#4287#0" expanded="false" />
-            <element signature="e#4344#4352#0" expanded="false" />
-            <element signature="e#5405#5414#0" expanded="false" />
-            <element signature="e#12090#12099#0" expanded="false" />
-            <element signature="e#20120#20121#0" expanded="false" />
-            <element signature="e#20194#20195#0" expanded="false" />
-            <element signature="e#20341#20350#0" expanded="false" />
-            <element signature="e#22545#22554#0" expanded="false" />
-            <element signature="e#25145#25154#0" expanded="false" />
-            <element signature="e#27151#27160#0" expanded="false" />
-            <element signature="e#33260#33268#0" expanded="false" />
-            <element signature="e#33343#33344#0" expanded="false" />
-            <element signature="e#33386#33387#0" expanded="false" />
-            <element signature="e#33446#33447#0" expanded="false" />
-            <element signature="e#33502#33503#0" expanded="false" />
-            <element signature="e#33558#33559#0" expanded="false" />
-            <element signature="e#33603#33604#0" expanded="false" />
-            <element signature="e#33678#33679#0" expanded="false" />
-            <element signature="e#33738#33739#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGPanel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2910">
@@ -1466,8 +1509,48 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGShowImage.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="101">
+        <state relative-caret-position="9015">
           <caret line="639" column="0" selection-start-line="639" selection-start-column="0" selection-end-line="639" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#2986#3425#0" expanded="false" />
+            <element signature="e#3424#3425#0" expanded="false" />
+            <element signature="e#3466#3878#0" expanded="false" />
+            <element signature="e#3877#3878#0" expanded="false" />
+            <element signature="e#3920#4761#0" expanded="false" />
+            <element signature="e#4760#4761#0" expanded="false" />
+            <element signature="e#4807#5645#0" expanded="false" />
+            <element signature="e#5644#5645#0" expanded="false" />
+            <element signature="e#5691#6518#0" expanded="false" />
+            <element signature="e#6517#6518#0" expanded="false" />
+            <element signature="e#6562#6971#0" expanded="false" />
+            <element signature="e#6970#6971#0" expanded="false" />
+            <element signature="e#7016#7848#0" expanded="false" />
+            <element signature="e#7847#7848#0" expanded="false" />
+            <element signature="e#7892#9267#0" expanded="false" />
+            <element signature="e#9266#9267#0" expanded="false" />
+            <element signature="e#9310#10665#0" expanded="false" />
+            <element signature="e#10664#10665#0" expanded="false" />
+            <element signature="e#10709#12094#0" expanded="false" />
+            <element signature="e#12093#12094#0" expanded="false" />
+            <element signature="e#12139#12752#0" expanded="false" />
+            <element signature="e#12751#12752#0" expanded="false" />
+            <element signature="e#12793#13402#0" expanded="false" />
+            <element signature="e#13401#13402#0" expanded="false" />
+            <element signature="e#13446#16691#0" expanded="false" />
+            <element signature="e#16690#16691#0" expanded="false" />
+            <element signature="e#16736#18515#0" expanded="false" />
+            <element signature="e#18514#18515#0" expanded="false" />
+            <element signature="e#18559#20909#0" expanded="false" />
+            <element signature="e#20908#20909#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/davidliebman/tag/ATAGProcCsv.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="343">
+          <caret line="639" column="36" selection-start-line="639" selection-start-column="36" selection-end-line="639" selection-end-column="36" />
           <folding />
         </state>
       </provider>

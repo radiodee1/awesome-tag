@@ -636,8 +636,8 @@ public class ATAGProcCsv {
         int left = 0;
         int right = image.getWidth();
 
-        int limHorizontal = (int)Math.ceil(right / (float)dim_pixels);
-        int limVertical = (int)Math.ceil(bot /(float) dim_pixels);
+        int limHorizontal = (int)(2 * Math.ceil(right / (float)dim_pixels));
+        int limVertical = (int)(2 * Math.ceil(bot /(float) dim_pixels));
 
         int spanHorizontal = ((right - left) - dim_pixels) / (limHorizontal - 1);//ATAG.CNN_DIM_SIDE;
         int spanVertical = ((bot - top) - dim_pixels) / (limVertical -1);//ATAG.CNN_DIM_SIDE;
