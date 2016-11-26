@@ -1,0 +1,5 @@
+MNIST_data
+*.ckpt.meta
+*.ckpt
+checkpoint
+
