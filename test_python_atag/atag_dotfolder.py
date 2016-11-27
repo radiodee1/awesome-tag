@@ -3,7 +3,7 @@
 from os.path import expanduser
 import os
 
-class Dotfolder():
+class Dotfolder(object):
     
     def __init__(self) :
         self.FOLDER_NAME = ".atagpy"
@@ -49,7 +49,7 @@ class Dotfolder():
         if os.path.isfile(self.FOLDER_FULL_DOTFOLDER + os.sep + name) :
             f = open( self.FOLDER_FULL_DOTFOLDER + os.sep + name , 'r')
             default = f.readline()
-        print default
+        #print default
         return default
         
     def dot_write(self, name, value):
@@ -73,6 +73,7 @@ class Dotfolder():
         self.VAR_SPLIT_START = self.dot_read(self.FOLDER_SPLIT_START)
 
     def save_vars(self):
+        ''' do not use this!! '''
         self.dot_write(self.FOLDER_BASE_NAME, self.VAR_BASE_NAME)
         self.dot_write(self.FOLDER_CSV_FILE_SECOND, self.VAR_CSV_FILE_SECOND)
         self.dot_write(self.FOLDER_CSV_FILE_SINGLE, self.VAR_CSV_FILE_SINGLE)
