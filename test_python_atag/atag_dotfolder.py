@@ -50,7 +50,7 @@ class Dotfolder(object):
             f = open( self.FOLDER_FULL_DOTFOLDER + os.sep + name , 'r')
             default = f.readline()
         #print default
-        return default
+        return default.strip("\n")
         
     def dot_write(self, name, value):
         f = open( self.FOLDER_FULL_DOTFOLDER + os.sep + name , 'w')

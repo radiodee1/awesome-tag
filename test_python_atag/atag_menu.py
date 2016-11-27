@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
-from Tkinter import Tk
-from tkFileDialog import askopenfilename
+import easygui
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -289,7 +288,6 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.drawingarea.connect("draw", self.draw)
         self.grid.attach(self.drawingarea, 0,13,4,20)
 
-        #self.resize(100,500)
 
     def show_window(self):
         win = self  # Interface()
@@ -303,7 +301,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
         if name.lower().endswith("png") :
             self.image = cairo.ImageSurface.create_from_png(name)
-            context.set_source_surface(self.image, 0.0, 0.0)
+            context.set_source_surface(self.image, 0.0, 10.0)
             context.paint()
             print ('png image')
         if name.lower().endswith("jpg") or name.lower().endswith("jpeg"):
@@ -314,16 +312,23 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         return False
 
     def enter_image_name_callback(self, widget, var, folder, label):
-        var = self.entry.get_text()
+        var = widget.get_text()
         self.dot_write(folder, var)
         #self.entry.set_text(self.shorten(var))
         label.set_text(self.shorten(var))
         self.switch_folder_var(folder,var)
 
     def on_image_name_button(self, widget, var, folder, label):
-        Tk().withdraw()
-        temp = askopenfilename()
+        temp = easygui.fileopenbox()
+        if len(temp) > 0:
+            var = str(temp)
+            self.dot_write(folder, var)
+            #self.entry.set_text(self.shorten(var))
+            label.set_text(self.shorten(var))
+            self.switch_folder_var(folder,var)
 
+    def on_image_folder_button(self, widget, var, folder, label):
+        temp = easygui.diropenbox()
         if len(temp) > 0:
             var = str(temp)
             self.dot_write(folder, var)

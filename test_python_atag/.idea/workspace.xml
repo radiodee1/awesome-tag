@@ -18,8 +18,8 @@
       <file leaf-file-name="atag_dotfolder.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/atag_dotfolder.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="5" column="22" lean-forward="false" selection-start-line="5" selection-start-column="22" selection-end-line="5" selection-end-column="22" />
+            <state relative-caret-position="295">
+              <caret line="50" column="33" lean-forward="false" selection-start-line="50" selection-start-column="33" selection-end-line="50" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -28,10 +28,10 @@
       <file leaf-file-name="atag_menu.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/atag_menu.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="55">
-              <caret line="133" column="33" lean-forward="false" selection-start-line="133" selection-start-column="33" selection-end-line="133" selection-end-column="33" />
+            <state relative-caret-position="610">
+              <caret line="330" column="34" lean-forward="false" selection-start-line="330" selection-start-column="34" selection-end-line="330" selection-end-column="34" />
               <folding>
-                <element signature="e#19#41#0" expanded="true" />
+                <element signature="e#19#33#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -314,18 +314,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/atag_dotfolder.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="5" column="22" lean-forward="false" selection-start-line="5" selection-start-column="22" selection-end-line="5" selection-end-column="22" />
+        <state relative-caret-position="295">
+          <caret line="50" column="33" lean-forward="false" selection-start-line="50" selection-start-column="33" selection-end-line="50" selection-end-column="33" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/atag_menu.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="55">
-          <caret line="133" column="33" lean-forward="false" selection-start-line="133" selection-start-column="33" selection-end-line="133" selection-end-column="33" />
+        <state relative-caret-position="610">
+          <caret line="330" column="34" lean-forward="false" selection-start-line="330" selection-start-column="34" selection-end-line="330" selection-end-column="34" />
           <folding>
-            <element signature="e#19#41#0" expanded="true" />
+            <element signature="e#19#33#0" expanded="true" />
           </folding>
         </state>
       </provider>
