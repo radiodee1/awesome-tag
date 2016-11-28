@@ -5,10 +5,13 @@ import easygui
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GdkPixbuf, Gdk
-import cairo
+#import cairo
+import threading
 
 import atag_dotfolder as atag
 import atag_drawingarea as dra
+import atag_csv_write as write
+import atag_csv_read as read
 
 
 class Interface(Gtk.Window, atag.Dotfolder) :
@@ -267,11 +270,58 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.label = Gtk.Label("Split Start (#)")
         self.grid.attach(self.label, 3, position11, 1, 1)
 
+        ''' some buttons in one row '''
+        self.grid2 = Gtk.Grid()
+
+        self.button = Gtk.Button(label="Read And Show CSV")
+        self.button.connect("clicked", self.on_button_show_csv)
+        self.grid2.attach(self.button, 0, 0, 1, 1)
+        self.button = Gtk.Button(label="Read And Write CSV")
+        self.button.connect("clicked", self.on_button_write_csv)
+        self.grid2.attach(self.button, 1, 0, 1, 1)
+        self.button = Gtk.Button(label="Train")
+        self.button.connect("clicked", self.on_button_train)
+        self.grid2.attach(self.button, 2, 0, 1, 1)
+        self.button = Gtk.Button(label="Test")
+        self.button.connect("clicked", self.on_button_test)
+        self.grid2.attach(self.button, 3, 0, 1, 1)
+        self.button = Gtk.Button(label="More Options")
+        self.button.connect("clicked", self.on_button_options)
+        self.grid2.attach(self.button, 4, 0, 1, 1)
+
+        self.grid.attach(self.grid2, 0, 13, 4,1)
+
         ''' end of list -- add drawingarea '''
         self.drawingarea = dra.DrawingArea()
         self.drawingarea.set_imagename(self.VAR_IMAGE_NAME)
-        self.grid.attach(self.drawingarea, 0,13,4,1)
+        self.grid.attach(self.drawingarea, 0, 14, 4, 1)
 
+    def on_button_show_csv(self, widget):
+        print 1
+
+    def on_button_write_csv(self, widget):
+        thread = threading.Thread(target=self.run_csv_write)
+        thread.daemon = True
+        thread.start()
+        print 2
+
+    def on_button_train(self, widget):
+        thread = threading.Thread(target=self.run_csv_read)
+        thread.daemon = True
+        thread.start()
+        print 3
+
+    def on_button_test(self, widget):
+        print 4
+
+    def on_button_options(self, widget):
+        print 5
+
+    def run_csv_write(self):
+        write.Write(self)
+
+    def run_csv_read(self):
+        read.Read(self)
 
     def show_window(self):
         win = self  # Interface()

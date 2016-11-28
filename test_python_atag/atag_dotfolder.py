@@ -34,7 +34,7 @@ class Dotfolder(object):
         self.VAR_SAVED_SPLIT = 0
         self.VAR_SPLIT_CURRENT = 0
         self.VAR_SPLIT_END = 0
-        self.VAR_SPLIT_FOLDER_NAME = "folder"
+        self.VAR_SPLIT_FOLDER_NAME = "split"
         self.VAR_SPLIT_START = 0
         
         """ initialize tasks """
