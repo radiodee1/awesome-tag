@@ -168,7 +168,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
                             self.label)
         self.grid.attach(self.button, 2, 7, 1, 1)
 
-        self.label = Gtk.Label("Saved Cursor Position")
+        self.label = Gtk.Label("Saved Cursor Position (#)")
         self.grid.attach(self.label, 3, 7, 1, 1)
 
         ''' row 8 '''
@@ -187,7 +187,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
                             self.label)
         self.grid.attach(self.button, 2, 8, 1, 1)
 
-        self.label = Gtk.Label("Saved Split")
+        self.label = Gtk.Label("Saved Split (#)")
         self.grid.attach(self.label, 3, 8, 1, 1)
 
         ''' row 9 '''
@@ -206,7 +206,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
                             self.label)
         self.grid.attach(self.button, 2, 9, 1, 1)
 
-        self.label = Gtk.Label("Current Split")
+        self.label = Gtk.Label("Current Split (#)")
         self.grid.attach(self.label, 3, 9, 1, 1)
 
         ''' row 10 '''
@@ -225,68 +225,52 @@ class Interface(Gtk.Window, atag.Dotfolder) :
                             self.label)
         self.grid.attach(self.button, 2, 10, 1, 1)
 
-        self.label = Gtk.Label("Split End")
+        self.label = Gtk.Label("Split End (#)")
         self.grid.attach(self.label, 3, 10, 1, 1)
 
         ''' row 11 '''
+        position12 = 12
         self.label = Gtk.Label(self.shorten(self.VAR_SPLIT_FOLDER_NAME))
-        self.grid.attach(self.label, 0, 11, 1, 1)
+        self.grid.attach(self.label, 0, position12, 1, 1)
 
         self.entry = Gtk.Entry()
         self.entry.set_text("")
         self.entry.connect("activate", self.enter_image_name_callback, self.VAR_SPLIT_FOLDER_NAME, self.FOLDER_SPLIT_FOLDER_NAME,
                            self.label)
-        self.grid.attach(self.entry, 1, 11, 1, 1)
+        self.grid.attach(self.entry, 1, position12, 1, 1)
 
         self.button = Gtk.Button(label="Picker")
         self.button.connect("clicked", self.on_image_folder_button, self.VAR_SPLIT_FOLDER_NAME, self.FOLDER_SPLIT_FOLDER_NAME,
                             self.label)
-        self.grid.attach(self.button, 2, 11, 1, 1)
+        self.grid.attach(self.button, 2, position12, 1, 1)
 
         self.label = Gtk.Label("Split Foldername")
-        self.grid.attach(self.label, 3, 11, 1, 1)
+        self.grid.attach(self.label, 3, position12, 1, 1)
 
         ''' row 12 '''
+        position11 = 11
         self.label = Gtk.Label(self.shorten(self.VAR_SPLIT_START))
-        self.grid.attach(self.label, 0, 12, 1, 1)
+        self.grid.attach(self.label, 0, position11, 1, 1)
 
         self.entry = Gtk.Entry()
         self.entry.set_text("")
         self.entry.connect("activate", self.enter_image_name_callback, self.VAR_SPLIT_START, self.FOLDER_SPLIT_START,
                            self.label)
-        self.grid.attach(self.entry, 1, 12, 1, 1)
+        self.grid.attach(self.entry, 1, position11, 1, 1)
 
         self.button = Gtk.Button(label="Picker")
         self.button.set_sensitive(False)
         self.button.connect("clicked", self.on_image_name_button, self.VAR_SPLIT_START, self.FOLDER_SPLIT_START,
                             self.label)
-        self.grid.attach(self.button, 2, 12, 1, 1)
+        self.grid.attach(self.button, 2, position11, 1, 1)
 
-        self.label = Gtk.Label("Split Start")
-        self.grid.attach(self.label, 3, 12, 1, 1)
+        self.label = Gtk.Label("Split Start (#)")
+        self.grid.attach(self.label, 3, position11, 1, 1)
 
-        ''' row 13
-        self.label = Gtk.Label(self.shorten(self.VAR_IMAGE_NAME))
-        self.grid.attach(self.label, 0, 13, 1, 1)
-
-        self.entry = Gtk.Entry()
-        self.entry.set_text("")
-        self.entry.connect("activate", self.enter_image_name_callback, self.VAR_IMAGE_NAME, self.FOLDER_IMAGE_NAME,
-                           self.label)
-        self.grid.attach(self.entry, 1, 13, 1, 1)
-
-        self.button = Gtk.Button(label="Picker")
-        self.button.connect("clicked", self.on_image_name_button, self.VAR_IMAGE_NAME, self.FOLDER_IMAGE_NAME,
-                            self.label)
-        self.grid.attach(self.button, 2, 13, 1, 1)
-
-        self.label = Gtk.Label("Base Name")
-        self.grid.attach(self.label, 3, 13, 1, 1)
-
-        '''
+        ''' end of list -- add drawingarea '''
         self.drawingarea = dra.DrawingArea()
         self.drawingarea.set_imagename(self.VAR_IMAGE_NAME)
-        self.grid.attach(self.drawingarea, 0,13,4,20)
+        self.grid.attach(self.drawingarea, 0,13,4,1)
 
 
     def show_window(self):
@@ -322,7 +306,8 @@ class Interface(Gtk.Window, atag.Dotfolder) :
             self.switch_folder_var(folder,var)
 
     def shorten(self, input):
-        return "..." + input[-10:]
+        if len(input) < 25 : return input
+        return "..." + input[-25:]
 
     def switch_folder_var(self, folder, var):
         if folder == self.FOLDER_BASE_NAME :
