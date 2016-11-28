@@ -13,3 +13,5 @@ class Enum(object) :
         self.FACE_WIDTH = 8
         self.FACE_HEIGHT = 9
         self.IS_FACE = 10 # THIS IS MY BOOBLEAN
+        self.TOTAL = 11
+        self.TOTAL_READ = 10

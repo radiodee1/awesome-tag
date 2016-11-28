@@ -5,9 +5,9 @@ import atag_csv as enum
 Here we read the csv file that we made and train the models
 '''
 
-class Read(object, enum.Enum) :
+class Read( enum.Enum) :
     def __init__(self, atag):
-        enum.Enum.__init__()
+        enum.Enum.__init__(self)
 
         self.a = atag
         self.csvnum = atag.VAR_SPLIT_CURRENT
@@ -20,3 +20,4 @@ class Read(object, enum.Enum) :
 
         self.csv_input = self.csvfolder + self.csvnum + os.sep + self.csvname + self.csvnum + self.csvend
         print self.csv_input + '\n'
+
