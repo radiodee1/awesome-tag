@@ -8,6 +8,7 @@ from gi.repository import Gtk, GdkPixbuf, Gdk
 import cairo
 
 import atag_dotfolder as atag
+import atag_drawingarea as dra
 
 
 class Interface(Gtk.Window, atag.Dotfolder) :
@@ -39,7 +40,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
                             self.label)
         self.grid.attach(self.button, 2, 0, 1, 1)
 
-        self.label = Gtk.Label("Base Name")
+        self.label = Gtk.Label("Checkpoint Base Name")
         self.grid.attach(self.label, 3, 0, 1, 1)
 
         ''' row 1 '''
@@ -107,7 +108,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.grid.attach(self.entry, 1, 4, 1, 1)
 
         self.button = Gtk.Button(label="Picker")
-        self.button.connect("clicked", self.on_image_name_button, self.VAR_LOCAL_DATABASE, self.FOLDER_LOCAL_DATABASE,
+        self.button.connect("clicked", self.on_image_folder_button, self.VAR_LOCAL_DATABASE, self.FOLDER_LOCAL_DATABASE,
                             self.label)
         self.grid.attach(self.button, 2, 4, 1, 1)
 
@@ -144,7 +145,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.grid.attach(self.entry, 1, 6, 1, 1)
 
         self.button = Gtk.Button(label="Picker")
-        self.button.connect("clicked", self.on_image_name_button, self.VAR_ROOT_DATABASE, self.FOLDER_ROOT_DATABASE,
+        self.button.connect("clicked", self.on_image_folder_button, self.VAR_ROOT_DATABASE, self.FOLDER_ROOT_DATABASE,
                             self.label)
         self.grid.attach(self.button, 2, 6, 1, 1)
 
@@ -238,7 +239,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.grid.attach(self.entry, 1, 11, 1, 1)
 
         self.button = Gtk.Button(label="Picker")
-        self.button.connect("clicked", self.on_image_name_button, self.VAR_SPLIT_FOLDER_NAME, self.FOLDER_SPLIT_FOLDER_NAME,
+        self.button.connect("clicked", self.on_image_folder_button, self.VAR_SPLIT_FOLDER_NAME, self.FOLDER_SPLIT_FOLDER_NAME,
                             self.label)
         self.grid.attach(self.button, 2, 11, 1, 1)
 
@@ -283,9 +284,8 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.grid.attach(self.label, 3, 13, 1, 1)
 
         '''
-        self.drawingarea = Gtk.DrawingArea()
-        self.drawingarea.set_size_request(500,500)
-        self.drawingarea.connect("draw", self.draw)
+        self.drawingarea = dra.DrawingArea()
+        self.drawingarea.set_imagename(self.VAR_IMAGE_NAME)
         self.grid.attach(self.drawingarea, 0,13,4,20)
 
 
@@ -295,21 +295,6 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         win.show_all()
         Gtk.main()
 
-    def draw(self, widget, context):
-        name = self.VAR_IMAGE_NAME.strip("\n")
-        print name
-
-        if name.lower().endswith("png") :
-            self.image = cairo.ImageSurface.create_from_png(name)
-            context.set_source_surface(self.image, 0.0, 10.0)
-            context.paint()
-            print ('png image')
-        if name.lower().endswith("jpg") or name.lower().endswith("jpeg"):
-            self.pb = GdkPixbuf.Pixbuf.new_from_file(name)
-            Gdk.cairo_set_source_pixbuf(context, self.pb, 0, 10)
-            context.paint()
-            print('jpg image')
-        return False
 
     def enter_image_name_callback(self, widget, var, folder, label):
         var = widget.get_text()
@@ -319,7 +304,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.switch_folder_var(folder,var)
 
     def on_image_name_button(self, widget, var, folder, label):
-        temp = easygui.fileopenbox()
+        temp = easygui.fileopenbox(msg="pick a file",title="FILE")
         if len(temp) > 0:
             var = str(temp)
             self.dot_write(folder, var)
@@ -328,7 +313,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
             self.switch_folder_var(folder,var)
 
     def on_image_folder_button(self, widget, var, folder, label):
-        temp = easygui.diropenbox()
+        temp = easygui.diropenbox(msg="pick a folder", title="FOLDER")
         if len(temp) > 0:
             var = str(temp)
             self.dot_write(folder, var)
@@ -348,6 +333,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
             self.VAR_CSV_FILE_SINGLE = var
         if folder == self.FOLDER_IMAGE_NAME :
             self.VAR_IMAGE_NAME = var
+            self.drawingarea.set_imagename(var)
         if folder == self.FOLDER_LOCAL_DATABASE :
             self.VAR_LOCAL_DATABASE = var
         if folder == self.FOLDER_MY_CSV_NAME :
