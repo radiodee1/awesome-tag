@@ -1,7 +1,8 @@
 import os
 import atag_csv as enum
-#import nn_loader as loader
+import nn_loader as loader
 import atag_dotfolder as aa
+import nn_model as model
 
 '''
 Here we read the csv file that we made and train the models
@@ -28,8 +29,10 @@ class Read( enum.Enum) :
 
     def run_mnist(self):
         print
-        import nn_model as model
+        ll = loader.Load(self.a)
+        train, test = ll.get_mnist_dat()
         nn = model.NN(self.a)
+        nn.set_mnist_train_test(train,test)
         nn.color_setup()
 
 if __name__ == '__main__':
