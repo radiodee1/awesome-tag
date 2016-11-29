@@ -299,6 +299,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
         self.grid.attach(self.drawingarea, 0, 14, 4, 1)
 
+    ''' button callback '''
     def on_button_show_csv(self, widget):
         self.run_draw_compile()
         print 1
@@ -321,9 +322,10 @@ class Interface(Gtk.Window, atag.Dotfolder) :
     def on_button_options(self, widget):
         print 5
 
+    ''' threading etc '''
     def run_draw_compile(self):
-        #draw.Read(self)
-        self.drawingarea.boxlist_red = draw.Read(self).boxlist
+        r = draw.Read(self)
+        self.drawingarea.boxlist_red = r.boxlist
         self.drawingarea.queue_draw()
 
     def run_csv_write(self):
@@ -332,6 +334,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
     def run_csv_read(self):
         read.Read(self)
 
+    ''' utility and atag var callback '''
     def show_window(self):
         win = self  # Interface()
         win.connect("delete-event", Gtk.main_quit)
