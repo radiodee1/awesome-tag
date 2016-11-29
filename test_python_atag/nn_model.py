@@ -19,6 +19,10 @@ class NN(object):
         self.mnist_train = []
         self.mnist_test = []
 
+        self.cursor = 0
+        self.cursor_tot = 0
+        self.batchsize = 100
+
     def color_setup(self):
         x = tf.placeholder(tf.float32, [None, 784])
         W = tf.Variable(tf.zeros([784, 10]))
@@ -38,8 +42,9 @@ class NN(object):
         if self.load_ckpt : self.load()
 
         if self.train :
-            for i in range(1000):
-                batch_xs, batch_ys = self.mnist_train.next_batch(100)
+            self.cursor = 0
+            for i in range(self.cursor_tot): #1000
+                batch_xs, batch_ys = self.get_mnist_next_train(self.batchsize)#self.mnist_train.next_batch(100)
                 self.sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
 
         if self.save_ckpt : self.save()
@@ -68,8 +73,10 @@ class NN(object):
 
 
     def set_mnist_train_test(self, valtrain = None, valtest = None):
+
         if valtrain != None:
             self.mnist_train = valtrain
+            self.cursor_tot = int(len(self.mnist_train.images) / self.batchsize)
         else:
             self.mnist_train = input_data.read_data_sets("MNIST_data/", one_hot=True).train
 
@@ -78,3 +85,11 @@ class NN(object):
         else:
             self.mnist_test = input_data.read_data_sets("MNIST_data/", one_hot=True).test
         print "in"
+
+    def get_mnist_next_train(self, batchsize):
+
+        images = self.mnist_train.images[self.cursor * batchsize : self.cursor * batchsize + batchsize]
+        lables = self.mnist_train.labels[self.cursor * batchsize : self.cursor * batchsize + batchsize]
+        self.cursor = self.cursor + 1
+        #print lables, "lables"
+        return  images, lables

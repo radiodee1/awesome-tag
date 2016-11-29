@@ -13,15 +13,17 @@ class Load(object):
         test = [0] * 784
         labels = [0] * 10
 
+        train = [train * 200]
         test = [test]
-        #np.reshape(test, (-1,784))
+        labels_train = [labels * 200]
+        train = np.reshape(train, (-1,784))
         labels = [labels]
-        #np.reshape(labels, (-1, 10))
+        labels_train = np.reshape(labels_train, (-1, 10))
 
-        self.mnist_train = Map({'images':train, 'labels': labels})
+        self.mnist_train = Map({'images':train, 'labels': labels_train})
         self.mnist_test = Map({'images':test, 'labels': labels})
         #self.mnist_test = test
-        print self.mnist_test
+        print self.mnist_train
         return self.mnist_train, self.mnist_test
 
     def look_at_img(filename, i=0, load_type=0):
