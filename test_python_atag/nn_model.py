@@ -10,7 +10,7 @@ class NN(object):
     def __init__(self, atag):
         self.ckpt_folder = atag.VAR_LOCAL_DATABASE
         self.ckpt_name = atag.VAR_BASE_NAME
-        self.train = False
+        self.train = True
         self.test = True
         self.load_ckpt = True
         self.save_ckpt = False
