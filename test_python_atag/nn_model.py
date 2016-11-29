@@ -4,15 +4,18 @@ from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
 import tensorflow as tf
+import atag_dotfolder as atag
 
 class NN(object):
     def __init__(self, atag):
         self.ckpt_folder = atag.VAR_LOCAL_DATABASE
         self.ckpt_name = atag.VAR_BASE_NAME
-        self.train = True
+        self.train = False
         self.test = True
-        self.load_ckpt = False
+        self.load_ckpt = True
         self.save_ckpt = False
+        self.sess = None
+
 
     def color_setup(self):
         x = tf.placeholder(tf.float32, [None, 784])
@@ -47,13 +50,29 @@ class NN(object):
 
 
     def save(self):
+        folder = self.ckpt_folder + os.sep + "ckpt"
+        if not os.path.exists(folder) :
+            os.makedirs(folder)
         saver = tf.train.Saver()
-        save_path = saver.save(self.sess, self.ckpt_folder + os.sep + "ckpt" + os.sep + self.ckpt_name + ".ckpt")
+        save_path = saver.save(self.sess, folder + os.sep + self.ckpt_name + ".ckpt")
 
         print "saved?"
 
     def load(self):
-        saver = tf.train.Saver()
-        saver.restore(self.sess, self.ckpt_folder + os.sep + "ckpt" + os.sep + self.ckpt_name + ".ckpt")
+        file = self.ckpt_folder + os.sep + "ckpt" + os.sep + self.ckpt_name + ".ckpt"
+        if os.path.isfile(file) :
+            saver = tf.train.Saver()
+            saver.restore(self.sess, file)
 
-        print "saved?"
+        print "load?"
+
+if __name__ == '__main__':
+    a = atag.Dotfolder()
+    c = NN(a)
+    c.color_setup()
+
+    #d.dot_write(d.FOLDER_IMAGE_NAME, "/home/dave/image.png")
+    #print (d.dot_read(d.FOLDER_IMAGE_NAME))
+    #d.VAR_IMAGE_NAME = d.dot_read(d.FOLDER_IMAGE_NAME)
+    #print d.VAR_IMAGE_NAME
+    print("done")

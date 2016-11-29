@@ -11,7 +11,7 @@ import threading
 import atag_dotfolder as atag
 import atag_drawingarea as dra
 import atag_csv_write as write
-import atag_csv_read as read
+#import atag_csv_read_tf as read
 import atag_csv_draw as draw
 
 
@@ -332,7 +332,8 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         write.Write(self)
 
     def run_csv_read(self):
-        read.Read(self)
+        #read.Read(self)
+        print "run from command line!"
 
     ''' utility and atag var callback '''
     def show_window(self):
