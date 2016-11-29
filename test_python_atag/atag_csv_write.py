@@ -29,6 +29,7 @@ class Write( enum.Enum) :
         with open(self.csv_input, 'r') as f:
             for line in f:
                 self.process_read_line(line)
+            f.close()
 
         print self.csv_output
         self.f = open(self.csv_output, "w")
@@ -36,7 +37,7 @@ class Write( enum.Enum) :
 
         for l in self.dat :
             self.process_write_line(l)
-
+        self.f.close()
 
     def process_read_line(self, line):
         l = line.split(",")

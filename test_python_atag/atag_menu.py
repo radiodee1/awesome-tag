@@ -12,6 +12,7 @@ import atag_dotfolder as atag
 import atag_drawingarea as dra
 import atag_csv_write as write
 import atag_csv_read as read
+import atag_csv_draw as draw
 
 
 class Interface(Gtk.Window, atag.Dotfolder) :
@@ -294,9 +295,12 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         ''' end of list -- add drawingarea '''
         self.drawingarea = dra.DrawingArea()
         self.drawingarea.set_imagename(self.VAR_IMAGE_NAME)
+        #self.drawingarea.boxlist_red = draw.Read(self).boxlist
+
         self.grid.attach(self.drawingarea, 0, 14, 4, 1)
 
     def on_button_show_csv(self, widget):
+        self.run_draw_compile()
         print 1
 
     def on_button_write_csv(self, widget):
@@ -316,6 +320,11 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     def on_button_options(self, widget):
         print 5
+
+    def run_draw_compile(self):
+        #draw.Read(self)
+        self.drawingarea.boxlist_red = draw.Read(self).boxlist
+        self.drawingarea.queue_draw()
 
     def run_csv_write(self):
         write.Write(self)
@@ -369,6 +378,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         if folder == self.FOLDER_IMAGE_NAME :
             self.VAR_IMAGE_NAME = var
             self.drawingarea.set_imagename(var)
+            self.drawingarea.queue_draw()
         if folder == self.FOLDER_LOCAL_DATABASE :
             self.VAR_LOCAL_DATABASE = var
         if folder == self.FOLDER_MY_CSV_NAME :

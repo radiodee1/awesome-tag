@@ -16,8 +16,8 @@ class DrawingArea(Gtk.DrawingArea) :
         self.set_size_request(500,500)
         self.connect("draw", self.draw)
 
-        self.boxlist_red = [(0,0,10,20),(5,5,10,20)]
-        self.boxlist_green = [(3,3,3,3),(7,7,7,7)]
+        self.boxlist_red = []#[(0,0,10,20),(5,5,10,20)]
+        self.boxlist_green = []#[(3,3,3,3),(7,7,7,7)]
         self.boxlist_blue = []
 
     def set_imagename(self, imagename):
