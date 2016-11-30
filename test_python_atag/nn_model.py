@@ -14,9 +14,9 @@ class NN(object):
         self.test = True
         self.load_ckpt = True
         self.save_ckpt = False
-        #self.sess = tf.Session() #None
+
         self.sess = tf.InteractiveSession()
-        self.mnist = []#input_data.read_data_sets("MNIST_data/", one_hot=True)
+        self.mnist = []
         self.mnist_train = []
         self.mnist_test = []
 
@@ -73,9 +73,7 @@ class NN(object):
             return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
                                   strides=[1, 2, 2, 1], padding='SAME')
 
-        #from tensorflow.examples.tutorials.mnist import input_data
-        #mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
-        #import tensorflow as tf
+
         x = tf.placeholder(tf.float32, shape=[None, 784])
         y_ = tf.placeholder(tf.float32, shape=[None, 10])
 
