@@ -117,7 +117,6 @@ class NN(object):
         if self.train :
             self.cursor = 0
             for i in range(self.cursor_tot ):
-                #batch = mnist.train.next_batch(50)
                 batch_0, batch_1 = self.get_mnist_next_train(self.batchsize)
                 if i % 100 == 0:
                     train_accuracy = accuracy.eval(feed_dict={
