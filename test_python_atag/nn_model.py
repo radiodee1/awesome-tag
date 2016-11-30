@@ -41,7 +41,7 @@ class NN(object):
         #self.sess = tf.Session()
         self.sess.run(init)
 
-        if self.load_ckpt : self.load()
+        if self.load_ckpt : self.load('softmax')
 
         if self.train :
             self.cursor = 0
@@ -49,7 +49,7 @@ class NN(object):
                 batch_xs, batch_ys = self.get_mnist_next_train(self.batchsize)#self.mnist_train.next_batch(100)
                 self.sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
 
-        if self.save_ckpt : self.save()
+        if self.save_ckpt : self.save('softmax')
 
         if self.test :
             correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
@@ -107,7 +107,6 @@ class NN(object):
 
         y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
-        if self.load_ckpt : self.load()
 
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y_conv, y_))
         train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
@@ -115,8 +114,11 @@ class NN(object):
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
         self.sess.run(tf.initialize_all_variables())
 
+        if self.load_ckpt : self.load('conv')
+
         if self.train :
-            for i in range(self.cursor_tot):
+            self.cursor = 0
+            for i in range(self.cursor_tot ):
                 #batch = mnist.train.next_batch(50)
                 batch_0, batch_1 = self.get_mnist_next_train(self.batchsize)
                 if i % 100 == 0:
@@ -125,30 +127,31 @@ class NN(object):
                     print("step %d, training accuracy %g" % (i, train_accuracy))
                 train_step.run(feed_dict={x: batch_0, y_: batch_1, keep_prob: 0.5})
 
-        if self.save_ckpt : self.save()
+        if self.save_ckpt : self.save('conv')
 
         if self.test :
             print("test accuracy %g" % accuracy.eval(feed_dict={
                 x: self.mnist_test.images, y_: self.mnist_test.labels, keep_prob: 1.0}))
 
-    def save(self):
+    def save(self, filename):
         folder = self.ckpt_folder + os.sep + "ckpt"
         if not os.path.exists(folder) :
             os.makedirs(folder)
         saver = tf.train.Saver()
-        save_path = saver.save(self.sess, folder + os.sep + self.ckpt_name + ".ckpt")
-        print "saved?"
+        save_path = saver.save(self.sess, folder + os.sep + self.ckpt_name + "."+ filename+ ".ckpt")
+        print "saved?", filename
 
-    def load(self):
-        file = self.ckpt_folder + os.sep + "ckpt" + os.sep + self.ckpt_name + ".ckpt"
+    def load(self, filename):
+        file = self.ckpt_folder + os.sep + "ckpt" + os.sep + self.ckpt_name +"."+ filename + ".ckpt"
         if os.path.isfile(file) :
             saver = tf.train.Saver()
             saver.restore(self.sess, file)
-        print "load?"
+            print "load?", filename
 
 
     def set_mnist_train_test(self, valtrain = None, valtest = None, batchsize = 50):
         self.batchsize = batchsize
+        #self.cursor = 0
 
         if valtrain != None:
             self.mnist_train = valtrain

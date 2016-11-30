@@ -20,13 +20,14 @@ class Read( enum.Enum) :
         ll = loader.Load(self.a)
         train, test = ll.get_mnist_dat()
         nn = model.NN(self.a)
-        nn.load_ckpt = False
-        nn.save_ckpt = True
-        nn.train = True
+        nn.load_ckpt = True
+        nn.save_ckpt = False
+        nn.train = False
         nn.test = True
         nn.set_mnist_train_test(train,test,100)
         nn.mnist_setup()
         nn.set_mnist_train_test(train,test, 50)
+        #print nn.batchsize, nn.cursor_tot, nn.cursor
         nn.conv_setup()
         #nn.save()
 
