@@ -33,7 +33,8 @@ class Read( enum.Enum) :
         train, test = ll.get_mnist_dat()
         nn = model.NN(self.a)
         nn.set_mnist_train_test(train,test)
-        nn.color_setup()
+        #nn.mnist_setup()
+        nn.conv_setup()
 
 if __name__ == '__main__':
     a = aa.Dotfolder()
