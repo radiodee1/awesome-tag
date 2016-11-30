@@ -10,11 +10,12 @@ class NN(object):
     def __init__(self, atag):
         self.ckpt_folder = atag.VAR_LOCAL_DATABASE
         self.ckpt_name = atag.VAR_BASE_NAME
-        self.train = True
+        self.train = False
         self.test = True
         self.load_ckpt = True
         self.save_ckpt = False
-        self.sess = tf.Session() #None
+        #self.sess = tf.Session() #None
+        self.sess = tf.InteractiveSession()
         self.mnist = []#input_data.read_data_sets("MNIST_data/", one_hot=True)
         self.mnist_train = []
         self.mnist_test = []
@@ -24,6 +25,7 @@ class NN(object):
         self.batchsize = 100
 
     def mnist_setup(self):
+
         x = tf.placeholder(tf.float32, [None, 784])
         W = tf.Variable(tf.zeros([784, 10]))
         b = tf.Variable(tf.zeros([10]))
@@ -71,15 +73,14 @@ class NN(object):
             return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
                                   strides=[1, 2, 2, 1], padding='SAME')
 
-
         #from tensorflow.examples.tutorials.mnist import input_data
-        mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
+        #mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
         #import tensorflow as tf
         x = tf.placeholder(tf.float32, shape=[None, 784])
         y_ = tf.placeholder(tf.float32, shape=[None, 10])
 
 
-        sess = tf.InteractiveSession()
+        #self.sess = tf.InteractiveSession()
         W_conv1 = weight_variable([5, 5, 1, 32])
         b_conv1 = bias_variable([32])
         x_image = tf.reshape(x, [-1, 28, 28, 1])
@@ -106,40 +107,29 @@ class NN(object):
 
         y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
-        '''
+        if self.load_ckpt : self.load()
 
-        x = tf.placeholder(tf.float32, shape=[None, 784])
-        y_ = tf.placeholder(tf.float32, shape=[None, 10])
-        W = tf.Variable(tf.zeros([784, 10]))
-        b = tf.Variable(tf.zeros([10]))
-        sess.run(tf.initialize_all_variables())
-        y = tf.matmul(x, W) + b
-
-
-        cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_))
-        train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
-        for i in range(1000):
-            batch = mnist.train.next_batch(100)
-            train_step.run(feed_dict={x: batch[0], y_: batch[1]})
-        correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
-        accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-        print(accuracy.eval(feed_dict={x: mnist.test.images, y_: mnist.test.labels}))
-        '''
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y_conv, y_))
         train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
         correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_, 1))
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-        sess.run(tf.initialize_all_variables())
-        for i in range(20000):
-            batch = mnist.train.next_batch(50)
-            if i % 100 == 0:
-                train_accuracy = accuracy.eval(feed_dict={
-                    x: batch[0], y_: batch[1], keep_prob: 1.0})
-                print("step %d, training accuracy %g" % (i, train_accuracy))
-            train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
+        self.sess.run(tf.initialize_all_variables())
 
-        print("test accuracy %g" % accuracy.eval(feed_dict={
-            x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
+        if self.train :
+            for i in range(self.cursor_tot):
+                #batch = mnist.train.next_batch(50)
+                batch_0, batch_1 = self.get_mnist_next_train(self.batchsize)
+                if i % 100 == 0:
+                    train_accuracy = accuracy.eval(feed_dict={
+                        x: batch_0, y_: batch_1, keep_prob: 1.0})
+                    print("step %d, training accuracy %g" % (i, train_accuracy))
+                train_step.run(feed_dict={x: batch_0, y_: batch_1, keep_prob: 0.5})
+
+        if self.save_ckpt : self.save()
+
+        if self.test :
+            print("test accuracy %g" % accuracy.eval(feed_dict={
+                x: self.mnist_test.images, y_: self.mnist_test.labels, keep_prob: 1.0}))
 
     def save(self):
         folder = self.ckpt_folder + os.sep + "ckpt"
@@ -157,7 +147,8 @@ class NN(object):
         print "load?"
 
 
-    def set_mnist_train_test(self, valtrain = None, valtest = None):
+    def set_mnist_train_test(self, valtrain = None, valtest = None, batchsize = 50):
+        self.batchsize = batchsize
 
         if valtrain != None:
             self.mnist_train = valtrain

@@ -7,8 +7,12 @@ class Load(object):
         self.csv_filename = ""
         self.mnist_train = {}
         self.mnist_test = {}
+        self.load_official_mnist = True
 
     def get_mnist_dat(self):
+        from tensorflow.examples.tutorials.mnist import input_data
+
+
         train = [0] * 784
         test = [0] * 784
         labels = [0] * 10
@@ -22,7 +26,12 @@ class Load(object):
 
         self.mnist_train = Map({'images':train, 'labels': labels_train})
         self.mnist_test = Map({'images':test, 'labels': labels})
-        #self.mnist_test = test
+
+        if self.load_official_mnist :
+            mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
+            self.mnist_train = mnist.train
+            self.mnist_test = mnist.test
+
         print self.mnist_train
         return self.mnist_train, self.mnist_test
 

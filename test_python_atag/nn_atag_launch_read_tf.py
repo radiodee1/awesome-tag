@@ -13,18 +13,6 @@ class Read( enum.Enum) :
         enum.Enum.__init__(self)
 
         self.a = atag
-        '''
-        self.csvnum = atag.VAR_SPLIT_CURRENT
-        self.csvfolder = atag.VAR_SPLIT_FOLDER_NAME
-        self.csvname = 'train_'
-        self.csvend = '.csv'
-
-        self.csvfolder = self.csvfolder[: -1]
-        if self.csvfolder.endswith('1') : self.csvfolder = self.csvfolder[: -1]
-
-        self.csv_input = self.csvfolder + self.csvnum + os.sep + self.csvname + self.csvnum + self.csvend
-        print self.csv_input + '\n'
-        '''
         self.run_mnist()
 
     def run_mnist(self):
@@ -32,9 +20,15 @@ class Read( enum.Enum) :
         ll = loader.Load(self.a)
         train, test = ll.get_mnist_dat()
         nn = model.NN(self.a)
-        nn.set_mnist_train_test(train,test)
-        #nn.mnist_setup()
+        nn.load_ckpt = False
+        nn.save_ckpt = True
+        nn.train = True
+        nn.test = True
+        nn.set_mnist_train_test(train,test,100)
+        nn.mnist_setup()
+        nn.set_mnist_train_test(train,test, 50)
         nn.conv_setup()
+        #nn.save()
 
 if __name__ == '__main__':
     a = aa.Dotfolder()
