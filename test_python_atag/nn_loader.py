@@ -26,7 +26,7 @@ class Load(object):
         print self.mnist_train
         return self.mnist_train, self.mnist_test
 
-    def look_at_img(filename, i=0, load_type=0):
+    def look_at_img(self, filename, i=0, load_type=0):
         img = Image.open(open(filename))
         size = 28, 28
         img2 = np.zeros(shape=(size), dtype='float64')
