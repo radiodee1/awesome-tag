@@ -90,9 +90,14 @@ class Load(enum.Enum):
             width = self.dat[self.iter][self.FACE_WIDTH]
             height = self.dat[self.iter][self.FACE_HEIGHT]
 
+            if not (os.path.isfile(filename) and width >=28 and height >= 28) :
+                self.iter = self.iter + 1
+                continue
+
             img = self.look_at_img(filename,x,y,width,height)
 
             print self.iter, filename
+
             if self.inspection_num == self.iter or True :
                 self.print_block(img)
                 sys.exit()
@@ -135,19 +140,22 @@ class Load(enum.Enum):
         #div = 1/div
         #print div
         xy_list = []
-
+        dimx, dimy = img.size
         img = np.asarray(img, dtype='float64')
-        marker = 0
+        print len(img), dimx, dimy, "size", self.iter
+
         ''' Detect 0 for black -- put in list in shrunk form. '''
-        for xx in range(x + 0, x + width):
-            for yy in range(y + 0, y + height):
-                #print img[xx,yy,0]
-                if xx< len(img) and yy  < len(img):
-                    #colors = img[xx,yy ] # + 16 * img[xx,yy,1] + 256 * img[xx,yy,2]
-                    #print colors , "color"
-                    if float(img[xx , yy , 0]) < float(205) or True: ## 255
-                        #print xx, yy, (xx-x) * divx, (yy -y) * divy
-                        xy_list.append([int ((xx -x) * divx) , int( (yy-y) * divy), list(img[xx,yy]) ])
+        if not len (img.shape) < 3 :
+            if not (x + width > dimx and y + height > dimy) :
+                for xx in range(x + 0, x + width):
+                    for yy in range(y + 0, y + height):
+                        #print img[xx,yy,0]
+                        if (xx -x ) * divx < dimx  and (yy - y) * divy  < dimy and xx < dimx -1 and yy < dimy -1:
+                            #colors = img[xx,yy ] # + 16 * img[xx,yy,1] + 256 * img[xx,yy,2]
+                            #print colors , "color"
+                            if True or float(img[xx , yy , 0]) < float(205) : ## 255
+                                #print img.shape #xx, yy, (xx-x) * divx, (yy -y) * divy, "mags"
+                                xy_list.append([int ((xx -x) * divx) , int( (yy-y) * divy), list(img[yy,xx]) ])
 
         ''' Put list in 28 x 28 array. '''
         if len(xy_list) == 0:
@@ -157,16 +165,15 @@ class Load(enum.Enum):
             if (q[0] < 28) and (q[1] < 28) and (q[0] >= 0) and (q[1] >= 0):
                 #print q[0], q[1], q[2], q
                 #print  img2
-                img2[int(math.floor(q[0]))][ int(math.floor(q[1]))] =   q[2]
+                img2[int(math.floor(q[0]))][ int(math.floor(q[1]))] =   q[2][0]
             #else :
             #    print "exception" , q
 
         ''' Then add entire array to oneimg variable and flatten.'''
-        for x in range(28):
-            for y in range(28):
-                oneimg.append(img2[x][ y])
+        for y in range(28):
+            for x in range(28):
+                oneimg.append(img2[y][x])
 
-        #oneindex, unused = get_number(filename, load_type)
         return oneimg #, oneindex
 
     def print_block(self, img):
@@ -174,8 +181,8 @@ class Load(enum.Enum):
         for y in range(28):
             for x in range(28):
                 out = " "
-                if img[y * 28 + x][0] > 0: out = "X"
-                out = str(img[y *28 +x][0])
+                #if img[y * 28 + x] > 0: out = "X"
+                out = str(img[x *28 + y]) +" "
                 sys.stdout.write(out)
             print "|"
         print "---------------"

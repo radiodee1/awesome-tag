@@ -28,14 +28,15 @@ class NN(object):
         self.batchsize = 100
 
     def mnist_setup(self):
+        output = 2
 
         x = tf.placeholder(tf.float32, [None, 784])
-        W = tf.Variable(tf.zeros([784, 10]))
-        b = tf.Variable(tf.zeros([10]))
+        W = tf.Variable(tf.zeros([784, output]))
+        b = tf.Variable(tf.zeros([output]))
 
         y = tf.nn.softmax(tf.matmul(x, W) + b)
 
-        y_ = tf.placeholder(tf.float32, [None, 10])
+        y_ = tf.placeholder(tf.float32, [None, output])
 
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_))
 
@@ -62,6 +63,7 @@ class NN(object):
             print(self.sess.run(accuracy, feed_dict={x: self.mnist_test.images, y_: self.mnist_test.labels}))
 
     def conv_setup(self):
+        output = 2
         def weight_variable(shape):
             initial = tf.truncated_normal(shape, stddev=0.1)
             return tf.Variable(initial)
@@ -79,7 +81,7 @@ class NN(object):
 
 
         x = tf.placeholder(tf.float32, shape=[None, 784])
-        y_ = tf.placeholder(tf.float32, shape=[None, 10])
+        y_ = tf.placeholder(tf.float32, shape=[None, output])
 
 
         #self.sess = tf.InteractiveSession()
@@ -104,8 +106,8 @@ class NN(object):
         keep_prob = tf.placeholder(tf.float32)
         h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
 
-        W_fc2 = weight_variable([1024, 10])
-        b_fc2 = bias_variable([10])
+        W_fc2 = weight_variable([1024, output])
+        b_fc2 = bias_variable([output])
 
         y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
