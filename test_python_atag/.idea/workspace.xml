@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c15ed38a-2fe7-44d1-b032-ae199cd14d43" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_launch_read_tf.py" afterPath="$PROJECT_DIR$/nn_launch_read_tf.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_loader.py" afterPath="$PROJECT_DIR$/nn_loader.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_model.py" afterPath="$PROJECT_DIR$/nn_model.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -47,8 +45,8 @@
       <file leaf-file-name="nn_model.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nn_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="491">
-              <caret line="189" column="67" lean-forward="false" selection-start-line="189" selection-start-column="67" selection-end-line="189" selection-end-column="67" />
+            <state relative-caret-position="1275">
+              <caret line="109" column="37" lean-forward="false" selection-start-line="109" selection-start-column="37" selection-end-line="109" selection-end-column="37" />
               <folding>
                 <element signature="e#18#27#0" expanded="true" />
               </folding>
@@ -59,8 +57,8 @@
       <file leaf-file-name="nn_loader.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nn_loader.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
-              <caret line="66" column="30" lean-forward="false" selection-start-line="66" selection-start-column="30" selection-end-line="66" selection-end-column="30" />
+            <state relative-caret-position="513">
+              <caret line="172" column="13" lean-forward="false" selection-start-line="172" selection-start-column="13" selection-end-line="172" selection-end-column="13" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -71,8 +69,8 @@
       <file leaf-file-name="nn_launch_read_tf.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nn_launch_read_tf.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="26" column="22" lean-forward="false" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
+            <state relative-caret-position="360">
+              <caret line="24" column="27" lean-forward="false" selection-start-line="24" selection-start-column="27" selection-end-line="24" selection-end-column="27" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -147,9 +145,9 @@
         <option value="$PROJECT_DIR$/atag_csv_read_tf.py" />
         <option value="$PROJECT_DIR$/nn_atag_csv_read_tf.py" />
         <option value="$PROJECT_DIR$/nn_atag_launch_read_tf.py" />
-        <option value="$PROJECT_DIR$/nn_loader.py" />
-        <option value="$PROJECT_DIR$/nn_launch_read_tf.py" />
         <option value="$PROJECT_DIR$/nn_model.py" />
+        <option value="$PROJECT_DIR$/nn_launch_read_tf.py" />
+        <option value="$PROJECT_DIR$/nn_loader.py" />
       </list>
     </option>
   </component>
@@ -500,7 +498,21 @@
       <option name="project" value="LOCAL" />
       <updated>1480687976736</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="messing with look_at_image() -- runs but doesnt do anything">
+      <created>1480703339059</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1480703339059</updated>
+    </task>
+    <task id="LOCAL-00019" summary="messing with look_at_image() -- models output changed to 2 and runs, but not all vars seem to be showing up">
+      <created>1480711460710</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1480711460710</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -544,7 +556,8 @@
     <MESSAGE value="better saving, loading" />
     <MESSAGE value="messing with look_at_image()" />
     <MESSAGE value="messing with look_at_image() -- runs but doesnt do anything" />
-    <option name="LAST_COMMIT_MESSAGE" value="messing with look_at_image() -- runs but doesnt do anything" />
+    <MESSAGE value="messing with look_at_image() -- models output changed to 2 and runs, but not all vars seem to be showing up" />
+    <option name="LAST_COMMIT_MESSAGE" value="messing with look_at_image() -- models output changed to 2 and runs, but not all vars seem to be showing up" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -982,8 +995,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nn_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="491">
-          <caret line="189" column="67" lean-forward="false" selection-start-line="189" selection-start-column="67" selection-end-line="189" selection-end-column="67" />
+        <state relative-caret-position="1275">
+          <caret line="109" column="37" lean-forward="false" selection-start-line="109" selection-start-column="37" selection-end-line="109" selection-end-column="37" />
           <folding>
             <element signature="e#18#27#0" expanded="true" />
           </folding>
@@ -992,8 +1005,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nn_launch_read_tf.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" column="22" lean-forward="false" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
+        <state relative-caret-position="360">
+          <caret line="24" column="27" lean-forward="false" selection-start-line="24" selection-start-column="27" selection-end-line="24" selection-end-column="27" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
@@ -1002,8 +1015,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nn_loader.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="66" column="30" lean-forward="false" selection-start-line="66" selection-start-column="30" selection-end-line="66" selection-end-column="30" />
+        <state relative-caret-position="513">
+          <caret line="172" column="13" lean-forward="false" selection-start-line="172" selection-start-column="13" selection-end-line="172" selection-end-column="13" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>

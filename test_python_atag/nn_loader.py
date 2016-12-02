@@ -132,54 +132,59 @@ class Load(enum.Enum):
         img = Image.open(open(filename))
         size = 28, 28
         img2 = [[0.0 ,0.0 ,0.0] * 28 ]* 28
+        img2 = [[-1] * 28] * 28
         oneimg = []
+
+        #width = 28
+        #height = 28
 
         mnist_dim = 28
         divx = mnist_dim / float(width)
         divy = mnist_dim / float(height)
-        #div = 1/div
+        #divx = 1/divx
+        #divy = 1/divy
         #print div
         xy_list = []
         dimx, dimy = img.size
         img = np.asarray(img, dtype='float64')
-        print len(img), dimx, dimy, "size", self.iter
+        #xy_list2 = []
+        print  dimx, dimy, "size", self.iter, "division", divx, divy
 
-        ''' Detect 0 for black -- put in list in shrunk form. '''
+        ''' Put in shrunk form. '''
         if not len (img.shape) < 3 :
             if not (x + width > dimx and y + height > dimy) :
-                for xx in range(x + 0, x + width):
-                    for yy in range(y + 0, y + height):
-                        #print img[xx,yy,0]
-                        if (xx -x ) * divx < dimx  and (yy - y) * divy  < dimy and xx < dimx -1 and yy < dimy -1:
-                            #colors = img[xx,yy ] # + 16 * img[xx,yy,1] + 256 * img[xx,yy,2]
-                            #print colors , "color"
-                            if True or float(img[xx , yy , 0]) < float(205) : ## 255
-                                #print img.shape #xx, yy, (xx-x) * divx, (yy -y) * divy, "mags"
-                                xy_list.append([int ((xx -x) * divx) , int( (yy-y) * divy), list(img[yy,xx]) ])
+                for xx in range(x , x + width):
+                    for yy in range(y , y + height):
+                        if (xx -x ) * divx < dimx  and (yy - y) * divy  < dimy and xx < dimx -1 and yy < dimy -1 :
+                            item = [int ((xx -x) * divx) , int( (yy-y) * divy), list(img[yy,xx]) ]
+
+                            if True: # or [int ((xx -x) * divx) , int( (yy-y) * divy)]  not in xy_list2 :
+                                #xy_list2.append([int ((xx -x) * divx) , int( (yy-y) * divy)])
+                                xy_list.append(item)
 
         ''' Put list in 28 x 28 array. '''
+        print xy_list
+        print len(xy_list),'len'
         if len(xy_list) == 0:
             xy_list = [[0, 0,[0,0,0]]]
-            #print "len zero" , filename
-        for q in xy_list:
-            if (q[0] < 28) and (q[1] < 28) and (q[0] >= 0) and (q[1] >= 0):
-                #print q[0], q[1], q[2], q
-                #print  img2
-                img2[int(math.floor(q[0]))][ int(math.floor(q[1]))] =   q[2][0]
-            #else :
-            #    print "exception" , q
+
+        for i in range(len(xy_list)):
+            q = xy_list[i]
+            #print q
+            if (q[0] < 28) and (q[1] < 28) and (q[0] >= 0) and (q[1] >= 0) :# and img2[int(q[0])] [ int(q[1])]  == -1:
+                img2[int(q[0])]  [ int(q[1])] =   q[2][0]
 
         ''' Then add entire array to oneimg variable and flatten.'''
-        for y in range(28):
-            for x in range(28):
-                oneimg.append(img2[y][x])
+        for yz in range(28):
+            for xz in range(28):
+                oneimg.append(img2[yz][xz])
 
         return oneimg #, oneindex
 
     def print_block(self, img):
-        print len(img)
-        for y in range(28):
-            for x in range(28):
+        #print (img)
+        for x in range(28):
+            for y in range(28):
                 out = " "
                 #if img[y * 28 + x] > 0: out = "X"
                 out = str(img[x *28 + y]) +" "
