@@ -102,7 +102,7 @@ class Load(enum.Enum):
     def look_at_img(self, filename, x = 0, y = 0, width = 28, height = 28):
         img = Image.open(open(filename))
         size = 28, 28
-        img2 = np.zeros(shape=(size), dtype='float64')
+        img2 = [[1.0 ,2.0 ,3.0] * 28 ]* 28 #np.zeros(shape=(size), dtype='float64')
         oneimg = []
 
         mnist_dim = 28
@@ -121,23 +121,26 @@ class Load(enum.Enum):
                 if xx< len(img) and yy  < len(img):
                     colors = img[xx,yy ] # + 16 * img[xx,yy,1] + 256 * img[xx,yy,2]
                     print colors , "color"
-                    if float(img[xx , yy , 0]) < float(205) : ## 255
+                    if float(img[xx , yy , 0]) < float(205) or True: ## 255
                         print xx, yy, (xx-x) * divx, (yy -y) * divy
-                        xy_list.append([(xx -x) * divx , (yy-y) * divy ])
+                        xy_list.append([int ((xx -x) * divx) , int( (yy-y) * divy), list(img[xx,yy]) ])
 
         ''' Put list in 28 x 28 array. '''
         if len(xy_list) == 0:
-            xy_list = [[0, 0]]
-            #print "len zero" , filename
+            xy_list = [[0, 0,[0,0,0]]]
+            print "len zero" , filename
         for q in xy_list:
             if (q[0] < 28) and (q[1] < 28) and (q[0] >= 0) and (q[1] >= 0):
-                # print (q[0], q[1])
-                img2[int(math.floor(q[0])), int(math.floor(q[1]))] = 1
+                print q[0], q[1], q[2], q
+                print  img2
+                img2[int(math.floor(q[0]))][ int(math.floor(q[1]))] =   q[2]
+            else :
+                print "exception" , q
 
         ''' Then add entire array to oneimg variable and flatten.'''
         for x in range(28):
             for y in range(28):
-                oneimg.append(img2[x, y])
+                oneimg.append(img2[x][ y])
 
         #oneindex, unused = get_number(filename, load_type)
         return oneimg #, oneindex
@@ -147,7 +150,8 @@ class Load(enum.Enum):
         for y in range(28):
             for x in range(28):
                 out = " "
-                if img[y * 28 + x] > 0: out = "X"
+                if img[y * 28 + x][0] > 0: out = "X"
+                out = str(img[y *28 +x][0])
                 sys.stdout.write(out)
             print "|"
         print "---------------"
