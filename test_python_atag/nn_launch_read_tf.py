@@ -18,19 +18,22 @@ class Read( enum.Enum) :
     def run_mnist(self):
         print
         ll = loader.Load(self.a)
-        train, test = ll.get_mnist_dat()
-        '''
+        #train, test = ll.get_mnist_dat()
+
         nn = model.NN(self.a)
         nn.load_ckpt = True
         nn.save_ckpt = False
-        nn.train = False
+        nn.train = True
         nn.test = True
-        nn.set_mnist_train_test(train,test,100)
+        nn.set_loader(ll)
+
+        #nn.set_mnist_train_test(train,test,100)
         nn.mnist_setup()
-        nn.set_mnist_train_test(train,test, 50)
+
+        #nn.set_mnist_train_test(train,test, 50)
         nn.conv_setup()
-        '''
-        ll.get_csv_image_dat()
+
+        #ll.get_csv_image_dat()
 
 if __name__ == '__main__':
     a = aa.Dotfolder()

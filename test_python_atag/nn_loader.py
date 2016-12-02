@@ -17,9 +17,17 @@ class Load(enum.Enum):
         self.label = []
         self.image = []
         self.dat = [] ## this is the raw csv data
+        #self.dat_subset = []
         self.iter = 0
 
         self.inspection_num = 0
+
+        #self.dat = []
+        #self.iter = 0
+        with open(self.csv_input, 'r') as f:
+            for line in f:
+                self._process_read_line(line)
+            f.close()
 
     def get_mnist_dat(self):
         from tensorflow.examples.tutorials.mnist import input_data
@@ -47,19 +55,35 @@ class Load(enum.Enum):
         print self.mnist_train
         return self.mnist_train, self.mnist_test
 
+    def get_mnist_next_train(self, batchsize, cursor):
+        print batchsize, cursor, "here"
+        ##self.dat_subset = self.dat[cursor * batchsize, cursor * batchsize + batchsize]
+        images, lables = self._get_pixels_from_dat(cursor * batchsize, cursor * batchsize + batchsize)
+        return images, lables
+
+    def get_mnist_next_test(self, batchsize):
+        images, labels = self._get_pixels_from_dat( len(self.dat) - batchsize, len(self.dat))
+        self.mnist_test = Map({'images':images, 'labels': labels})
+        return self.mnist_test
+
     def get_csv_image_dat(self):
+        '''
         self.dat = []
         self.iter = 0
         with open(self.csv_input, 'r') as f:
             for line in f:
-                self.process_read_line(line)
+                self._process_read_line(line)
             f.close()
-        images, lables = self.get_pixels_from_dat()
+        '''
+        images, lables = self._get_pixels_from_dat(0, len(self.dat))
         return images, lables
 
-    def get_pixels_from_dat(self):
+    def _get_pixels_from_dat(self, start, stop):
         print "work with dat var"
-        while self.iter < len(self.dat) :
+        self.image = []
+        self.label = []
+        self.iter = start
+        while self.iter < stop :
             filename = self.image_folder + os.sep + self.dat[self.iter][self.FILE]
             x = self.dat[self.iter][self.FACE_X]
             y = self.dat[self.iter][self.FACE_Y]
@@ -82,7 +106,7 @@ class Load(enum.Enum):
             self.iter = self.iter + 1
         return self.image, self.label
 
-    def process_read_line(self, line):
+    def _process_read_line(self, line):
         print line
         row = []
         strings = line.rstrip("\r\n").split(",")
@@ -102,7 +126,7 @@ class Load(enum.Enum):
     def look_at_img(self, filename, x = 0, y = 0, width = 28, height = 28):
         img = Image.open(open(filename))
         size = 28, 28
-        img2 = [[1.0 ,2.0 ,3.0] * 28 ]* 28 #np.zeros(shape=(size), dtype='float64')
+        img2 = [[0.0 ,0.0 ,0.0] * 28 ]* 28
         oneimg = []
 
         mnist_dim = 28
@@ -119,23 +143,23 @@ class Load(enum.Enum):
             for yy in range(y + 0, y + height):
                 #print img[xx,yy,0]
                 if xx< len(img) and yy  < len(img):
-                    colors = img[xx,yy ] # + 16 * img[xx,yy,1] + 256 * img[xx,yy,2]
-                    print colors , "color"
+                    #colors = img[xx,yy ] # + 16 * img[xx,yy,1] + 256 * img[xx,yy,2]
+                    #print colors , "color"
                     if float(img[xx , yy , 0]) < float(205) or True: ## 255
-                        print xx, yy, (xx-x) * divx, (yy -y) * divy
+                        #print xx, yy, (xx-x) * divx, (yy -y) * divy
                         xy_list.append([int ((xx -x) * divx) , int( (yy-y) * divy), list(img[xx,yy]) ])
 
         ''' Put list in 28 x 28 array. '''
         if len(xy_list) == 0:
             xy_list = [[0, 0,[0,0,0]]]
-            print "len zero" , filename
+            #print "len zero" , filename
         for q in xy_list:
             if (q[0] < 28) and (q[1] < 28) and (q[0] >= 0) and (q[1] >= 0):
-                print q[0], q[1], q[2], q
-                print  img2
+                #print q[0], q[1], q[2], q
+                #print  img2
                 img2[int(math.floor(q[0]))][ int(math.floor(q[1]))] =   q[2]
-            else :
-                print "exception" , q
+            #else :
+            #    print "exception" , q
 
         ''' Then add entire array to oneimg variable and flatten.'''
         for x in range(28):

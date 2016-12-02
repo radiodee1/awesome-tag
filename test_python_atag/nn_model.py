@@ -20,6 +20,9 @@ class NN(object):
         self.mnist_train = []
         self.mnist_test = []
 
+        self.loader = []
+        self.use_loader = False
+
         self.cursor = 0
         self.cursor_tot = 0
         self.batchsize = 100
@@ -55,6 +58,7 @@ class NN(object):
             correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
             accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
+            if self.use_loader : self.get_mnist_next_test(self.batchsize)
             print(self.sess.run(accuracy, feed_dict={x: self.mnist_test.images, y_: self.mnist_test.labels}))
 
     def conv_setup(self):
@@ -127,6 +131,7 @@ class NN(object):
         if self.save_ckpt : self.save('conv')
 
         if self.test :
+            if self.use_loader : self.get_mnist_next_test(self.batchsize)
             print("test accuracy %g" % accuracy.eval(feed_dict={
                 x: self.mnist_test.images, y_: self.mnist_test.labels, keep_prob: 1.0}))
 
@@ -162,10 +167,24 @@ class NN(object):
             self.mnist_test = input_data.read_data_sets("MNIST_data/", one_hot=True).test
         print "in"
 
-    def get_mnist_next_train(self, batchsize):
+    def set_loader(self, load):
+        self.loader = load
+        self.cursor = 0
+        self.use_loader = True
 
-        images = self.mnist_train.images[self.cursor * batchsize : self.cursor * batchsize + batchsize]
-        lables = self.mnist_train.labels[self.cursor * batchsize : self.cursor * batchsize + batchsize]
-        self.cursor = self.cursor + 1
+    def get_mnist_next_train(self, batchsize):
+        if not self.use_loader :
+            images = self.mnist_train.images[self.cursor * batchsize : self.cursor * batchsize + batchsize]
+            lables = self.mnist_train.labels[self.cursor * batchsize : self.cursor * batchsize + batchsize]
+            self.cursor = self.cursor + 1
+        else:
+            self.cursor_tot = int(len(self.loader.dat)/ batchsize)
+            if self.cursor < self.cursor_tot :
+                images, lables = self.loader.get_mnist_next_train(batchsize, self.cursor)
+                print "next train batch"
+            self.cursor = self.cursor + 1
         #print lables, "lables"
         return  images, lables
+
+    def get_mnist_next_test(self, batchsize):
+        self.mnist_test = self.loader.get_mnist_next_test(batchsize)
