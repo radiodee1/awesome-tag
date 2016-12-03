@@ -79,7 +79,7 @@ class Load(enum.Enum):
         return images, lables
 
     def _get_pixels_from_dat(self, start, stop):
-        print ("work with dat var")
+        #print ("work with dat var")
         self.image = []
         self.label = []
         self.iter = start
@@ -98,7 +98,7 @@ class Load(enum.Enum):
 
             print (self.iter, filename)
 
-            if self.inspection_num == self.iter or True :
+            if self.inspection_num == self.iter and False :
                 self.print_block(img)
                 self.print_block(three[:28*28])
                 self.print_block(three[28*28:28*28*2])
@@ -156,7 +156,7 @@ class Load(enum.Enum):
         counter = 0
 
         ''' Put in shrunk form. '''
-        if not len (img.getpixel((0,0))) < 3 :
+        if not len (img.getbands()) < 3 :
             if not (x + width > dimx and y + height > dimy) :
 
                 for aa in range(28) :
