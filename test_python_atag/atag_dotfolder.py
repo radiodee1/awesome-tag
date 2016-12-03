@@ -55,7 +55,7 @@ class Dotfolder(object):
     def dot_write(self, name, value):
         f = open( self.FOLDER_FULL_DOTFOLDER + os.sep + name , 'w')
         f.write(value+"\n")
-        print value
+        #print value
 
     def load_vars(self):
         self.VAR_BASE_NAME = self.dot_read(self.FOLDER_BASE_NAME)
@@ -93,5 +93,5 @@ if __name__ == '__main__':
     d.dot_write(d.FOLDER_IMAGE_NAME, "/home/dave/image.png")
     print (d.dot_read(d.FOLDER_IMAGE_NAME))
     d.VAR_IMAGE_NAME = d.dot_read(d.FOLDER_IMAGE_NAME)
-    print d.VAR_IMAGE_NAME
+    print ( d.VAR_IMAGE_NAME)
     print("done")

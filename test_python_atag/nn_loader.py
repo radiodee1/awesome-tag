@@ -52,11 +52,11 @@ class Load(enum.Enum):
             self.mnist_train = mnist.train
             self.mnist_test = mnist.test
 
-        print self.mnist_train
+        #print (self.mnist_train)
         return self.mnist_train, self.mnist_test
 
     def get_mnist_next_train(self, batchsize, cursor):
-        print batchsize, cursor, "here"
+        #print batchsize, cursor, "here"
         ##self.dat_subset = self.dat[cursor * batchsize, cursor * batchsize + batchsize]
         images, lables = self._get_pixels_from_dat(cursor * batchsize, cursor * batchsize + batchsize)
         return images, lables
@@ -79,7 +79,7 @@ class Load(enum.Enum):
         return images, lables
 
     def _get_pixels_from_dat(self, start, stop):
-        print "work with dat var"
+        print ("work with dat var")
         self.image = []
         self.label = []
         self.iter = start
@@ -96,7 +96,7 @@ class Load(enum.Enum):
 
             img = self.look_at_img(filename,x,y,width,height)
 
-            print self.iter, filename
+            print (self.iter, filename)
 
             if self.inspection_num == self.iter or True :
                 self.print_block(img)
@@ -105,6 +105,7 @@ class Load(enum.Enum):
             lbl_1 = 0
             lbl_2 = 0
             if self.dat[self.iter][self.IS_FACE] == 1: lbl_1 = 1
+            else : lbl_2 = 1
 
             self.image.append(img)
             self.label.append([lbl_1,lbl_2])
@@ -112,7 +113,7 @@ class Load(enum.Enum):
         return self.image, self.label
 
     def _process_read_line(self, line):
-        print line
+        #print line
         row = []
         strings = line.rstrip("\r\n").split(",")
         try:
@@ -129,72 +130,95 @@ class Load(enum.Enum):
 
 
     def look_at_img(self, filename, x = 0, y = 0, width = 28, height = 28):
-        img = Image.open(open(filename))
-        size = 28, 28
-        img2 = [[0.0 ,0.0 ,0.0] * 28 ]* 28
-        img2 = [[0] * 28] * 28
-        oneimg = []
+        #img = Image.open(open(filename))
+        img = Image.open(filename)
 
-        #width = 28
-        #height = 28
+        img2 = [[0] * 28] * 28
+        img2 = np.asarray(img2, dtype="float64") ## 'img2' MUST BE A NUMPY ARRAY!!
+
+        img3 = [[0] * 28 ] * 28
+        img3 = np.asarray(img3, dtype="float64")
+
+        oneimg = []
+        threeimg = []
 
         mnist_dim = 28
-        divx = mnist_dim / float(width)
-        divy = mnist_dim / float(height)
+
         multx = width / float(mnist_dim)
         multy = height / float(mnist_dim)
-        #divx = 1/divx
-        #divy = 1/divy
-        #print div
+
         xy_list = []
         dimx, dimy = img.size
-        img = np.asarray(img, dtype='float64')
 
-        print  dimx, dimy, "size", self.iter, "mult", multx, multy, "w/h", width, height
+        counter = 0
 
         ''' Put in shrunk form. '''
-        if not len (img.shape) < 3 :
+        if not len (img.getpixel((0,0))) < 3 :
             if not (x + width > dimx and y + height > dimy) :
 
                 for aa in range(28) :
                     for bb in range(28) :
                         astart = x + aa * multx
                         bstart = y + bb * multy
-                        #print astart, bstart
+
                         if True or (astart < 28 and astart >=0 and bstart < 28 and bstart >=0 ) :
-                            item = [ aa, bb, list(img[int(bstart), int(astart)])]
+                            item = [ aa, bb, list(img.getpixel((int(astart) ,int(bstart))))]
                             xy_list.append(item)
+                            counter = counter + 1
 
 
         ''' Put list in 28 x 28 array. '''
-        print xy_list
-        print len(xy_list),'len'
         if len(xy_list) == 0:
             xy_list = [[0, 0,[0,0,0]]]
-
+        ''' just one color '''
         for i in range(len(xy_list)):
             q = xy_list[i]
-            #print q
-            if (q[0] < 28) and (q[1] < 28) and (q[0] >= 0) and (q[1] >= 0) :# and img2[int(q[0])] [ int(q[1])]  == -1:
-                img2[int(q[0])]  [ int(q[1])] =   q[2][0]
+            color = q[2][0]
+            img2[int(q[0]), int(q[1])] =   color
 
         ''' Then add entire array to oneimg variable and flatten.'''
         for yz in range(28):
             for xz in range(28):
                 oneimg.append(img2[yz][xz])
 
-        return oneimg #, oneindex
+        ''' Three color channels '''
+        if len(xy_list) == 28 * 28 :
+            for i in range(len(xy_list)):
+                q = xy_list[i]
+                color = q[2][0]
+                img3 [int(q[0]), int(q[1])] = color
+            for yz in range(28):
+                for xz in range(28):
+                    threeimg.append(img3[yz][xz])
+
+            for i in range(len(xy_list)):
+                q = xy_list[i]
+                color = q[2][1]
+                img3 [int(q[0]), int(q[1])] = color
+            for yz in range(28):
+                for xz in range(28):
+                    threeimg.append(img3[yz][xz])
+
+            for i in range(len(xy_list)):
+                q = xy_list[i]
+                color = q[2][2]
+                img3 [int(q[0]), int(q[1])] = color
+            for yz in range(28):
+                for xz in range(28):
+                    threeimg.append(img3[yz][xz])
+
+        return oneimg
 
     def print_block(self, img):
-        #print (img)
+        print (np.asarray(img).shape,"block")
         for x in range(28):
             for y in range(28):
                 out = " "
-                #if img[y * 28 + x] > 0: out = "X"
-                out = str(img[x *28 + y]) +" "
+                if img[y * 28 + x] > 200: out = "X"
+                #out = str(img[x *28 + y]) +" "
                 sys.stdout.write(out)
-            print "|"
-        print "---------------"
+            print ("|")
+        print ("---------------")
 
 class Map(dict):
 

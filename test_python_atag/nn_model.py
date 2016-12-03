@@ -143,14 +143,14 @@ class NN(object):
             os.makedirs(folder)
         saver = tf.train.Saver()
         save_path = saver.save(self.sess, folder + os.sep + self.ckpt_name + "."+ filename+ ".ckpt")
-        print "saved?", filename
+        print ("saved?", filename)
 
     def load(self, filename):
         file = self.ckpt_folder + os.sep + "ckpt" + os.sep + self.ckpt_name +"."+ filename + ".ckpt"
         if os.path.isfile(file) :
             saver = tf.train.Saver()
             saver.restore(self.sess, file)
-            print "load?", filename
+            print ("load?", filename)
 
 
     def set_mnist_train_test(self, valtrain = None, valtest = None, batchsize = 50):
@@ -167,7 +167,7 @@ class NN(object):
             self.mnist_test = valtest
         else:
             self.mnist_test = input_data.read_data_sets("MNIST_data/", one_hot=True).test
-        print "in"
+        print ("in")
 
     def set_loader(self, load):
         self.loader = load
@@ -183,7 +183,7 @@ class NN(object):
             self.cursor_tot = int(len(self.loader.dat)/ batchsize)
             if self.cursor < self.cursor_tot :
                 images, lables = self.loader.get_mnist_next_train(batchsize, self.cursor)
-                print "next train batch"
+                print ("next train batch")
             self.cursor = self.cursor + 1
         #print lables, "lables"
         return  images, lables
