@@ -94,12 +94,15 @@ class Load(enum.Enum):
                 self.iter = self.iter + 1
                 continue
 
-            img = self.look_at_img(filename,x,y,width,height)
+            img , three = self.look_at_img(filename,x,y,width,height)
 
             print (self.iter, filename)
 
             if self.inspection_num == self.iter or True :
                 self.print_block(img)
+                self.print_block(three[:28*28])
+                self.print_block(three[28*28:28*28*2])
+                self.print_block(three[28*28*2:])
                 sys.exit()
 
             lbl_1 = 0
@@ -207,10 +210,9 @@ class Load(enum.Enum):
                 for xz in range(28):
                     threeimg.append(img3[yz][xz])
 
-        return oneimg
+        return oneimg, threeimg
 
     def print_block(self, img):
-        print (np.asarray(img).shape,"block")
         for x in range(28):
             for y in range(28):
                 out = " "
