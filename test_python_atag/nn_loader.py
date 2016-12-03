@@ -132,7 +132,7 @@ class Load(enum.Enum):
         img = Image.open(open(filename))
         size = 28, 28
         img2 = [[0.0 ,0.0 ,0.0] * 28 ]* 28
-        img2 = [[-1] * 28] * 28
+        img2 = [[0] * 28] * 28
         oneimg = []
 
         #width = 28
@@ -141,26 +141,30 @@ class Load(enum.Enum):
         mnist_dim = 28
         divx = mnist_dim / float(width)
         divy = mnist_dim / float(height)
+        multx = width / float(mnist_dim)
+        multy = height / float(mnist_dim)
         #divx = 1/divx
         #divy = 1/divy
         #print div
         xy_list = []
         dimx, dimy = img.size
         img = np.asarray(img, dtype='float64')
-        #xy_list2 = []
-        print  dimx, dimy, "size", self.iter, "division", divx, divy
+
+        print  dimx, dimy, "size", self.iter, "mult", multx, multy, "w/h", width, height
 
         ''' Put in shrunk form. '''
         if not len (img.shape) < 3 :
             if not (x + width > dimx and y + height > dimy) :
-                for xx in range(x , x + width):
-                    for yy in range(y , y + height):
-                        if (xx -x ) * divx < dimx  and (yy - y) * divy  < dimy and xx < dimx -1 and yy < dimy -1 :
-                            item = [int ((xx -x) * divx) , int( (yy-y) * divy), list(img[yy,xx]) ]
 
-                            if True: # or [int ((xx -x) * divx) , int( (yy-y) * divy)]  not in xy_list2 :
-                                #xy_list2.append([int ((xx -x) * divx) , int( (yy-y) * divy)])
-                                xy_list.append(item)
+                for aa in range(28) :
+                    for bb in range(28) :
+                        astart = x + aa * multx
+                        bstart = y + bb * multy
+                        #print astart, bstart
+                        if True or (astart < 28 and astart >=0 and bstart < 28 and bstart >=0 ) :
+                            item = [ aa, bb, list(img[int(bstart), int(astart)])]
+                            xy_list.append(item)
+
 
         ''' Put list in 28 x 28 array. '''
         print xy_list
