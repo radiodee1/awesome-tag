@@ -1,5 +1,5 @@
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageFile
 import math
 import os
 import sys
@@ -21,6 +21,7 @@ class Load(enum.Enum):
         #self.dat_subset = []
         self.iter = 0
 
+        ImageFile.LOAD_TRUNCATED_IMAGES = True
         self.inspection_num = 0
 
         ''' Read csv file '''
@@ -66,7 +67,8 @@ class Load(enum.Enum):
         return images, lables
 
     def get_mnist_next_test(self, batchsize, num_channels = 1):
-        three, images, labels = self._get_pixels_from_dat( len(self.dat) - batchsize, len(self.dat))
+        three, images, labels = self._get_pixels_from_dat( 0, batchsize) #len(self.dat) - batchsize, len(self.dat))
+        print ("test", len(images), batchsize)
         if num_channels == 1 : self.mnist_test = Map({'images':images, 'labels': labels})
         if num_channels == 3 : self.mnist_test = Map({'images':three, 'labels':labels})
         return self.mnist_test
@@ -78,15 +80,19 @@ class Load(enum.Enum):
         self.label = []
         self.image_x3 = []
         self.iter = start
-        while self.iter < stop :
+        while self.iter < stop and stop < len(self.dat) :
             filename = self.image_folder + os.sep + self.dat[self.iter][self.FILE]
             x = self.dat[self.iter][self.FACE_X]
             y = self.dat[self.iter][self.FACE_Y]
             width = self.dat[self.iter][self.FACE_WIDTH]
             height = self.dat[self.iter][self.FACE_HEIGHT]
 
-            if not (os.path.isfile(filename) and width >=28 and height >= 28) :
+
+            #testimage = Image.open(filename)
+
+            if not (os.path.isfile(filename) and width >=28 and height >= 28 and len(Image.open(filename).getbands()) >=3) :
                 self.iter = self.iter + 1
+                stop = stop + 1
                 continue
 
             img , three = self.look_at_img(filename,x,y,width,height)

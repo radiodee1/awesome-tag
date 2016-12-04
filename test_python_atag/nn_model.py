@@ -184,8 +184,9 @@ class NN(object):
             self.cursor = self.cursor + 1
             print ("not use loader")
         else:
-            print (len(self.loader.dat), self.cursor_tot, "len,tot")
+            print (len(self.loader.dat), self.cursor_tot, self.cursor, "len,tot,cursor")
             if self.cursor < self.cursor_tot :
+
                 images, lables = self.loader.get_mnist_next_train(batchsize, self.cursor, num_channels)
                 #print ("next train batch")
             self.cursor = self.cursor + 1

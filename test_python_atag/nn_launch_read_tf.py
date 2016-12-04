@@ -22,19 +22,19 @@ class Read( enum.Enum) :
 
         nn = model.NN(self.a)
         nn.load_ckpt = True
-        nn.save_ckpt = True
-        nn.train = True
+        nn.save_ckpt = False
+        nn.train = False
         nn.test = True
         nn.set_loader(ll)
 
         nn.set_vars(len(ll.dat), 100)
 
-        #nn.set_mnist_train_test(train,test,100)
+
         nn.mnist_setup()
 
         nn.set_vars(len(ll.dat), 50)
-        #nn.set_mnist_train_test(train,test, 50)
-        nn.conv_setup()
+
+        #nn.conv_setup()
 
         #ll.get_csv_image_dat()
 
