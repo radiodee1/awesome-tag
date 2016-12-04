@@ -41,7 +41,8 @@ class Load(enum.Enum):
         return images, lables
 
     def get_mnist_next_test(self, batchsize, num_channels = 1):
-        three, images, labels = self._get_pixels_from_dat( 0,  batchsize) #len(self.dat) - batchsize, len(self.dat))
+        testframe = 0
+        three, images, labels = self._get_pixels_from_dat( testframe * batchsize, testframe * batchsize + batchsize) #len(self.dat) - batchsize, len(self.dat))
         print ("test", len(images), batchsize)
         if num_channels == 1 : self.mnist_test = Map({'images':images, 'labels': labels})
         if num_channels == 3 : self.mnist_test = Map({'images':three, 'labels':labels})
