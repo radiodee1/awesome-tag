@@ -16,19 +16,20 @@ class Load(enum.Enum):
         self.csv_input = atag.VAR_LOCAL_DATABASE + os.sep + atag.VAR_MY_CSV_NAME + ".csv"
         self.label = []
         self.image = []
+        self.image_x3 = []
         self.dat = [] ## this is the raw csv data
         #self.dat_subset = []
         self.iter = 0
 
         self.inspection_num = 0
 
-        #self.dat = []
-        #self.iter = 0
+        ''' Read csv file '''
         with open(self.csv_input, 'r') as f:
             for line in f:
                 self._process_read_line(line)
             f.close()
 
+    '''
     def get_mnist_dat(self):
         from tensorflow.examples.tutorials.mnist import input_data
 
@@ -54,34 +55,28 @@ class Load(enum.Enum):
 
         #print (self.mnist_train)
         return self.mnist_train, self.mnist_test
+    '''
 
-    def get_mnist_next_train(self, batchsize, cursor):
+    def get_mnist_next_train(self, batchsize, cursor, num_channels = 1):
         #print batchsize, cursor, "here"
         ##self.dat_subset = self.dat[cursor * batchsize, cursor * batchsize + batchsize]
-        images, lables = self._get_pixels_from_dat(cursor * batchsize, cursor * batchsize + batchsize)
+        three, images, lables = self._get_pixels_from_dat(cursor * batchsize, cursor * batchsize + batchsize)
+        if num_channels == 1 : return images, lables
+        if num_channels == 3 : return three, lables
         return images, lables
 
-    def get_mnist_next_test(self, batchsize):
-        images, labels = self._get_pixels_from_dat( len(self.dat) - batchsize, len(self.dat))
-        self.mnist_test = Map({'images':images, 'labels': labels})
+    def get_mnist_next_test(self, batchsize, num_channels = 1):
+        three, images, labels = self._get_pixels_from_dat( len(self.dat) - batchsize, len(self.dat))
+        if num_channels == 1 : self.mnist_test = Map({'images':images, 'labels': labels})
+        if num_channels == 3 : self.mnist_test = Map({'images':three, 'labels':labels})
         return self.mnist_test
 
-    def get_csv_image_dat(self):
-        '''
-        self.dat = []
-        self.iter = 0
-        with open(self.csv_input, 'r') as f:
-            for line in f:
-                self._process_read_line(line)
-            f.close()
-        '''
-        images, lables = self._get_pixels_from_dat(0, len(self.dat))
-        return images, lables
 
     def _get_pixels_from_dat(self, start, stop):
         #print ("work with dat var")
         self.image = []
         self.label = []
+        self.image_x3 = []
         self.iter = start
         while self.iter < stop :
             filename = self.image_folder + os.sep + self.dat[self.iter][self.FILE]
@@ -111,9 +106,10 @@ class Load(enum.Enum):
             else : lbl_2 = 1
 
             self.image.append(img)
+            self.image_x3.append(three)
             self.label.append([lbl_1,lbl_2])
             self.iter = self.iter + 1
-        return self.image, self.label
+        return self.image_x3, self.image, self.label
 
     def _process_read_line(self, line):
         #print line
@@ -164,7 +160,7 @@ class Load(enum.Enum):
                         astart = x + aa * multx
                         bstart = y + bb * multy
 
-                        if True or (astart < 28 and astart >=0 and bstart < 28 and bstart >=0 ) :
+                        if  (astart < 28 and astart >=0 and bstart < 28 and bstart >=0 ) :
                             item = [ aa, bb, list(img.getpixel((int(astart) ,int(bstart))))]
                             xy_list.append(item)
                             counter = counter + 1

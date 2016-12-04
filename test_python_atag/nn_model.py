@@ -174,19 +174,24 @@ class NN(object):
         self.cursor = 0
         self.use_loader = True
 
-    def get_mnist_next_train(self, batchsize):
+    def set_vars(self, length,  batchsize):
+        self.cursor_tot = int(length / batchsize)
+
+    def get_mnist_next_train(self, batchsize, num_channels = 1):
         if not self.use_loader :
             images = self.mnist_train.images[self.cursor * batchsize : self.cursor * batchsize + batchsize]
             lables = self.mnist_train.labels[self.cursor * batchsize : self.cursor * batchsize + batchsize]
             self.cursor = self.cursor + 1
+            print ("not use loader")
         else:
-            self.cursor_tot = int(len(self.loader.dat)/ batchsize)
+            print (len(self.loader.dat), self.cursor_tot, "len,tot")
             if self.cursor < self.cursor_tot :
-                images, lables = self.loader.get_mnist_next_train(batchsize, self.cursor)
+                images, lables = self.loader.get_mnist_next_train(batchsize, self.cursor, num_channels)
                 #print ("next train batch")
             self.cursor = self.cursor + 1
         #print lables, "lables"
         return  images, lables
 
-    def get_mnist_next_test(self, batchsize):
-        self.mnist_test = self.loader.get_mnist_next_test(batchsize)
+    def get_mnist_next_test(self, batchsize, num_channels = 1):
+        print ("test", self.cursor_tot)
+        self.mnist_test = self.loader.get_mnist_next_test(batchsize, num_channels)
