@@ -30,33 +30,7 @@ class Load(enum.Enum):
                 self._process_read_line(line)
             f.close()
 
-    '''
-    def get_mnist_dat(self):
-        from tensorflow.examples.tutorials.mnist import input_data
 
-
-        train = [0] * 784
-        test = [0] * 784
-        labels = [0] * 10
-
-        train = [train * 200]
-        test = [test]
-        labels_train = [labels * 200]
-        train = np.reshape(train, (-1,784))
-        labels = [labels]
-        labels_train = np.reshape(labels_train, (-1, 10))
-
-        self.mnist_train = Map({'images':train, 'labels': labels_train})
-        self.mnist_test = Map({'images':test, 'labels': labels})
-
-        if self.load_official_mnist :
-            mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
-            self.mnist_train = mnist.train
-            self.mnist_test = mnist.test
-
-        #print (self.mnist_train)
-        return self.mnist_train, self.mnist_test
-    '''
 
     def get_mnist_next_train(self, batchsize, cursor, num_channels = 1):
         #print batchsize, cursor, "here"
@@ -67,7 +41,7 @@ class Load(enum.Enum):
         return images, lables
 
     def get_mnist_next_test(self, batchsize, num_channels = 1):
-        three, images, labels = self._get_pixels_from_dat( 0, batchsize) #len(self.dat) - batchsize, len(self.dat))
+        three, images, labels = self._get_pixels_from_dat( 0,  batchsize) #len(self.dat) - batchsize, len(self.dat))
         print ("test", len(images), batchsize)
         if num_channels == 1 : self.mnist_test = Map({'images':images, 'labels': labels})
         if num_channels == 3 : self.mnist_test = Map({'images':three, 'labels':labels})
@@ -96,6 +70,7 @@ class Load(enum.Enum):
                 continue
 
             img , three = self.look_at_img(filename,x,y,width,height)
+            #print three, "three"
 
             print (self.iter, filename)
 
@@ -187,7 +162,9 @@ class Load(enum.Enum):
                 oneimg.append(img2[yz][xz])
 
         ''' Three color channels '''
-        if len(xy_list) == 28 * 28 :
+        if len(xy_list) >= 28 * 28 or True:
+            img3 = [[0] * 28] * 28
+            img3 = np.asarray(img3, dtype="float64")
             for i in range(len(xy_list)):
                 q = xy_list[i]
                 color = q[2][0]
@@ -196,6 +173,8 @@ class Load(enum.Enum):
                 for xz in range(28):
                     threeimg.append(img3[yz][xz])
 
+            img3 = [[0] * 28] * 28
+            img3 = np.asarray(img3, dtype="float64")
             for i in range(len(xy_list)):
                 q = xy_list[i]
                 color = q[2][1]
@@ -204,6 +183,8 @@ class Load(enum.Enum):
                 for xz in range(28):
                     threeimg.append(img3[yz][xz])
 
+            img3 = [[0] * 28] * 28
+            img3 = np.asarray(img3, dtype="float64")
             for i in range(len(xy_list)):
                 q = xy_list[i]
                 color = q[2][2]

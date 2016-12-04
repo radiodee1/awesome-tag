@@ -29,9 +29,10 @@ class NN(object):
 
     def mnist_setup(self):
         output = 2
+        input_num = 784 * 3
 
-        x = tf.placeholder(tf.float32, [None, 784])
-        W = tf.Variable(tf.zeros([784, output]))
+        x = tf.placeholder(tf.float32, [None, input_num])
+        W = tf.Variable(tf.zeros([input_num, output]))
         b = tf.Variable(tf.zeros([output]))
 
         y = tf.nn.softmax(tf.matmul(x, W) + b)
@@ -49,17 +50,17 @@ class NN(object):
 
         if self.train :
             self.cursor = 0
-            for i in range(self.cursor_tot): #1000
-                batch_xs, batch_ys = self.get_mnist_next_train(self.batchsize)#self.mnist_train.next_batch(100)
+            for i in range(1,self.cursor_tot): #1000
+                batch_xs, batch_ys = self.get_mnist_next_train(self.batchsize, 3)#self.mnist_train.next_batch(100)
                 self.sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
 
-        if self.save_ckpt : self.save('softmax')
+        if self.save_ckpt and self.train : self.save('softmax')
 
         if self.test :
             correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
             accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-            if self.use_loader : self.get_mnist_next_test(self.batchsize)
+            if self.use_loader : self.get_mnist_next_test(self.batchsize, 3)
             print(self.sess.run(accuracy, feed_dict={x: self.mnist_test.images, y_: self.mnist_test.labels}))
 
     def conv_setup(self):
@@ -122,7 +123,7 @@ class NN(object):
 
         if self.train :
             self.cursor = 0
-            for i in range(self.cursor_tot ):
+            for i in range(1,self.cursor_tot ):
                 batch_0, batch_1 = self.get_mnist_next_train(self.batchsize)
                 if i % 100 == 0:
                     train_accuracy = accuracy.eval(feed_dict={
@@ -130,7 +131,7 @@ class NN(object):
                     print("step %d, training accuracy %g" % (i, train_accuracy))
                 train_step.run(feed_dict={x: batch_0, y_: batch_1, keep_prob: 0.5})
 
-        if self.save_ckpt : self.save('conv')
+        if self.save_ckpt and self.train: self.save('conv')
 
         if self.test :
             if self.use_loader : self.get_mnist_next_test(self.batchsize)
@@ -194,5 +195,5 @@ class NN(object):
         return  images, lables
 
     def get_mnist_next_test(self, batchsize, num_channels = 1):
-        print ("test", self.cursor_tot)
+        print ("test", self.cursor_tot, num_channels)
         self.mnist_test = self.loader.get_mnist_next_test(batchsize, num_channels)

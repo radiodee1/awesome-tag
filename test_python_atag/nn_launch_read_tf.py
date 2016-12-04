@@ -22,21 +22,18 @@ class Read( enum.Enum) :
 
         nn = model.NN(self.a)
         nn.load_ckpt = True
-        nn.save_ckpt = False
+        nn.save_ckpt = True
         nn.train = False
         nn.test = True
         nn.set_loader(ll)
 
         nn.set_vars(len(ll.dat), 100)
 
-
         nn.mnist_setup()
 
         nn.set_vars(len(ll.dat), 50)
 
         #nn.conv_setup()
-
-        #ll.get_csv_image_dat()
 
 if __name__ == '__main__':
     a = aa.Dotfolder()
