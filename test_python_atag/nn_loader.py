@@ -77,6 +77,7 @@ class Load(enum.Enum):
 
             if self.inspection_num == self.iter and False :
                 self.print_block(img)
+                print "========="
                 self.print_block(three[:28*28])
                 self.print_block(three[28*28:28*28*2])
                 self.print_block(three[28*28*2:])
@@ -142,7 +143,7 @@ class Load(enum.Enum):
                         astart = x + aa * multx
                         bstart = y + bb * multy
 
-                        if  (astart < 28 and astart >=0 and bstart < 28 and bstart >=0 ) :
+                        if  astart >= 0 and astart < dimx and bstart >= 0 and bstart < dimy :
                             item = [ aa, bb, list(img.getpixel((int(astart) ,int(bstart))))]
                             xy_list.append(item)
                             counter = counter + 1
@@ -201,7 +202,7 @@ class Load(enum.Enum):
             for y in range(28):
                 out = " "
                 if img[y * 28 + x] > 200: out = "X"
-                #out = str(img[x *28 + y]) +" "
+                out = str(img[x *28 + y]) +" "
                 sys.stdout.write(out)
             print ("|")
         print ("---------------")
