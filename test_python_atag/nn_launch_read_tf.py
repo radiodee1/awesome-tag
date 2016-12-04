@@ -23,16 +23,14 @@ class Read( enum.Enum) :
         nn = model.NN(self.a)
         nn.load_ckpt = True
         nn.save_ckpt = True
-        nn.train = False
+        nn.train = True
         nn.test = True
         nn.set_loader(ll)
 
         nn.set_vars(len(ll.dat), 100)
-
         nn.mnist_setup()
 
-        nn.set_vars(len(ll.dat), 50)
-
+        #nn.set_vars(len(ll.dat), 50)
         #nn.conv_setup()
 
 if __name__ == '__main__':
