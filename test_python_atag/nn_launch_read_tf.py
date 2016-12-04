@@ -1,8 +1,11 @@
 import os
+import signal
+import sys
 import atag_csv as enum
 import nn_loader as loader
 import atag_dotfolder as aa
 import nn_model as model
+
 
 '''
 Here we read the csv file that we made and train the models
@@ -14,32 +17,34 @@ class Read( enum.Enum) :
 
         self.a = atag
         self.run_mnist()
+        self.nn = None
 
     def run_mnist(self):
         print
         ll = loader.Load(self.a)
-        #train, test = ll.get_mnist_dat()
+        self.nn = model.NN(self.a)
 
-        nn = model.NN(self.a)
-        nn.load_ckpt = True
-        nn.save_ckpt = True
-        nn.train = True
-        nn.test = True
-        nn.set_loader(ll)
+        signal.signal(signal.SIGINT, self.signal_handler)
 
-        nn.set_vars(len(ll.dat), 100)
-        nn.mnist_setup()
+        self.nn.load_ckpt = True
+        self.nn.save_ckpt = True
+        self.nn.train = True
+        self.nn.test = True
+        self.nn.set_loader(ll)
 
-        #nn.set_vars(len(ll.dat), 50)
-        #nn.conv_setup()
+        self.nn.set_vars(len(ll.dat), 100, "softmax")
+        self.nn.mnist_setup()
+
+        #self.nn.set_vars(len(ll.dat), 50, "conv")
+        #self.nn.conv_setup()
+
+    def signal_handler(self, signum, frame):
+        self.nn.save()
+        sys.exit()
 
 if __name__ == '__main__':
+
     a = aa.Dotfolder()
     r = Read(a)
 
-
-    #d.dot_write(d.FOLDER_IMAGE_NAME, "/home/dave/image.png")
-    #print (d.dot_read(d.FOLDER_IMAGE_NAME))
-    #d.VAR_IMAGE_NAME = d.dot_read(d.FOLDER_IMAGE_NAME)
-    #print d.VAR_IMAGE_NAME
     print("done")

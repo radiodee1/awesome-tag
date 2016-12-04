@@ -61,17 +61,17 @@ class Write( enum.Enum) :
         width = int(line[self.FACE_WIDTH])
         height = int(line[self.FACE_HEIGHT])
 
-        for y in range(2):
+        for y in range(3):
 
             for x in range(self.TOTAL_READ):
-                if y == 0 :
+                if y == 0  :
                     self.f.write(line[x])
 
-                elif y == 1 and x == self.FACE_X:
+                elif (y == 1 or y == 2) and x == self.FACE_X:
                     r = 0
                     if left - width > 0 : r = random.randint(0,left - width)
                     self.f.write(str(r))
-                elif y == 1 and x == self.FACE_Y:
+                elif (y == 1 or y == 2) and x == self.FACE_Y:
                     r = 0
                     if top - height > 0 : r = random.randint(0,top - height)
                     self.f.write(str(r))
@@ -80,9 +80,9 @@ class Write( enum.Enum) :
 
                 if x < self.TOTAL_READ - 1:
                     self.f.write(",")
-                elif y == 0:
+                elif y == 0 :
                     #true
                     self.f.write(",1\n")
-                elif y == 1:
+                elif (y == 1 or y == 2):
                     #false
                     self.f.write(",0\n")
