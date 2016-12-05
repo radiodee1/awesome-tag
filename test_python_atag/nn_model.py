@@ -42,7 +42,7 @@ class NN(object):
 
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_))
 
-        train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
+        train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy) #0.5
         init = tf.initialize_all_variables()
         #self.sess = tf.Session()
         self.sess.run(init)
@@ -60,6 +60,8 @@ class NN(object):
         if self.test :
             correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
             accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+            #print (correct_prediction, accuracy, y, y_)
 
             if self.use_loader : self.get_mnist_next_test(self.batchsize, 3)
             print(self.sess.run(accuracy, feed_dict={x: self.mnist_test.images, y_: self.mnist_test.labels}))

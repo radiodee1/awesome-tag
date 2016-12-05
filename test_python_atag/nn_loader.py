@@ -116,10 +116,10 @@ class Load(enum.Enum):
         img = Image.open(filename)
 
         img2 = [[0] * 28] * 28
-        img2 = np.asarray(img2, dtype="float64") ## 'img2' MUST BE A NUMPY ARRAY!!
+        img2 = np.asarray(img2, dtype="float32") ## 'img2' MUST BE A NUMPY ARRAY!!
 
         img3 = [[0] * 28 ] * 28
-        img3 = np.asarray(img3, dtype="float64")
+        img3 = np.asarray(img3, dtype="float32")
 
         oneimg = []
         threeimg = []
@@ -153,10 +153,11 @@ class Load(enum.Enum):
         if len(xy_list) == 0:
             xy_list = [[0, 0,[0,0,0]]]
         ''' just one color '''
+        high = img.getextrema()[0][1] /2
         for i in range(len(xy_list)):
             q = xy_list[i]
             color = q[2][0]
-            img2[int(q[0]), int(q[1])] =   color
+            if color > high : img2[int(q[0]), int(q[1])] =   color
 
         ''' Then add entire array to oneimg variable and flatten.'''
         for yz in range(28):
@@ -166,31 +167,37 @@ class Load(enum.Enum):
         ''' Three color channels '''
         if len(xy_list) >= 28 * 28 or True:
             img3 = [[0] * 28] * 28
-            img3 = np.asarray(img3, dtype="float64")
+            img3 = np.asarray(img3, dtype="float32")
+            high = img.getextrema()[0][1] / 2
+
             for i in range(len(xy_list)):
                 q = xy_list[i]
                 color = q[2][0]
-                img3 [int(q[0]), int(q[1])] = color
+                if color > high : img3 [int(q[0]), int(q[1])] = color
             for yz in range(28):
                 for xz in range(28):
                     threeimg.append(img3[yz][xz])
 
             img3 = [[0] * 28] * 28
-            img3 = np.asarray(img3, dtype="float64")
+            img3 = np.asarray(img3, dtype="float32")
+            high = img.getextrema()[1][1] / 2
+
             for i in range(len(xy_list)):
                 q = xy_list[i]
                 color = q[2][1]
-                img3 [int(q[0]), int(q[1])] = color
+                if color > high : img3 [int(q[0]), int(q[1])] = color
             for yz in range(28):
                 for xz in range(28):
                     threeimg.append(img3[yz][xz])
 
             img3 = [[0] * 28] * 28
-            img3 = np.asarray(img3, dtype="float64")
+            img3 = np.asarray(img3, dtype="float32")
+            high = img.getextrema()[2][1] / 2
+
             for i in range(len(xy_list)):
                 q = xy_list[i]
                 color = q[2][2]
-                img3 [int(q[0]), int(q[1])] = color
+                if color > high : img3 [int(q[0]), int(q[1])] = color
             for yz in range(28):
                 for xz in range(28):
                     threeimg.append(img3[yz][xz])
