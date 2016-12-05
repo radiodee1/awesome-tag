@@ -29,9 +29,9 @@ class NN(object):
         self.save_name = ""
 
     def mnist_setup(self):
-        output_num = 2
-        mid_num = 10
         input_num = 784 * 3
+        mid_num = 10
+        output_num = 2
 
         x = tf.placeholder(tf.float32, [None, input_num])
         W_1 = tf.Variable(tf.zeros([input_num, mid_num]))
@@ -48,17 +48,21 @@ class NN(object):
         #cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_))
 
-        train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy) #0.5
+        #train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy) #0.5
+        train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
+
         init = tf.initialize_all_variables()
         #self.sess = tf.Session()
         self.sess.run(init)
+
+        #summary_writer = tf.train.SummaryWriter("/home/dave/workspace/ATAG/logs/", self.sess.graph)
 
         if self.load_ckpt : self.load()
 
         if self.train :
             self.cursor = 0
             for i in range(1,self.cursor_tot): #1000
-                batch_xs, batch_ys = self.get_mnist_next_train(self.batchsize, 3)#self.mnist_train.next_batch(100)
+                batch_xs, batch_ys = self.get_mnist_next_train(self.batchsize, 3)
                 self.sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
 
         if self.save_ckpt and self.train : self.save()
@@ -67,7 +71,8 @@ class NN(object):
             correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
             accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-            #print (correct_prediction, accuracy, y, y_)
+            #print self.sess.run(y_)
+            #print "here"
 
             if self.use_loader : self.get_mnist_next_test(self.batchsize, 3)
             print(self.sess.run(accuracy, feed_dict={x: self.mnist_test.images, y_: self.mnist_test.labels}))

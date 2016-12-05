@@ -22,7 +22,7 @@ class Load(enum.Enum):
         self.iter = 0
 
         ImageFile.LOAD_TRUNCATED_IMAGES = True
-        self.inspection_num = 0
+        self.inspection_num = 2
 
         ''' Read csv file '''
         with open(self.csv_input, 'r') as f:
@@ -70,23 +70,26 @@ class Load(enum.Enum):
                 stop = stop + 1
                 continue
 
+            lbl_1 = 0
+            lbl_2 = 0
+            if self.dat[self.iter][self.IS_FACE] == 1:
+                lbl_1 = 1
+            else:
+                lbl_2 = 1
+
             img , three = self.look_at_img(filename,x,y,width,height)
             #print three, "three"
 
             print (self.iter, filename)
 
-            if self.inspection_num == self.iter and False :
+            if self.inspection_num >= self.iter and False :
                 self.print_block(img)
                 print "========="
                 self.print_block(three[:28*28])
                 self.print_block(three[28*28:28*28*2])
                 self.print_block(three[28*28*2:])
-                sys.exit()
-
-            lbl_1 = 0
-            lbl_2 = 0
-            if self.dat[self.iter][self.IS_FACE] == 1: lbl_1 = 1
-            else : lbl_2 = 1
+                print [lbl_1, lbl_2]
+                #sys.exit()
 
             self.image.append(img)
             self.image_x3.append(three)
