@@ -61,7 +61,7 @@ class Write( enum.Enum) :
         width = int(line[self.FACE_WIDTH])
         height = int(line[self.FACE_HEIGHT])
 
-        for y in range(3):
+        for y in range(2): #3
 
             for x in range(self.TOTAL_READ):
                 if y == 0  :
