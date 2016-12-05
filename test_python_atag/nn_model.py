@@ -29,19 +29,24 @@ class NN(object):
         self.save_name = ""
 
     def mnist_setup(self):
-        output = 2
+        output_num = 2
+        mid_num = 10
         input_num = 784 * 3
 
         x = tf.placeholder(tf.float32, [None, input_num])
-        W = tf.Variable(tf.zeros([input_num, output]))
-        b = tf.Variable(tf.zeros([output]))
+        W_1 = tf.Variable(tf.zeros([input_num, mid_num]))
+        b_1 = tf.Variable(tf.zeros([mid_num]))
 
-        y = tf.nn.softmax(tf.matmul(x, W) + b)
+        y_mid = tf.nn.softmax(tf.matmul(x,W_1) + b_1)
 
-        y_ = tf.placeholder(tf.float32, [None, output])
+        W_2 = tf.Variable(tf.zeros([mid_num, output_num]))
+        b_2 = tf.Variable(tf.zeros([output_num]))
+        y = tf.nn.softmax(tf.matmul(y_mid, W_2) + b_2)
 
-        cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
-        #cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_))
+        y_ = tf.placeholder(tf.float32, [None, output_num])
+
+        #cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
+        cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_))
 
         train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy) #0.5
         init = tf.initialize_all_variables()
