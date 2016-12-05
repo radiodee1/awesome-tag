@@ -72,10 +72,10 @@ class NN(object):
             accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
             #print self.sess.run(y_)
-            #print "here"
 
             if self.use_loader : self.get_mnist_next_test(self.batchsize, 3)
             print(self.sess.run(accuracy, feed_dict={x: self.mnist_test.images, y_: self.mnist_test.labels}))
+
 
     def conv_setup(self):
         output = 2
