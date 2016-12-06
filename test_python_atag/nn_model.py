@@ -62,7 +62,7 @@ class NN(object):
         if self.train :
             self.cursor = 0
             for i in range(1,self.cursor_tot): #1000
-                batch_xs, batch_ys = self.get_mnist_next_train(self.batchsize, 3)
+                batch_xs, batch_ys = self.get_mnist_next_train(self.batchsize, 12)
                 self.sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
 
         if self.save_ckpt and self.train : self.save()
@@ -73,7 +73,7 @@ class NN(object):
 
             #print self.sess.run(y_)
 
-            if self.use_loader : self.get_mnist_next_test(self.batchsize, 3)
+            if self.use_loader : self.get_mnist_next_test(self.batchsize, 12)
             print(self.sess.run(accuracy, feed_dict={x: self.mnist_test.images, y_: self.mnist_test.labels}))
 
 

@@ -36,17 +36,19 @@ class Load(enum.Enum):
     def get_mnist_next_train(self, batchsize, cursor, num_channels = 1):
         #print batchsize, cursor, "here"
         ##self.dat_subset = self.dat[cursor * batchsize, cursor * batchsize + batchsize]
-        three, images, lables = self._get_pixels_from_dat(cursor * batchsize, cursor * batchsize + batchsize)
+        skin, three, images, lables = self._get_pixels_from_dat(cursor * batchsize, cursor * batchsize + batchsize)
         if num_channels == 1 : return images, lables
         if num_channels == 3 : return three, lables
+        if num_channels == 12 : return skin, lables
         return images, lables
 
     def get_mnist_next_test(self, batchsize, num_channels = 1):
         testframe = 0
-        three, images, labels = self._get_pixels_from_dat( testframe * batchsize, testframe * batchsize + batchsize) #len(self.dat) - batchsize, len(self.dat))
+        skin, three, images, labels = self._get_pixels_from_dat( testframe * batchsize, testframe * batchsize + batchsize) #len(self.dat) - batchsize, len(self.dat))
         print ("test", len(images), batchsize)
         if num_channels == 1 : self.mnist_test = Map({'images':images, 'labels': labels})
         if num_channels == 3 : self.mnist_test = Map({'images':three, 'labels':labels})
+        if num_channels == 12 : self.mnist_test = Map({'images':skin, 'labels': labels})
         return self.mnist_test
 
 
@@ -81,7 +83,7 @@ class Load(enum.Enum):
 
             print (self.iter, filename)
 
-            if self.inspection_num >= self.iter or True :
+            if self.inspection_num >= self.iter and False :
                 self.print_block(img)
                 print "========="
                 self.print_block(three[:28*28])
@@ -95,7 +97,7 @@ class Load(enum.Enum):
             self.image_skin.append(skin)
             self.label.append([lbl_1,lbl_2])
             self.iter = self.iter + 1
-        return self.image_x3, self.image, self.label
+        return self.image_skin, self.image_x3, self.image, self.label
 
     def _process_read_line(self, line):
         #print line
@@ -219,7 +221,7 @@ class Load(enum.Enum):
             if q[0] == 28 / 2 +1 and q[1] == 28/2 + 1 :img_skin[3] = color
 
         for i in range(4) :
-            skin.append(list(img_skin[i]))
+            skin.extend(list(img_skin[i]))
 
         return skin, oneimg, threeimg
 
