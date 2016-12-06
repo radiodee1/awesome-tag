@@ -17,6 +17,7 @@ class Load(enum.Enum):
         self.label = []
         self.image = []
         self.image_x3 = []
+        self.image_skin = []
         self.dat = [] ## this is the raw csv data
         #self.dat_subset = []
         self.iter = 0
@@ -54,6 +55,7 @@ class Load(enum.Enum):
         self.image = []
         self.label = []
         self.image_x3 = []
+        self.image_skin = []
         self.iter = start
         while self.iter < stop and stop < len(self.dat) :
             filename = self.image_folder + os.sep + self.dat[self.iter][self.FILE]
@@ -61,9 +63,6 @@ class Load(enum.Enum):
             y = self.dat[self.iter][self.FACE_Y]
             width = self.dat[self.iter][self.FACE_WIDTH]
             height = self.dat[self.iter][self.FACE_HEIGHT]
-
-
-            #testimage = Image.open(filename)
 
             if not (os.path.isfile(filename) and width >=28 and height >= 28 and len(Image.open(filename).getbands()) >=3) :
                 self.iter = self.iter + 1
@@ -77,22 +76,23 @@ class Load(enum.Enum):
             else:
                 lbl_2 = 1
 
-            img , three = self.look_at_img(filename,x,y,width,height)
+            skin, img , three = self.look_at_img(filename,x,y,width,height)
             #print three, "three"
 
             print (self.iter, filename)
 
-            if self.inspection_num >= self.iter and False :
+            if self.inspection_num >= self.iter or True :
                 self.print_block(img)
                 print "========="
                 self.print_block(three[:28*28])
                 self.print_block(three[28*28:28*28*2])
                 self.print_block(three[28*28*2:])
                 print [lbl_1, lbl_2]
-                #sys.exit()
+                sys.exit()
 
             self.image.append(img)
             self.image_x3.append(three)
+            self.image_skin.append(skin)
             self.label.append([lbl_1,lbl_2])
             self.iter = self.iter + 1
         return self.image_x3, self.image, self.label
@@ -124,8 +124,12 @@ class Load(enum.Enum):
         img3 = [[0] * 28 ] * 28
         img3 = np.asarray(img3, dtype="float32")
 
+        img_skin = [[0] *3] * 4
+        img_skin = np.asarray(img_skin, dtype="float32")
+
         oneimg = []
         threeimg = []
+        skin = []
 
         mnist_dim = 28
 
@@ -205,7 +209,19 @@ class Load(enum.Enum):
                 for xz in range(28):
                     threeimg.append(img3[yz][xz])
 
-        return oneimg, threeimg
+        ''' Skin tone '''
+        for i in range(len(xy_list)):
+            q = xy_list[i]
+            color = q[2]
+            if q[0] == 28 /2 and q[1] == 28/2 : img_skin[0] = color
+            if q[0] == 28 /2 +1 and q[1] == 28/2 : img_skin[1] = color
+            if q[0] == 28/2 and q[1] == 28/2 + 1 : img_skin[2] = color
+            if q[0] == 28 / 2 +1 and q[1] == 28/2 + 1 :img_skin[3] = color
+
+        for i in range(4) :
+            skin.append(list(img_skin[i]))
+
+        return skin, oneimg, threeimg
 
     def print_block(self, img):
         for x in range(28):
