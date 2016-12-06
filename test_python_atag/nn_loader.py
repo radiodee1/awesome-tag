@@ -34,8 +34,6 @@ class Load(enum.Enum):
 
 
     def get_mnist_next_train(self, batchsize, cursor, num_channels = 1):
-        #print batchsize, cursor, "here"
-        ##self.dat_subset = self.dat[cursor * batchsize, cursor * batchsize + batchsize]
         skin, three, images, lables = self._get_pixels_from_dat(cursor * batchsize, cursor * batchsize + batchsize)
         if num_channels == 1 : return images, lables
         if num_channels == 3 : return three, lables
