@@ -85,12 +85,12 @@ class NN(object):
         output_num = 2
 
         x = tf.placeholder(tf.float32, [None, input_num])
-        W_1 = tf.Variable(tf.random_normal([input_num, mid_num], stddev=0.04))
+        W_1 = tf.Variable(tf.random_normal([input_num, mid_num], stddev=0.0004))
         b_1 = tf.Variable(tf.random_normal([mid_num], stddev=0.5))
 
         y_mid = tf.nn.relu(tf.matmul(x,W_1) + b_1)
 
-        W_2 = tf.Variable(tf.random_normal([mid_num, output_num],stddev=0.4))
+        W_2 = tf.Variable(tf.random_normal([mid_num, output_num],stddev=0.004))
         b_2 = tf.Variable(tf.random_normal([output_num],stddev=0.5))
 
         y_logits = tf.matmul(y_mid, W_2) + b_2
@@ -109,8 +109,8 @@ class NN(object):
         #self.sess = tf.Session()
         self.sess.run(init)
 
-        print self.ckpt_folder + os.sep + "logs" + os.sep
-        summary_writer = tf.train.SummaryWriter(self.ckpt_folder + os.sep + "logs" + os.sep, self.sess.graph)
+        #print self.ckpt_folder + os.sep + "logs" + os.sep
+        #summary_writer = tf.train.SummaryWriter(self.ckpt_folder + os.sep + "logs" + os.sep, self.sess.graph)
 
         if self.load_ckpt : self.load()
 
