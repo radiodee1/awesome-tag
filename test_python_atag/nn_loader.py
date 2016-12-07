@@ -118,10 +118,11 @@ class Load(enum.Enum):
         #img = Image.open(open(filename))
         img = Image.open(filename)
 
-        img2 = [[0] * 28] * 28
+        #img2 = [[0] * 28] * 28
+        img2 = [[0] * 28 for _ in range(28)]
         img2 = np.asarray(img2, dtype="float32") ## 'img2' MUST BE A NUMPY ARRAY!!
 
-        img3 = [[0] * 28 ] * 28
+        img3 = [[0] * 28 for _ in range(28)] #[[0] * 28 ] * 28
         img3 = np.asarray(img3, dtype="float32")
 
         img_skin = [[0] *3] * 4
@@ -142,7 +143,7 @@ class Load(enum.Enum):
         counter = 0
 
         ''' Put in shrunk form. '''
-        if not len (img.getbands()) < 3 :
+        if  len (img.getbands()) == 3 :
             if not (x + width > dimx and y + height > dimy) :
 
                 for aa in range(28) :
