@@ -28,6 +28,14 @@ class NN(object):
         self.batchsize = 100
         self.save_name = ""
 
+        self.predict_skintone = False
+        self.predict_softmax = False
+        self.predict_conv = False
+
+        self.nn_out_skintone = None
+        self.nn_out_softmax = None
+        self.nn_out_conv = None
+
     def skintone_setup(self):
         input_num = 4 * 3
         mid_num = 3
@@ -110,7 +118,7 @@ class NN(object):
         self.sess.run(init)
 
         #print self.ckpt_folder + os.sep + "logs" + os.sep
-        #summary_writer = tf.train.SummaryWriter(self.ckpt_folder + os.sep + "logs" + os.sep, self.sess.graph)
+        summary_writer = tf.train.SummaryWriter(self.ckpt_folder + os.sep + "logs" + os.sep, self.sess.graph)
 
         if self.load_ckpt : self.load()
 
@@ -126,10 +134,12 @@ class NN(object):
             correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
             accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-            #print self.sess.run(y_)
-
             if self.use_loader : self.get_mnist_next_test(self.batchsize, 3)
             print(self.sess.run(accuracy, feed_dict={x: self.mnist_test.images, y_: self.mnist_test.labels}))
+
+            y_out = tf.argmax(y,1)
+            out = self.sess.run(y_out, feed_dict={x : self.mnist_test.images, y_: self.mnist_test.labels})
+            print out, len(out)
 
 
     def conv_setup(self):
