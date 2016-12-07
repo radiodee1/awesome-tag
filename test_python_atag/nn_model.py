@@ -90,7 +90,7 @@ class NN(object):
 
         y_mid = tf.nn.relu(tf.matmul(x,W_1) + b_1)
 
-        W_2 = tf.Variable(tf.random_normal([mid_num, output_num],stddev=0.004))
+        W_2 = tf.Variable(tf.random_normal([mid_num, output_num],stddev=0.0004))
         b_2 = tf.Variable(tf.random_normal([output_num],stddev=0.5))
 
         y_logits = tf.matmul(y_mid, W_2) + b_2
