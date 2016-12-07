@@ -32,8 +32,8 @@ class Load(enum.Enum):
                     self._process_read_line(line)
                 f.close()
         else:
-            w = 10
-            h = 10
+            w = 10 ## how many tiles wide
+            h = 10 ## how many tiles high
             xx, yy = Image.open(filename).size
             print "do individual file prediction"
             for i in range(w*h) :
@@ -57,7 +57,7 @@ class Load(enum.Enum):
                     temp.append(num)
                 self.dat.append(temp)
 
-        print "dat",self.dat
+        #print "dat",self.dat
 
 
     def get_mnist_next_train(self, batchsize, cursor, num_channels = 1):
@@ -93,7 +93,7 @@ class Load(enum.Enum):
             width = self.dat[self.iter][self.FACE_WIDTH]
             height = self.dat[self.iter][self.FACE_HEIGHT]
 
-            print filename, "fullname..."
+            #print filename, "fullname..."
             if not (os.path.isfile(filename) and width >=28 and height >= 28 and len(Image.open(filename).getbands()) >=3) :
                 self.iter = self.iter + 1
                 stop = stop + 1

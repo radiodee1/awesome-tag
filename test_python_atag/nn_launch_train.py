@@ -15,7 +15,7 @@ class Read( enum.Enum) :
     def __init__(self, atag):
         enum.Enum.__init__(self)
 
-        self.pic =  atag.VAR_IMAGE_NAME
+        self.pic = ""# atag.VAR_IMAGE_NAME
 
         self.a = atag
         self.run_mnist()
@@ -39,12 +39,12 @@ class Read( enum.Enum) :
         #self.nn.skintone_setup()
 
         #self.nn.predict_softmax = True
-        #self.nn.set_vars(len(ll.dat), 100, "softmax", 0)
-        #self.nn.softmax_setup()
+        self.nn.set_vars(len(ll.dat), 100, "softmax", 0)
+        self.nn.softmax_setup()
 
-        self.nn.predict_conv = True
-        self.nn.set_vars(len(ll.dat), 50, "conv", 0)
-        self.nn.conv_setup()
+        #self.nn.predict_conv = False
+        #self.nn.set_vars(len(ll.dat), 50, "conv", 0)
+        #self.nn.conv_setup()
 
     def signal_handler(self, signum, frame):
         self.nn.save()
