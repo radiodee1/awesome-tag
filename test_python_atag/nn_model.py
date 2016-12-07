@@ -27,6 +27,7 @@ class NN(object):
         self.cursor_tot = 0
         self.batchsize = 100
         self.save_name = ""
+        self.start_train = 1
 
         self.predict_skintone = False
         self.predict_softmax = False
@@ -124,7 +125,8 @@ class NN(object):
 
         if self.train :
             self.cursor = 0
-            for i in range(1,self.cursor_tot): #1000
+
+            for i in range(self.start_train,self.cursor_tot): #1000
                 batch_xs, batch_ys = self.get_mnist_next_train(self.batchsize, 3)
                 self.sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
 
@@ -137,6 +139,8 @@ class NN(object):
             if self.use_loader : self.get_mnist_next_test(self.batchsize, 3)
             print(self.sess.run(accuracy, feed_dict={x: self.mnist_test.images, y_: self.mnist_test.labels}))
 
+        if self.predict_softmax :
+            self.get_mnist_next_test(self.batchsize, 3)
             y_out = tf.argmax(y,1)
             out = self.sess.run(y_out, feed_dict={x : self.mnist_test.images, y_: self.mnist_test.labels})
             print out, len(out)
@@ -202,7 +206,7 @@ class NN(object):
 
         if self.train :
             self.cursor = 0
-            for i in range(1,self.cursor_tot ):
+            for i in range(self.start_train,self.cursor_tot ):
                 batch_0, batch_1 = self.get_mnist_next_train(self.batchsize)
                 if i % 100 == 0:
                     train_accuracy = accuracy.eval(feed_dict={
@@ -216,6 +220,14 @@ class NN(object):
             if self.use_loader : self.get_mnist_next_test(self.batchsize)
             print("test accuracy %g" % accuracy.eval(feed_dict={
                 x: self.mnist_test.images, y_: self.mnist_test.labels, keep_prob: 1.0}))
+
+        if self.predict_conv :
+            self.cursor = 0
+            for i in range(self.start_train, self.cursor_tot) :
+                self.get_mnist_next_test(self.batchsize)
+                y_out = tf.argmax(y_conv,1)
+                out = self.sess.run(y_out, feed_dict={x : self.mnist_test.images, y_: self.mnist_test.labels, keep_prob:1.0})
+                print out, len(out)
 
     def save(self):
         filename = self.save_name
@@ -234,39 +246,25 @@ class NN(object):
             saver.restore(self.sess, file)
             print ("load?", filename)
 
-    '''
-    def set_mnist_train_test(self, valtrain = None, valtest = None, batchsize = 50):
-        self.batchsize = batchsize
-        #self.cursor = 0
 
-        if valtrain != None:
-            self.mnist_train = valtrain
-            self.cursor_tot = int(len(self.mnist_train.images) / self.batchsize)
-        else:
-            self.mnist_train = input_data.read_data_sets("MNIST_data/", one_hot=True).train
-
-        if valtest != None:
-            self.mnist_test = valtest
-        else:
-            self.mnist_test = input_data.read_data_sets("MNIST_data/", one_hot=True).test
-        #print ("in")
-    '''
 
     def set_loader(self, load):
         self.loader = load
         self.cursor = 0
         self.use_loader = True
 
-    def set_vars(self, length,  batchsize, name = ""):
+    def set_vars(self, length,  batchsize, name = "", start = 1):
         self.cursor_tot = int(length / batchsize)
         self.save_name = name
+        self.start_train = start
+        #print "vars", self.cursor_tot, self.save_name
 
     def get_mnist_next_train(self, batchsize, num_channels = 1):
         if not self.use_loader :
             images = self.mnist_train.images[self.cursor * batchsize : self.cursor * batchsize + batchsize]
             lables = self.mnist_train.labels[self.cursor * batchsize : self.cursor * batchsize + batchsize]
             self.cursor = self.cursor + 1
-            print ("not use loader")
+            #print ("not use loader")
         else:
             print (len(self.loader.dat), self.cursor_tot, self.cursor, "len,tot,cursor")
             if self.cursor < self.cursor_tot :
@@ -278,5 +276,5 @@ class NN(object):
         return  images, lables
 
     def get_mnist_next_test(self, batchsize, num_channels = 1):
-        print ("test", self.cursor_tot, num_channels)
+        #print ("test", self.cursor_tot, num_channels)
         self.mnist_test = self.loader.get_mnist_next_test(batchsize, num_channels)

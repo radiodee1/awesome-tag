@@ -6,7 +6,7 @@ import sys
 import atag_csv as enum
 
 class Load(enum.Enum):
-    def __init__(self, atag):
+    def __init__(self, atag, filename):
         enum.Enum.__init__(self)
         self.mnist_train = {}
         self.mnist_test = {}
@@ -26,11 +26,38 @@ class Load(enum.Enum):
         self.inspection_num = 2
 
         ''' Read csv file '''
-        with open(self.csv_input, 'r') as f:
-            for line in f:
-                self._process_read_line(line)
-            f.close()
+        if len(filename) == 0 :
+            with open(self.csv_input, 'r') as f:
+                for line in f:
+                    self._process_read_line(line)
+                f.close()
+        else:
+            w = 10
+            h = 10
+            xx, yy = Image.open(filename).size
+            print "do individual file prediction"
+            for i in range(w*h) :
+                x = i - (i / w)
+                y = i / h
+                temp = []
+                for j in range(self.TOTAL) :
+                    num = 0
+                    if j is self.FILE :
+                        num = filename
+                    elif j is self.FACE_WIDTH:
+                        num = xx / w
+                        if num < 28 : num = 28
+                    elif j is self.FACE_HEIGHT:
+                        num = yy / h
+                        if num < 28 : num = 28
+                    elif j is self.FACE_X :
+                        num = x * (xx / w)
+                    elif j is self.FACE_Y :
+                        num = y * (yy / h)
+                    temp.append(num)
+                self.dat.append(temp)
 
+        print "dat",self.dat
 
 
     def get_mnist_next_train(self, batchsize, cursor, num_channels = 1):
@@ -43,7 +70,7 @@ class Load(enum.Enum):
     def get_mnist_next_test(self, batchsize, num_channels = 1):
         testframe = 0
         skin, three, images, labels = self._get_pixels_from_dat( testframe * batchsize, testframe * batchsize + batchsize) #len(self.dat) - batchsize, len(self.dat))
-        print ("test", len(images), batchsize)
+        print ("next test", len(images), batchsize, testframe)
         if num_channels == 1 : self.mnist_test = Map({'images':images, 'labels': labels})
         if num_channels == 3 : self.mnist_test = Map({'images':three, 'labels':labels})
         if num_channels == 12 : self.mnist_test = Map({'images':skin, 'labels': labels})
@@ -57,13 +84,16 @@ class Load(enum.Enum):
         self.image_x3 = []
         self.image_skin = []
         self.iter = start
-        while self.iter < stop and stop < len(self.dat) :
-            filename = self.image_folder + os.sep + self.dat[self.iter][self.FILE]
+        while self.iter < stop and stop <= len(self.dat) :
+            filename = self.dat[self.iter][self.FILE]
+            if not filename.startswith(self.image_folder + os.sep) : # filename = filename[len(self.image_folder + os.sep):]
+                filename = self.image_folder + os.sep + filename #self.dat[self.iter][self.FILE]
             x = self.dat[self.iter][self.FACE_X]
             y = self.dat[self.iter][self.FACE_Y]
             width = self.dat[self.iter][self.FACE_WIDTH]
             height = self.dat[self.iter][self.FACE_HEIGHT]
 
+            print filename, "fullname..."
             if not (os.path.isfile(filename) and width >=28 and height >= 28 and len(Image.open(filename).getbands()) >=3) :
                 self.iter = self.iter + 1
                 stop = stop + 1

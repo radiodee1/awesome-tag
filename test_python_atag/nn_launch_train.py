@@ -15,31 +15,36 @@ class Read( enum.Enum) :
     def __init__(self, atag):
         enum.Enum.__init__(self)
 
+        self.pic =  atag.VAR_IMAGE_NAME
+
         self.a = atag
         self.run_mnist()
         self.nn = None
 
     def run_mnist(self):
         print
-        ll = loader.Load(self.a)
+        ll = loader.Load(self.a, self.pic)
         self.nn = model.NN(self.a)
 
         signal.signal(signal.SIGINT, self.signal_handler)
 
         self.nn.load_ckpt = True
         self.nn.save_ckpt = True
-        self.nn.train = True
+        self.nn.train = False
         self.nn.test = True
         self.nn.set_loader(ll)
 
-        #self.nn.set_vars(len(ll.dat), 100, "skin")
+        #self.nn.predict_skintone = True
+        #self.nn.set_vars(len(ll.dat), 100, "skin", 0)
         #self.nn.skintone_setup()
 
-        self.nn.set_vars(len(ll.dat), 100, "softmax")
-        self.nn.softmax_setup()
+        #self.nn.predict_softmax = True
+        #self.nn.set_vars(len(ll.dat), 100, "softmax", 0)
+        #self.nn.softmax_setup()
 
-        #self.nn.set_vars(len(ll.dat), 50, "conv")
-        #self.nn.conv_setup()
+        self.nn.predict_conv = True
+        self.nn.set_vars(len(ll.dat), 50, "conv", 0)
+        self.nn.conv_setup()
 
     def signal_handler(self, signum, frame):
         self.nn.save()
