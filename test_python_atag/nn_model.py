@@ -90,13 +90,14 @@ class NN(object):
 
     def softmax_setup(self):
         input_num = 784 * 3 # like mnist but with three channels
-        mid_num = 10
+        mid_num = 10 # 10
         output_num = 2
 
         x = tf.placeholder(tf.float32, [None, input_num])
         W_1 = tf.Variable(tf.random_normal([input_num, mid_num], stddev=0.0004))
         b_1 = tf.Variable(tf.random_normal([mid_num], stddev=0.5))
 
+        #y_mid = tf.nn.relu(tf.matmul(x,W_1) + b_1)
         y_mid = tf.nn.relu(tf.matmul(x,W_1) + b_1)
 
         W_2 = tf.Variable(tf.random_normal([mid_num, output_num],stddev=0.0004))
