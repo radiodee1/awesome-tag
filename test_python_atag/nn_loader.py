@@ -60,14 +60,14 @@ class Load(enum.Enum):
         #print "dat",self.dat
 
 
-    def get_mnist_next_train(self, batchsize, cursor, num_channels = 1):
+    def get_nn_next_train(self, batchsize, cursor, num_channels = 1):
         skin, three, images, lables = self._get_pixels_from_dat(cursor * batchsize, cursor * batchsize + batchsize)
         if num_channels == 1 : return images, lables
         if num_channels == 3 : return three, lables
         if num_channels == 12 : return skin, lables
         return images, lables
 
-    def get_mnist_next_test(self, batchsize, num_channels = 1):
+    def get_nn_next_test(self, batchsize, num_channels = 1):
         testframe = 0
         skin, three, images, labels = self._get_pixels_from_dat( testframe * batchsize, testframe * batchsize + batchsize) #len(self.dat) - batchsize, len(self.dat))
         print ("next test", len(images), batchsize, testframe)

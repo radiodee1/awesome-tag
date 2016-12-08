@@ -30,7 +30,7 @@ class Read( enum.Enum) :
 
         self.nn.load_ckpt = True
         self.nn.save_ckpt = True
-        self.nn.train = False
+        self.nn.train = True
         self.nn.test = True
         self.nn.set_loader(ll)
 
@@ -38,13 +38,13 @@ class Read( enum.Enum) :
         #self.nn.set_vars(len(ll.dat), 100, "skin", 0)
         #self.nn.skintone_setup()
 
-        #self.nn.predict_softmax = True
-        #self.nn.set_vars(len(ll.dat), 100, "softmax", 0)
-        #self.nn.softmax_setup()
+        self.nn.predict_softmax = False
+        self.nn.set_vars(len(ll.dat), 100, "softmax", 0)
+        self.nn.softmax_setup()
 
         #self.nn.predict_conv = False
-        self.nn.set_vars(len(ll.dat), 50, "conv", 0)
-        self.nn.conv_setup()
+        #self.nn.set_vars(len(ll.dat), 50, "conv", 0)
+        #self.nn.conv_setup()
 
     def signal_handler(self, signum, frame):
         self.nn.save()
