@@ -112,7 +112,7 @@ class NN(object):
         #cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y_logits, y_))
 
-        train_step = tf.train.GradientDescentOptimizer(0.0001).minimize(cross_entropy) #0.5
+        train_step = tf.train.GradientDescentOptimizer(0.0001).minimize(cross_entropy) #0.0001
         #train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
         init = tf.initialize_all_variables()
