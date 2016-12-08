@@ -269,7 +269,7 @@ class NN(object):
             print (len(self.loader.dat), self.cursor_tot, self.cursor, "len,tot,cursor")
             if self.cursor < self.cursor_tot :
 
-                images, lables = self.loader.get_mnist_next_train(batchsize, self.cursor, num_channels)
+                images, lables = self.loader.get_nn_next_train(batchsize, self.cursor, num_channels)
                 #print ("next train batch")
             self.cursor = self.cursor + 1
         #print lables, "lables"
@@ -277,4 +277,4 @@ class NN(object):
 
     def get_nn_next_test(self, batchsize, num_channels = 1):
         #print ("test", self.cursor_tot, num_channels)
-        self.mnist_test = self.loader.get_mnist_next_test(batchsize, num_channels)
+        self.mnist_test = self.loader.get_nn_next_test(batchsize, num_channels)
