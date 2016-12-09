@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import os
 import signal
 import sys
@@ -18,13 +20,13 @@ class Read( enum.Enum) :
         self.pic = pic
 
         self.a = atag
-        self.run_mnist()
-        self.nn = None
+        #self.run_mnist()
+        self.nn = model.NN(self.a)
 
-    def run_mnist(self):
+    def run_nn(self):
         print
         ll = loader.Load(self.a, self.pic)
-        self.nn = model.NN(self.a)
+        #self.nn = model.NN(self.a)
 
         signal.signal(signal.SIGINT, self.signal_handler)
 
@@ -38,7 +40,7 @@ class Read( enum.Enum) :
         #self.nn.set_vars(len(ll.dat), 100, "skin", 0)
         #self.nn.skintone_setup()
 
-        self.nn.predict_softmax = False
+        #self.nn.predict_softmax = False
         self.nn.set_vars(len(ll.dat), 100, "softmax", 0)
         self.nn.softmax_setup()
 
@@ -53,9 +55,13 @@ class Read( enum.Enum) :
 if __name__ == '__main__':
 
     pic = ""
-    if len(sys.argv) > 1 : pic = str(sys.argv[1])
+    if len(sys.argv) > 1 :
+        pic = str(sys.argv[1])
+    print sys.argv
     print pic
     a = aa.Dotfolder()
     r = Read(a, pic)
+    if len(pic) > 0 : r.nn.predict_softmax = True
+    r.run_nn()
 
     print("done")

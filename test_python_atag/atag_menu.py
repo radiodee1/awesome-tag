@@ -13,7 +13,7 @@ import atag_drawingarea as dra
 import atag_csv_write as write
 #import atag_csv_read_tf as read
 import atag_csv_draw as draw
-
+import subprocess
 
 class Interface(Gtk.Window, atag.Dotfolder) :
 
@@ -274,7 +274,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         ''' some buttons in one row '''
         self.grid2 = Gtk.Grid()
 
-        self.button = Gtk.Button(label="Read And Show CSV")
+        self.button = Gtk.Button(label="Read CSV, Show Boxes")
         self.button.connect("clicked", self.on_button_show_csv)
         self.grid2.attach(self.button, 0, 0, 1, 1)
         self.button = Gtk.Button(label="Read And Write CSV")
@@ -283,7 +283,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.button = Gtk.Button(label="Train")
         self.button.connect("clicked", self.on_button_train)
         self.grid2.attach(self.button, 2, 0, 1, 1)
-        self.button = Gtk.Button(label="Test")
+        self.button = Gtk.Button(label="Predict")
         self.button.connect("clicked", self.on_button_test)
         self.grid2.attach(self.button, 3, 0, 1, 1)
         self.button = Gtk.Button(label="More Options")
@@ -318,6 +318,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     def on_button_test(self, widget):
         print 4
+        subprocess.call(["python","./nn_launch_train.py",self.VAR_IMAGE_NAME])
 
     def on_button_options(self, widget):
         print 5
@@ -334,6 +335,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
     def run_csv_read(self):
         #read.Read(self)
         print "run from command line!"
+        subprocess.call(["python","./nn_launch_train.py",""])
 
     ''' utility and atag var callback '''
     def show_window(self):
