@@ -4,6 +4,7 @@ import math
 import os
 import sys
 import atag_csv as enum
+import nn_record as rec
 
 class Load(enum.Enum):
     def __init__(self, atag, filename):
@@ -22,6 +23,8 @@ class Load(enum.Enum):
         #self.dat_subset = []
         self.iter = 0
 
+        self.record = rec.Record(atag)
+
         ImageFile.LOAD_TRUNCATED_IMAGES = True
         self.inspection_num = 2
 
@@ -32,6 +35,8 @@ class Load(enum.Enum):
                     self._process_read_line(line)
                 f.close()
         else:
+            self.dat = self.record.make_boxes(filename)
+            '''
             w = 10 ## how many tiles wide
             h = 10 ## how many tiles high
             xx, yy = Image.open(filename).size
@@ -56,7 +61,7 @@ class Load(enum.Enum):
                         num = y * (yy / h)
                     temp.append(num)
                 self.dat.append(temp)
-
+            '''
         #print "dat",self.dat
 
 
@@ -152,8 +157,8 @@ class Load(enum.Enum):
         img2 = [[0] * 28 for _ in range(28)]
         img2 = np.asarray(img2, dtype="float32") ## 'img2' MUST BE A NUMPY ARRAY!!
 
-        img3 = [[0] * 28 for _ in range(28)] #[[0] * 28 ] * 28
-        img3 = np.asarray(img3, dtype="float32")
+        #img3 = [[0] * 28 for _ in range(28)] #[[0] * 28 ] * 28
+        #img3 = np.asarray(img3, dtype="float32")
 
         img_skin = [[0] *3] * 4
         img_skin = np.asarray(img_skin, dtype="float32")
@@ -195,7 +200,7 @@ class Load(enum.Enum):
         for i in range(len(xy_list)):
             q = xy_list[i]
             color = q[2][0]
-            if color > high : img2[int(q[0]), int(q[1])] =   color
+            if color > high : img2[int(q[0]), int(q[1])] =   color / float(high * 2)
 
         ''' Then add entire array to oneimg variable and flatten.'''
         for yz in range(28):
@@ -211,7 +216,7 @@ class Load(enum.Enum):
             for i in range(len(xy_list)):
                 q = xy_list[i]
                 color = q[2][0]
-                if color > high : img3 [int(q[0]), int(q[1])] = color #/ float(255)
+                if color > high : img3 [int(q[0]), int(q[1])] = color / float(high * 2)
             for yz in range(28):
                 for xz in range(28):
                     threeimg.append(img3[yz][xz])
@@ -223,7 +228,7 @@ class Load(enum.Enum):
             for i in range(len(xy_list)):
                 q = xy_list[i]
                 color = q[2][1]
-                if color > high : img3 [int(q[0]), int(q[1])] = color #/ float(255)
+                if color > high : img3 [int(q[0]), int(q[1])] = color / float(high * 2)
             for yz in range(28):
                 for xz in range(28):
                     threeimg.append(img3[yz][xz])
@@ -235,7 +240,7 @@ class Load(enum.Enum):
             for i in range(len(xy_list)):
                 q = xy_list[i]
                 color = q[2][2]
-                if color > high  : img3 [int(q[0]), int(q[1])] = color #/ float(255)
+                if color > high  : img3 [int(q[0]), int(q[1])] = color / float(high * 2)
             for yz in range(28):
                 for xz in range(28):
                     threeimg.append(img3[yz][xz])
@@ -244,10 +249,10 @@ class Load(enum.Enum):
         for i in range(len(xy_list)):
             q = xy_list[i]
             color = q[2]
-            if q[0] == 28 /2 and q[1] == 28/2 : img_skin[0] = color
-            if q[0] == 28 /2 +1 and q[1] == 28/2 : img_skin[1] = color
-            if q[0] == 28/2 and q[1] == 28/2 + 1 : img_skin[2] = color
-            if q[0] == 28 / 2 +1 and q[1] == 28/2 + 1 :img_skin[3] = color
+            if q[0] == 28 /2 and q[1] == 28/2 : img_skin[0] = color #/ float(255)
+            if q[0] == 28 /2 +1 and q[1] == 28/2 : img_skin[1] = color #/ float(255)
+            if q[0] == 28/2 and q[1] == 28/2 + 1 : img_skin[2] = color #/ float(255)
+            if q[0] == 28 / 2 +1 and q[1] == 28/2 + 1 :img_skin[3] = color #/ float(255)
 
         for i in range(4) :
             skin.extend(list(img_skin[i]))

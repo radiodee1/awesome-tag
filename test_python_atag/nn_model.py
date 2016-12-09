@@ -62,7 +62,8 @@ class NN(object):
         train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy) #0.5
         #train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
-        init = tf.initialize_all_variables()
+        #init = tf.initialize_all_variables()
+        init = tf.global_variables_initializer()
         #self.sess = tf.Session()
         self.sess.run(init)
 
@@ -94,13 +95,13 @@ class NN(object):
         output_num = 2
 
         x = tf.placeholder(tf.float32, [None, input_num])
-        W_1 = tf.Variable(tf.random_normal([input_num, mid_num], stddev=0.0004))
+        W_1 = tf.Variable(tf.random_normal([input_num, mid_num], stddev=0.0001))
         b_1 = tf.Variable(tf.random_normal([mid_num], stddev=0.5))
 
         #y_mid = tf.nn.relu(tf.matmul(x,W_1) + b_1)
         y_mid = tf.nn.relu(tf.matmul(x,W_1) + b_1)
 
-        W_2 = tf.Variable(tf.random_normal([mid_num, output_num],stddev=0.0004))
+        W_2 = tf.Variable(tf.random_normal([mid_num, output_num],stddev=0.0001))
         b_2 = tf.Variable(tf.random_normal([output_num],stddev=0.5))
 
         y_logits = tf.matmul(y_mid, W_2) + b_2
@@ -112,14 +113,15 @@ class NN(object):
         #cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y_logits, y_))
 
-        train_step = tf.train.GradientDescentOptimizer(0.0001).minimize(cross_entropy) #0.0001
+        train_step = tf.train.GradientDescentOptimizer(0.001).minimize(cross_entropy) #0.0001
         #train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
-        init = tf.initialize_all_variables()
+        #init = tf.initialize_all_variables()
+        init = tf.global_variables_initializer()
         #self.sess = tf.Session()
         self.sess.run(init)
 
-        #print self.ckpt_folder + os.sep + "logs" + os.sep
+
         summary_writer = tf.train.SummaryWriter(self.ckpt_folder + os.sep + "logs" + os.sep, self.sess.graph)
 
         if self.load_ckpt : self.load()
@@ -201,7 +203,9 @@ class NN(object):
         train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
         correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_, 1))
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-        self.sess.run(tf.initialize_all_variables())
+        init = tf.global_variables_initializer()
+        self.sess.run(init)
+        #self.sess.run(tf.initialize_all_variables())
 
         if self.load_ckpt : self.load()
 
