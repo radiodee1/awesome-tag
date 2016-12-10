@@ -3,6 +3,7 @@ from PIL import Image
 
 class Record( enum.Enum):
     def __init__(self, atag):
+        enum.Enum.__init__(self)
         print
         self.dat = []
         self.a = atag
