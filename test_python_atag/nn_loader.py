@@ -200,7 +200,7 @@ class Load(enum.Enum):
         for i in range(len(xy_list)):
             q = xy_list[i]
             color = q[2][0]
-            if color > high : img2[int(q[0]), int(q[1])] =   color / float(high * 2)
+            if color > high : img2[int(q[0]), int(q[1])] =   color # / float(high * 2)
 
         ''' Then add entire array to oneimg variable and flatten.'''
         for yz in range(28):
@@ -216,7 +216,7 @@ class Load(enum.Enum):
             for i in range(len(xy_list)):
                 q = xy_list[i]
                 color = q[2][0]
-                if color > high : img3 [int(q[0]), int(q[1])] = color / float(high * 2)
+                if color > high : img3 [int(q[0]), int(q[1])] = color # / float(high * 2)
             for yz in range(28):
                 for xz in range(28):
                     threeimg.append(img3[yz][xz])
@@ -228,7 +228,7 @@ class Load(enum.Enum):
             for i in range(len(xy_list)):
                 q = xy_list[i]
                 color = q[2][1]
-                if color > high : img3 [int(q[0]), int(q[1])] = color / float(high * 2)
+                if color > high : img3 [int(q[0]), int(q[1])] = color # / float(high * 2)
             for yz in range(28):
                 for xz in range(28):
                     threeimg.append(img3[yz][xz])
@@ -240,7 +240,7 @@ class Load(enum.Enum):
             for i in range(len(xy_list)):
                 q = xy_list[i]
                 color = q[2][2]
-                if color > high  : img3 [int(q[0]), int(q[1])] = color / float(high * 2)
+                if color > high  : img3 [int(q[0]), int(q[1])] = color # / float(high * 2)
             for yz in range(28):
                 for xz in range(28):
                     threeimg.append(img3[yz][xz])
