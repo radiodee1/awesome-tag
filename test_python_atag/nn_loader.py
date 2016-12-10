@@ -90,10 +90,14 @@ class Load(enum.Enum):
         self.image_x3 = []
         self.image_skin = []
         self.iter = start
-        while self.iter < stop and stop < len(self.dat) :
+        if self.iter + (stop - start) >= len(self.dat):
+            self.iter = 0
+            stop = stop - start
+
+        while self.iter < stop and stop < len(self.dat) and self.iter < len(self.dat):
             filename = self.dat[self.iter][self.FILE]
-            if not filename.startswith(self.image_folder + os.sep) : # filename = filename[len(self.image_folder + os.sep):]
-                filename = self.image_folder + os.sep + filename #self.dat[self.iter][self.FILE]
+            if not filename.startswith(self.image_folder + os.sep) :
+                filename = self.image_folder + os.sep + filename
             x = self.dat[self.iter][self.FACE_X]
             y = self.dat[self.iter][self.FACE_Y]
             width = self.dat[self.iter][self.FACE_WIDTH]
