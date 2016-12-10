@@ -262,7 +262,7 @@ class NN(object):
         self.use_loader = True
 
     def set_vars(self, length,  batchsize, name = "", start = 1):
-        self.cursor_tot = int(length / batchsize) - 2
+        self.cursor_tot = int(length / batchsize) - 1
         self.save_name = name
         #self.start_train = start
         #self.loader.start_num = start
@@ -282,6 +282,7 @@ class NN(object):
                 images, lables = self.loader.get_nn_next_train(batchsize, self.cursor, num_channels)
                 #print ("next train batch")
             else:
+                pass
                 self.save()
                 sys.exit()
 
