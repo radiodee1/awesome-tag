@@ -22,6 +22,7 @@ class Load(enum.Enum):
         self.dat = [] ## this is the raw csv data
         #self.dat_subset = []
         self.iter = 0
+        self.start_num = 0
 
         self.record = rec.Record(atag)
 
@@ -89,7 +90,7 @@ class Load(enum.Enum):
         self.image_x3 = []
         self.image_skin = []
         self.iter = start
-        while self.iter < stop and stop <= len(self.dat) :
+        while self.iter < stop and stop < len(self.dat) :
             filename = self.dat[self.iter][self.FILE]
             if not filename.startswith(self.image_folder + os.sep) : # filename = filename[len(self.image_folder + os.sep):]
                 filename = self.image_folder + os.sep + filename #self.dat[self.iter][self.FILE]
@@ -115,6 +116,11 @@ class Load(enum.Enum):
             #print three, "three"
 
             print (self.iter, filename)
+
+            if len(img) != 28 * 28 or len(three) != 28 * 28 * 3 :
+                self.iter = self.iter + 1
+                stop = stop + 1
+                continue
 
             if self.inspection_num >= self.iter and False :
                 self.print_block(img)

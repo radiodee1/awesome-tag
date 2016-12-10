@@ -210,7 +210,7 @@ class NN(object):
         if self.load_ckpt : self.load()
 
         if self.train :
-            self.cursor = 0
+            #self.cursor = 0
             for i in range(self.start_train,self.cursor_tot ):
                 batch_0, batch_1 = self.get_nn_next_train(self.batchsize)
                 if i % 100 == 0:
@@ -261,7 +261,9 @@ class NN(object):
     def set_vars(self, length,  batchsize, name = "", start = 1):
         self.cursor_tot = int(length / batchsize)
         self.save_name = name
-        self.start_train = start
+        #self.start_train = start
+        #self.loader.start_num = start
+        self.cursor = start
         #print "vars", self.cursor_tot, self.save_name
 
     def get_nn_next_train(self, batchsize, num_channels = 1):

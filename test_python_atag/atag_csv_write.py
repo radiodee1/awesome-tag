@@ -60,6 +60,7 @@ class Write( enum.Enum) :
 
         try:
             if True : dimx, dimy = Image.open(filename).size # get image bounds... slow!!
+            if dimy == 0 or dimx == 0 : return
         except:
             return
 
