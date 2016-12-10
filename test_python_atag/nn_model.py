@@ -1,5 +1,7 @@
 #!/usr/bin/python
 import os
+import sys
+
 from tensorflow.examples.tutorials.mnist import input_data
 #mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
@@ -213,6 +215,7 @@ class NN(object):
             #self.cursor = 0
             for i in range(self.start_train,self.cursor_tot ):
                 batch_0, batch_1 = self.get_nn_next_train(self.batchsize)
+
                 if i % 100 == 0:
                     train_accuracy = accuracy.eval(feed_dict={
                         x: batch_0, y_: batch_1, keep_prob: 1.0})
@@ -259,7 +262,7 @@ class NN(object):
         self.use_loader = True
 
     def set_vars(self, length,  batchsize, name = "", start = 1):
-        self.cursor_tot = int(length / batchsize)
+        self.cursor_tot = int(length / batchsize) - 2
         self.save_name = name
         #self.start_train = start
         #self.loader.start_num = start
@@ -278,7 +281,12 @@ class NN(object):
 
                 images, lables = self.loader.get_nn_next_train(batchsize, self.cursor, num_channels)
                 #print ("next train batch")
+            else:
+                self.save()
+                sys.exit()
+
             self.cursor = self.cursor + 1
+
         #print lables, "lables"
         return  images, lables
 

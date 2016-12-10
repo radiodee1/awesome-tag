@@ -47,7 +47,7 @@ class Read( enum.Enum) :
         #self.nn.set_vars(len(ll.dat), 100, "softmax", 0)
         #self.nn.softmax_setup()
 
-        self.nn.set_vars(len(ll.dat), 50, "conv", 675)
+        self.nn.set_vars(len(ll.dat), 100, "conv", 0) #50, 'conv', 676
         self.nn.conv_setup()
 
     def signal_handler(self, signum, frame):
