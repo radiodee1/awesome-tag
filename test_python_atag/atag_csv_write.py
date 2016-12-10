@@ -1,6 +1,8 @@
 import os
 import random
 import atag_csv as enum
+from PIL import Image
+import sys
 
 '''
 Here we read the split file and write our own csv file for training later on.
@@ -49,6 +51,18 @@ class Write( enum.Enum) :
         print z
 
     def process_write_line(self, line):
+
+        filename = line[self.FILE]
+        if not filename.startswith(self.a.VAR_ROOT_DATABASE + os.sep) :
+            filename = self.a.VAR_ROOT_DATABASE + os.sep + line[self.FILE]
+
+        if not os.path.isfile(filename) : return
+
+        try:
+            if True : dimx, dimy = Image.open(filename).size # get image bounds... slow!!
+        except:
+            return
+
         try:
             int(line[self.FACE_X]) # are we looking at heading?
         except ValueError:
@@ -61,7 +75,7 @@ class Write( enum.Enum) :
         width = int(line[self.FACE_WIDTH])
         height = int(line[self.FACE_HEIGHT])
 
-        for y in range(2): #3
+        for y in range(2): #3 # values of 2 or 3 are valid
 
             for x in range(self.TOTAL_READ):
                 if y == 0  :
@@ -69,7 +83,7 @@ class Write( enum.Enum) :
 
                 elif (y == 1 or y == 2) and x == self.FACE_X:
                     r = 0
-                    if left - width > 0 : r = random.randint(0,left - width)
+                    if left + width < dimx : r = random.randint(0,dimx - width) # somewhere on top
                     self.f.write(str(r))
                 elif (y == 1 or y == 2) and x == self.FACE_Y:
                     r = 0
