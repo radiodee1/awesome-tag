@@ -28,11 +28,11 @@ class Read( enum.Enum) :
 
     def process_read_line(self, line):
         line = line.split(",")
-        #print line[self.FILE]
-        if line[self.FILE] == self.picname:
+        #print line[self.FILE], "read"
+        if line[self.FILE].endswith(self.picname) :
             self.num = self.num + 1
+
             if line[self.COLOR] == self.RED :
-                print "color"
                 self.boxlist_r.append([int(line[self.FACE_X]), int(line[self.FACE_Y]),
                                  int (line[self.FACE_WIDTH]) , int (line[self.FACE_HEIGHT])])
             if line[self.COLOR] == self.GREEN:

@@ -20,8 +20,8 @@ class Record( enum.Enum):
         h = yy / 28  ## how many tiles high
         print "do individual file prediction"
         for i in range(w * h):
-            x = i - (i / w)
-            y = i / h
+            y = i / w
+            x = i - (y * w)
             temp = []
             for j in range(self.TOTAL):
                 num = 0
@@ -34,7 +34,8 @@ class Record( enum.Enum):
                     num = yy / h
                     if num < 28: num = 28
                 elif j is self.FACE_X:
-                    num = x * (xx / w)
+                    #print xx / w
+                    num = x  * (xx / w) #- (y * (yy / w))
                 elif j is self.FACE_Y:
                     num = y * (yy / h)
                 elif j is self.COLOR :
