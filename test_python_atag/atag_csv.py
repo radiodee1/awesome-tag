@@ -15,7 +15,8 @@ class Enum(object) :
 
         self.COLOR = 10 # THIS IS MY COLOR
         self.IS_FACE = 11 # THIS IS MY BOOBLEAN
-        self.TOTAL = 12
+        self.ATAG_ID = 12
+        self.TOTAL = 13
         self.TOTAL_READ = 10
 
         self.RED = "RED"

@@ -57,8 +57,6 @@ class Read( enum.Enum) :
 
         ll = loader.Load(self.a, self.pic)
 
-        #signal.signal(signal.SIGINT, self.signal_handler)
-
         self.nn.load_ckpt = True
         self.nn.save_ckpt = False
         self.nn.train = False
@@ -70,11 +68,13 @@ class Read( enum.Enum) :
         # self.nn.skintone_setup()
 
 
-        # self.nn.set_vars(len(ll.dat), 100, "softmax", 0)
-        # self.nn.softmax_setup()
+        self.nn.set_vars(len(ll.dat), 100, "softmax", 0)
+        self.nn.softmax_setup()
 
-        self.nn.set_vars(len(ll.dat), 100, "conv", 0)  # 50, 'conv', 676
-        self.nn.conv_setup()
+        #self.nn.set_vars(len(ll.dat), 100, "conv", 0)  # 50, 'conv', 676
+        #self.nn.conv_setup()
+
+        ll.record.remove_lines_from_dat(self.nn.dat_remove)
 
         ll.record.save_dat_to_file()
 

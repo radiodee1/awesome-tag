@@ -40,6 +40,8 @@ class Record( enum.Enum):
                     num = y * (yy / h)
                 elif j is self.COLOR :
                     num = self.RED
+                elif j is self.ATAG_ID :
+                    num = i
                 temp.append(num)
             self.dat.append(temp)
         return self.dat
@@ -56,3 +58,12 @@ class Record( enum.Enum):
                 else: temp = temp + "\n"
             pass
             f.write(temp)
+
+    def remove_lines_from_dat(self, lines):
+        for line in lines:
+            for num in range(len(self.dat)) :
+                print self.dat[num]
+
+                if self.dat[num][self.ATAG_ID] == line :
+                    del self.dat[num]
+                    break

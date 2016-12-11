@@ -42,7 +42,11 @@ class Load(enum.Enum):
 
 
     def get_nn_next_train(self, batchsize, cursor, num_channels = 1):
-        skin, three, images, lables = self._get_pixels_from_dat(cursor * batchsize, cursor * batchsize + batchsize)
+        if cursor * batchsize + batchsize >= len(self.dat):
+            skin, three, images, lables = self._get_pixels_from_dat(cursor * batchsize, len(self.dat) -1 )
+
+        elif cursor * batchsize + batchsize < len(self.dat) :
+            skin, three, images, lables = self._get_pixels_from_dat(cursor * batchsize, cursor * batchsize + batchsize)
         if num_channels == 1 : return images, lables
         if num_channels == 3 : return three, lables
         if num_channels == 12 : return skin, lables

@@ -35,6 +35,8 @@ class NN(object):
         self.predict_softmax = False
         self.predict_conv = False
 
+        self.dat_remove = []
+
         self.nn_out_skintone = None
         self.nn_out_softmax = None
         self.nn_out_conv = None
@@ -144,11 +146,21 @@ class NN(object):
             print(self.sess.run(accuracy, feed_dict={x: self.mnist_test.images, y_: self.mnist_test.labels}))
 
         if self.predict_softmax :
-            self.get_nn_next_test(self.batchsize, 3)
-            y_out = tf.argmax(y,1)
-            out = self.sess.run(y_out, feed_dict={x : self.mnist_test.images, y_: self.mnist_test.labels})
-            print out, len(out)
+            self.cursor = 0
+            self.dat_remove = []
 
+            out = []
+            for i in range(self.start_train, self.cursor_tot + 3) :
+                batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, 3)
+                y_out = tf.argmax(y,1)
+                out.extend( self.sess.run(y_out, feed_dict={x : batch_0, y_: batch_1}))
+                print out, len(out) , i, self.cursor_tot
+
+            for j in range(len(out)) :
+                zz = out[j]
+                if zz == 0 :
+                    self.dat_remove.append( j)
+            print "remove", self.dat_remove
 
     def conv_setup(self):
         output = 2
@@ -231,12 +243,21 @@ class NN(object):
 
         if self.predict_conv :
             self.cursor = 0
-            if True:
-            #for i in range(self.start_train, self.cursor_tot) :
-                self.get_nn_next_test(self.batchsize)
+            self.dat_remove = []
+
+            out = []
+            for i in range(self.start_train, self.cursor_tot + 3) :
+                batch_0, batch_1 = self.get_nn_next_predict(self.batchsize)
                 y_out = tf.argmax(y_conv,1)
-                out = self.sess.run(y_out, feed_dict={x : self.mnist_test.images, y_: self.mnist_test.labels, keep_prob:1.0})
-                print out, len(out)
+                out.extend( self.sess.run(y_out, feed_dict={x : batch_0, y_: batch_1, keep_prob: 0.5}))
+                #print out, len(out) , i, self.cursor_tot
+
+            for j in range(len(out)) :
+                zz = out[j]
+                if zz == 0 :
+                    self.dat_remove.append( j)
+            #print "remove", self.dat_remove
+
 
     def save(self):
         filename = self.save_name
@@ -269,6 +290,11 @@ class NN(object):
         #self.loader.start_num = start
         self.cursor = start
         #print "vars", self.cursor_tot, self.save_name
+
+    def get_nn_next_predict(self, batchsize, num_channels = 1):
+        images, labels = self.loader.get_nn_next_train(batchsize, self.cursor, num_channels)
+        self.cursor = self.cursor + 1
+        return images, labels
 
     def get_nn_next_train(self, batchsize, num_channels = 1):
         if not self.use_loader :

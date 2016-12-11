@@ -97,7 +97,7 @@ class Write( enum.Enum) :
                     self.f.write(",")
                 elif y == 0 :
                     #true
-                    self.f.write(","+ self.RED+",1\n")
+                    self.f.write(","+ self.RED+",1,0\n")
                 elif (y == 1 or y == 2):
                     #false
-                    self.f.write(","+self.RED+",0\n")
+                    self.f.write(","+self.RED+",0,0\n")
