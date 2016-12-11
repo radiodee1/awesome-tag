@@ -21,12 +21,8 @@ class Read( enum.Enum) :
         print self.picname, "picname"
 
         self.csv_input = atag.VAR_LOCAL_DATABASE + os.sep + atag.VAR_MY_CSV_NAME + ".csv"
+        self.csv_input_predict = atag.VAR_LOCAL_DATABASE + os.sep + "predict" + ".csv"
 
-        with open(self.csv_input, 'r') as f:
-            for line in f:
-                self.process_read_line(line)
-        f.close()
-        print "num of boxes", self.num
 
     def process_read_line(self, line):
         line = line.split(",")
@@ -35,3 +31,19 @@ class Read( enum.Enum) :
             self.num = self.num + 1
             self.boxlist.append([int(line[self.FACE_X]), int(line[self.FACE_Y]),
                                  int (line[self.FACE_WIDTH]) , int (line[self.FACE_HEIGHT])])
+
+    def process_read_file_simple(self):
+        with open(self.csv_input, 'r') as f:
+            for line in f:
+                self.process_read_line(line)
+        f.close()
+        print "num of boxes", self.num
+        pass
+
+    def process_read_file_predict(self):
+        with open(self.csv_input_predict, 'r') as f:
+            for line in f:
+                self.process_read_line(line)
+        f.close()
+        print "num of boxes", self.num
+        pass

@@ -302,7 +302,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
     ''' button callback '''
     def on_button_show_csv(self, widget):
         self.run_draw_compile()
-        print 1
+        #print 1
 
     def on_button_write_csv(self, widget):
         thread = threading.Thread(target=self.run_csv_write)
@@ -325,8 +325,14 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     ''' threading etc '''
     def run_draw_compile(self):
+        ii = easygui.buttonbox("Type of Diagram","Choose",choices=("TRAIN","PREDICT"))
         r = draw.Read(self)
-        self.drawingarea.boxlist_red = r.boxlist
+        if ii == "TRAIN" :
+            r.process_read_file_simple()
+            self.drawingarea.boxlist_red = r.boxlist
+        elif ii == "PREDICT" :
+            r.process_read_file_predict()
+            self.drawingarea.boxlist_red = r.boxlist
         self.drawingarea.queue_draw()
 
     def run_csv_write(self):

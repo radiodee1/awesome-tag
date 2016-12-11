@@ -50,6 +50,32 @@ class Read( enum.Enum) :
         self.nn.set_vars(len(ll.dat), 100, "conv", 0) #50, 'conv', 676
         self.nn.conv_setup()
 
+
+
+    def run_predict(self):
+        self.check_folder_exists()
+
+        ll = loader.Load(self.a, self.pic)
+
+        #signal.signal(signal.SIGINT, self.signal_handler)
+
+        self.nn.load_ckpt = True
+        self.nn.save_ckpt = False
+        self.nn.train = False
+        self.nn.test = False
+        self.nn.set_loader(ll)
+
+        # self.nn.predict_skintone = True
+        # self.nn.set_vars(len(ll.dat), 100, "skin", 0)
+        # self.nn.skintone_setup()
+
+
+        # self.nn.set_vars(len(ll.dat), 100, "softmax", 0)
+        # self.nn.softmax_setup()
+
+        self.nn.set_vars(len(ll.dat), 100, "conv", 0)  # 50, 'conv', 676
+        self.nn.conv_setup()
+
         ll.record.save_dat_to_file()
 
     def signal_handler(self, signum, frame):
@@ -74,6 +100,8 @@ if __name__ == '__main__':
     if len(pic) > 0 :
         r.nn.predict_softmax = True
         r.nn.predict_conv = True
-    r.run_nn()
+        r.run_predict()
+    else:
+        r.run_nn()
 
     print("done")

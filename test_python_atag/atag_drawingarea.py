@@ -34,18 +34,18 @@ class DrawingArea(Gtk.DrawingArea) :
 
     def draw(self, widget, context):
         name = self.imagename.strip("\n")
-        print name
+        #print name
 
         if name.lower().endswith("png") :
             self.image = cairo.ImageSurface.create_from_png(name)
             context.set_source_surface(self.image, self.space_left, self.space_top)
             context.paint()
-            print ('png image')
+            #print ('png image')
         if name.lower().endswith("jpg") or name.lower().endswith("jpeg"):
             self.pb = GdkPixbuf.Pixbuf.new_from_file(name)
             Gdk.cairo_set_source_pixbuf(context, self.pb, self.space_left, self.space_top)
             context.paint()
-            print('jpg image')
+            #print('jpg image')
 
         context.set_line_width(1)
         context.set_source_rgb(1, 0, 0)

@@ -13,8 +13,6 @@ class Record( enum.Enum):
     def set_dat(self, dat):
         self.dat = dat
 
-        print
-
     def make_boxes(self, filename):
         xx, yy = Image.open(filename).size
 

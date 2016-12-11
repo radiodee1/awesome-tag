@@ -127,7 +127,7 @@ class Load(enum.Enum):
             return
 
         for l in range(self.TOTAL):
-            if l == self.FILE or l == self.FRAME :
+            if l == self.FILE or l == self.FRAME or l == self.COLOR:
                 row.append(strings[l])
             else:
                 row.append(int(strings[l]))

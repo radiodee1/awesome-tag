@@ -12,6 +12,12 @@ class Enum(object) :
         self.FACE_Y = 7
         self.FACE_WIDTH = 8
         self.FACE_HEIGHT = 9
-        self.IS_FACE = 10 # THIS IS MY BOOBLEAN
-        self.TOTAL = 11
+
+        self.COLOR = 10 # THIS IS MY COLOR
+        self.IS_FACE = 11 # THIS IS MY BOOBLEAN
+        self.TOTAL = 12
         self.TOTAL_READ = 10
+
+        self.RED = "RED"
+        self.GREEN = "GREEN"
+        self.BLUE = "BLUE"
