@@ -231,7 +231,8 @@ class NN(object):
 
         if self.predict_conv :
             self.cursor = 0
-            for i in range(self.start_train, self.cursor_tot) :
+            if True:
+            #for i in range(self.start_train, self.cursor_tot) :
                 self.get_nn_next_test(self.batchsize)
                 y_out = tf.argmax(y_conv,1)
                 out = self.sess.run(y_out, feed_dict={x : self.mnist_test.images, y_: self.mnist_test.labels, keep_prob:1.0})

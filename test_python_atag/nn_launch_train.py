@@ -50,6 +50,8 @@ class Read( enum.Enum) :
         self.nn.set_vars(len(ll.dat), 100, "conv", 0) #50, 'conv', 676
         self.nn.conv_setup()
 
+        ll.record.save_dat_to_file()
+
     def signal_handler(self, signum, frame):
         self.nn.save()
         sys.exit()
@@ -69,7 +71,9 @@ if __name__ == '__main__':
     print pic
     a = aa.Dotfolder()
     r = Read(a, pic)
-    if len(pic) > 0 : r.nn.predict_softmax = True
+    if len(pic) > 0 :
+        r.nn.predict_softmax = True
+        r.nn.predict_conv = True
     r.run_nn()
 
     print("done")

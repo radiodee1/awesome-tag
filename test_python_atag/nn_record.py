@@ -1,3 +1,4 @@
+import os
 import atag_csv as enum
 from PIL import Image
 
@@ -7,16 +8,18 @@ class Record( enum.Enum):
         print
         self.dat = []
         self.a = atag
+        self.predict_filename = self.a.VAR_LOCAL_DATABASE + os.sep + "predict" + ".csv"
 
-    def save_dat(self, dat):
+    def set_dat(self, dat):
         self.dat = dat
 
         print
 
     def make_boxes(self, filename):
-        w = 10  ## how many tiles wide
-        h = 10  ## how many tiles high
         xx, yy = Image.open(filename).size
+
+        w = xx / 28  ## how many tiles wide
+        h = yy / 28  ## how many tiles high
         print "do individual file prediction"
         for i in range(w * h):
             x = i - (i / w)
@@ -39,3 +42,16 @@ class Record( enum.Enum):
                 temp.append(num)
             self.dat.append(temp)
         return self.dat
+
+    def save_dat_to_file(self):
+        #print self.dat
+        f = open(self.predict_filename, "w")
+        f = open(self.predict_filename, "a")
+        for i in self.dat :
+            temp = ""
+            for j in range(len(i)) :
+                temp = temp + str(i[j])
+                if j < len(i) -1 : temp = temp + ","
+                else: temp = temp + "\n"
+            pass
+            f.write(temp)
