@@ -329,10 +329,13 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         r = draw.Read(self)
         if ii == "TRAIN" :
             r.process_read_file_simple()
-            self.drawingarea.boxlist_red = r.boxlist
+            self.drawingarea.boxlist_red = r.boxlist_r
         elif ii == "PREDICT" :
             r.process_read_file_predict()
-            self.drawingarea.boxlist_red = r.boxlist
+            self.drawingarea.boxlist_red = r.boxlist_r
+            self.drawingarea.boxlist_green = r.boxlist_g
+            self.drawingarea.boxlist_blue = r.boxlist_b
+            print self.drawingarea.boxlist_red, "red"
         self.drawingarea.queue_draw()
 
     def run_csv_write(self):

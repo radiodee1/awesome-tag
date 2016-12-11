@@ -37,6 +37,8 @@ class Record( enum.Enum):
                     num = x * (xx / w)
                 elif j is self.FACE_Y:
                     num = y * (yy / h)
+                elif j is self.COLOR :
+                    num = self.RED
                 temp.append(num)
             self.dat.append(temp)
         return self.dat
