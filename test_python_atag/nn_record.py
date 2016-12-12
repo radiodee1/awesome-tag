@@ -67,3 +67,4 @@ class Record( enum.Enum):
                 if self.dat[num][self.ATAG_ID] == line :
                     del self.dat[num]
                     break
+        return self.dat

@@ -121,7 +121,7 @@ class NN(object):
 
         init = tf.initialize_all_variables()
         #init = tf.global_variables_initializer()
-        #self.sess = tf.Session()
+        self.sess = tf.InteractiveSession()
         self.sess.run(init)
 
 
@@ -152,15 +152,18 @@ class NN(object):
             out = []
             for i in range(self.start_train, self.cursor_tot + 3) :
                 batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, 3)
-                y_out = tf.argmax(y,1)
+                y_out = tf.argmax(y,1) # 1
                 out.extend( self.sess.run(y_out, feed_dict={x : batch_0, y_: batch_1}))
                 print out, len(out) , i, self.cursor_tot
 
             for j in range(len(out)) :
                 zz = out[j]
-                if zz == 0 :
+                if zz == 1 : ## 0
                     self.dat_remove.append( j)
             print "remove", self.dat_remove
+
+        self.sess.close()
+
 
     def conv_setup(self):
         output = 2
@@ -184,7 +187,7 @@ class NN(object):
         y_ = tf.placeholder(tf.float32, shape=[None, output])
 
 
-        #self.sess = tf.InteractiveSession()
+        self.sess = tf.InteractiveSession()
         W_conv1 = weight_variable([5, 5, 1, 32])
         b_conv1 = bias_variable([32])
         x_image = tf.reshape(x, [-1, 28, 28, 1])
@@ -248,15 +251,17 @@ class NN(object):
             out = []
             for i in range(self.start_train, self.cursor_tot + 3) :
                 batch_0, batch_1 = self.get_nn_next_predict(self.batchsize)
-                y_out = tf.argmax(y_conv,1)
-                out.extend( self.sess.run(y_out, feed_dict={x : batch_0, y_: batch_1, keep_prob: 0.5}))
+                y_out = tf.argmax(y_conv,1) ## 1
+                out.extend( self.sess.run(y_out, feed_dict={x : batch_0, y_: batch_1, keep_prob: 1.0}))
                 #print out, len(out) , i, self.cursor_tot
 
             for j in range(len(out)) :
                 zz = out[j]
-                if zz == 0 :
+                if zz == 1 : ## 0
                     self.dat_remove.append( j)
-            #print "remove", self.dat_remove
+            print "remove", self.dat_remove
+
+        self.sess.close()
 
 
     def save(self):
