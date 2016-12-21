@@ -57,7 +57,7 @@ class Read( enum.Enum) :
 
         ll = loader.Load(self.a, self.pic)
 
-        self.nn.load_ckpt = True
+        self.nn.load_ckpt = False
         self.nn.save_ckpt = False
         self.nn.train = False
         self.nn.test = False

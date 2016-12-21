@@ -41,6 +41,96 @@ class NN(object):
         self.nn_out_softmax = None
         self.nn_out_conv = None
 
+        self.group_initialize = False
+
+    def nn_configure(self):
+        pass
+        ''' SOFTMAX FIRST '''
+        input_num = 784 * 3  # like mnist but with three channels
+        mid_num = 50  # 10
+        output_num = 2
+
+        x = tf.placeholder(tf.float32, [None, input_num])
+        W_1 = tf.Variable(tf.random_normal([input_num, mid_num], stddev=0.0004))  # 0.0004
+        b_1 = tf.Variable(tf.random_normal([mid_num], stddev=0.5))
+
+        # y_mid = tf.nn.relu(tf.matmul(x,W_1) + b_1)
+        y_mid = tf.nn.relu(tf.matmul(x, W_1) + b_1)
+
+        W_2 = tf.Variable(tf.random_normal([mid_num, output_num], stddev=0.0004))
+        b_2 = tf.Variable(tf.random_normal([output_num], stddev=0.5))
+
+        y_logits = tf.matmul(y_mid, W_2) + b_2
+        y = tf.nn.softmax(y_logits)
+
+        y_ = tf.placeholder(tf.float32, [None, output_num])
+
+        # cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
+        cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y_logits, y_))
+
+        train_step = tf.train.GradientDescentOptimizer(0.0001).minimize(cross_entropy)  # 0.0001
+        # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
+
+        ''' CONVOLUTION NEXT '''
+        c_output = 2
+
+        def weight_variable(shape):
+            initial = tf.truncated_normal(shape, stddev=0.1)
+            return tf.Variable(initial)
+
+        def bias_variable(shape):
+            initial = tf.constant(0.1, shape=shape)
+            return tf.Variable(initial)
+
+        def conv2d(x, W):
+            return tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')
+
+        def max_pool_2x2(x):
+            return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
+                                  strides=[1, 2, 2, 1], padding='SAME')
+
+        c_x = tf.placeholder(tf.float32, shape=[None, 784])
+        c_y_ = tf.placeholder(tf.float32, shape=[None, c_output])
+
+        self.sess = tf.InteractiveSession()
+        W_conv1 = weight_variable([5, 5, 1, 32])
+        b_conv1 = bias_variable([32])
+        x_image = tf.reshape(c_x, [-1, 28, 28, 1])
+        h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
+        h_pool1 = max_pool_2x2(h_conv1)
+
+        W_conv2 = weight_variable([5, 5, 32, 64])
+        b_conv2 = bias_variable([64])
+
+        h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)
+        h_pool2 = max_pool_2x2(h_conv2)
+
+        W_fc1 = weight_variable([7 * 7 * 64, 1024])
+        b_fc1 = bias_variable([1024])
+
+        h_pool2_flat = tf.reshape(h_pool2, [-1, 7 * 7 * 64])
+        h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
+
+        keep_prob = tf.placeholder(tf.float32)
+        h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
+
+        W_fc2 = weight_variable([1024, c_output])
+        b_fc2 = bias_variable([c_output])
+
+        y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
+
+        c_cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y_conv, c_y_))
+        c_train_step = tf.train.AdamOptimizer(1e-4).minimize(c_cross_entropy)
+        c_correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(c_y_, 1))
+        c_accuracy = tf.reduce_mean(tf.cast(c_correct_prediction, tf.float32))
+        pass
+
+        #summary_writer = tf.train.SummaryWriter(self.ckpt_folder + os.sep + "logs" + os.sep, self.sess.graph)
+        if self.load_ckpt : self.load()
+
+
+
+    '''
     def skintone_setup(self):
         input_num = 4 * 3
         mid_num = 3
@@ -91,33 +181,34 @@ class NN(object):
 
             if self.use_loader : self.get_nn_next_test(self.batchsize, 12)
             print(self.sess.run(accuracy, feed_dict={x: self.mnist_test.images, y_: self.mnist_test.labels}))
-
+    '''
 
     def softmax_setup(self):
         input_num = 784 * 3 # like mnist but with three channels
         mid_num = 50 # 10
         output_num = 2
 
-        x = tf.placeholder(tf.float32, [None, input_num])
-        W_1 = tf.Variable(tf.random_normal([input_num, mid_num], stddev=0.0004)) #0.0004
-        b_1 = tf.Variable(tf.random_normal([mid_num], stddev=0.5))
+        if not self.group_initialize :
+            x = tf.placeholder(tf.float32, [None, input_num])
+            W_1 = tf.Variable(tf.random_normal([input_num, mid_num], stddev=0.0004)) #0.0004
+            b_1 = tf.Variable(tf.random_normal([mid_num], stddev=0.5))
 
-        #y_mid = tf.nn.relu(tf.matmul(x,W_1) + b_1)
-        y_mid = tf.nn.relu(tf.matmul(x,W_1) + b_1)
+            #y_mid = tf.nn.relu(tf.matmul(x,W_1) + b_1)
+            y_mid = tf.nn.relu(tf.matmul(x,W_1) + b_1)
 
-        W_2 = tf.Variable(tf.random_normal([mid_num, output_num],stddev=0.0004))
-        b_2 = tf.Variable(tf.random_normal([output_num],stddev=0.5))
+            W_2 = tf.Variable(tf.random_normal([mid_num, output_num],stddev=0.0004))
+            b_2 = tf.Variable(tf.random_normal([output_num],stddev=0.5))
 
-        y_logits = tf.matmul(y_mid, W_2) + b_2
-        y = tf.nn.softmax(y_logits)
+            y_logits = tf.matmul(y_mid, W_2) + b_2
+            y = tf.nn.softmax(y_logits)
 
-        y_ = tf.placeholder(tf.float32, [None, output_num])
+            y_ = tf.placeholder(tf.float32, [None, output_num])
 
-        #cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
-        cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y_logits, y_))
+            #cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
+            cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y_logits, y_))
 
-        train_step = tf.train.GradientDescentOptimizer(0.0001).minimize(cross_entropy) #0.0001
-        #train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
+            train_step = tf.train.GradientDescentOptimizer(0.0001).minimize(cross_entropy) #0.0001
+            #train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
         init = tf.initialize_all_variables()
         #init = tf.global_variables_initializer()
@@ -136,7 +227,8 @@ class NN(object):
                 batch_xs, batch_ys = self.get_nn_next_train(self.batchsize, 3)
                 self.sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
 
-        if self.save_ckpt and self.train : self.save()
+        if self.save_ckpt and self.train and (not self.group_initialize): self.save()
+        if self.save_ckpt and self.train and self.group_initialize : self.save_group()
 
         if self.test :
             correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
@@ -166,59 +258,62 @@ class NN(object):
 
 
     def conv_setup(self):
-        output = 2
-        def weight_variable(shape):
-            initial = tf.truncated_normal(shape, stddev=0.1)
-            return tf.Variable(initial)
+        c_output = 2
 
-        def bias_variable(shape):
-            initial = tf.constant(0.1, shape=shape)
-            return tf.Variable(initial)
+        if not self.group_initialize :
+            def weight_variable(shape):
+                initial = tf.truncated_normal(shape, stddev=0.1)
+                return tf.Variable(initial)
 
-        def conv2d(x, W):
-            return tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')
+            def bias_variable(shape):
+                initial = tf.constant(0.1, shape=shape)
+                return tf.Variable(initial)
 
-        def max_pool_2x2(x):
-            return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
-                                  strides=[1, 2, 2, 1], padding='SAME')
+            def conv2d(x, W):
+                return tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')
 
-
-        x = tf.placeholder(tf.float32, shape=[None, 784])
-        y_ = tf.placeholder(tf.float32, shape=[None, output])
+            def max_pool_2x2(x):
+                return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
+                                      strides=[1, 2, 2, 1], padding='SAME')
 
 
-        self.sess = tf.InteractiveSession()
-        W_conv1 = weight_variable([5, 5, 1, 32])
-        b_conv1 = bias_variable([32])
-        x_image = tf.reshape(x, [-1, 28, 28, 1])
-        h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
-        h_pool1 = max_pool_2x2(h_conv1)
-
-        W_conv2 = weight_variable([5, 5, 32, 64])
-        b_conv2 = bias_variable([64])
-
-        h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)
-        h_pool2 = max_pool_2x2(h_conv2)
-
-        W_fc1 = weight_variable([7 * 7 * 64, 1024])
-        b_fc1 = bias_variable([1024])
-
-        h_pool2_flat = tf.reshape(h_pool2, [-1, 7 * 7 * 64])
-        h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
-
-        keep_prob = tf.placeholder(tf.float32)
-        h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
-
-        W_fc2 = weight_variable([1024, output])
-        b_fc2 = bias_variable([output])
-
-        y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
+            c_x = tf.placeholder(tf.float32, shape=[None, 784])
+            c_y_ = tf.placeholder(tf.float32, shape=[None, c_output])
 
 
-        cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y_conv, y_))
-        train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
-        correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_, 1))
-        accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+            self.sess = tf.InteractiveSession()
+            W_conv1 = weight_variable([5, 5, 1, 32])
+            b_conv1 = bias_variable([32])
+            x_image = tf.reshape(c_x, [-1, 28, 28, 1])
+            h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
+            h_pool1 = max_pool_2x2(h_conv1)
+
+            W_conv2 = weight_variable([5, 5, 32, 64])
+            b_conv2 = bias_variable([64])
+
+            h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)
+            h_pool2 = max_pool_2x2(h_conv2)
+
+            W_fc1 = weight_variable([7 * 7 * 64, 1024])
+            b_fc1 = bias_variable([1024])
+
+            h_pool2_flat = tf.reshape(h_pool2, [-1, 7 * 7 * 64])
+            h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
+
+            keep_prob = tf.placeholder(tf.float32)
+            h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
+
+            W_fc2 = weight_variable([1024, c_output])
+            b_fc2 = bias_variable([c_output])
+
+            y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
+
+
+            c_cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y_conv, c_y_))
+            c_train_step = tf.train.AdamOptimizer(1e-4).minimize(c_cross_entropy)
+            c_correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(c_y_, 1))
+            c_accuracy = tf.reduce_mean(tf.cast(c_correct_prediction, tf.float32))
+
         #init = tf.global_variables_initializer()
         init = tf.initialize_all_variables()
         self.sess.run(init)
@@ -232,17 +327,18 @@ class NN(object):
                 batch_0, batch_1 = self.get_nn_next_train(self.batchsize)
 
                 if i % 100 == 0:
-                    train_accuracy = accuracy.eval(feed_dict={
-                        x: batch_0, y_: batch_1, keep_prob: 1.0})
+                    train_accuracy = c_accuracy.eval(feed_dict={
+                        c_x: batch_0, c_y_: batch_1, keep_prob: 1.0})
                     print("step %d, training accuracy %g" % (i, train_accuracy))
-                train_step.run(feed_dict={x: batch_0, y_: batch_1, keep_prob: 0.5})
+                c_train_step.run(feed_dict={c_x: batch_0, c_y_: batch_1, keep_prob: 0.5})
 
-        if self.save_ckpt and self.train: self.save()
+        if self.save_ckpt and self.train and (not self.group_initialize): self.save()
+        if self.save_ckpt and self.train and self.group_initialize : self.save_group()
 
         if self.test :
             if self.use_loader : self.get_nn_next_test(self.batchsize)
-            print("test accuracy %g" % accuracy.eval(feed_dict={
-                x: self.mnist_test.images, y_: self.mnist_test.labels, keep_prob: 1.0}))
+            print("test accuracy %g" % c_accuracy.eval(feed_dict={
+                c_x: self.mnist_test.images, c_y_: self.mnist_test.labels, keep_prob: 1.0}))
 
         if self.predict_conv :
             self.cursor = 0
@@ -252,7 +348,7 @@ class NN(object):
             for i in range(self.start_train, self.cursor_tot + 3) :
                 batch_0, batch_1 = self.get_nn_next_predict(self.batchsize)
                 y_out = tf.argmax(y_conv,1) ## 1
-                out.extend( self.sess.run(y_out, feed_dict={x : batch_0, y_: batch_1, keep_prob: 1.0}))
+                out.extend( self.sess.run(y_out, feed_dict={c_x : batch_0, c_y_: batch_1, keep_prob: 1.0}))
                 #print out, len(out) , i, self.cursor_tot
 
             for j in range(len(out)) :
@@ -262,6 +358,7 @@ class NN(object):
             print "remove", self.dat_remove
 
         self.sess.close()
+
 
 
     def save(self):
@@ -281,6 +378,14 @@ class NN(object):
             saver.restore(self.sess, file)
             print ("load?", filename)
 
+    def save_group(self):
+        filename = "group" # self.save_name
+        folder = self.ckpt_folder + os.sep + "ckpt"
+        if not os.path.exists(folder) :
+            os.makedirs(folder)
+        saver = tf.train.Saver()
+        save_path = saver.save(self.sess, folder + os.sep + self.ckpt_name + "."+ filename)
+        print ("saved?", filename)
 
 
     def set_loader(self, load):
