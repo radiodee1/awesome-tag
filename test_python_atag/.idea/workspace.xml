@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c15ed38a-2fe7-44d1-b032-ae199cd14d43" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_launch_train.py" afterPath="$PROJECT_DIR$/nn_launch_train.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_model.py" afterPath="$PROJECT_DIR$/nn_model.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -53,11 +52,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="nn_model.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="nn_model.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nn_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1440">
-              <caret line="135" column="9" lean-forward="false" selection-start-line="135" selection-start-column="9" selection-end-line="135" selection-end-column="9" />
+            <state relative-caret-position="-934">
+              <caret line="192" column="9" lean-forward="false" selection-start-line="192" selection-start-column="9" selection-end-line="192" selection-end-column="9" />
               <folding>
                 <element signature="e#18#27#0" expanded="true" />
               </folding>
@@ -89,7 +88,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="nn_launch_train.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="nn_launch_train.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nn_launch_train.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="342">
@@ -190,8 +189,8 @@
         <option value="$PROJECT_DIR$/atag_csv.py" />
         <option value="$PROJECT_DIR$/atag_csv_write.py" />
         <option value="$PROJECT_DIR$/nn_record.py" />
-        <option value="$PROJECT_DIR$/nn_model.py" />
         <option value="$PROJECT_DIR$/nn_launch_train.py" />
+        <option value="$PROJECT_DIR$/nn_model.py" />
       </list>
     </option>
   </component>
@@ -422,13 +421,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1480257882064</updated>
-    </task>
-    <task id="LOCAL-00019" summary="messing with look_at_image() -- models output changed to 2 and runs, but not all vars seem to be showing up">
-      <created>1480711460710</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1480711460710</updated>
     </task>
     <task id="LOCAL-00020" summary="messing with look_at_image() -- models output changed to 2 and runs, but not all vars seem to be showing up">
       <created>1480721070115</created>
@@ -766,7 +758,14 @@
       <option name="project" value="LOCAL" />
       <updated>1482429472714</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="combine two models for saving of results">
+      <created>1482430848838</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1482430848838</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -796,7 +795,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="working on cursors" />
     <MESSAGE value="working on cursors -- three channel stuff" />
     <MESSAGE value="change img loader a little" />
     <MESSAGE value="change img loader a little -- change model slightly" />
@@ -821,7 +819,8 @@
     <MESSAGE value="changing enumeration" />
     <MESSAGE value="boxes correct size" />
     <MESSAGE value="combine two models" />
-    <option name="LAST_COMMIT_MESSAGE" value="combine two models" />
+    <MESSAGE value="combine two models for saving of results" />
+    <option name="LAST_COMMIT_MESSAGE" value="combine two models for saving of results" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1270,22 +1269,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nn_model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1440">
-          <caret line="135" column="9" lean-forward="false" selection-start-line="135" selection-start-column="9" selection-end-line="135" selection-end-column="9" />
-          <folding>
-            <element signature="e#18#27#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/nn_launch_train.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="342">
           <caret line="43" column="9" lean-forward="false" selection-start-line="43" selection-start-column="9" selection-end-line="43" selection-end-column="9" />
           <folding>
             <element signature="e#19#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nn_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-934">
+          <caret line="192" column="9" lean-forward="false" selection-start-line="192" selection-start-column="9" selection-end-line="192" selection-end-column="9" />
+          <folding>
+            <element signature="e#18#27#0" expanded="true" />
           </folding>
         </state>
       </provider>
