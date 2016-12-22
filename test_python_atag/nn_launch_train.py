@@ -40,11 +40,11 @@ class Read( enum.Enum) :
         self.nn.set_loader(ll)
 
 
-        self.nn.set_vars(len(ll.dat), 100, 0)
-        self.nn.softmax_setup()
+        #self.nn.set_vars(len(ll.dat), 100, 0)
+        #self.nn.softmax_setup()
 
-        #self.nn.set_vars(len(ll.dat), 100, 0) #50, 'conv', 676
-        #self.nn.conv_setup()
+        self.nn.set_vars(len(ll.dat), 100, 0) #50, 'conv', 676
+        self.nn.conv_setup()
 
 
 
@@ -77,7 +77,7 @@ class Read( enum.Enum) :
         ll.record.save_dat_to_file()
 
     def signal_handler(self, signum, frame):
-        self.nn.save()
+        self.nn.save_group()
         sys.exit()
 
     def check_folder_exists(self):

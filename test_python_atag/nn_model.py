@@ -133,7 +133,7 @@ class NN(object):
         pass
 
         #summary_writer = tf.train.SummaryWriter(self.ckpt_folder + os.sep + "logs" + os.sep, self.sess.graph)
-        if self.load_ckpt : self.load()
+        #if self.load_ckpt : self.load()
 
 
 
@@ -263,7 +263,7 @@ class NN(object):
                     self.dat_remove.append( j)
             print "remove", self.dat_remove
 
-        self.sess.close()
+        #self.sess.close()
 
 
     def conv_setup(self):
@@ -369,29 +369,12 @@ class NN(object):
                     self.dat_remove.append( j)
             print "remove", self.dat_remove
 
-        self.sess.close()
+        #self.sess.close()
 
-
-
-    def save(self):
-        filename = self.save_name
-        folder = self.ckpt_folder + os.sep + "ckpt"
-        if not os.path.exists(folder) :
-            os.makedirs(folder)
-        saver = tf.train.Saver()
-        save_path = saver.save(self.sess, folder + os.sep + self.ckpt_name + "."+ filename)
-        print ("saved?", filename)
-
-    def load(self):
-        filename = self.save_name
-        file = self.ckpt_folder + os.sep + "ckpt" + os.sep + self.ckpt_name +"."+ filename
-        if os.path.isfile(file) :
-            saver = tf.train.Saver()
-            saver.restore(self.sess, file)
-            print ("load?", filename)
 
     def save_group(self):
         filename = "group" # self.save_name
+        #self.ckpt_name = filename
         folder = self.ckpt_folder + os.sep + "ckpt"
         if not os.path.exists(folder) :
             os.makedirs(folder)
@@ -401,6 +384,7 @@ class NN(object):
 
     def load_group(self):
         filename = "group"
+        #self.ckpt_name = filename
         file = self.ckpt_folder + os.sep + "ckpt" + os.sep + self.ckpt_name + "." + filename
         if os.path.isfile(file):
             saver = tf.train.Saver()
