@@ -39,16 +39,12 @@ class Read( enum.Enum) :
         self.nn.test = True
         self.nn.set_loader(ll)
 
-        #self.nn.predict_skintone = True
-        #self.nn.set_vars(len(ll.dat), 100, "skin", 0)
-        #self.nn.skintone_setup()
 
+        self.nn.set_vars(len(ll.dat), 100, 0)
+        self.nn.softmax_setup()
 
-        #self.nn.set_vars(len(ll.dat), 100, "softmax", 0)
-        #self.nn.softmax_setup()
-
-        self.nn.set_vars(len(ll.dat), 100, "conv", 0) #50, 'conv', 676
-        self.nn.conv_setup()
+        #self.nn.set_vars(len(ll.dat), 100, 0) #50, 'conv', 676
+        #self.nn.conv_setup()
 
 
 
@@ -68,12 +64,12 @@ class Read( enum.Enum) :
         # self.nn.skintone_setup()
 
 
-        self.nn.set_vars(len(ll.dat), 100, "softmax", 0)
+        self.nn.set_vars(len(ll.dat), 100, 0)
         self.nn.softmax_setup()
 
         ll.dat = ll.record.remove_lines_from_dat(self.nn.dat_remove)
 
-        self.nn.set_vars(len(ll.dat), 100, "conv", 0)  # 50, 'conv', 676
+        self.nn.set_vars(len(ll.dat), 100,  0)  # 50, 'conv', 676
         self.nn.conv_setup()
 
         #ll.dat = ll.record.remove_lines_from_dat(self.nn.dat_remove)
