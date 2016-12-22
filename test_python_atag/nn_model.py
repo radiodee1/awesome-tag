@@ -42,6 +42,7 @@ class NN(object):
         self.nn_out_conv = None
 
         self.group_initialize = False
+        self.predict_remove_symbol = 0 ## or 0 ??
 
         self.nn_configure()
 
@@ -130,25 +131,26 @@ class NN(object):
         self.c_train_step = tf.train.AdamOptimizer(1e-4).minimize(self.c_cross_entropy)
         self.c_correct_prediction = tf.equal(tf.argmax(self.y_conv, 1), tf.argmax(self.c_y_, 1))
         self.c_accuracy = tf.reduce_mean(tf.cast(self.c_correct_prediction, tf.float32))
-        pass
+
+        init = tf.initialize_all_variables()
+        self.sess.run(init)
 
         #summary_writer = tf.train.SummaryWriter(self.ckpt_folder + os.sep + "logs" + os.sep, self.sess.graph)
-        #if self.load_ckpt : self.load()
 
 
 
     def softmax_setup(self):
-        input_num = 784 * 3 # like mnist but with three channels
-        mid_num = 50 # 10
-        output_num = 2
+        #input_num = 784 * 3 # like mnist but with three channels
+        #mid_num = 50 # 10
+        #output_num = 2
 
-        init = tf.initialize_all_variables()
+        #init = tf.initialize_all_variables()
         #init = tf.global_variables_initializer()
         #self.sess = tf.InteractiveSession()
-        self.sess.run(init)
+        #self.sess.run(init)
 
 
-        summary_writer = tf.train.SummaryWriter(self.ckpt_folder + os.sep + "logs" + os.sep, self.sess.graph)
+        #summary_writer = tf.train.SummaryWriter(self.ckpt_folder + os.sep + "logs" + os.sep, self.sess.graph)
 
         if self.load_ckpt : self.load_group()
 
@@ -159,7 +161,6 @@ class NN(object):
                 batch_xs, batch_ys = self.get_nn_next_train(self.batchsize, 3)
                 self.sess.run(self.train_step, feed_dict={self.x: batch_xs, self.y_: batch_ys})
 
-        #if self.save_ckpt and self.train and (not self.group_initialize): self.save()
         if self.save_ckpt and self.train : self.save_group()
 
         if self.test :
@@ -182,26 +183,24 @@ class NN(object):
 
             for j in range(len(out)) :
                 zz = out[j]
-                if zz == 1 : ## 0
-                    self.dat_remove.append( j)
+                if zz == self.predict_remove_symbol : ## 1
+                    self.dat_remove.append( j )
             print "remove", self.dat_remove
-
-        #self.sess.close()
 
 
     def conv_setup(self):
         #c_output = 2
 
         #init = tf.global_variables_initializer()
-        init = tf.initialize_all_variables()
-        self.sess.run(init)
+        #init = tf.initialize_all_variables()
+        #self.sess.run(init)
         #self.sess.run(tf.initialize_all_variables())
 
         if self.load_ckpt : self.load_group()
 
         if self.train :
             #self.cursor = 0
-            for i in range(self.start_train,self.cursor_tot ):
+            for i in range(self.start_train, self.cursor_tot ):
                 batch_0, batch_1 = self.get_nn_next_train(self.batchsize)
 
                 if i % 100 == 0:
@@ -210,7 +209,6 @@ class NN(object):
                     print("step %d, training accuracy %g" % (i, train_accuracy))
                 self.c_train_step.run(feed_dict={self.c_x: batch_0, self.c_y_: batch_1, self.keep_prob: 0.5})
 
-        #if self.save_ckpt and self.train and (not self.group_initialize): self.save()
         if self.save_ckpt and self.train  : self.save_group()
 
         if self.test :
@@ -226,12 +224,14 @@ class NN(object):
             for i in range(self.start_train, self.cursor_tot + 3) :
                 batch_0, batch_1 = self.get_nn_next_predict(self.batchsize)
                 y_out = tf.argmax(self.y_conv,1) ## 1
-                out.extend( self.sess.run(y_out, feed_dict={self.c_x : batch_0, self.c_y_: batch_1, self.keep_prob: 1.0}))
-                #print out, len(out) , i, self.cursor_tot
+                #zz = self.sess.run(y_out,feed_dict={self.c_x: batch_0, self.c_y_: batch_1, self.keep_prob: 1.0})
+                if len(batch_0) > 0  :
+                    out.extend( self.sess.run(y_out, feed_dict={self.c_x : batch_0, self.c_y_: batch_1, self.keep_prob: 1.0}))
+                    #print out, len(out) , i, self.cursor_tot
 
             for j in range(len(out)) :
                 zz = out[j]
-                if zz == 1 : ## 0
+                if zz == self.predict_remove_symbol : ## 1
                     self.dat_remove.append( j)
             print "remove", self.dat_remove
 

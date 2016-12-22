@@ -62,7 +62,7 @@ class Record( enum.Enum):
     def remove_lines_from_dat(self, lines):
         for line in lines:
             for num in range(len(self.dat)) :
-                print self.dat[num]
+                print self.dat[num], "list"
 
                 if self.dat[num][self.ATAG_ID] == line :
                     del self.dat[num]
