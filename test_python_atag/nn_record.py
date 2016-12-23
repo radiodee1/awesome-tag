@@ -68,3 +68,15 @@ class Record( enum.Enum):
                     del self.dat[num]
                     break
         return self.dat
+
+    def show_dat_list(self, name = "listing"):
+        for line in self.dat:
+            print line, name
+        print name, "over"
+
+    def renumber_dat_list(self, dat):
+        self.dat = dat
+        for i in range(len(self.dat)) :
+            zz = self.dat[i]
+            zz[self.ATAG_ID] = i
+        return  self.dat
