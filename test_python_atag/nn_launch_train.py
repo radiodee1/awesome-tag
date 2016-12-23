@@ -62,10 +62,11 @@ class Read( enum.Enum) :
 
         self.nn.set_vars(len(ll.dat), 100, 0)
         self.nn.skintone_setup()
+        print "len-dat1", len(ll.dat)
 
-
-        #self.nn.set_vars(len(ll.dat), 100,  0)  # 50, 'conv', 676
-        #self.nn.conv_setup()
+        self.nn.set_vars(len(ll.dat), 100,  0)  # 50, 'conv', 676
+        self.nn.conv_setup()
+        print "len-dat2", len(ll.dat)
 
 
 
