@@ -31,6 +31,7 @@ class Load(enum.Enum):
 
         ''' Read csv file '''
         if len(filename) == 0 :
+            print self.csv_input , " - input file"
             with open(self.csv_input, 'r') as f:
                 for line in f:
                     self._process_read_line(line)

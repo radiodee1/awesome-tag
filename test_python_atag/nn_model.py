@@ -42,7 +42,7 @@ class NN(object):
         self.nn_out_conv = None
 
         self.group_initialize = False
-        self.predict_remove_symbol = 0 ## or 0 ??
+        self.predict_remove_symbol = 1 ## or 0 ??
 
         self.nn_configure()
 
@@ -50,7 +50,6 @@ class NN(object):
 
         self.group_initialize = True
         self.sess = tf.InteractiveSession()
-
 
         ''' SOFTMAX FIRST '''
         input_num = 784 * 3  # like mnist but with three channels
@@ -77,6 +76,8 @@ class NN(object):
 
         self.train_step = tf.train.GradientDescentOptimizer(0.0001).minimize(self.cross_entropy)  # 0.0001
         # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
+
+        self.y_out = tf.argmax(self.y, 1)  ## for prediction
 
         ''' CONVOLUTION NEXT '''
         c_output = 2
@@ -132,6 +133,8 @@ class NN(object):
         self.c_correct_prediction = tf.equal(tf.argmax(self.y_conv, 1), tf.argmax(self.c_y_, 1))
         self.c_accuracy = tf.reduce_mean(tf.cast(self.c_correct_prediction, tf.float32))
 
+        self.c_y_out = tf.argmax(self.y_conv, 1)  ## for prediction
+
         init = tf.initialize_all_variables()
         self.sess.run(init)
 
@@ -139,18 +142,7 @@ class NN(object):
 
 
 
-    def softmax_setup(self):
-        #input_num = 784 * 3 # like mnist but with three channels
-        #mid_num = 50 # 10
-        #output_num = 2
-
-        #init = tf.initialize_all_variables()
-        #init = tf.global_variables_initializer()
-        #self.sess = tf.InteractiveSession()
-        #self.sess.run(init)
-
-
-        #summary_writer = tf.train.SummaryWriter(self.ckpt_folder + os.sep + "logs" + os.sep, self.sess.graph)
+    def skintone_setup(self):
 
         if self.load_ckpt : self.load_group()
 
@@ -177,24 +169,21 @@ class NN(object):
             out = []
             for i in range(self.start_train, self.cursor_tot + 3) :
                 batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, 3)
-                y_out = tf.argmax(self.y,1) # 1
-                out.extend( self.sess.run(y_out, feed_dict={self.x : batch_0, self.y_: batch_1}))
+                #self.y_out = tf.argmax(self.y,1) # 1
+                out.extend( self.sess.run(self.y_out, feed_dict={self.x : batch_0, self.y_: batch_1}))
                 print out, len(out) , i, self.cursor_tot
 
             for j in range(len(out)) :
                 zz = out[j]
                 if zz == self.predict_remove_symbol : ## 1
                     self.dat_remove.append( j )
-            print "remove", self.dat_remove
+
+            self.loader.record.remove_lines_from_dat(self.dat_remove)
+            print "remove skintone", self.dat_remove
 
 
     def conv_setup(self):
         #c_output = 2
-
-        #init = tf.global_variables_initializer()
-        #init = tf.initialize_all_variables()
-        #self.sess.run(init)
-        #self.sess.run(tf.initialize_all_variables())
 
         if self.load_ckpt : self.load_group()
 
@@ -223,17 +212,18 @@ class NN(object):
             out = []
             for i in range(self.start_train, self.cursor_tot + 3) :
                 batch_0, batch_1 = self.get_nn_next_predict(self.batchsize)
-                y_out = tf.argmax(self.y_conv,1) ## 1
-                #zz = self.sess.run(y_out,feed_dict={self.c_x: batch_0, self.c_y_: batch_1, self.keep_prob: 1.0})
+                #self.c_y_out = tf.argmax(self.y_conv,1) ## 1
                 if len(batch_0) > 0  :
-                    out.extend( self.sess.run(y_out, feed_dict={self.c_x : batch_0, self.c_y_: batch_1, self.keep_prob: 1.0}))
+                    out.extend( self.sess.run(self.c_y_out, feed_dict={self.c_x : batch_0, self.c_y_: batch_1, self.keep_prob: 1.0}))
                     #print out, len(out) , i, self.cursor_tot
 
             for j in range(len(out)) :
                 zz = out[j]
                 if zz == self.predict_remove_symbol : ## 1
                     self.dat_remove.append( j)
-            print "remove", self.dat_remove
+
+            self.loader.record.remove_lines_from_dat(self.dat_remove)
+            print "remove conv", self.dat_remove
 
         #self.sess.close()
 

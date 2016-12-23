@@ -35,16 +35,16 @@ class Read( enum.Enum) :
 
         self.nn.load_ckpt = True
         self.nn.save_ckpt = True
-        self.nn.train = True
+        self.nn.train = False
         self.nn.test = True
         self.nn.set_loader(ll)
 
 
-        #self.nn.set_vars(len(ll.dat), 100, 0)
-        #self.nn.softmax_setup()
+        self.nn.set_vars(len(ll.dat), 100, 0)
+        self.nn.skintone_setup()
 
-        self.nn.set_vars(len(ll.dat), 100, 0) #50, 'conv', 676
-        self.nn.conv_setup()
+        #self.nn.set_vars(len(ll.dat), 100, 0) #50, 'conv', 676
+        #self.nn.conv_setup()
 
 
 
@@ -53,7 +53,7 @@ class Read( enum.Enum) :
 
         ll = loader.Load(self.a, self.pic)
 
-        self.nn.load_ckpt = False
+        self.nn.load_ckpt = True
         self.nn.save_ckpt = False
         self.nn.train = False
         self.nn.test = False
@@ -61,15 +61,13 @@ class Read( enum.Enum) :
 
 
         self.nn.set_vars(len(ll.dat), 100, 0)
-        self.nn.softmax_setup()
-
-        ll.dat = ll.record.remove_lines_from_dat(self.nn.dat_remove)
+        self.nn.skintone_setup()
 
 
         #self.nn.set_vars(len(ll.dat), 100,  0)  # 50, 'conv', 676
         #self.nn.conv_setup()
 
-        #ll.dat = ll.record.remove_lines_from_dat(self.nn.dat_remove)
+
 
 
         ll.record.save_dat_to_file()
