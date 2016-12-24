@@ -167,11 +167,18 @@ class NN(object):
             self.dat_remove = []
 
             out = []
-            for i in range(self.start_train, self.cursor_tot + 3) :
+            start = 0 # self.start_train
+            stop = self.cursor_tot
+            if len(self.loader.dat) > self.cursor_tot * self.batchsize:
+                stop = self.cursor_tot + 1
+                print stop
+
+            for i in range(start, stop ) :
                 batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, 3)
                 #self.y_out = tf.argmax(self.y,1) # 1
-                out.extend( self.sess.run(self.y_out, feed_dict={self.x : batch_0, self.y_: batch_1}))
-                print out, len(out) , i, self.cursor_tot
+                if len(batch_0) > 0:
+                    out.extend( self.sess.run(self.y_out, feed_dict={self.x : batch_0, self.y_: batch_1}))
+                    print out, len(out) , i, self.cursor_tot
 
             for j in range(len(out)) :
                 zz = out[j]
@@ -211,7 +218,13 @@ class NN(object):
             self.dat_remove = []
 
             out = []
-            for i in range(self.start_train, self.cursor_tot + 3) :
+            start = 0 # self.start_train
+            stop = self.cursor_tot
+            if len(self.loader.dat) > self.cursor_tot * self.batchsize :
+                stop = self.cursor_tot + 1
+                print stop
+
+            for i in range(start, stop ) :
                 batch_0, batch_1 = self.get_nn_next_predict(self.batchsize)
                 #self.c_y_out = tf.argmax(self.y_conv,1) ## 1
                 if len(batch_0) > 0  :
@@ -256,7 +269,7 @@ class NN(object):
         self.use_loader = True
 
     def set_vars(self, length,  batchsize, start = 1):
-        self.cursor_tot = int(length / batchsize) - 1
+        self.cursor_tot = int(length / batchsize) ## -1
         self.save_name = "group-miss"
         #self.start_train = start
         #self.loader.start_num = start
@@ -264,7 +277,8 @@ class NN(object):
         #print "vars", self.cursor_tot, self.save_name
 
     def get_nn_next_predict(self, batchsize, num_channels = 1):
-        images, labels = self.loader.get_nn_next_train(batchsize, self.cursor, num_channels)
+        print self.cursor, num_channels
+        images, labels = self.loader.get_nn_next_predict(batchsize, self.cursor, num_channels)
         self.cursor = self.cursor + 1
         return images, labels
 

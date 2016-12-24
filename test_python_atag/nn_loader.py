@@ -62,9 +62,20 @@ class Load(enum.Enum):
         if num_channels == 12 : self.mnist_test = Map({'images':skin, 'labels': labels})
         return self.mnist_test
 
+    def get_nn_next_predict(self, batchsize, cursor, num_channels = 1):
+        tot_cursors = int(len(self.dat) / batchsize)
+        if cursor >= tot_cursors  :
+            print cursor, tot_cursors, batchsize, len(self.dat), "end"
+            skin, three, images, labels = self._get_pixels_from_dat(cursor * batchsize, len(self.dat) )
+        elif cursor <= tot_cursors :
+            skin, three, images, labels = self._get_pixels_from_dat(cursor * batchsize, cursor * batchsize + batchsize)
+        if num_channels == 1 : return images, labels
+        if num_channels == 3 : return three, labels
+        if num_channels == 12 : return skin, labels
+        return images, labels
 
     def _get_pixels_from_dat(self, start, stop):
-        #print ("work with dat var")
+        print ("work with dat var")
         self.image = []
         self.label = []
         self.image_x3 = []
@@ -76,7 +87,7 @@ class Load(enum.Enum):
 
         while self.iter < stop and stop <= len(self.dat) and self.iter < len(self.dat):
             filename = self.dat[self.iter][self.FILE]
-            if not filename.startswith(self.image_folder + os.sep) :
+            if not filename.startswith(self.image_folder + os.sep) and not (filename.startswith(os.sep)) :
                 filename = self.image_folder + os.sep + filename
             x = self.dat[self.iter][self.FACE_X]
             y = self.dat[self.iter][self.FACE_Y]
