@@ -48,18 +48,18 @@ class Load(enum.Enum):
 
         elif cursor * batchsize + batchsize < len(self.dat) :
             skin, three, images, lables = self._get_pixels_from_dat(cursor * batchsize, cursor * batchsize + batchsize)
-        if num_channels == 1 : return images, lables
-        if num_channels == 3 : return three, lables
-        if num_channels == 12 : return skin, lables
+        if num_channels == self.CONST_ONE_CHANNEL : return images, lables
+        if num_channels == self.CONST_THREE_CHANNEL : return three, lables
+        if num_channels == self.CONST_DOT : return skin, lables
         return images, lables
 
     def get_nn_next_test(self, batchsize, num_channels = 1):
         testframe = 0
         skin, three, images, labels = self._get_pixels_from_dat( testframe * batchsize, testframe * batchsize + batchsize) #len(self.dat) - batchsize, len(self.dat))
         print ("next test", len(images), batchsize, testframe)
-        if num_channels == 1 : self.mnist_test = Map({'images':images, 'labels': labels})
-        if num_channels == 3 : self.mnist_test = Map({'images':three, 'labels':labels})
-        if num_channels == 12 : self.mnist_test = Map({'images':skin, 'labels': labels})
+        if num_channels == self.CONST_ONE_CHANNEL : self.mnist_test = Map({'images':images, 'labels': labels})
+        if num_channels == self.CONST_THREE_CHANNEL : self.mnist_test = Map({'images':three, 'labels':labels})
+        if num_channels == self.CONST_DOT : self.mnist_test = Map({'images':skin, 'labels': labels})
         return self.mnist_test
 
     def get_nn_next_predict(self, batchsize, cursor, num_channels = 1):
@@ -69,9 +69,9 @@ class Load(enum.Enum):
             skin, three, images, labels = self._get_pixels_from_dat(cursor * batchsize, len(self.dat) )
         elif cursor <= tot_cursors :
             skin, three, images, labels = self._get_pixels_from_dat(cursor * batchsize, cursor * batchsize + batchsize)
-        if num_channels == 1 : return images, labels
-        if num_channels == 3 : return three, labels
-        if num_channels == 12 : return skin, labels
+        if num_channels == self.CONST_ONE_CHANNEL : return images, labels
+        if num_channels == self.CONST_THREE_CHANNEL : return three, labels
+        if num_channels == self.CONST_DOT : return skin, labels
         return images, labels
 
     def _get_pixels_from_dat(self, start, stop):

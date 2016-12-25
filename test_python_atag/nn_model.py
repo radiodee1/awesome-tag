@@ -7,9 +7,12 @@ from tensorflow.examples.tutorials.mnist import input_data
 
 import tensorflow as tf
 #import atag_dotfolder as aa
+import atag_csv as enum
 
-class NN(object):
+class NN(enum.Enum):
     def __init__(self, atag):
+        enum.Enum.__init__(self)
+
         self.ckpt_folder = atag.VAR_LOCAL_DATABASE
         self.ckpt_name = atag.VAR_BASE_NAME
         self.train = False
@@ -42,7 +45,7 @@ class NN(object):
         self.nn_out_conv = None
 
         self.group_initialize = False
-        self.predict_remove_symbol = 0 ## 1 or 0 ??
+        self.predict_remove_symbol = 1 ## 1 or 0 ??
 
         self.nn_configure()
 
@@ -177,7 +180,7 @@ class NN(object):
             self.cursor = 0
 
             for i in range(self.start_train,self.cursor_tot): #1000
-                batch_xs, batch_ys = self.get_nn_next_train(self.batchsize, 12)
+                batch_xs, batch_ys = self.get_nn_next_train(self.batchsize, self.CONST_DOT)
                 self.sess.run(self.d_train_step, feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys})
 
         if self.save_ckpt and self.train : self.save_group()
@@ -186,7 +189,7 @@ class NN(object):
             d_correct_prediction = tf.equal(tf.argmax(self.d_y,1), tf.argmax(self.d_y_,1))
             d_accuracy = tf.reduce_mean(tf.cast(d_correct_prediction, tf.float32))
 
-            if self.use_loader : self.get_nn_next_test(self.batchsize, 12)
+            if self.use_loader : self.get_nn_next_test(self.batchsize, self.CONST_DOT)
             print(self.sess.run(d_accuracy, feed_dict={self.d_x: self.mnist_test.images, self.d_y_: self.mnist_test.labels}))
 
         if self.predict_softmax :
@@ -201,7 +204,7 @@ class NN(object):
                 print stop
 
             for i in range(start, stop ) :
-                batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, 12)
+                batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, self.CONST_DOT)
                 #self.y_out = tf.argmax(self.y,1) # 1
                 if len(batch_0) > 0:
                     out.extend( self.sess.run(self.d_y_out, feed_dict={self.d_x : batch_0, self.d_y_: batch_1}))
@@ -225,7 +228,7 @@ class NN(object):
             self.cursor = 0
 
             for i in range(self.start_train,self.cursor_tot): #1000
-                batch_xs, batch_ys = self.get_nn_next_train(self.batchsize, 3)
+                batch_xs, batch_ys = self.get_nn_next_train(self.batchsize, self.CONST_THREE_CHANNEL)
                 self.sess.run(self.train_step, feed_dict={self.x: batch_xs, self.y_: batch_ys})
 
         if self.save_ckpt and self.train : self.save_group()
@@ -234,7 +237,7 @@ class NN(object):
             correct_prediction = tf.equal(tf.argmax(self.y,1), tf.argmax(self.y_,1))
             accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-            if self.use_loader : self.get_nn_next_test(self.batchsize, 3)
+            if self.use_loader : self.get_nn_next_test(self.batchsize, self.CONST_THREE_CHANNEL)
             print(self.sess.run(accuracy, feed_dict={self.x: self.mnist_test.images, self.y_: self.mnist_test.labels}))
 
         if self.predict_softmax :
@@ -249,7 +252,7 @@ class NN(object):
                 print stop
 
             for i in range(start, stop ) :
-                batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, 3)
+                batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, self.CONST_THREE_CHANNEL)
                 #self.y_out = tf.argmax(self.y,1) # 1
                 if len(batch_0) > 0:
                     out.extend( self.sess.run(self.y_out, feed_dict={self.x : batch_0, self.y_: batch_1}))
@@ -273,7 +276,7 @@ class NN(object):
         if self.train :
             #self.cursor = 0
             for i in range(self.start_train, self.cursor_tot ):
-                batch_0, batch_1 = self.get_nn_next_train(self.batchsize)
+                batch_0, batch_1 = self.get_nn_next_train(self.batchsize, self.CONST_ONE_CHANNEL)
 
                 if i % 100 == 0:
                     train_accuracy = self.c_accuracy.eval(feed_dict={
@@ -284,7 +287,7 @@ class NN(object):
         if self.save_ckpt and self.train  : self.save_group()
 
         if self.test :
-            if self.use_loader : self.get_nn_next_test(self.batchsize)
+            if self.use_loader : self.get_nn_next_test(self.batchsize, self.CONST_ONE_CHANNEL)
             print("test accuracy %g" % self.c_accuracy.eval(feed_dict={
                 self.c_x: self.mnist_test.images, self.c_y_: self.mnist_test.labels, self.keep_prob: 1.0}))
 
@@ -300,7 +303,7 @@ class NN(object):
                 print stop
 
             for i in range(start, stop ) :
-                batch_0, batch_1 = self.get_nn_next_predict(self.batchsize)
+                batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, self.CONST_ONE_CHANNEL)
                 #self.c_y_out = tf.argmax(self.y_conv,1) ## 1
                 if len(batch_0) > 0  :
                     out.extend( self.sess.run(self.c_y_out, feed_dict={self.c_x : batch_0, self.c_y_: batch_1, self.keep_prob: 1.0}))

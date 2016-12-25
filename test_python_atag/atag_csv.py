@@ -22,3 +22,7 @@ class Enum(object) :
         self.RED = "RED"
         self.GREEN = "GREEN"
         self.BLUE = "BLUE"
+
+        self.CONST_ONE_CHANNEL = 1
+        self.CONST_THREE_CHANNEL = 3
+        self.CONST_DOT = 12
