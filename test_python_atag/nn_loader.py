@@ -250,13 +250,18 @@ class Load(enum.Enum):
         for i in range(len(xy_list)):
             q = xy_list[i]
             color = q[2]
-            if q[0] == 28 /2 and q[1] == 28/2 : img_skin[0] = color #/ float(255)
-            if q[0] == 28 /2 +1 and q[1] == 28/2 : img_skin[1] = color #/ float(255)
-            if q[0] == 28/2 and q[1] == 28/2 + 1 : img_skin[2] = color #/ float(255)
-            if q[0] == 28 / 2 +1 and q[1] == 28/2 + 1 :img_skin[3] = color #/ float(255)
+            if q[0] == 0 and q[1] == 0 : img_skin[0] = color #/ float(255)
+            if q[0] == 1 and q[1] == 0 : img_skin[1] = color #/ float(255)
+            if q[0] == 0 and q[1] == 1 : img_skin[2] = color #/ float(255)
+            if q[0] == 1 and q[1] == 1 : img_skin[3] = color #/ float(255)
 
         for i in range(4) :
             skin.extend(list(img_skin[i]))
+
+        for s in range(len(skin)):
+            skin[s] = skin[s] / float(255)
+
+        print skin
 
         return skin, oneimg, threeimg
 

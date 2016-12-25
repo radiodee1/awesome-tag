@@ -42,7 +42,7 @@ class NN(object):
         self.nn_out_conv = None
 
         self.group_initialize = False
-        self.predict_remove_symbol = 1 ## or 0 ??
+        self.predict_remove_symbol = 0 ## 1 or 0 ??
 
         self.nn_configure()
 
@@ -51,7 +51,35 @@ class NN(object):
         self.group_initialize = True
         self.sess = tf.InteractiveSession()
 
-        ''' SOFTMAX FIRST '''
+        ''' DOT FIRST '''
+        input_num = 4 * 3  # like mnist but with three channels
+        #mid_num = 5  # 10
+        output_num = 2
+
+        self.d_x = tf.placeholder(tf.float32, [None, input_num])
+        self.d_W_1 = tf.Variable(tf.random_normal([input_num, output_num], stddev=0.0001))  # 0.0004
+        self.d_b_1 = tf.Variable(tf.random_normal([output_num], stddev=0.5))
+
+        # y_mid = tf.nn.relu(tf.matmul(x,W_1) + b_1)
+        #self.d_y_mid = tf.nn.relu(tf.matmul(self.d_x, self.d_W_1) + self.d_b_1)
+
+        #self.d_W_2 = tf.Variable(tf.random_normal([mid_num, output_num], stddev=0.0001))
+        #self.d_b_2 = tf.Variable(tf.random_normal([output_num], stddev=0.5))
+
+        self.d_y_logits = tf.matmul(self.d_x, self.d_W_1) + self.d_b_1
+        self.d_y = tf.nn.softmax(self.d_y_logits)
+
+        self.d_y_ = tf.placeholder(tf.float32, [None, output_num])
+
+        # cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
+        self.d_cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(self.d_y_logits, self.d_y_))
+
+        self.d_train_step = tf.train.GradientDescentOptimizer(0.0001).minimize(self.d_cross_entropy)  # 0.0001
+        # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
+
+        self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
+
+        ''' SOFTMAX NEXT '''
         input_num = 784 * 3  # like mnist but with three channels
         mid_num = 50  # 10
         output_num = 2
@@ -140,6 +168,53 @@ class NN(object):
 
         #summary_writer = tf.train.SummaryWriter(self.ckpt_folder + os.sep + "logs" + os.sep, self.sess.graph)
 
+
+    def dot_setup(self):
+
+        if self.load_ckpt : self.load_group()
+
+        if self.train :
+            self.cursor = 0
+
+            for i in range(self.start_train,self.cursor_tot): #1000
+                batch_xs, batch_ys = self.get_nn_next_train(self.batchsize, 12)
+                self.sess.run(self.d_train_step, feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys})
+
+        if self.save_ckpt and self.train : self.save_group()
+
+        if self.test :
+            d_correct_prediction = tf.equal(tf.argmax(self.d_y,1), tf.argmax(self.d_y_,1))
+            d_accuracy = tf.reduce_mean(tf.cast(d_correct_prediction, tf.float32))
+
+            if self.use_loader : self.get_nn_next_test(self.batchsize, 12)
+            print(self.sess.run(d_accuracy, feed_dict={self.d_x: self.mnist_test.images, self.d_y_: self.mnist_test.labels}))
+
+        if self.predict_softmax :
+            self.cursor = 0
+            self.dat_remove = []
+
+            out = []
+            start = 0 # self.start_train
+            stop = self.cursor_tot
+            if len(self.loader.dat) > self.cursor_tot * self.batchsize:
+                stop = self.cursor_tot + 1
+                print stop
+
+            for i in range(start, stop ) :
+                batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, 12)
+                #self.y_out = tf.argmax(self.y,1) # 1
+                if len(batch_0) > 0:
+                    out.extend( self.sess.run(self.d_y_out, feed_dict={self.d_x : batch_0, self.d_y_: batch_1}))
+                    print out, len(out) , i, self.cursor_tot
+
+            for j in range(len(out)) :
+                zz = out[j]
+                if zz == self.predict_remove_symbol : ## 1
+                    self.dat_remove.append( j )
+
+            self.loader.record.remove_lines_from_dat(self.dat_remove)
+            self.loader.record.renumber_dat_list(self.loader.dat)
+            print "remove skintone", self.dat_remove
 
 
     def skintone_setup(self):

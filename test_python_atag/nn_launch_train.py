@@ -35,13 +35,15 @@ class Read( enum.Enum) :
 
         self.nn.load_ckpt = True
         self.nn.save_ckpt = True
-        self.nn.train = True
+        self.nn.train = False
         self.nn.test = True
         self.nn.set_loader(ll)
 
-
         self.nn.set_vars(len(ll.dat), 100, 0)
-        self.nn.skintone_setup()
+        self.nn.dot_setup()
+
+        #self.nn.set_vars(len(ll.dat), 100, 0)
+        #self.nn.skintone_setup()
 
         #self.nn.set_vars(len(ll.dat), 100, 0) #50, 'conv', 676
         #self.nn.conv_setup()
