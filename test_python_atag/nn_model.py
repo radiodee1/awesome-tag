@@ -58,7 +58,7 @@ class NN(object):
 
         self.d_x = tf.placeholder(tf.float32, [None, input_num])
         self.d_W_1 = tf.Variable(tf.random_normal([input_num, output_num], stddev=0.0001))  # 0.0004
-        self.d_b_1 = tf.Variable(tf.random_normal([output_num], stddev=0.5))
+        self.d_b_1 = tf.Variable(tf.zeros([output_num]))
 
         # y_mid = tf.nn.relu(tf.matmul(x,W_1) + b_1)
         #self.d_y_mid = tf.nn.relu(tf.matmul(self.d_x, self.d_W_1) + self.d_b_1)
@@ -74,7 +74,7 @@ class NN(object):
         # cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
         self.d_cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(self.d_y_logits, self.d_y_))
 
-        self.d_train_step = tf.train.GradientDescentOptimizer(0.0001).minimize(self.d_cross_entropy)  # 0.0001
+        self.d_train_step = tf.train.GradientDescentOptimizer(0.001).minimize(self.d_cross_entropy)  # 0.0001
         # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
         self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction

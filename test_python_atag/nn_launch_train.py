@@ -35,7 +35,7 @@ class Read( enum.Enum) :
 
         self.nn.load_ckpt = True
         self.nn.save_ckpt = True
-        self.nn.train = False
+        self.nn.train = True
         self.nn.test = True
         self.nn.set_loader(ll)
 

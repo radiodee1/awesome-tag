@@ -259,9 +259,9 @@ class Load(enum.Enum):
             skin.extend(list(img_skin[i]))
 
         for s in range(len(skin)):
-            skin[s] = skin[s] / float(255)
+            skin[s] = skin[s] / float(127)
 
-        print skin
+        #print skin
 
         return skin, oneimg, threeimg
 
