@@ -131,11 +131,11 @@ class Record( enum.Enum):
 
         zz = 0
         i = box_id
-        j = 0
+        j = box_id
         k = 0
         while  k < len(self.dat):
 
-            if self.dat[j][self.ATAG_ID] != self.AGGREGATE_DELETE and self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE :
+            if j < len(self.dat) and self.dat[j][self.ATAG_ID] != self.AGGREGATE_DELETE and self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE :
                 x,y,w,h = self._get_xywh(j)
                 zz = self._box_at_right(x,y,w,h)
                 if zz != -1:
@@ -143,7 +143,7 @@ class Record( enum.Enum):
                     self.dat[i][self.FACE_WIDTH] = self.dat[i][self.FACE_WIDTH] + self.dat[zz][self.FACE_WIDTH]
                     self.dat[zz][self.ATAG_ID] = self.AGGREGATE_DELETE
                     #break
-                else: j = j + 1
+                j = j + 1
             k = k + 1
 
     def _make_column(self, box_id):
