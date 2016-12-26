@@ -66,6 +66,8 @@ class Read( enum.Enum) :
         self.nn.dot_setup()
         print "len-dat0", len(ll.dat)
 
+        ll.record.aggregate_dat_list(ll.dat)
+
         #self.nn.set_vars(len(ll.dat), 100, 0)
         #self.nn.skintone_setup()
         #print "len-dat1", len(ll.dat)

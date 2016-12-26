@@ -86,24 +86,27 @@ class Record( enum.Enum):
         loop = True
         for i in range(len(self.dat)):
             self.dat[i][self.ATAG_ID] = self.AGGREGATE_START
-        while loop :
+        while loop:
+        #for k in self.dat:
             for i in self.dat:
                 loop = False
                 if i[self.ATAG_ID] == self.AGGREGATE_START : loop = True
             for i in range(len(self.dat)) :
                 #x,y,w,h = self._get_xywh(i)
-                if self.dat[i][self.ATAG_ID] != self.AGGREGATE_TOUCHED:
+                #if self.dat[i][self.ATAG_ID] != self.AGGREGATE_TOUCHED and
+                if  self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE:
                     self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
                     self._make_row(i)
             for i in range(len(self.dat)):
-                #print "columns"
-                if self.dat[i][self.ATAG_ID] == self.AGGREGATE_TOUCHED: self.dat[i][self.ATAG_ID] = self.AGGREGATE_START
+                pass
+                #if self.dat[i][self.ATAG_ID] == self.AGGREGATE_TOUCHED: self.dat[i][self.ATAG_ID] = self.AGGREGATE_START
             for i in range(len(self.dat)) :
                 if self.dat[i][self.ATAG_ID] == self.AGGREGATE_START: self._make_column(i)
-        for i in range(len(self.dat), -1, -1) :
-            print i
+        for i in range(len(self.dat) -1, -1, -1) :
+            print i, "del", len(self.dat), self.dat[i]
             if self.dat[i][self.ATAG_ID] == self.AGGREGATE_DELETE:
                 del self.dat[i]
+                print len(self.dat), "after"
 
     def _get_xywh(self, i):
         x = self.dat[i][self.FACE_X]
@@ -114,27 +117,34 @@ class Record( enum.Enum):
 
     def _box_at_right(self, x, y, w, h):
         for i in range(len(self.dat)) :
-            xx,yy,ww,hh = self._get_xywh(i)
-            if  yy == y and x + w == xx and y + h == yy + hh:
-                #box = self.dat[i]
-                #del self.dat[i]
-                return i
+            if self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE:
+                xx,yy,ww,hh = self._get_xywh(i)
+                if  yy == y and x + w + 2 >= xx and y + h == yy + hh and x < xx and x + w -2 <= xx:
+                    print "boxatright"
+                    return i
         return -1
 
     def _empty_box(self):
         return [0,0,"",0,0,0,0,0,0,0,"",0,0]
 
     def _make_row(self, box_id):
-        for i in range(len(self.dat)) :
-            for j in range(len(self.dat)):
-                if self.dat[j][self.ATAG_ID] == self.AGGREGATE_START :
-                    x,y,w,h = self._get_xywh(j)
-                    zz = self._box_at_right(x,y,w,h)
-                    if zz != self.AGGREGATE_START:
-                        #self.dat[j][self.ATAG_ID] = 0
-                        self.dat[i][self.FACE_WIDTH] = self.dat[i][self.FACE_WIDTH] + self.dat[zz][self.FACE_WIDTH]
-                        self.dat[zz][self.ATAG_ID] = self.AGGREGATE_DELETE
-                        break
+
+        zz = 0
+        i = box_id
+        j = 0
+        k = 0
+        while  k < len(self.dat):
+
+            if self.dat[j][self.ATAG_ID] != self.AGGREGATE_DELETE and self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE :
+                x,y,w,h = self._get_xywh(j)
+                zz = self._box_at_right(x,y,w,h)
+                if zz != -1:
+                    #self.dat[j][self.ATAG_ID] = 0
+                    self.dat[i][self.FACE_WIDTH] = self.dat[i][self.FACE_WIDTH] + self.dat[zz][self.FACE_WIDTH]
+                    self.dat[zz][self.ATAG_ID] = self.AGGREGATE_DELETE
+                    #break
+                else: j = j + 1
+            k = k + 1
 
     def _make_column(self, box_id):
         print "c"
