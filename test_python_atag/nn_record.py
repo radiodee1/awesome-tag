@@ -80,3 +80,39 @@ class Record( enum.Enum):
             zz = self.dat[i]
             zz[self.ATAG_ID] = i
         return  self.dat
+
+    def aggregate_dat_list(self, dat):
+        self.dat = dat
+        loop = True
+        for i in range(len(self.dat)):
+            self.dat[i][self.ATAG_ID] = -1
+        while loop :
+            for i in dat:
+                loop = False
+                if i[self.ATAG_ID] == -1 : loop = True
+            for i in range(len(self.dat)) :
+                x = self.dat[i][self.FACE_X]
+                y = self.dat[i][self.FACE_Y]
+                w = self.dat[i][self.FACE_WIDTH]
+                h = self.dat[i][self.FACE_HEIGHT]
+                index , box = self._box_at_right(x,y,w,h)
+                if box[self.FACE_WIDTH] != 0 :
+                    self.dat[i][self.FACE_WIDTH] = self.dat[i][self.FACE_WIDTH] + box[self.FACE_WIDTH]
+                    del self.dat[index]
+
+    def _box_at_right(self, x, y, w, h):
+        for i in range(len(self.dat)) :
+            xx = self.dat[i][self.FACE_X]
+            yy = self.dat[i][self.FACE_Y]
+            ww = self.dat[i][self.FACE_WIDTH]
+            hh = self.dat[i][self.FACE_HEIGHT]
+            if  yy == y and x + w == xx and y + h == yy + hh:
+                #box = self.dat[i]
+                #del self.dat[i]
+                return i #, box
+            return -1 # i, self._empty_box()
+
+    def _empty_box(self):
+        return [0,0,"",0,0,0,0,0,0,0,"",0,0]
+
+
