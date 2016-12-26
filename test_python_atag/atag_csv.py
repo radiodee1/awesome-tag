@@ -26,3 +26,7 @@ class Enum(object) :
         self.CONST_ONE_CHANNEL = 1
         self.CONST_THREE_CHANNEL = 3
         self.CONST_DOT = 12
+
+        self.AGGREGATE_START = -1
+        self.AGGREGATE_TOUCHED = 5
+        self.AGGREGATE_DELETE = 0
