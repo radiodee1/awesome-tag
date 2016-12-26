@@ -117,7 +117,7 @@ class Record( enum.Enum):
 
     def _box_at_right(self, x, y, w, h):
         for i in range(len(self.dat)) :
-            if self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE:
+            if self.dat[i][self.ATAG_ID] == self.AGGREGATE_START:
                 xx,yy,ww,hh = self._get_xywh(i)
                 if  yy == y and x + w + 2 >= xx and y + h == yy + hh and x < xx and x + w -2 <= xx:
                     print "boxatright"
@@ -135,15 +135,17 @@ class Record( enum.Enum):
         k = 0
         while  k < len(self.dat):
 
-            if j < len(self.dat) and self.dat[j][self.ATAG_ID] != self.AGGREGATE_DELETE and self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE :
+            if j < len(self.dat) \
+                    and self.dat[j][self.ATAG_ID] != self.AGGREGATE_DELETE \
+                    and self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE :
                 x,y,w,h = self._get_xywh(j)
                 zz = self._box_at_right(x,y,w,h)
                 if zz != -1:
-                    #self.dat[j][self.ATAG_ID] = 0
+
                     self.dat[i][self.FACE_WIDTH] = self.dat[i][self.FACE_WIDTH] + self.dat[zz][self.FACE_WIDTH]
                     self.dat[zz][self.ATAG_ID] = self.AGGREGATE_DELETE
-                    #break
-                j = j + 1
+
+                #j = j + 1
             k = k + 1
 
     def _make_column(self, box_id):
