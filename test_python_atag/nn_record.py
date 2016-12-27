@@ -99,7 +99,6 @@ class Record( enum.Enum):
                     self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
                     self._make_row(i)
             for i in range(len(self.dat)):
-                pass
                 if self.dat[i][self.ATAG_ID] == self.AGGREGATE_TOUCHED: self.dat[i][self.ATAG_ID] = self.AGGREGATE_START
             for i in range(len(self.dat)) :
                 if self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE:
@@ -114,7 +113,7 @@ class Record( enum.Enum):
             #print i, "del", len(self.dat), self.dat[i]
             if self.dat[i][self.FACE_WIDTH] >= self.dat[i][self.FACE_HEIGHT] * 1.5:
                 pass
-                #del self.dat[i]
+                del self.dat[i]
                 #print len(self.dat), "after"
         return self.dat
 
@@ -140,18 +139,23 @@ class Record( enum.Enum):
                 xx,yy,ww,hh = self._get_xywh(i)
                 if  y + h + 2 >= yy and y < yy and y + h -2 <= yy:
                     if self.strict_columns and x + w == xx + ww and xx == x :
-                        #print "boxatbottom strict"
+                        print "boxatbottom strict"
                         return i
-                    elif (not self.strict_columns) and ((xx >=x and xx <= x+w -2) or \
-                                                ( xx + ww >= x and xx + ww <= x+w -2  and xx+ww > x + self.dim_x)):
+                    elif (not self.strict_columns and not self._reject_box(i, w)) and ((xx >=x and xx <= x+w -2) or
+                            ( xx + ww >= x and xx + ww <= x+w   )):
                         print "boxatbottom loose"
                         return i
+                    #else : print "boxatbottom none"
         return -1
 
-    '''
-    def _empty_box(self):
-        return [0,0,"",0,0,0,0,0,0,0,"",0,0]
-    '''
+
+    def _reject_box(self, i, w):
+        #return False
+        if self.dat[i][self.FACE_WIDTH] <= w  or True:
+            if float(self.dat[i][self.FACE_WIDTH]) * float(1.5)  >= w   :
+                return False
+        return True
+
 
     def _make_row(self, box_id):
 
@@ -186,11 +190,15 @@ class Record( enum.Enum):
                 zz = self._box_at_bottom(x, y, w, h)
                 if zz != -1:
                     self.dat[i][self.FACE_HEIGHT] = self.dat[i][self.FACE_HEIGHT] + self.dat[zz][self.FACE_HEIGHT]
-                    if not self.strict_columns :
-                        if self.dat[i][self.FACE_WIDTH] > self.dat[zz][self.FACE_WIDTH] + self.dim_x:
+                    if not self.strict_columns:
+                        if self.dat[i][self.FACE_WIDTH]   > self.dat[zz][self.FACE_WIDTH] + self.dim_x :
                             self.dat[i][self.FACE_WIDTH] = self.dat[zz][self.FACE_WIDTH]
-                        if self.dat[i][self.FACE_X] < self.dat[zz][self.FACE_X] + self.dim_x :
-                            self.dat[i][self.FACE_X] = self.dat[zz][self.FACE_X]
+                        if self.dat[i][self.FACE_X] < self.dat[zz][self.FACE_X] - self.dim_x  :
+
+                            w_calc = self.dat[i][self.FACE_X] + self.dat[i][self.FACE_WIDTH] - self.dat[zz][self.FACE_X]
+                            if w_calc > 2:
+                                self.dat[i][self.FACE_WIDTH] = w_calc
+                                self.dat[i][self.FACE_X] = self.dat[zz][self.FACE_X]
 
                     self.dat[zz][self.ATAG_ID] = self.AGGREGATE_DELETE
 
