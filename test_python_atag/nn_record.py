@@ -10,6 +10,8 @@ class Record( enum.Enum):
         self.a = atag
         self.predict_filename = self.a.VAR_LOCAL_DATABASE + os.sep + "predict" + ".csv"
         self.strict_columns = False
+        self.dim_x = 28
+        self.dim_y = 28
 
     def set_dat(self, dat):
         self.dat = dat
@@ -140,7 +142,8 @@ class Record( enum.Enum):
                     if self.strict_columns and x + w == xx + ww and xx == x :
                         #print "boxatbottom strict"
                         return i
-                    elif (not self.strict_columns) and xx >=x and xx <= x+w -2:
+                    elif (not self.strict_columns) and ((xx >=x and xx <= x+w -2) or \
+                                                ( xx + ww >= x and xx + ww <= x+w -2  and xx+ww > x + self.dim_x)):
                         print "boxatbottom loose"
                         return i
         return -1
@@ -183,9 +186,11 @@ class Record( enum.Enum):
                 zz = self._box_at_bottom(x, y, w, h)
                 if zz != -1:
                     self.dat[i][self.FACE_HEIGHT] = self.dat[i][self.FACE_HEIGHT] + self.dat[zz][self.FACE_HEIGHT]
-                    if self.strict_columns :
-                        if self.dat[i][self.FACE_WIDTH] > self.dat[zz][self.FACE_WIDTH]:
+                    if not self.strict_columns :
+                        if self.dat[i][self.FACE_WIDTH] > self.dat[zz][self.FACE_WIDTH] + self.dim_x:
                             self.dat[i][self.FACE_WIDTH] = self.dat[zz][self.FACE_WIDTH]
+                        if self.dat[i][self.FACE_X] < self.dat[zz][self.FACE_X] + self.dim_x :
+                            self.dat[i][self.FACE_X] = self.dat[zz][self.FACE_X]
 
                     self.dat[zz][self.ATAG_ID] = self.AGGREGATE_DELETE
 
