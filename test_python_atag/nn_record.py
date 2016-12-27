@@ -111,8 +111,10 @@ class Record( enum.Enum):
         for i in range(len(self.dat) -1, -1, -1) :
             #print i, "del", len(self.dat), self.dat[i]
             if self.dat[i][self.FACE_WIDTH] >= self.dat[i][self.FACE_HEIGHT] * 1.5:
-                del self.dat[i]
+                pass
+                #del self.dat[i]
                 #print len(self.dat), "after"
+        return self.dat
 
     def _get_xywh(self, i):
         x = self.dat[i][self.FACE_X]
@@ -134,17 +136,19 @@ class Record( enum.Enum):
         for i in range(len(self.dat)) :
             if self.dat[i][self.ATAG_ID] == self.AGGREGATE_START:
                 xx,yy,ww,hh = self._get_xywh(i)
-                if  xx == x and y + h + 2 >= yy and y < yy and y + h -2 <= yy:
-                    if self.strict_columns and x + w == xx + ww:
+                if  y + h + 2 >= yy and y < yy and y + h -2 <= yy:
+                    if self.strict_columns and x + w == xx + ww and xx == x :
                         #print "boxatbottom strict"
                         return i
-                    else:
-                        #print "boxatbottom loose"
+                    elif (not self.strict_columns) and xx >=x and xx <= x+w -2:
+                        print "boxatbottom loose"
                         return i
         return -1
 
+    '''
     def _empty_box(self):
         return [0,0,"",0,0,0,0,0,0,0,"",0,0]
+    '''
 
     def _make_row(self, box_id):
 
