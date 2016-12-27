@@ -104,10 +104,15 @@ class Record( enum.Enum):
                     self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
                     self._make_column(i)
         for i in range(len(self.dat) -1, -1, -1) :
-            print i, "del", len(self.dat), self.dat[i]
+            #print i, "del", len(self.dat), self.dat[i]
             if self.dat[i][self.ATAG_ID] == self.AGGREGATE_DELETE:
                 del self.dat[i]
-                print len(self.dat), "after"
+                #print len(self.dat), "after"
+        for i in range(len(self.dat) -1, -1, -1) :
+            #print i, "del", len(self.dat), self.dat[i]
+            if self.dat[i][self.FACE_WIDTH] >= self.dat[i][self.FACE_HEIGHT] * 1.5:
+                del self.dat[i]
+                #print len(self.dat), "after"
 
     def _get_xywh(self, i):
         x = self.dat[i][self.FACE_X]
@@ -121,7 +126,7 @@ class Record( enum.Enum):
             if self.dat[i][self.ATAG_ID] == self.AGGREGATE_START:
                 xx,yy,ww,hh = self._get_xywh(i)
                 if  yy == y and x + w + 2 >= xx and y + h == yy + hh and x < xx and x + w -2 <= xx:
-                    print "boxatright"
+                    #print "boxatright"
                     return i
         return -1
 
@@ -131,10 +136,10 @@ class Record( enum.Enum):
                 xx,yy,ww,hh = self._get_xywh(i)
                 if  xx == x and y + h + 2 >= yy and y < yy and y + h -2 <= yy:
                     if self.strict_columns and x + w == xx + ww:
-                        print "boxatbottom strict"
+                        #print "boxatbottom strict"
                         return i
                     else:
-                        print "boxatbottom loose"
+                        #print "boxatbottom loose"
                         return i
         return -1
 
@@ -150,8 +155,7 @@ class Record( enum.Enum):
         while  k < len(self.dat):
 
             if j < len(self.dat) \
-                    and self.dat[j][self.ATAG_ID] != self.AGGREGATE_DELETE: # \
-                    #and self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE :
+                    and self.dat[j][self.ATAG_ID] != self.AGGREGATE_DELETE:
                 x,y,w,h = self._get_xywh(j)
                 zz = self._box_at_right(x,y,w,h)
                 if zz != -1:
@@ -162,7 +166,7 @@ class Record( enum.Enum):
             k = k + 1
 
     def _make_column(self, box_id):
-        print "c"
+
         zz = 0
         i = box_id
         j = box_id
@@ -170,12 +174,15 @@ class Record( enum.Enum):
         while k < len(self.dat):
 
             if j < len(self.dat) \
-                    and self.dat[j][self.ATAG_ID] != self.AGGREGATE_DELETE: # \
-                    #and self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE:
+                    and self.dat[j][self.ATAG_ID] != self.AGGREGATE_DELETE:
                 x, y, w, h = self._get_xywh(j)
                 zz = self._box_at_bottom(x, y, w, h)
                 if zz != -1:
                     self.dat[i][self.FACE_HEIGHT] = self.dat[i][self.FACE_HEIGHT] + self.dat[zz][self.FACE_HEIGHT]
+                    if self.strict_columns :
+                        if self.dat[i][self.FACE_WIDTH] > self.dat[zz][self.FACE_WIDTH]:
+                            self.dat[i][self.FACE_WIDTH] = self.dat[zz][self.FACE_WIDTH]
+
                     self.dat[zz][self.ATAG_ID] = self.AGGREGATE_DELETE
 
             k = k + 1

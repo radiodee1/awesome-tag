@@ -45,8 +45,8 @@
       <file leaf-file-name="nn_record.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nn_record.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="327">
-              <caret line="136" column="48" lean-forward="false" selection-start-line="136" selection-start-column="48" selection-end-line="136" selection-end-column="48" />
+            <state relative-caret-position="282">
+              <caret line="128" column="21" lean-forward="false" selection-start-line="128" selection-start-column="21" selection-end-line="128" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -164,7 +164,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -179,6 +178,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -369,13 +369,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1480257882064</updated>
-    </task>
-    <task id="LOCAL-00034" summary="add middle softmax layer">
-      <created>1480970826038</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1480970826038</updated>
     </task>
     <task id="LOCAL-00035" summary="add middle softmax layer">
       <created>1480976416840</created>
@@ -713,7 +706,14 @@
       <option name="project" value="LOCAL" />
       <updated>1482785843047</updated>
     </task>
-    <option name="localTasksCounter" value="83" />
+    <task id="LOCAL-00083" summary="aggregate code started -- make_rows() seems to work, make_columns() may also work">
+      <created>1482847892363</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1482847892373</updated>
+    </task>
+    <option name="localTasksCounter" value="84" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -743,7 +743,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add some code for single image operation. -- model might recognise top left corner" />
     <MESSAGE value="comments, etc" />
     <MESSAGE value="rename some methods" />
     <MESSAGE value="trying suggestions" />
@@ -768,7 +767,8 @@
     <MESSAGE value="aggregate code started" />
     <MESSAGE value="aggregate code started -- not working but interesting output" />
     <MESSAGE value="aggregate code started -- make_rows() seems to work" />
-    <option name="LAST_COMMIT_MESSAGE" value="aggregate code started -- make_rows() seems to work" />
+    <MESSAGE value="aggregate code started -- make_rows() seems to work, make_columns() may also work" />
+    <option name="LAST_COMMIT_MESSAGE" value="aggregate code started -- make_rows() seems to work, make_columns() may also work" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1170,8 +1170,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nn_record.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="327">
-          <caret line="136" column="48" lean-forward="false" selection-start-line="136" selection-start-column="48" selection-end-line="136" selection-end-column="48" />
+        <state relative-caret-position="282">
+          <caret line="128" column="21" lean-forward="false" selection-start-line="128" selection-start-column="21" selection-end-line="128" selection-end-column="21" />
           <folding />
         </state>
       </provider>
