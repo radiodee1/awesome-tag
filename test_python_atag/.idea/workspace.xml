@@ -33,7 +33,7 @@
       <file leaf-file-name="nn_launch_train.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nn_launch_train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
+            <state relative-caret-position="930">
               <caret line="68" column="43" lean-forward="false" selection-start-line="68" selection-start-column="43" selection-end-line="68" selection-end-column="43" />
               <folding>
                 <element signature="e#19#28#0" expanded="true" />
@@ -45,8 +45,8 @@
       <file leaf-file-name="nn_record.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nn_record.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="522">
-              <caret line="146" column="0" lean-forward="false" selection-start-line="146" selection-start-column="0" selection-end-line="146" selection-end-column="0" />
+            <state relative-caret-position="327">
+              <caret line="136" column="48" lean-forward="false" selection-start-line="136" selection-start-column="48" selection-end-line="136" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -65,7 +65,7 @@
       <file leaf-file-name="nn_model.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nn_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2250">
+            <state relative-caret-position="585">
               <caret line="47" column="38" lean-forward="false" selection-start-line="47" selection-start-column="38" selection-end-line="47" selection-end-column="38" />
               <folding>
                 <element signature="e#18#27#0" expanded="true" />
@@ -85,7 +85,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>color_setup</find>
       <find>mnist</find>
       <find>csv_filename</find>
       <find>sys</find>
@@ -114,6 +113,8 @@
       <find>len</find>
       <find>cursor_tot</find>
       <find>start_train</find>
+      <find>boxatb</find>
+      <find>boxatbottom</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -163,6 +164,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -178,7 +180,6 @@
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -368,13 +369,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1480257882064</updated>
-    </task>
-    <task id="LOCAL-00033" summary="change img loader a little -- change model slightly">
-      <created>1480965228651</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1480965228651</updated>
     </task>
     <task id="LOCAL-00034" summary="add middle softmax layer">
       <created>1480970826038</created>
@@ -712,19 +706,26 @@
       <option name="project" value="LOCAL" />
       <updated>1482785014061</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="aggregate code started -- make_rows() seems to work">
+      <created>1482785843047</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1482785843047</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="450" y="54" width="1400" height="1000" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26013514" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26013514" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -742,7 +743,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="rename file" />
     <MESSAGE value="add some code for single image operation. -- model might recognise top left corner" />
     <MESSAGE value="comments, etc" />
     <MESSAGE value="rename some methods" />
@@ -767,7 +767,8 @@
     <MESSAGE value="try to add skintone/dot" />
     <MESSAGE value="aggregate code started" />
     <MESSAGE value="aggregate code started -- not working but interesting output" />
-    <option name="LAST_COMMIT_MESSAGE" value="aggregate code started -- not working but interesting output" />
+    <MESSAGE value="aggregate code started -- make_rows() seems to work" />
+    <option name="LAST_COMMIT_MESSAGE" value="aggregate code started -- make_rows() seems to work" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1141,7 +1142,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nn_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2250">
+        <state relative-caret-position="585">
           <caret line="47" column="38" lean-forward="false" selection-start-line="47" selection-start-column="38" selection-end-line="47" selection-end-column="38" />
           <folding>
             <element signature="e#18#27#0" expanded="true" />
@@ -1151,7 +1152,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nn_launch_train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
+        <state relative-caret-position="930">
           <caret line="68" column="43" lean-forward="false" selection-start-line="68" selection-start-column="43" selection-end-line="68" selection-end-column="43" />
           <folding>
             <element signature="e#19#28#0" expanded="true" />
@@ -1169,8 +1170,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nn_record.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="522">
-          <caret line="146" column="0" lean-forward="false" selection-start-line="146" selection-start-column="0" selection-end-line="146" selection-end-column="0" />
+        <state relative-caret-position="327">
+          <caret line="136" column="48" lean-forward="false" selection-start-line="136" selection-start-column="48" selection-end-line="136" selection-end-column="48" />
           <folding />
         </state>
       </provider>

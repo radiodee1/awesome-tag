@@ -9,6 +9,7 @@ class Record( enum.Enum):
         self.dat = []
         self.a = atag
         self.predict_filename = self.a.VAR_LOCAL_DATABASE + os.sep + "predict" + ".csv"
+        self.strict_columns = False
 
     def set_dat(self, dat):
         self.dat = dat
@@ -92,16 +93,16 @@ class Record( enum.Enum):
                 loop = False
                 if i[self.ATAG_ID] == self.AGGREGATE_START : loop = True
             for i in range(len(self.dat)) :
-                #x,y,w,h = self._get_xywh(i)
-                #if self.dat[i][self.ATAG_ID] != self.AGGREGATE_TOUCHED and
                 if  self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE:
                     self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
                     self._make_row(i)
             for i in range(len(self.dat)):
                 pass
-                #if self.dat[i][self.ATAG_ID] == self.AGGREGATE_TOUCHED: self.dat[i][self.ATAG_ID] = self.AGGREGATE_START
+                if self.dat[i][self.ATAG_ID] == self.AGGREGATE_TOUCHED: self.dat[i][self.ATAG_ID] = self.AGGREGATE_START
             for i in range(len(self.dat)) :
-                if self.dat[i][self.ATAG_ID] == self.AGGREGATE_START: self._make_column(i)
+                if self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE:
+                    self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
+                    self._make_column(i)
         for i in range(len(self.dat) -1, -1, -1) :
             print i, "del", len(self.dat), self.dat[i]
             if self.dat[i][self.ATAG_ID] == self.AGGREGATE_DELETE:
@@ -124,6 +125,19 @@ class Record( enum.Enum):
                     return i
         return -1
 
+    def _box_at_bottom(self, x, y, w, h):
+        for i in range(len(self.dat)) :
+            if self.dat[i][self.ATAG_ID] == self.AGGREGATE_START:
+                xx,yy,ww,hh = self._get_xywh(i)
+                if  xx == x and y + h + 2 >= yy and y < yy and y + h -2 <= yy:
+                    if self.strict_columns and x + w == xx + ww:
+                        print "boxatbottom strict"
+                        return i
+                    else:
+                        print "boxatbottom loose"
+                        return i
+        return -1
+
     def _empty_box(self):
         return [0,0,"",0,0,0,0,0,0,0,"",0,0]
 
@@ -136,8 +150,8 @@ class Record( enum.Enum):
         while  k < len(self.dat):
 
             if j < len(self.dat) \
-                    and self.dat[j][self.ATAG_ID] != self.AGGREGATE_DELETE \
-                    and self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE :
+                    and self.dat[j][self.ATAG_ID] != self.AGGREGATE_DELETE: # \
+                    #and self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE :
                 x,y,w,h = self._get_xywh(j)
                 zz = self._box_at_right(x,y,w,h)
                 if zz != -1:
@@ -145,8 +159,23 @@ class Record( enum.Enum):
                     self.dat[i][self.FACE_WIDTH] = self.dat[i][self.FACE_WIDTH] + self.dat[zz][self.FACE_WIDTH]
                     self.dat[zz][self.ATAG_ID] = self.AGGREGATE_DELETE
 
-                #j = j + 1
             k = k + 1
 
     def _make_column(self, box_id):
         print "c"
+        zz = 0
+        i = box_id
+        j = box_id
+        k = 0
+        while k < len(self.dat):
+
+            if j < len(self.dat) \
+                    and self.dat[j][self.ATAG_ID] != self.AGGREGATE_DELETE: # \
+                    #and self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE:
+                x, y, w, h = self._get_xywh(j)
+                zz = self._box_at_bottom(x, y, w, h)
+                if zz != -1:
+                    self.dat[i][self.FACE_HEIGHT] = self.dat[i][self.FACE_HEIGHT] + self.dat[zz][self.FACE_HEIGHT]
+                    self.dat[zz][self.ATAG_ID] = self.AGGREGATE_DELETE
+
+            k = k + 1
