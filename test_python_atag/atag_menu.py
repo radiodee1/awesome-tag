@@ -325,7 +325,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     ''' threading etc '''
     def run_draw_compile(self):
-        ii = easygui.buttonbox("Type of Diagram","Choose",choices=("TRAIN","PREDICT"))
+        ii = easygui.buttonbox("Type of Diagram","Choose",choices=("TRAIN","DOT","PREDICT"))
         r = draw.Read(self)
         if ii == "TRAIN" :
             r.process_read_file_simple()
@@ -336,6 +336,10 @@ class Interface(Gtk.Window, atag.Dotfolder) :
             self.drawingarea.boxlist_green = r.boxlist_g
             self.drawingarea.boxlist_blue = r.boxlist_b
             print self.drawingarea.boxlist_red, "red"
+        elif ii == "DOT" :
+            pass
+            r.process_read_file_dot()
+            self.drawingarea.boxlist_red = r.boxlist_r
         self.drawingarea.queue_draw()
 
     def run_csv_write(self):

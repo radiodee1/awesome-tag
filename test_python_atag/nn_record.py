@@ -121,7 +121,7 @@ class Record( enum.Enum):
                 self.dat[i][self.FACE_WIDTH] * 2 <= self.dat[i][self.FACE_HEIGHT] ):
                 pass
                 del self.dat[i]
-                #print len(self.dat), "after"
+
         return self.dat
 
     def _get_xywh(self, i):
@@ -144,7 +144,7 @@ class Record( enum.Enum):
         for i in range(len(self.dat)) :
             if self.dat[i][self.ATAG_ID] == self.AGGREGATE_START:
                 xx,yy,ww,hh = self._get_xywh(i)
-                if  y + h + 2 >= yy and y < yy and y + h -2 <= yy:
+                if  y + h + 2 >= yy and y < yy:# and y + h -2 <= yy:
                     if self.strict_columns and x + w == xx + ww and xx == x :
                         print "boxatbottom strict"
                         return i
@@ -168,17 +168,17 @@ class Record( enum.Enum):
 
         zz = 0
         i = box_id
-        j = box_id
+
         k = 0
         while  k < len(self.dat):
 
-            if j < len(self.dat) \
-                    and self.dat[j][self.ATAG_ID] != self.AGGREGATE_DELETE:
-                x,y,w,h = self._get_xywh(j)
+            if i < len(self.dat) \
+                    and self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE:
+                x,y,w,h = self._get_xywh(i)
                 zz = self._box_at_right(x,y,w,h)
                 if zz != -1:
-
-                    self.dat[i][self.FACE_WIDTH] = self.dat[i][self.FACE_WIDTH] + self.dat[zz][self.FACE_WIDTH]
+                    w_calc = self.dat[zz][self.FACE_X] + self.dat[zz][self.FACE_WIDTH] - self.dat[i][self.FACE_X]
+                    self.dat[i][self.FACE_WIDTH] = w_calc # self.dat[i][self.FACE_WIDTH] + self.dat[zz][self.FACE_WIDTH]
                     self.dat[zz][self.ATAG_ID] = self.AGGREGATE_DELETE
 
             k = k + 1
@@ -187,24 +187,30 @@ class Record( enum.Enum):
 
         zz = 0
         i = box_id
-        j = box_id
+
         k = 0
         while k < len(self.dat):
 
-            if j < len(self.dat) \
-                    and self.dat[j][self.ATAG_ID] != self.AGGREGATE_DELETE:
-                x, y, w, h = self._get_xywh(j)
+            if i < len(self.dat) \
+                    and self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE:
+                x, y, w, h = self._get_xywh(i)
                 zz = self._box_at_bottom(x, y, w, h)
                 if zz != -1:
-                    self.dat[i][self.FACE_HEIGHT] = self.dat[i][self.FACE_HEIGHT] + self.dat[zz][self.FACE_HEIGHT]
-                    if not self.strict_columns:
-                        if self.dat[i][self.FACE_WIDTH]   > self.dat[zz][self.FACE_WIDTH] + self.dim_x :
-                            self.dat[i][self.FACE_WIDTH] = self.dat[zz][self.FACE_WIDTH]
-                        if self.dat[i][self.FACE_X] < self.dat[zz][self.FACE_X] - self.dim_x  :
+                    h_calc = self.dat[zz][self.FACE_Y] + self.dat[zz][self.FACE_HEIGHT] - self.dat[i][self.FACE_Y]
+                    self.dat[i][self.FACE_HEIGHT] = h_calc # self.dat[i][self.FACE_HEIGHT] + self.dat[zz][self.FACE_HEIGHT]
 
-                            w_calc = self.dat[i][self.FACE_X] + self.dat[i][self.FACE_WIDTH] - self.dat[zz][self.FACE_X]
-                            if w_calc > 2:
-                                self.dat[i][self.FACE_WIDTH] = w_calc
+                    if not self.strict_columns :
+                        ''' move right side '''
+                        if (self.dat[i][self.FACE_WIDTH] + self.dat[i][self.FACE_X]  >
+                                        self.dat[zz][self.FACE_WIDTH] + self.dat[zz][self.FACE_X] + self.dim_x ):
+                            w_calc = self.dat[zz][self.FACE_X] + self.dat[zz][self.FACE_WIDTH] - self.dat[i][self.FACE_X]
+                            self.dat[i][self.FACE_WIDTH] = w_calc #self.dat[zz][self.FACE_WIDTH]
+                        ''' move left side '''
+                        if self.dat[i][self.FACE_X] < self.dat[zz][self.FACE_X] - self.dim_x   :
+
+                            w_calc = self.dat[zz][self.FACE_X] + self.dat[zz][self.FACE_WIDTH] # - self.dat[i][self.FACE_X]
+                            if self.dat[zz][self.FACE_WIDTH] > 2:
+                                self.dat[i][self.FACE_WIDTH] = self.dat[zz][self.FACE_WIDTH] #w_calc
                                 self.dat[i][self.FACE_X] = self.dat[zz][self.FACE_X]
 
                     self.dat[zz][self.ATAG_ID] = self.AGGREGATE_DELETE

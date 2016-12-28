@@ -24,7 +24,7 @@ class Read( enum.Enum) :
 
         self.csv_input = atag.VAR_LOCAL_DATABASE + os.sep + atag.VAR_MY_CSV_NAME + ".csv"
         self.csv_input_predict = atag.VAR_LOCAL_DATABASE + os.sep + "predict" + ".csv"
-
+        self.csv_input_dot = atag.VAR_LOCAL_DATABASE + os.sep + atag.VAR_MY_CSV_NAME + ".dot.csv"
 
     def process_read_line(self, line):
         line = line.split(",")
@@ -52,6 +52,14 @@ class Read( enum.Enum) :
 
     def process_read_file_predict(self):
         with open(self.csv_input_predict, 'r') as f:
+            for line in f:
+                self.process_read_line(line)
+        f.close()
+        print "num of boxes", self.num
+        pass
+
+    def process_read_file_dot(self):
+        with open(self.csv_input_dot, 'r') as f:
             for line in f:
                 self.process_read_line(line)
         f.close()
