@@ -16,11 +16,13 @@ class Record( enum.Enum):
     def set_dat(self, dat):
         self.dat = dat
 
-    def make_boxes(self, filename):
+    def make_boxes(self, filename, dim=28):
+        self.dim_x = dim
+        self.dim_y = dim
         xx, yy = Image.open(filename).size
 
-        w = xx / 28  ## how many tiles wide
-        h = yy / 28  ## how many tiles high
+        w = xx / self.dim_x  ## w is how many tiles wide
+        h = yy / self.dim_y  ## h is how many tiles high
         print "do individual file prediction"
         for i in range(w * h):
             y = i / w
@@ -105,13 +107,14 @@ class Record( enum.Enum):
                     self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
                     self._make_column(i)
         for i in range(len(self.dat) -1, -1, -1) :
-            #print i, "del", len(self.dat), self.dat[i]
+            ''' delete marked for delete '''
             if self.dat[i][self.ATAG_ID] == self.AGGREGATE_DELETE:
                 del self.dat[i]
                 #print len(self.dat), "after"
         for i in range(len(self.dat) -1, -1, -1) :
-            #print i, "del", len(self.dat), self.dat[i]
-            if self.dat[i][self.FACE_WIDTH] >= self.dat[i][self.FACE_HEIGHT] * 1.5:
+            ''' delete odd sizes '''
+            if (self.dat[i][self.FACE_WIDTH] >= self.dat[i][self.FACE_HEIGHT] * 1.5 or
+                self.dat[i][self.FACE_WIDTH] * 2 <= self.dat[i][self.FACE_HEIGHT] ):
                 pass
                 del self.dat[i]
                 #print len(self.dat), "after"
