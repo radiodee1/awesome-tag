@@ -55,7 +55,7 @@ class Read( enum.Enum) :
 
         ll = loader.Load(self.a, self.pic)
 
-        ll.dat = ll.record.make_boxes(self.pic, dim=28)
+        ll.dat = ll.record.make_boxes(self.pic, dim=7)
 
         self.nn.load_ckpt = True
         self.nn.save_ckpt = False

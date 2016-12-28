@@ -34,10 +34,12 @@ class Record( enum.Enum):
                     num = filename
                 elif j is self.FACE_WIDTH:
                     num = xx / w
-                    if num < 28: num = 28
+                    if num < 28:#self.dim_x:
+                        num = 28 #self.dim_x
                 elif j is self.FACE_HEIGHT:
                     num = yy / h
-                    if num < 28: num = 28
+                    if num < 28: #self.dim_y:
+                        num = 28# self.dim_y
                 elif j is self.FACE_X:
                     #print xx / w
                     num = x  * (xx / w) #- (y * (yy / w))
@@ -86,6 +88,8 @@ class Record( enum.Enum):
             zz[self.ATAG_ID] = i
         return  self.dat
 
+    ##############################################################
+
     def aggregate_dat_list(self, dat):
         self.dat = dat
         loop = True
@@ -131,7 +135,7 @@ class Record( enum.Enum):
         for i in range(len(self.dat)) :
             if self.dat[i][self.ATAG_ID] == self.AGGREGATE_START:
                 xx,yy,ww,hh = self._get_xywh(i)
-                if  yy == y and x + w + 2 >= xx and y + h == yy + hh and x < xx and x + w -2 <= xx:
+                if  yy >= y and x + w + 2 >= xx and y + h >= yy and x < xx and x + w -2 <= xx:
                     #print "boxatright"
                     return i
         return -1
@@ -154,7 +158,7 @@ class Record( enum.Enum):
 
     def _reject_box(self, i, w):
         #return False
-        if self.dat[i][self.FACE_WIDTH] <= w  or True:
+        if self.dat[i][self.FACE_WIDTH] <= w  :
             if float(self.dat[i][self.FACE_WIDTH]) * float(1.5)  >= w   :
                 return False
         return True
