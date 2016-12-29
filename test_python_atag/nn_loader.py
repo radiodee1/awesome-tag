@@ -24,20 +24,22 @@ class Load(enum.Enum):
         self.iter = 0
         self.start_num = 0
 
+        self.filename = filename
         self.record = rec.Record(atag)
 
         ImageFile.LOAD_TRUNCATED_IMAGES = True
         self.inspection_num = 2
 
+    def read_csv(self):
         ''' Read csv file '''
-        if len(filename) == 0 :
+        if len(self.filename) == 0 :
             print self.csv_input , " - input file"
             with open(self.csv_input, 'r') as f:
                 for line in f:
                     self._process_read_line(line)
                 f.close()
         else:
-            self.dat = self.record.make_boxes(filename)
+            self.dat = self.record.make_boxes(self.filename)
 
         #print "dat",self.dat
 

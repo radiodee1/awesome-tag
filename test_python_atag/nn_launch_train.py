@@ -28,22 +28,28 @@ class Read( enum.Enum) :
         self.check_folder_exists()
 
         ll = loader.Load(self.a, self.pic)
-
+        #ll.read_csv()
 
         signal.signal(signal.SIGINT, self.signal_handler)
 
 
         self.nn.load_ckpt = True
         self.nn.save_ckpt = True
-        self.nn.train = True
+        self.nn.train = False
         self.nn.test = True
         self.nn.set_loader(ll)
 
-        #self.nn.set_vars(len(ll.dat), 100, 0)
-        #self.nn.dot_setup()
+        ll.csv_input = self.a.VAR_LOCAL_DATABASE + os.sep + self.a.VAR_MY_CSV_NAME + ".dot.csv"
+        ll.read_csv()
 
         self.nn.set_vars(len(ll.dat), 100, 0)
-        self.nn.skintone_setup()
+        self.nn.dot_setup()
+
+        #ll.csv_input = self.a.VAR_LOCAL_DATABASE + os.sep + self.a.VAR_MY_CSV_NAME + ".csv"
+        #ll.read_csv()
+
+        #self.nn.set_vars(len(ll.dat), 100, 0)
+        #self.nn.skintone_setup()
 
         #self.nn.set_vars(len(ll.dat), 100, 0) #50, 'conv', 676
         #self.nn.conv_setup()
@@ -54,6 +60,7 @@ class Read( enum.Enum) :
         self.check_folder_exists()
 
         ll = loader.Load(self.a, self.pic)
+        ll.read_csv()
 
         ll.dat = ll.record.make_boxes(self.pic, dim=7)
 

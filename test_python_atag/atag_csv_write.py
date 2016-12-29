@@ -49,6 +49,7 @@ class Write( enum.Enum) :
         for l in self.dat:
             self.process_write_line_for_dot(l)
         self.f.close()
+        print "done"
 
     def process_read_line(self, line):
         l = line.split(",")
