@@ -113,7 +113,7 @@ class Write( enum.Enum) :
                     self.f.write(","+self.RED+",0,0\n")
 
     def process_write_line_for_dot(self, line):
-        space = 5
+        space = 25
         filename = line[self.FILE]
         if not filename.startswith(self.a.VAR_ROOT_DATABASE + os.sep):
             filename = self.a.VAR_ROOT_DATABASE + os.sep + line[self.FILE]

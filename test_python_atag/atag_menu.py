@@ -273,6 +273,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
         ''' some buttons in one row '''
         self.grid2 = Gtk.Grid()
+        self.grid2.set_border_width(10)
 
         self.button = Gtk.Button(label="Read CSV, Show Boxes")
         self.button.connect("clicked", self.on_button_show_csv)
