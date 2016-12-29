@@ -148,10 +148,8 @@ class Write( enum.Enum) :
                         #else:
                         #    self.f.write(line[x])
                         if x == self.FACE_X:
-
                             self.f.write(str(int(line[x]) + z * 2 + space))
                         elif x == self.FACE_Y:
-
                             self.f.write(str(int(line[x]) + z * 2 + space))
 
                     elif (y % 2 == 1 ) and x == self.FACE_X:
@@ -162,8 +160,6 @@ class Write( enum.Enum) :
                         r = 0
                         if top - height > 0: r = random.randint(0, top - height)
                         self.f.write(str(r))
-                    #elif y % 2 == 0:
-
                     else :
                         self.f.write(line[x])
 
