@@ -35,7 +35,7 @@ class Read( enum.Enum) :
 
         self.nn.load_ckpt = True
         self.nn.save_ckpt = True
-        self.nn.train = False
+        self.nn.train = True
         self.nn.test = True
         self.nn.set_loader(ll)
 
@@ -85,7 +85,7 @@ class Read( enum.Enum) :
 
         self.nn.predict_remove_symbol = 1
         self.nn.set_vars(len(ll.dat), 100,  0)  # 50, 'conv', 676
-        self.nn.conv_setup()
+        #self.nn.conv_setup()
         print "len-dat2", len(ll.dat)
 
 

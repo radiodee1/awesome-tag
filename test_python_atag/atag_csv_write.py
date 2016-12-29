@@ -113,7 +113,7 @@ class Write( enum.Enum) :
                     self.f.write(","+self.RED+",0,0\n")
 
     def process_write_line_for_dot(self, line):
-
+        space = 5
         filename = line[self.FILE]
         if not filename.startswith(self.a.VAR_ROOT_DATABASE + os.sep):
             filename = self.a.VAR_ROOT_DATABASE + os.sep + line[self.FILE]
@@ -149,10 +149,10 @@ class Write( enum.Enum) :
                         #    self.f.write(line[x])
                         if x == self.FACE_X:
 
-                            self.f.write(str(int(line[x]) + z * 2))
+                            self.f.write(str(int(line[x]) + z * 2 + space))
                         elif x == self.FACE_Y:
 
-                            self.f.write(str(int(line[x]) + z * 2))
+                            self.f.write(str(int(line[x]) + z * 2 + space))
 
                     elif (y % 2 == 1 ) and x == self.FACE_X:
                         r = 0
