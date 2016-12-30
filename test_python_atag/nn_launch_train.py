@@ -41,11 +41,11 @@ class Read( enum.Enum) :
 
         if True:
             pass
-            #ll.csv_input = self.a.VAR_LOCAL_DATABASE + os.sep + self.a.VAR_MY_CSV_NAME + ".dot.csv"
-            #ll.read_csv()
+            ll.csv_input = self.a.VAR_LOCAL_DATABASE + os.sep + self.a.VAR_MY_CSV_NAME + ".dot.csv"
+            ll.read_csv()
 
-            #self.nn.set_vars(len(ll.dat), 100, 0)
-            #self.nn.dot_setup()
+            self.nn.set_vars(len(ll.dat), 100, 0)
+            self.nn.dot_setup()
 
         else:
             ll.csv_input = self.a.VAR_LOCAL_DATABASE + os.sep + self.a.VAR_MY_CSV_NAME + ".csv"
