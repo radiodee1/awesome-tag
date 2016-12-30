@@ -112,6 +112,7 @@ class NN(enum.Enum):
 
         ''' CONVOLUTION NEXT '''
         c_output = 2
+        c_input = 784 * 3
 
         def weight_variable(shape):
             initial = tf.truncated_normal(shape, stddev=0.1)
@@ -128,14 +129,12 @@ class NN(enum.Enum):
             return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
                                   strides=[1, 2, 2, 1], padding='SAME')
 
-        self.c_x = tf.placeholder(tf.float32, shape=[None, 784])
+        self.c_x = tf.placeholder(tf.float32, shape=[None, c_input])
         self.c_y_ = tf.placeholder(tf.float32, shape=[None, c_output])
 
-        ###self.sess = tf.InteractiveSession()
-
-        self.W_conv1 = weight_variable([5, 5, 1, 32])
+        self.W_conv1 = weight_variable([5, 5, 3, 32])
         self.b_conv1 = bias_variable([32])
-        self.x_image = tf.reshape(self.c_x, [-1, 28, 28, 1])
+        self.x_image = tf.reshape(self.c_x, [-1, 28, 28  , 3])
         self.h_conv1 = tf.nn.relu(conv2d(self.x_image, self.W_conv1) + self.b_conv1)
         self.h_pool1 = max_pool_2x2(self.h_conv1)
 
@@ -148,7 +147,7 @@ class NN(enum.Enum):
         self.W_fc1 = weight_variable([7 * 7 * 64, 1024])
         self.b_fc1 = bias_variable([1024])
 
-        self.h_pool2_flat = tf.reshape(self.h_pool2, [-1, 7 * 7 * 64])
+        self.h_pool2_flat = tf.reshape(self.h_pool2, [-1, 7 * 7 * 64 ])
         self.h_fc1 = tf.nn.relu(tf.matmul(self.h_pool2_flat, self.W_fc1) + self.b_fc1)
 
         self.keep_prob = tf.placeholder(tf.float32)
@@ -276,7 +275,7 @@ class NN(enum.Enum):
         if self.train :
             #self.cursor = 0
             for i in range(self.start_train, self.cursor_tot ):
-                batch_0, batch_1 = self.get_nn_next_train(self.batchsize, self.CONST_ONE_CHANNEL)
+                batch_0, batch_1 = self.get_nn_next_train(self.batchsize, self.CONST_THREE_CHANNEL)
 
                 if i % 100 == 0:
                     train_accuracy = self.c_accuracy.eval(feed_dict={
@@ -287,7 +286,7 @@ class NN(enum.Enum):
         if self.save_ckpt and self.train  : self.save_group()
 
         if self.test :
-            if self.use_loader : self.get_nn_next_test(self.batchsize, self.CONST_ONE_CHANNEL)
+            if self.use_loader : self.get_nn_next_test(self.batchsize, self.CONST_THREE_CHANNEL)
             print("test accuracy %g" % self.c_accuracy.eval(feed_dict={
                 self.c_x: self.mnist_test.images, self.c_y_: self.mnist_test.labels, self.keep_prob: 1.0}))
 
@@ -303,7 +302,7 @@ class NN(enum.Enum):
                 print stop
 
             for i in range(start, stop ) :
-                batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, self.CONST_ONE_CHANNEL)
+                batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, self.CONST_THREE_CHANNEL)
                 #self.c_y_out = tf.argmax(self.y_conv,1) ## 1
                 if len(batch_0) > 0  :
                     out.extend( self.sess.run(self.c_y_out, feed_dict={self.c_x : batch_0, self.c_y_: batch_1, self.keep_prob: 1.0}))

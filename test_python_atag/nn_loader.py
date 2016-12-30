@@ -109,10 +109,10 @@ class Load(enum.Enum):
             else:
                 lbl_2 = 1
 
-            skin, img , three = self.look_at_img(filename,x,y,width,height)
+            skin, img , three = self._look_at_img(filename,x,y,width,height)
             #print three, "three"
 
-            print (self.iter, filename)
+            print self.iter, " -- ", self.iter / float(len(self.dat)) * 100 , "% -- " , filename
 
             if len(img) != 28 * 28 or len(three) != 28 * 28 * 3 :
                 self.iter = self.iter + 1
@@ -152,7 +152,7 @@ class Load(enum.Enum):
         self.dat.append(row)
 
 
-    def look_at_img(self, filename, x = 0, y = 0, width = 28, height = 28):
+    def _look_at_img(self, filename, x = 0, y = 0, width = 28, height = 28):
         #img = Image.open(open(filename))
         img = Image.open(filename)
 
@@ -219,7 +219,7 @@ class Load(enum.Enum):
             for i in range(len(xy_list)):
                 q = xy_list[i]
                 color = q[2][0]
-                if color > high : img3 [int(q[0]), int(q[1])] = color # / float(high * 2)
+                if color > high or True: img3 [int(q[0]), int(q[1])] = color  / float(high * 2)
             for yz in range(28):
                 for xz in range(28):
                     threeimg.append(img3[yz][xz])
@@ -231,7 +231,7 @@ class Load(enum.Enum):
             for i in range(len(xy_list)):
                 q = xy_list[i]
                 color = q[2][1]
-                if color > high : img3 [int(q[0]), int(q[1])] = color # / float(high * 2)
+                if color > high or True: img3 [int(q[0]), int(q[1])] = color  / float(high * 2)
             for yz in range(28):
                 for xz in range(28):
                     threeimg.append(img3[yz][xz])
@@ -243,7 +243,7 @@ class Load(enum.Enum):
             for i in range(len(xy_list)):
                 q = xy_list[i]
                 color = q[2][2]
-                if color > high  : img3 [int(q[0]), int(q[1])] = color # / float(high * 2)
+                if color > high  or True: img3 [int(q[0]), int(q[1])] = color  / float(high * 2)
             for yz in range(28):
                 for xz in range(28):
                     threeimg.append(img3[yz][xz])
