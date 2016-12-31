@@ -37,6 +37,7 @@ class NN(enum.Enum):
         self.predict_skintone = False
         self.predict_softmax = False
         self.predict_conv = False
+        self.predict_dot = False
 
         self.dat_remove = []
 
@@ -191,7 +192,7 @@ class NN(enum.Enum):
             if self.use_loader : self.get_nn_next_test(self.batchsize, self.CONST_DOT)
             print(self.sess.run(d_accuracy, feed_dict={self.d_x: self.mnist_test.images, self.d_y_: self.mnist_test.labels}))
 
-        if self.predict_softmax :
+        if self.predict_dot :
             self.cursor = 0
             self.dat_remove = []
 

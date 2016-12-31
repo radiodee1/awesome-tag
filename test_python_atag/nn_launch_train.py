@@ -115,8 +115,10 @@ if __name__ == '__main__':
     a = aa.Dotfolder()
     r = Read(a, pic)
     if len(pic) > 0 :
+        ''' any combination '''
         r.nn.predict_softmax = True
         r.nn.predict_conv = True
+        r.nn.predict_dot = True
         r.run_predict()
     else:
         r.run_nn()
