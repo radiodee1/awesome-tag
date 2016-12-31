@@ -110,7 +110,7 @@ class Load(enum.Enum):
                 lbl_2 = 1
 
             skin, img , three = self._look_at_img(filename,x,y,width,height)
-            #print three, "three"
+            #print len(three) , three, "three"
 
             print self.iter, " -- ", self.iter / float(len(self.dat)) * 100 , "% -- " , filename
 
@@ -169,6 +169,7 @@ class Load(enum.Enum):
         oneimg = []
         threeimg = []
         skin = []
+        oneimg_rgb = []
 
         mnist_dim = 28
 
@@ -191,6 +192,7 @@ class Load(enum.Enum):
 
                         if  astart >= 0 and astart < dimx and bstart >= 0 and bstart < dimy :
                             item = [ aa, bb, list(img.getpixel((int(astart) ,int(bstart))))]
+                            oneimg_rgb.extend(list(img.getpixel((int(astart) ,int(bstart)))))
                             xy_list.append(item)
                             counter = counter + 1
 
@@ -211,42 +213,47 @@ class Load(enum.Enum):
                 oneimg.append(img2[yz][xz])
 
         ''' Three color channels '''
-        if len(xy_list) >= 28 * 28 or True:
-            img3 = [[0] * 28] * 28
-            img3 = np.asarray(img3, dtype="float32")
-            high = img.getextrema()[0][1] / 2
+        if False:
+            if len(xy_list) >= 28 * 28 or True:
+                img3 = [[0] * 28] * 28
+                img3 = np.asarray(img3, dtype="float32")
+                high = img.getextrema()[0][1] / 2
 
-            for i in range(len(xy_list)):
-                q = xy_list[i]
-                color = q[2][0]
-                if color > high or True: img3 [int(q[0]), int(q[1])] = color  / float(high * 2)
-            for yz in range(28):
-                for xz in range(28):
-                    threeimg.append(img3[yz][xz])
+                for i in range(len(xy_list)):
+                    q = xy_list[i]
+                    color = q[2][0]
+                    if color > high or True: img3 [int(q[0]), int(q[1])] = color  / float(high * 2)
+                for yz in range(28):
+                    for xz in range(28):
+                        threeimg.append(img3[yz][xz])
 
-            img3 = [[0] * 28] * 28
-            img3 = np.asarray(img3, dtype="float32")
-            high = img.getextrema()[1][1] / 2
+                img3 = [[0] * 28] * 28
+                img3 = np.asarray(img3, dtype="float32")
+                high = img.getextrema()[1][1] / 2
 
-            for i in range(len(xy_list)):
-                q = xy_list[i]
-                color = q[2][1]
-                if color > high or True: img3 [int(q[0]), int(q[1])] = color  / float(high * 2)
-            for yz in range(28):
-                for xz in range(28):
-                    threeimg.append(img3[yz][xz])
+                for i in range(len(xy_list)):
+                    q = xy_list[i]
+                    color = q[2][1]
+                    if color > high or True: img3 [int(q[0]), int(q[1])] = color  / float(high * 2)
+                for yz in range(28):
+                    for xz in range(28):
+                        threeimg.append(img3[yz][xz])
 
-            img3 = [[0] * 28] * 28
-            img3 = np.asarray(img3, dtype="float32")
-            high = img.getextrema()[2][1] / 2
+                img3 = [[0] * 28] * 28
+                img3 = np.asarray(img3, dtype="float32")
+                high = img.getextrema()[2][1] / 2
 
-            for i in range(len(xy_list)):
-                q = xy_list[i]
-                color = q[2][2]
-                if color > high  or True: img3 [int(q[0]), int(q[1])] = color  / float(high * 2)
-            for yz in range(28):
-                for xz in range(28):
-                    threeimg.append(img3[yz][xz])
+                for i in range(len(xy_list)):
+                    q = xy_list[i]
+                    color = q[2][2]
+                    if color > high  or True: img3 [int(q[0]), int(q[1])] = color  / float(high * 2)
+                for yz in range(28):
+                    for xz in range(28):
+                        threeimg.append(img3[yz][xz])
+        else:
+            for i in range(len(oneimg_rgb)):
+                oneimg_rgb[i] = oneimg_rgb[i] / float(255)
+            threeimg = oneimg_rgb
 
         ''' Skin tone '''
         for i in range(len(xy_list)):

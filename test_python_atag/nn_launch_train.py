@@ -35,11 +35,11 @@ class Read( enum.Enum) :
 
         self.nn.load_ckpt = True
         self.nn.save_ckpt = True
-        self.nn.train = False
+        self.nn.train = True
         self.nn.test = True
         self.nn.set_loader(ll)
 
-        if True:
+        if False:
             pass
             ll.csv_input = self.a.VAR_LOCAL_DATABASE + os.sep + self.a.VAR_MY_CSV_NAME + ".dot.csv"
             ll.read_csv()
@@ -47,7 +47,7 @@ class Read( enum.Enum) :
             self.nn.set_vars(len(ll.dat), 100, 0)
             self.nn.dot_setup()
 
-        else:
+        if True:
             ll.csv_input = self.a.VAR_LOCAL_DATABASE + os.sep + self.a.VAR_MY_CSV_NAME + ".csv"
             ll.read_csv()
 

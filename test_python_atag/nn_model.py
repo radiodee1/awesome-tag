@@ -115,7 +115,7 @@ class NN(enum.Enum):
         c_input = 784 * 3
 
         def weight_variable(shape):
-            initial = tf.truncated_normal(shape, stddev=0.1)
+            initial = tf.truncated_normal(shape, stddev=0.0001) #0.1
             return tf.Variable(initial)
 
         def bias_variable(shape):
