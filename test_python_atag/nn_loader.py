@@ -112,7 +112,7 @@ class Load(enum.Enum):
             skin, img , three = self._look_at_img(filename,x,y,width,height)
             #print len(three) , three, "three"
 
-            print self.iter, " -- ", self.iter / float(len(self.dat)) * 100 , "% -- " , filename
+            print self.iter, " -- ", int(self.iter / float(len(self.dat)) * 100) , "% -- " , filename
 
             if len(img) != 28 * 28 or len(three) != 28 * 28 * 3 :
                 self.iter = self.iter + 1
