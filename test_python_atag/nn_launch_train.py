@@ -26,7 +26,7 @@ class Read( enum.Enum) :
         self.dot_only = False
         self.conv_only = False
 
-        self.predict_mc = True
+        self.predict_mc = False
 
     def run_nn(self):
 
@@ -84,14 +84,14 @@ class Read( enum.Enum) :
         self.nn.test = False
         self.nn.set_loader(ll)
 
-        if False:
+        if not self.predict_mc:
             self.nn.predict_remove_symbol = 1
             self.nn.set_vars(len(ll.dat), 100, 0)
             self.nn.dot_setup()
             #self.nn.conv_setup()
             print "len-dat0", len(ll.dat)
 
-        if False:
+        if not self.predict_mc:
             ll.dat = ll.record.aggregate_dat_list(ll.dat)
             ll.record.renumber_dat_list(ll.dat)
 

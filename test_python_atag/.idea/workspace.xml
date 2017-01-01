@@ -4,7 +4,6 @@
     <list default="true" id="c15ed38a-2fe7-44d1-b032-ae199cd14d43" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_launch_train.py" afterPath="$PROJECT_DIR$/nn_launch_train.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_record.py" afterPath="$PROJECT_DIR$/nn_record.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -31,11 +30,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="nn_launch_train.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="nn_launch_train.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nn_launch_train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-633">
-              <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+            <state relative-caret-position="357">
+              <caret line="93" column="30" lean-forward="false" selection-start-line="93" selection-start-column="30" selection-end-line="93" selection-end-column="30" />
               <folding>
                 <element signature="e#19#28#0" expanded="true" />
               </folding>
@@ -73,7 +72,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="nn_record.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="nn_record.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nn_record.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="732">
@@ -402,13 +401,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1480257882064</updated>
-    </task>
-    <task id="LOCAL-00056" summary="repeatable error with conv function and iter 676">
-      <created>1481397606289</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1481397606289</updated>
     </task>
     <task id="LOCAL-00057" summary="emergency save">
       <created>1481403403253</created>
@@ -746,7 +738,14 @@
       <option name="project" value="LOCAL" />
       <updated>1483301253273</updated>
     </task>
-    <option name="localTasksCounter" value="105" />
+    <task id="LOCAL-00105" summary="try to predict using some kind of Monte Carlo scheme">
+      <created>1483304337648</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1483304337649</updated>
+    </task>
+    <option name="localTasksCounter" value="106" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -776,7 +775,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="combine two models" />
     <MESSAGE value="combine two models for saving of results" />
     <MESSAGE value="must enable loading of model in predict section" />
     <MESSAGE value="runs without error but does nothing special" />
@@ -801,7 +799,8 @@
     <MESSAGE value="same score at three epochs as two. must train dot()" />
     <MESSAGE value="argparse" />
     <MESSAGE value="doesn't do a very good job and takes a long time." />
-    <option name="LAST_COMMIT_MESSAGE" value="doesn't do a very good job and takes a long time." />
+    <MESSAGE value="try to predict using some kind of Monte Carlo scheme" />
+    <option name="LAST_COMMIT_MESSAGE" value="try to predict using some kind of Monte Carlo scheme" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1194,22 +1193,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nn_launch_train.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-633">
-          <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
-          <folding>
-            <element signature="e#19#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/nn_record.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="732">
           <caret line="85" column="47" lean-forward="false" selection-start-line="85" selection-start-column="47" selection-end-line="85" selection-end-column="47" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nn_launch_train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="93" column="30" lean-forward="false" selection-start-line="93" selection-start-column="30" selection-end-line="93" selection-end-column="30" />
+          <folding>
+            <element signature="e#19#28#0" expanded="true" />
           </folding>
         </state>
       </provider>
