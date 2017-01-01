@@ -1,3 +1,4 @@
+import random
 import os
 import atag_csv as enum
 from PIL import Image
@@ -45,6 +46,45 @@ class Record( enum.Enum):
                     num = x  * (xx / w) #- (y * (yy / w))
                 elif j is self.FACE_Y:
                     num = y * (yy / h)
+                elif j is self.COLOR :
+                    num = self.RED
+                elif j is self.ATAG_ID :
+                    num = i
+                temp.append(num)
+            self.dat.append(temp)
+        return self.dat
+
+    def make_boxes_mc(self, filename, dim=28):
+        self.dim_x = dim
+        self.dim_y = dim
+        xx, yy = Image.open(filename).size
+
+        mc_num = xx / dim # random.randint(0,xx) #(xx, xx*yy)
+
+        print "do mc file prediction"
+        for i in range(mc_num):
+            size = random.randint(dim, xx)
+
+            temp = []
+            for j in range(self.TOTAL):
+                num = 0
+                if j is self.FILE:
+                    num = filename
+                elif j is self.FACE_WIDTH:
+                    num = size #xx / w
+
+                elif j is self.FACE_HEIGHT:
+                    num = size #yy / h
+
+                elif j is self.FACE_X:
+                    xxx = 0
+                    if xx - size > 0 : xxx = xx - size
+                    num = random.randint(0, xxx)
+                elif j is self.FACE_Y:
+                    yyy = 0
+                    if yy - size > 0 : yyy = yy - size
+                    num = random.randint(0, yyy)
+
                 elif j is self.COLOR :
                     num = self.RED
                 elif j is self.ATAG_ID :

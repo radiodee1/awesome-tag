@@ -26,6 +26,8 @@ class Read( enum.Enum) :
         self.dot_only = False
         self.conv_only = False
 
+        self.predict_mc = True
+
     def run_nn(self):
 
         self.check_folder_exists()
@@ -73,7 +75,8 @@ class Read( enum.Enum) :
         ll = loader.Load(self.a, self.pic)
         ll.read_csv()
 
-        ll.dat = ll.record.make_boxes(self.pic, dim=2) # 7
+        if not  self.predict_mc : ll.dat = ll.record.make_boxes(self.pic, dim=7) # 7
+        if self.predict_mc : ll.dat = ll.record.make_boxes_mc(self.pic)
 
         self.nn.load_ckpt = True
         self.nn.save_ckpt = False
@@ -81,18 +84,14 @@ class Read( enum.Enum) :
         self.nn.test = False
         self.nn.set_loader(ll)
 
-        if True:
+        if False:
             self.nn.predict_remove_symbol = 1
             self.nn.set_vars(len(ll.dat), 100, 0)
             self.nn.dot_setup()
             #self.nn.conv_setup()
             print "len-dat0", len(ll.dat)
 
-        #self.nn.set_vars(len(ll.dat), 100, 0)
-        #self.nn.skintone_setup()
-        #print "len-dat1", len(ll.dat)
-
-        if True:
+        if False:
             ll.dat = ll.record.aggregate_dat_list(ll.dat)
             ll.record.renumber_dat_list(ll.dat)
 
@@ -101,6 +100,8 @@ class Read( enum.Enum) :
             self.nn.set_vars(len(ll.dat), 100,  0)  # 50, 'conv', 676
             self.nn.conv_setup()
             print "len-dat2", len(ll.dat)
+
+        if self.predict_mc : ll.record.aggregate_dat_list(ll.dat)
 
         ll.record.save_dat_to_file()
 
