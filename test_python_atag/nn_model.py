@@ -217,7 +217,7 @@ class NN(enum.Enum):
 
             self.loader.record.remove_lines_from_dat(self.dat_remove)
             self.loader.record.renumber_dat_list(self.loader.dat)
-            print "remove skintone", self.dat_remove
+            print "remove dot", len(self.dat_remove), self.dat_remove
 
 
     def skintone_setup(self):

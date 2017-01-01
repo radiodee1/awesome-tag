@@ -34,12 +34,12 @@ class Record( enum.Enum):
                     num = filename
                 elif j is self.FACE_WIDTH:
                     num = xx / w
-                    if num < 28:#self.dim_x:
-                        num = 28 #self.dim_x
+                    if num < self.dim_x: # 28
+                        num = self.dim_x # 28
                 elif j is self.FACE_HEIGHT:
                     num = yy / h
-                    if num < 28: #self.dim_y:
-                        num = 28# self.dim_y
+                    if num < self.dim_y: # 28
+                        num = self.dim_y # 28
                 elif j is self.FACE_X:
                     #print xx / w
                     num = x  * (xx / w) #- (y * (yy / w))

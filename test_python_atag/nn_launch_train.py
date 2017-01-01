@@ -73,7 +73,7 @@ class Read( enum.Enum) :
         ll = loader.Load(self.a, self.pic)
         ll.read_csv()
 
-        ll.dat = ll.record.make_boxes(self.pic, dim=7)
+        ll.dat = ll.record.make_boxes(self.pic, dim=2) # 7
 
         self.nn.load_ckpt = True
         self.nn.save_ckpt = False
