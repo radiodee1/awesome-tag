@@ -81,24 +81,26 @@ class Read( enum.Enum) :
         self.nn.test = False
         self.nn.set_loader(ll)
 
-        self.nn.predict_remove_symbol = 1
-
-        self.nn.set_vars(len(ll.dat), 100, 0)
-        self.nn.dot_setup()
-        #self.nn.conv_setup()
-        print "len-dat0", len(ll.dat)
+        if True:
+            self.nn.predict_remove_symbol = 1
+            self.nn.set_vars(len(ll.dat), 100, 0)
+            self.nn.dot_setup()
+            #self.nn.conv_setup()
+            print "len-dat0", len(ll.dat)
 
         #self.nn.set_vars(len(ll.dat), 100, 0)
         #self.nn.skintone_setup()
         #print "len-dat1", len(ll.dat)
 
-        ll.dat = ll.record.aggregate_dat_list(ll.dat)
-        ll.record.renumber_dat_list(ll.dat)
+        if True:
+            ll.dat = ll.record.aggregate_dat_list(ll.dat)
+            ll.record.renumber_dat_list(ll.dat)
 
-        self.nn.predict_remove_symbol = 1
-        self.nn.set_vars(len(ll.dat), 100,  0)  # 50, 'conv', 676
-        self.nn.conv_setup()
-        print "len-dat2", len(ll.dat)
+        if False:
+            self.nn.predict_remove_symbol = 1
+            self.nn.set_vars(len(ll.dat), 100,  0)  # 50, 'conv', 676
+            self.nn.conv_setup()
+            print "len-dat2", len(ll.dat)
 
 
         ll.record.save_dat_to_file()

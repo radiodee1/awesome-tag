@@ -114,7 +114,6 @@ class Record( enum.Enum):
             ''' delete marked for delete '''
             if self.dat[i][self.ATAG_ID] == self.AGGREGATE_DELETE:
                 del self.dat[i]
-                #print len(self.dat), "after"
         for i in range(len(self.dat) -1, -1, -1) :
             ''' delete odd sizes '''
             if (self.dat[i][self.FACE_WIDTH] >= self.dat[i][self.FACE_HEIGHT] * 1.5 or
@@ -138,20 +137,26 @@ class Record( enum.Enum):
                 if  yy >= y and x + w + 2 >= xx and y + h >= yy and x < xx and x + w -2 <= xx:
                     #print "boxatright"
                     return i
+                if  x + w + 2 + self.dim_x >= xx and x < xx and ((yy >= y and y + h >= yy) or
+                                                                     (y >= yy and y <= yy+hh))  :
+                    return i
         return -1
 
     def _box_at_bottom(self, x, y, w, h):
         for i in range(len(self.dat)) :
             if self.dat[i][self.ATAG_ID] == self.AGGREGATE_START:
                 xx,yy,ww,hh = self._get_xywh(i)
-                if  y + h + 2 >= yy and y < yy:# and y + h -2 <= yy:
+                if  y + h + 2 + self.dim_y >= yy and y < yy + self.dim_y:
                     if self.strict_columns and x + w == xx + ww and xx == x :
                         print "boxatbottom strict"
                         return i
-                    elif (not self.strict_columns and not self._reject_box(i, w)) and ((xx >=x and xx <= x+w -2) or
+                    elif (not self.strict_columns and not self._reject_box(i, w)) : #and
+                        if ((xx >=x and xx <= x+w -2) or
                             ( xx + ww >= x and xx + ww <= x+w   )):
-                        print "boxatbottom loose"
-                        return i
+                            print "boxatbottom loose"
+                            return i
+                        if x + w + 2 + self.dim_x >=xx and x < xx :
+                            return i
                     #else : print "boxatbottom none"
         return -1
 
@@ -178,7 +183,7 @@ class Record( enum.Enum):
                 zz = self._box_at_right(x,y,w,h)
                 if zz != -1:
                     w_calc = self.dat[zz][self.FACE_X] + self.dat[zz][self.FACE_WIDTH] - self.dat[i][self.FACE_X]
-                    self.dat[i][self.FACE_WIDTH] = w_calc # self.dat[i][self.FACE_WIDTH] + self.dat[zz][self.FACE_WIDTH]
+                    self.dat[i][self.FACE_WIDTH] = w_calc
                     self.dat[zz][self.ATAG_ID] = self.AGGREGATE_DELETE
 
             k = k + 1
