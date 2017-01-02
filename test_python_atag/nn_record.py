@@ -11,7 +11,7 @@ class Record( enum.Enum):
         self.a = atag
         self.predict_filename = self.a.VAR_LOCAL_DATABASE + os.sep + "predict" + ".csv"
         self.strict_columns = False
-        self.allow_skipping = False
+        self.allow_skipping = True
         self.dim_x = 28
         self.dim_y = 28
 
@@ -156,7 +156,7 @@ class Record( enum.Enum):
             for i in range(len(self.dat)) :
                 if self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE:
                     self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
-                    #self._make_column(i)
+                    self._make_column(i)
             self._delete_marked()
 
         for i in range(len(self.dat) -1, -1, -1) :
@@ -204,7 +204,7 @@ class Record( enum.Enum):
                         return i
                     elif (not self.strict_columns and not self._reject_box(i, w)) : #and
                         if ((xx >=x and xx <= x+w -2) or
-                            ( xx + ww >= x and xx + ww <= x+w   )):
+                                ( xx + ww >= x and xx + ww <= x+w   )):
                             print "boxatbottom loose"
                             return i
                         if self.allow_skipping and x + w + 2 + self.dim_x >=xx and x < xx :

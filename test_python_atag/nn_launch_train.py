@@ -91,7 +91,7 @@ class Read( enum.Enum) :
             #self.nn.conv_setup()
             print "len-dat0", len(ll.dat)
 
-        if not self.predict_mc and True :
+        if not self.predict_mc and False :
             ll.dat = ll.record.aggregate_dat_list(ll.dat)
             ll.record.renumber_dat_list(ll.dat)
 
