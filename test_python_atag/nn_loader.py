@@ -26,6 +26,7 @@ class Load(enum.Enum):
 
         self.filename = filename
         self.record = rec.Record(atag)
+        self.normal_train = True
 
         ImageFile.LOAD_TRUNCATED_IMAGES = True
         self.inspection_num = 2
@@ -40,8 +41,6 @@ class Load(enum.Enum):
                 f.close()
         else:
             self.dat = self.record.make_boxes(self.filename)
-
-        #print "dat",self.dat
 
 
     def get_nn_next_train(self, batchsize, cursor, num_channels = 1):
@@ -65,10 +64,11 @@ class Load(enum.Enum):
         return self.mnist_test
 
     def get_nn_next_predict(self, batchsize, cursor, num_channels = 1):
+        self.normal_train = False
         tot_cursors = int(len(self.dat) / batchsize)
-        if cursor >= tot_cursors  :
+        if cursor > tot_cursors  :
             print cursor, tot_cursors, batchsize, len(self.dat), "end"
-            skin, three, images, labels = self._get_pixels_from_dat(cursor * batchsize, len(self.dat) )
+            skin, three, images, labels = self._get_pixels_from_dat(cursor-1 * batchsize, len(self.dat) )
         elif cursor <= tot_cursors :
             skin, three, images, labels = self._get_pixels_from_dat(cursor * batchsize, cursor * batchsize + batchsize)
         if num_channels == self.CONST_ONE_CHANNEL : return images, labels
@@ -83,9 +83,11 @@ class Load(enum.Enum):
         self.image_x3 = []
         self.image_skin = []
         self.iter = start
-        if self.iter + (stop - start) >= len(self.dat):
+
+        if self.iter  > len(self.dat):
             self.iter = 0
             stop = stop - start
+            print "some kind of reset"
 
         while self.iter < stop and stop <= len(self.dat) and self.iter < len(self.dat):
             filename = self.dat[self.iter][self.FILE]
@@ -97,7 +99,8 @@ class Load(enum.Enum):
             height = self.dat[self.iter][self.FACE_HEIGHT]
 
             #print filename, "fullname..."
-            if not (os.path.isfile(filename) and width >=28 and height >= 28 and len(Image.open(filename).getbands()) >=3) :
+            if not (os.path.isfile(filename) and width >=28 and height >= 28
+                    and len(Image.open(filename).getbands()) >=3) and self.normal_train :
                 self.iter = self.iter + 1
                 stop = stop + 1
                 continue
@@ -112,7 +115,7 @@ class Load(enum.Enum):
             skin, img , three = self._look_at_img(filename,x,y,width,height)
             #print len(three) , three, "three"
 
-            print self.iter, " -- ", int(self.iter / float(len(self.dat)) * 100) , "% -- " , filename
+            print self.iter, " -- ", int(self.iter / float(len(self.dat)) * 100) , "% -- " , filename, len(self.dat)
 
             if len(img) != 28 * 28 or len(three) != 28 * 28 * 3 :
                 self.iter = self.iter + 1

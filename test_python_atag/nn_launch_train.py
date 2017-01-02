@@ -40,7 +40,7 @@ class Read( enum.Enum) :
 
         self.nn.load_ckpt = True
         self.nn.save_ckpt = True
-        self.nn.train = True
+        self.nn.train = False
         self.nn.test = True
         self.nn.set_loader(ll)
 
@@ -73,7 +73,7 @@ class Read( enum.Enum) :
         self.check_folder_exists()
 
         ll = loader.Load(self.a, self.pic)
-        ll.read_csv()
+        #ll.read_csv()
 
         if not  self.predict_mc : ll.dat = ll.record.make_boxes(self.pic, dim=7) # 7
         if self.predict_mc : ll.dat = ll.record.make_boxes_mc(self.pic)
@@ -91,11 +91,11 @@ class Read( enum.Enum) :
             #self.nn.conv_setup()
             print "len-dat0", len(ll.dat)
 
-        if not self.predict_mc:
+        if not self.predict_mc and True :
             ll.dat = ll.record.aggregate_dat_list(ll.dat)
             ll.record.renumber_dat_list(ll.dat)
 
-        if True:
+        if False:
             self.nn.predict_remove_symbol = 1
             self.nn.set_vars(len(ll.dat), 100,  0)  # 50, 'conv', 676
             self.nn.conv_setup()

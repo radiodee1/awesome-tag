@@ -31,6 +31,7 @@ class NN(enum.Enum):
         self.cursor = 0
         self.cursor_tot = 0
         self.batchsize = 100
+        self.dat_len = 0
         self.save_name = ""
         self.start_train = 1
 
@@ -196,6 +197,10 @@ class NN(enum.Enum):
             self.cursor = 0
             self.dat_remove = []
 
+            if len(self.loader.dat) != self.dat_len:
+                print "error"
+                sys.exit()
+
             out = []
             start = 0 # self.start_train
             stop = self.cursor_tot
@@ -205,19 +210,19 @@ class NN(enum.Enum):
 
             for i in range(start, stop ) :
                 batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, self.CONST_DOT)
-                #self.y_out = tf.argmax(self.y,1) # 1
-                if len(batch_0) > 0:
+                print "batch_0", len(batch_0)
+                if len(batch_0) > 0 :
                     out.extend( self.sess.run(self.d_y_out, feed_dict={self.d_x : batch_0, self.d_y_: batch_1}))
-                    print out, len(out) , i, self.cursor_tot
+                    print "out" , len(out) , i, self.cursor_tot, out
 
             for j in range(len(out)) :
                 zz = out[j]
-                if zz == self.predict_remove_symbol : ## 1
+                if int(zz) == int(self.predict_remove_symbol ) : ## 1
                     self.dat_remove.append( j )
 
+            print "remove dot", len(self.dat_remove), self.dat_remove
             self.loader.record.remove_lines_from_dat(self.dat_remove)
             self.loader.record.renumber_dat_list(self.loader.dat)
-            print "remove dot", len(self.dat_remove), self.dat_remove
 
 
     def skintone_setup(self):
@@ -260,7 +265,7 @@ class NN(enum.Enum):
 
             for j in range(len(out)) :
                 zz = out[j]
-                if zz == self.predict_remove_symbol : ## 1
+                if int(zz) == int(self.predict_remove_symbol) : ## 1
                     self.dat_remove.append( j )
 
             self.loader.record.remove_lines_from_dat(self.dat_remove)
@@ -311,7 +316,7 @@ class NN(enum.Enum):
 
             for j in range(len(out)) :
                 zz = out[j]
-                if zz == self.predict_remove_symbol : ## 1
+                if int(zz) == int(self.predict_remove_symbol ) : ## 1
                     self.dat_remove.append( j)
 
             self.loader.record.remove_lines_from_dat(self.dat_remove)
@@ -347,6 +352,7 @@ class NN(enum.Enum):
         self.use_loader = True
 
     def set_vars(self, length,  batchsize, start = 1):
+        self.dat_len = length
         self.cursor_tot = int(length / batchsize) ## -1
         self.save_name = "group-miss"
         #self.start_train = start
@@ -355,7 +361,7 @@ class NN(enum.Enum):
         #print "vars", self.cursor_tot, self.save_name
 
     def get_nn_next_predict(self, batchsize, num_channels = 1):
-        print self.cursor, num_channels
+        print self.cursor, num_channels, "cursor, num-channels"
         images, labels = self.loader.get_nn_next_predict(batchsize, self.cursor, num_channels)
         self.cursor = self.cursor + 1
         return images, labels

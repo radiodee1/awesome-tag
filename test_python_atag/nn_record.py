@@ -11,6 +11,7 @@ class Record( enum.Enum):
         self.a = atag
         self.predict_filename = self.a.VAR_LOCAL_DATABASE + os.sep + "predict" + ".csv"
         self.strict_columns = False
+        self.allow_skipping = False
         self.dim_x = 28
         self.dim_y = 28
 
@@ -108,11 +109,12 @@ class Record( enum.Enum):
 
     def remove_lines_from_dat(self, lines):
         for line in lines:
-            for num in range(len(self.dat)) :
-                print self.dat[num], "list"
+            for num in range(len(self.dat)-1,-1,-1) :
+                #print self.dat[num], "list"
 
                 if self.dat[num][self.ATAG_ID] == line :
                     del self.dat[num]
+                    print "delete here", num, line
                     break
         return self.dat
 
@@ -135,33 +137,43 @@ class Record( enum.Enum):
         loop = True
         for i in range(len(self.dat)):
             self.dat[i][self.ATAG_ID] = self.AGGREGATE_START
-        while loop:
+        #while loop:
         #for k in self.dat:
+        if True:
+            '''
             for i in self.dat:
                 loop = False
                 if i[self.ATAG_ID] == self.AGGREGATE_START : loop = True
+            '''
+            loop = False
             for i in range(len(self.dat)) :
                 if  self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE:
                     self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
                     self._make_row(i)
+            self._delete_marked()
             for i in range(len(self.dat)):
                 if self.dat[i][self.ATAG_ID] == self.AGGREGATE_TOUCHED: self.dat[i][self.ATAG_ID] = self.AGGREGATE_START
             for i in range(len(self.dat)) :
                 if self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE:
                     self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
-                    self._make_column(i)
+                    #self._make_column(i)
+            self._delete_marked()
+
+        for i in range(len(self.dat) -1, -1, -1) :
+            ''' delete odd sizes '''
+            if (self.dat[i][self.FACE_WIDTH] >= float(self.dat[i][self.FACE_HEIGHT]) * float(2.5) or
+                float(self.dat[i][self.FACE_WIDTH]) * float(2.5) <= self.dat[i][self.FACE_HEIGHT] ):
+                pass
+                #del self.dat[i]
+
+        return self.dat
+
+    def _delete_marked(self):
         for i in range(len(self.dat) -1, -1, -1) :
             ''' delete marked for delete '''
             if self.dat[i][self.ATAG_ID] == self.AGGREGATE_DELETE:
                 del self.dat[i]
-        for i in range(len(self.dat) -1, -1, -1) :
-            ''' delete odd sizes '''
-            if (self.dat[i][self.FACE_WIDTH] >= self.dat[i][self.FACE_HEIGHT] * 1.5 or
-                self.dat[i][self.FACE_WIDTH] * 2 <= self.dat[i][self.FACE_HEIGHT] ):
-                pass
-                del self.dat[i]
-
-        return self.dat
+                print "del"
 
     def _get_xywh(self, i):
         x = self.dat[i][self.FACE_X]
@@ -177,7 +189,7 @@ class Record( enum.Enum):
                 if  yy >= y and x + w + 2 >= xx and y + h >= yy and x < xx and x + w -2 <= xx:
                     #print "boxatright"
                     return i
-                if  x + w + 2 + self.dim_x >= xx and x < xx and ((yy >= y and y + h >= yy) or
+                if  self.allow_skipping and x + w + 2 + self.dim_x >= xx and x < xx and ((yy >= y and y + h >= yy) or
                                                                      (y >= yy and y <= yy+hh))  :
                     return i
         return -1
@@ -195,7 +207,7 @@ class Record( enum.Enum):
                             ( xx + ww >= x and xx + ww <= x+w   )):
                             print "boxatbottom loose"
                             return i
-                        if x + w + 2 + self.dim_x >=xx and x < xx :
+                        if self.allow_skipping and x + w + 2 + self.dim_x >=xx and x < xx :
                             return i
                     #else : print "boxatbottom none"
         return -1
@@ -215,16 +227,19 @@ class Record( enum.Enum):
         i = box_id
 
         k = 0
+        #if True:
         while  k < len(self.dat):
 
             if i < len(self.dat) \
                     and self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE:
-                x,y,w,h = self._get_xywh(i)
+                self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
+                x,y,w,h = self._get_xywh(k) # i
                 zz = self._box_at_right(x,y,w,h)
                 if zz != -1:
                     w_calc = self.dat[zz][self.FACE_X] + self.dat[zz][self.FACE_WIDTH] - self.dat[i][self.FACE_X]
                     self.dat[i][self.FACE_WIDTH] = w_calc
                     self.dat[zz][self.ATAG_ID] = self.AGGREGATE_DELETE
+                    print "row", k
 
             k = k + 1
 
@@ -234,11 +249,13 @@ class Record( enum.Enum):
         i = box_id
 
         k = 0
+        #if True:
         while k < len(self.dat):
 
             if i < len(self.dat) \
                     and self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE:
-                x, y, w, h = self._get_xywh(i)
+                self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
+                x, y, w, h = self._get_xywh(k)
                 zz = self._box_at_bottom(x, y, w, h)
                 if zz != -1:
                     h_calc = self.dat[zz][self.FACE_Y] + self.dat[zz][self.FACE_HEIGHT] - self.dat[i][self.FACE_Y]
@@ -259,5 +276,6 @@ class Record( enum.Enum):
                                 self.dat[i][self.FACE_X] = self.dat[zz][self.FACE_X]
 
                     self.dat[zz][self.ATAG_ID] = self.AGGREGATE_DELETE
+                    print "column" , k
 
             k = k + 1
