@@ -95,6 +95,7 @@ class Read( enum.Enum) :
 
         if True:
             ll.dat = km.do_km(ll.dat, 3) # 3
+            ll.record.renumber_dat_list(ll.dat)
 
         if not self.predict_mc and False :
             ll.dat = ll.record.aggregate_dat_list(ll.dat)

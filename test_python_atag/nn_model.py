@@ -320,7 +320,7 @@ class NN(enum.Enum):
                     self.dat_remove.append( j)
 
             self.loader.record.remove_lines_from_dat(self.dat_remove)
-            self.loader.record.renumber_dat_list(self.loader.dat)
+            self.loader.dat = self.loader.record.renumber_dat_list(self.loader.dat)
             print "remove conv", self.dat_remove
 
         #self.sess.close()

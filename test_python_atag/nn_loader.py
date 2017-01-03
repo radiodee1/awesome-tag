@@ -69,6 +69,8 @@ class Load(enum.Enum):
         if cursor > tot_cursors  :
             print cursor, tot_cursors, batchsize, len(self.dat), "end"
             skin, three, images, labels = self._get_pixels_from_dat(cursor-1 * batchsize, len(self.dat) )
+        elif batchsize > len(self.dat):
+            skin, three, images, labels = self._get_pixels_from_dat(0, len(self.dat))
         elif cursor <= tot_cursors :
             skin, three, images, labels = self._get_pixels_from_dat(cursor * batchsize, cursor * batchsize + batchsize)
         if num_channels == self.CONST_ONE_CHANNEL : return images, labels
@@ -103,6 +105,7 @@ class Load(enum.Enum):
                     and len(Image.open(filename).getbands()) >=3) and self.normal_train :
                 self.iter = self.iter + 1
                 stop = stop + 1
+                print "skipping 1"
                 continue
 
             lbl_1 = 0
@@ -117,9 +120,10 @@ class Load(enum.Enum):
 
             print self.iter, " -- ", int(self.iter / float(len(self.dat)) * 100) , "% -- " , filename, len(self.dat)
 
-            if len(img) != 28 * 28 or len(three) != 28 * 28 * 3 :
+            if (len(img) != 28 * 28 or len(three) != 28 * 28 * 3) and self.normal_train :
                 self.iter = self.iter + 1
                 stop = stop + 1
+                print "skipping 2"
                 continue
 
             if self.inspection_num >= self.iter and False :
