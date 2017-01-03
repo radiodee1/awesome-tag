@@ -79,8 +79,6 @@ class Read( enum.Enum) :
         if self.predict_mc : ll.dat = ll.record.make_boxes_mc(self.pic)
 
         km = kmeans.Kmeans(self.a)
-        #km.do_km(ll.dat, 3)
-        #sys.exit()
 
         self.nn.load_ckpt = True
         self.nn.save_ckpt = False
@@ -96,13 +94,13 @@ class Read( enum.Enum) :
             print "len-dat0", len(ll.dat)
 
         if True:
-            ll.dat = km.do_km(ll.dat, 3)
+            ll.dat = km.do_km(ll.dat, 3) # 3
 
         if not self.predict_mc and False :
             ll.dat = ll.record.aggregate_dat_list(ll.dat)
             ll.record.renumber_dat_list(ll.dat)
 
-        if False:
+        if True:
             self.nn.predict_remove_symbol = 1
             self.nn.set_vars(len(ll.dat), 100,  0)  # 50, 'conv', 676
             self.nn.conv_setup()
