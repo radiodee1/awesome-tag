@@ -1,6 +1,7 @@
 import random
 import os
 import atag_csv as enum
+import nn_kmeans as kmeans
 from PIL import Image
 
 class Record( enum.Enum):
@@ -12,8 +13,10 @@ class Record( enum.Enum):
         self.predict_filename = self.a.VAR_LOCAL_DATABASE + os.sep + "predict" + ".csv"
         self.strict_columns = False
         self.allow_skipping = True
+        self.strict_next_to = True
         self.dim_x = 28
         self.dim_y = 28
+        self.count = 0
 
     def set_dat(self, dat):
         self.dat = dat
@@ -140,25 +143,25 @@ class Record( enum.Enum):
             self.dat[i][self.ATAG_ID] = self.AGGREGATE_START
         #while loop:
         #for k in self.dat:
+        self.count = 0
         if True:
-            '''
-            for i in self.dat:
-                loop = False
-                if i[self.ATAG_ID] == self.AGGREGATE_START : loop = True
-            '''
-            loop = False
+
+            #loop = False
             for i in range(len(self.dat)) :
                 if  self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE:
-                    self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
+                    if not self.strict_next_to : self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
                     self._make_row(i)
+                    self.count = self.count + 1
             self._delete_marked()
             for i in range(len(self.dat)):
                 if self.dat[i][self.ATAG_ID] == self.AGGREGATE_TOUCHED: self.dat[i][self.ATAG_ID] = self.AGGREGATE_START
             for i in range(len(self.dat)) :
                 if self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE:
-                    self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
+                    if not self.strict_next_to: self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
                     self._make_column(i)
             self._delete_marked()
+            if self.strict_next_to:
+                self._make_boxes()
 
         for i in range(len(self.dat) -1, -1, -1) :
             ''' delete odd sizes '''
@@ -233,13 +236,18 @@ class Record( enum.Enum):
 
             if i < len(self.dat) \
                     and self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE:
-                self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
+                self.dat[i][self.ATAG_ID] =  self.AGGREGATE_TOUCHED
+                if self.strict_next_to : self.dat[i][self.ATAG_ID] = self.count # self.AGGREGATE_TOUCHED
+
                 x,y,w,h = self._get_xywh(k) # i
                 zz = self._box_at_right(x,y,w,h)
                 if zz != -1:
-                    w_calc = self.dat[zz][self.FACE_X] + self.dat[zz][self.FACE_WIDTH] - self.dat[i][self.FACE_X]
-                    self.dat[i][self.FACE_WIDTH] = w_calc
-                    self.dat[zz][self.ATAG_ID] = self.AGGREGATE_DELETE
+                    if not self.strict_next_to:
+                        w_calc = self.dat[zz][self.FACE_X] + self.dat[zz][self.FACE_WIDTH] - self.dat[i][self.FACE_X]
+                        self.dat[i][self.FACE_WIDTH] = w_calc
+                        self.dat[zz][self.ATAG_ID] = self.AGGREGATE_DELETE
+                    else:
+                        self.dat[zz][self.ATAG_ID] = self.dat[i][self.ATAG_ID]
                     print "row", k
 
             k = k + 1
@@ -255,28 +263,39 @@ class Record( enum.Enum):
 
             if i < len(self.dat) \
                     and self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE:
-                self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
+                if not self.strict_next_to: self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
                 x, y, w, h = self._get_xywh(k)
                 zz = self._box_at_bottom(x, y, w, h)
                 if zz != -1:
-                    h_calc = self.dat[zz][self.FACE_Y] + self.dat[zz][self.FACE_HEIGHT] - self.dat[i][self.FACE_Y]
-                    self.dat[i][self.FACE_HEIGHT] = h_calc # self.dat[i][self.FACE_HEIGHT] + self.dat[zz][self.FACE_HEIGHT]
 
-                    if not self.strict_columns :
-                        ''' move right side '''
-                        if (self.dat[i][self.FACE_WIDTH] + self.dat[i][self.FACE_X]  >
-                                        self.dat[zz][self.FACE_WIDTH] + self.dat[zz][self.FACE_X] + self.dim_x ):
-                            w_calc = self.dat[zz][self.FACE_X] + self.dat[zz][self.FACE_WIDTH] - self.dat[i][self.FACE_X]
-                            self.dat[i][self.FACE_WIDTH] = w_calc #self.dat[zz][self.FACE_WIDTH]
-                        ''' move left side '''
-                        if self.dat[i][self.FACE_X] < self.dat[zz][self.FACE_X] - self.dim_x   :
+                    if not self.strict_next_to:
+                        h_calc = self.dat[zz][self.FACE_Y] + self.dat[zz][self.FACE_HEIGHT] - self.dat[i][self.FACE_Y]
+                        self.dat[i][self.FACE_HEIGHT] = h_calc # self.dat[i][self.FACE_HEIGHT] + self.dat[zz][self.FACE_HEIGHT]
 
-                            w_calc = self.dat[zz][self.FACE_X] + self.dat[zz][self.FACE_WIDTH] # - self.dat[i][self.FACE_X]
-                            if self.dat[zz][self.FACE_WIDTH] > 2:
-                                self.dat[i][self.FACE_WIDTH] = self.dat[zz][self.FACE_WIDTH] #w_calc
-                                self.dat[i][self.FACE_X] = self.dat[zz][self.FACE_X]
+                        if not self.strict_columns :
+                            ''' move right side '''
+                            if (self.dat[i][self.FACE_WIDTH] + self.dat[i][self.FACE_X]  >
+                                            self.dat[zz][self.FACE_WIDTH] + self.dat[zz][self.FACE_X] + self.dim_x ):
+                                w_calc = self.dat[zz][self.FACE_X] + self.dat[zz][self.FACE_WIDTH] - self.dat[i][self.FACE_X]
+                                self.dat[i][self.FACE_WIDTH] = w_calc #self.dat[zz][self.FACE_WIDTH]
+                            ''' move left side '''
+                            if self.dat[i][self.FACE_X] < self.dat[zz][self.FACE_X] - self.dim_x   :
 
-                    self.dat[zz][self.ATAG_ID] = self.AGGREGATE_DELETE
+                                w_calc = self.dat[zz][self.FACE_X] + self.dat[zz][self.FACE_WIDTH] # - self.dat[i][self.FACE_X]
+                                if self.dat[zz][self.FACE_WIDTH] > 2:
+                                    self.dat[i][self.FACE_WIDTH] = self.dat[zz][self.FACE_WIDTH] #w_calc
+                                    self.dat[i][self.FACE_X] = self.dat[zz][self.FACE_X]
+
+                            self.dat[zz][self.ATAG_ID] = self.AGGREGATE_DELETE
+
+                    else:
+                        self.dat[zz][self.ATAG_ID] = self.dat[i][self.ATAG_ID]
                     print "column" , k
 
             k = k + 1
+
+    def _make_boxes(self):
+        def sort_key(list):
+            return list[self.ATAG_ID]
+        self.dat.sort(key=sort_key)
+        print self.dat

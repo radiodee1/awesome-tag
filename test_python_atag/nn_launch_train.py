@@ -93,15 +93,15 @@ class Read( enum.Enum) :
             #self.nn.conv_setup()
             print "len-dat0", len(ll.dat)
 
-        if True:
-            ll.dat = km.do_km(ll.dat, 3) # 3
+        if False:
+            ll.dat = km.do_km(ll.dat, 4) # 3
             ll.record.renumber_dat_list(ll.dat)
 
-        if not self.predict_mc and False :
+        if not self.predict_mc and True :
             ll.dat = ll.record.aggregate_dat_list(ll.dat)
             ll.record.renumber_dat_list(ll.dat)
 
-        if True:
+        if False:
             self.nn.predict_remove_symbol = 1
             self.nn.set_vars(len(ll.dat), 100,  0)  # 50, 'conv', 676
             self.nn.conv_setup()

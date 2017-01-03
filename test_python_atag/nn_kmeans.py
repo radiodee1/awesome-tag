@@ -117,7 +117,7 @@ class Kmeans(enum.Enum):
         for i in range(num):
             start = division * i
             stop = division * i + division
-            self.cent.append([random.randint(start,stop), h/2])
+            self.cent.append([random.randint(start,stop), random.randint(0,h)]) #random, h/2
             self.cent_old.append([0,0])
         print self.cent
 

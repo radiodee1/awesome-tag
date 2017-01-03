@@ -28,5 +28,5 @@ class Enum(object) :
         self.CONST_DOT = 12
 
         self.AGGREGATE_START = -1
-        self.AGGREGATE_TOUCHED = 5
-        self.AGGREGATE_DELETE = 0
+        self.AGGREGATE_TOUCHED = -5
+        self.AGGREGATE_DELETE = -99
