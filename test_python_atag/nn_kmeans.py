@@ -26,10 +26,11 @@ class Kmeans(enum.Enum):
         self._make_centroids(self.num_centroids)
         print
         while not self._has_converged(self.cent, self.cent_old):
-            self.cent_old = self.cent
+            self.cent_old = self._copy_cent( self.cent)
             print "loop"
             self.dat = self._assign_points(self.dat, self.cent)
             self.cent = self._move_centers(self.dat, self.cent)
+            #self.cent_old = self.cent
         self.dat = self._make_boxes(self.dat, self.cent)
         return self.dat
 
@@ -47,6 +48,7 @@ class Kmeans(enum.Enum):
                 v2 = self.dat[j][self.FACE_Y]
                 l = math.sqrt(math.pow(h1 -h2,2) + math.pow(v1-v2,2))
                 smallarray[i] = l
+            #print smallarray
             index = 0
             smallest = smallarray[0]
             for i in range(len(self.cent)):
@@ -54,6 +56,7 @@ class Kmeans(enum.Enum):
                     index = i
                     smallest = smallarray[i]
             self.dat[j][self.ATAG_ID] = index
+            #print index
         pass
         return self.dat
 
@@ -70,7 +73,7 @@ class Kmeans(enum.Enum):
                     v = v + self.dat[j][self.FACE_Y]
             self.cent[i][0] = h / len(self.dat)
             self.cent[i][1] = v / len(self.dat)
-            print "working on", i
+            print "working on", i, self.cent
         return self.cent
 
     def _has_converged(self, cent, cent_old):
@@ -96,33 +99,58 @@ class Kmeans(enum.Enum):
             self.cent_old.append([0,0])
         print self.cent
 
+    def _copy_cent(self, cent):
+        arr = []
+        for i in cent:
+            arr.append(i[:])
+        return arr
+
     def _make_boxes(self, dat, cent):
         self.dat = dat
         self.cent = cent
         new_dat = []
-        print cent
+        print cent, len(self.dat)
         for i in range(len(self.cent)):
+            if self.cent[i][0] == 0 and self.cent[i][1] == 0: continue
             one_box = []
-            x = 0
-            y = 0
+            x = self.cent[i][0]
+            y = self.cent[i][1]
             h = 0
             v = 0
+            '''
             for j in range(len(self.dat)):
                 if self.dat[j][self.ATAG_ID] == i:
-                    if self.dat[j][self.FACE_X] < x : x = self.dat[j][self.FACE_X]
-                    if self.dat[j][self.FACE_Y] < y : y = self.dat[j][self.FACE_Y]
+                    x = self.dat[j][self.FACE_X]
+                    y = self.dat[j][self.FACE_Y]
+                    h = self.dat[j][self.FACE_WIDTH]
+                    v = self.dat[j][self.FACE_HEIGHT]
+                    print "start", x,y,h,v, "i=",i
+                    break
+            '''
+            for j in range(len(self.dat)):
+                if self.dat[j][self.ATAG_ID] == i:
+                    if self.dat[j][self.FACE_X] < x :
+                        x = self.dat[j][self.FACE_X]
+                        #h = self.dat[j][self.FACE_WIDTH] + self.dat[j][self.FACE_X] - x
+                    if self.dat[j][self.FACE_Y] < y :
+                        y = self.dat[j][self.FACE_Y]
+                        #v = self.dat[j][self.FACE_HEIGHT] + self.dat[j][self.FACE_Y] - y
+
+            for j in range(len(self.dat)):
+                if self.dat[j][self.ATAG_ID] == i:
                     if self.dat[j][self.FACE_X] + self.dat[j][self.FACE_WIDTH] > x + h :
-                        h = self.dat[j][self.FACE_WIDTH] -  self.dat[j][self.FACE_X]
+                        h = self.dat[j][self.FACE_WIDTH] +  self.dat[j][self.FACE_X] - x
                     if self.dat[j][self.FACE_Y] + self.dat[j][self.FACE_HEIGHT] > y + v :
-                        v = self.dat[j][self.FACE_HEIGHT] -  self.dat[j][self.FACE_Y]
+                        v = self.dat[j][self.FACE_HEIGHT] +  self.dat[j][self.FACE_Y] - y
             for k in range(self.TOTAL):
                 num = self.dat[0][k]
                 if k == self.FACE_X: num = x
                 if k == self.FACE_Y: num = y
                 if k == self.FACE_WIDTH: num = h
                 if k == self.FACE_HEIGHT: num = v
-
+                if k == self.ATAG_ID: num = i
                 one_box.append(num)
+
             new_dat.append(one_box)
         print new_dat
         return new_dat

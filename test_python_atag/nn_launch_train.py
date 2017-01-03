@@ -110,7 +110,7 @@ class Read( enum.Enum) :
 
         if self.predict_mc : ll.record.aggregate_dat_list(ll.dat)
 
-        ll.record.save_dat_to_file()
+        ll.record.save_dat_to_file(ll.dat)
 
     def signal_handler(self, signum, frame):
         if self.nn.save_ckpt:

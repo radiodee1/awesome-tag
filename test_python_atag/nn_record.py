@@ -94,7 +94,8 @@ class Record( enum.Enum):
             self.dat.append(temp)
         return self.dat
 
-    def save_dat_to_file(self):
+    def save_dat_to_file(self, dat = []):
+        self.dat = dat
         #print self.dat
         f = open(self.predict_filename, "w")
         f = open(self.predict_filename, "a")
