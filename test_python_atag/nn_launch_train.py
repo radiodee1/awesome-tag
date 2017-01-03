@@ -7,6 +7,7 @@ import atag_csv as enum
 import nn_loader as loader
 import atag_dotfolder as aa
 import nn_model as model
+import nn_kmeans as kmeans
 import argparse
 
 '''
@@ -73,10 +74,13 @@ class Read( enum.Enum) :
         self.check_folder_exists()
 
         ll = loader.Load(self.a, self.pic)
-        #ll.read_csv()
 
         if not  self.predict_mc : ll.dat = ll.record.make_boxes(self.pic, dim=7) # 7
         if self.predict_mc : ll.dat = ll.record.make_boxes_mc(self.pic)
+
+        km = kmeans.Kmeans(self.a)
+        #km.do_km(ll.dat, 3)
+        #sys.exit()
 
         self.nn.load_ckpt = True
         self.nn.save_ckpt = False
@@ -90,6 +94,9 @@ class Read( enum.Enum) :
             self.nn.dot_setup()
             #self.nn.conv_setup()
             print "len-dat0", len(ll.dat)
+
+        if True:
+            ll.dat = km.do_km(ll.dat, 3)
 
         if not self.predict_mc and False :
             ll.dat = ll.record.aggregate_dat_list(ll.dat)
