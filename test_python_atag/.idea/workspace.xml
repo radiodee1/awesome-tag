@@ -45,8 +45,8 @@
       <file leaf-file-name="nn_record.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nn_record.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="146">
-              <caret line="281" column="0" lean-forward="true" selection-start-line="281" selection-start-column="0" selection-end-line="281" selection-end-column="0" />
+            <state relative-caret-position="296">
+              <caret line="276" column="23" lean-forward="false" selection-start-line="276" selection-start-column="23" selection-end-line="276" selection-end-column="23" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -372,13 +372,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1480257882064</updated>
-    </task>
-    <task id="LOCAL-00070" summary="combine two models for saving of results">
-      <created>1482443469820</created>
-      <option name="number" value="00070" />
-      <option name="presentableId" value="LOCAL-00070" />
-      <option name="project" value="LOCAL" />
-      <updated>1482443469820</updated>
     </task>
     <task id="LOCAL-00071" summary="must enable loading of model in predict section">
       <created>1482500928543</created>
@@ -716,7 +709,14 @@
       <option name="project" value="LOCAL" />
       <updated>1483566901129</updated>
     </task>
-    <option name="localTasksCounter" value="119" />
+    <task id="LOCAL-00119" summary="very interesting. probably not right, but very interesting">
+      <created>1483567886984</created>
+      <option name="number" value="00119" />
+      <option name="presentableId" value="LOCAL-00119" />
+      <option name="project" value="LOCAL" />
+      <updated>1483567886984</updated>
+    </task>
+    <option name="localTasksCounter" value="120" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -765,7 +765,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="aggregate code started" />
     <MESSAGE value="aggregate code started -- not working but interesting output" />
     <MESSAGE value="aggregate code started -- make_rows() seems to work" />
     <MESSAGE value="aggregate code started -- make_rows() seems to work, make_columns() may also work" />
@@ -790,7 +789,8 @@
     <MESSAGE value="maybe try kmeans? -- back to aggregate?" />
     <MESSAGE value="throw out old aggregate functions in favor of new" />
     <MESSAGE value="while loop problems" />
-    <option name="LAST_COMMIT_MESSAGE" value="while loop problems" />
+    <MESSAGE value="very interesting. probably not right, but very interesting" />
+    <option name="LAST_COMMIT_MESSAGE" value="very interesting. probably not right, but very interesting" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1195,8 +1195,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nn_record.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
-          <caret line="281" column="0" lean-forward="true" selection-start-line="281" selection-start-column="0" selection-end-line="281" selection-end-column="0" />
+        <state relative-caret-position="296">
+          <caret line="276" column="23" lean-forward="false" selection-start-line="276" selection-start-column="23" selection-end-line="276" selection-end-column="23" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>

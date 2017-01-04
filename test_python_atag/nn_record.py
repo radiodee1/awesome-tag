@@ -209,11 +209,12 @@ class Record( enum.Enum):
                         print "boxatbottom strict"
                         return i
                     elif (not self.strict_columns): # and not self._reject_box(i, w)) : #and
-                        if ((xx >=x and xx <= x+w -2) or
+                        if ((xx >=x and xx <= x+w ) or
                                 ( xx + ww >= x and xx + ww <= x+w   )):
                             print "boxatbottom loose"
                             return i
                         if self.allow_skipping and x + w + 2 + self.dim_x >=xx and x < xx :
+                            print "boxatbottom skipping"
                             return i
                     #else : print "boxatbottom none"
         return -1
@@ -272,6 +273,9 @@ class Record( enum.Enum):
 
             if k < len(self.dat) :#and  ( self.dat[k][self.ATAG_ID] >= 0):
 
+                id =  self.dat[k][self.ATAG_ID]
+                if id == self.AGGREGATE_START or id == self.AGGREGATE_TOUCHED:
+                    self.dat[k][self.ATAG_ID] = self.count
 
                 #if not self.strict_next_to: self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
                 x, y, w, h = self._get_xywh(k)
