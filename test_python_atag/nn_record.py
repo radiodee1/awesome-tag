@@ -148,20 +148,18 @@ class Record( enum.Enum):
 
             self._make_row()
             print "---"
-            if self.strict_next_to:
-                pass
-                self.dat = self._make_boxes()
-            #self._delete_marked()
+
+            self.dat = self._make_boxes()
+            self._delete_marked()
             ''' renumber '''
             for i in range(len(self.dat)):
                 if self.dat[i][self.ATAG_ID] >= 0 : self.dat[i][self.ATAG_ID] = self.AGGREGATE_START
             ''' make columns '''
 
             self._make_column()
-            if self.strict_next_to:
-                pass
-                self.dat = self._make_boxes()
-            #self._delete_marked()
+
+            self.dat = self._make_boxes()
+            self._delete_marked()
         for i in range(len(self.dat) -1, -1, -1) :
             ''' delete odd sizes '''
             if (self.dat[i][self.FACE_WIDTH] >= float(self.dat[i][self.FACE_HEIGHT]) * float(2.5) or
@@ -201,9 +199,12 @@ class Record( enum.Enum):
     def _box_at_bottom(self, x, y, w, h):
         for i in range(len(self.dat)) :
             if self.dat[i][self.ATAG_ID] == self.AGGREGATE_START: #
-                self.dat[i][self.ATAG_ID] = self.count # self.AGGREGATE_TOUCHED #or self.strict_next_to:
+                #self.dat[i][self.ATAG_ID] = self.count # self.AGGREGATE_TOUCHED #or self.strict_next_to:
                 xx,yy,ww,hh = self._get_xywh(i)
-                if  y + h + 2 + self.dim_y >= yy and y < yy + self.dim_y:
+                if yy +hh +2 >=  y and yy < y:
+                    print "y is reversed"
+                if  y + h + 2  >= yy and y < yy :
+                    print "y is good", y, h, yy, hh
                     if self.strict_columns and x + w == xx + ww and xx == x :
                         print "boxatbottom strict"
                         return i
@@ -266,8 +267,8 @@ class Record( enum.Enum):
         self.count = 0
         zz = 0
         k = 0
-
         while k < len(self.dat):
+        #for k in range(len(self.dat)):
 
             if k < len(self.dat) :#and  ( self.dat[k][self.ATAG_ID] >= 0):
 
@@ -282,22 +283,22 @@ class Record( enum.Enum):
                     if True:
                         for a in range(len(self.dat)):
                             if a != zz and self.dat[a][self.ATAG_ID] == self.dat[zz][self.ATAG_ID]:# and self.dat[a][self.ATAG_ID] >= 0 :
-                                self.dat[a][self.ATAG_ID] = self.dat[k][self.ATAG_ID]
-                                print "renumber", self.dat[zz][self.ATAG_ID], self.dat[k][self.ATAG_ID], k,y,h, len(self.dat)
-
+                                #self.dat[a][self.ATAG_ID] = self.dat[k][self.ATAG_ID]
+                                #print "renumber", self.dat[zz][self.ATAG_ID], self.dat[k][self.ATAG_ID], k,y,h, len(self.dat)
+                                pass
                         self.dat[zz][self.ATAG_ID] = self.dat[k][self.ATAG_ID]
 
                         if True: #y != self.dat[k][self.FACE_Y]:
                             y = self.dat[k][self.FACE_Y]
                             h = h_calc
-
+                            #h = self.dat[zz][self.FACE_HEIGHT]
                             zz = self._box_at_bottom(x, y, w, h)
                             #if zz != -1: x,y,w,h = self._get_xywh(zz)
                             #h = h_calc
                         else :
                             zz = -1
 
-                    print "column" , k, "count", self.count
+            print "column" , k, "count", self.count
 
             k = k + 1
             self.count = self.count + 1

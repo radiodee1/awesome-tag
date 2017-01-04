@@ -42,23 +42,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="nn_kmeans.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/nn_kmeans.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2775">
-              <caret line="190" column="35" lean-forward="false" selection-start-line="136" selection-start-column="12" selection-end-line="190" selection-end-column="35" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="nn_record.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nn_record.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1901">
-              <caret line="269" column="13" lean-forward="false" selection-start-line="269" selection-start-column="13" selection-end-line="269" selection-end-column="13" />
+            <state relative-caret-position="-1084">
+              <caret line="154" column="12" lean-forward="false" selection-start-line="154" selection-start-column="12" selection-end-line="154" selection-end-column="12" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -99,7 +87,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>y</find>
       <find>use_loader</find>
       <find>100</find>
       <find>get_mnist_next_test</find>
@@ -129,6 +116,7 @@
       <find>row</find>
       <find>_reject_box</find>
       <find>AGGREGATE_START</find>
+      <find>AGGREGATE_DELETE</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -384,13 +372,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1480257882064</updated>
-    </task>
-    <task id="LOCAL-00068" summary="combine two models for saving of results">
-      <created>1482430848838</created>
-      <option name="number" value="00068" />
-      <option name="presentableId" value="LOCAL-00068" />
-      <option name="project" value="LOCAL" />
-      <updated>1482430848838</updated>
     </task>
     <task id="LOCAL-00069" summary="combine two models for saving of results">
       <created>1482431565695</created>
@@ -728,7 +709,14 @@
       <option name="project" value="LOCAL" />
       <updated>1483552715616</updated>
     </task>
-    <option name="localTasksCounter" value="117" />
+    <task id="LOCAL-00117" summary="while loop problems">
+      <created>1483563565892</created>
+      <option name="number" value="00117" />
+      <option name="presentableId" value="LOCAL-00117" />
+      <option name="project" value="LOCAL" />
+      <updated>1483563565892</updated>
+    </task>
+    <option name="localTasksCounter" value="118" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -777,7 +765,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="try to add skintone/dot" />
     <MESSAGE value="aggregate code started" />
     <MESSAGE value="aggregate code started -- not working but interesting output" />
     <MESSAGE value="aggregate code started -- make_rows() seems to work" />
@@ -802,7 +789,8 @@
     <MESSAGE value="maybe try kmeans?" />
     <MESSAGE value="maybe try kmeans? -- back to aggregate?" />
     <MESSAGE value="throw out old aggregate functions in favor of new" />
-    <option name="LAST_COMMIT_MESSAGE" value="throw out old aggregate functions in favor of new" />
+    <MESSAGE value="while loop problems" />
+    <option name="LAST_COMMIT_MESSAGE" value="while loop problems" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1207,8 +1195,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nn_record.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1901">
-          <caret line="269" column="13" lean-forward="false" selection-start-line="269" selection-start-column="13" selection-end-line="269" selection-end-column="13" />
+        <state relative-caret-position="-1084">
+          <caret line="154" column="12" lean-forward="false" selection-start-line="154" selection-start-column="12" selection-end-line="154" selection-end-column="12" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
