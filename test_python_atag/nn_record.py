@@ -12,7 +12,7 @@ class Record( enum.Enum):
         self.a = atag
         self.predict_filename = self.a.VAR_LOCAL_DATABASE + os.sep + "predict" + ".csv"
         self.strict_columns = False
-        self.allow_skipping = True
+        self.allow_skipping = False
         self.strict_next_to = True
         self.dim_x = 28
         self.dim_y = 28
@@ -136,7 +136,7 @@ class Record( enum.Enum):
 
     ##############################################################
 
-    def aggregate_dat_list(self, dat):
+    def aggregate_dat_list(self, dat, del_shapes=False):
         self.dat = dat
         loop = True
         for i in range(len(self.dat)):
@@ -165,7 +165,7 @@ class Record( enum.Enum):
             if (self.dat[i][self.FACE_WIDTH] >= float(self.dat[i][self.FACE_HEIGHT]) * float(2.5) or
                 float(self.dat[i][self.FACE_WIDTH]) * float(2.5) <= self.dat[i][self.FACE_HEIGHT] ):
                 pass
-                #del self.dat[i]
+                if del_shapes: del self.dat[i]
 
         return self.dat
 
@@ -188,10 +188,11 @@ class Record( enum.Enum):
             if self.dat[i][self.ATAG_ID] == self.AGGREGATE_START:# or self.strict_next_to:
                 xx,yy,ww,hh = self._get_xywh(i)
                 if  yy >= y and x + w + 2 >= xx and y + h >= yy and x < xx and x + w -2 <= xx:
-                    #print "boxatright"
+                    print "boxatright"
                     return i
                 if  self.allow_skipping and x + w + 2 + self.dim_x >= xx and x < xx and ((yy >= y and y + h >= yy) or
                                                                      (y >= yy and y <= yy+hh))  :
+                    print "boxatright skipping"
                     return i
         #self.count = self.count + 1
         return -1
@@ -210,7 +211,8 @@ class Record( enum.Enum):
                         return i
                     elif (not self.strict_columns): # and not self._reject_box(i, w)) : #and
                         if ((xx >=x and xx <= x+w ) or
-                                ( xx + ww >= x and xx + ww <= x+w   )):
+                                ( xx + ww >= x and xx + ww <= x+w   ) or
+                                ( x + w >=xx and x < xx)):
                             print "boxatbottom loose"
                             return i
                         if self.allow_skipping and x + w + 2 + self.dim_x >=xx and x < xx :
