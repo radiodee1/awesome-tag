@@ -350,6 +350,7 @@ class Record( enum.Enum):
             h = 0
             v = 0
             if True:
+                not_found = False
                 for j in range(len(self.dat)):
                     if self.dat[j][self.ATAG_ID] == i:
                         x = self.dat[j][self.FACE_X]
@@ -358,7 +359,13 @@ class Record( enum.Enum):
                         v = self.dat[j][self.FACE_HEIGHT]
                         print "start", x, y, h, v, "i=", i
                         break
+                    if j >= len(self.dat) - 1:
+                        not_found = True
+                if not_found == True:
+                    i = i + 1
+                    continue
 
+            print "make boxes for", i
             for j in range(len(self.dat)):
                 if self.dat[j][self.ATAG_ID] == i:
                     if self.dat[j][self.FACE_X] < x:
