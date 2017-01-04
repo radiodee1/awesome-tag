@@ -272,13 +272,13 @@ class Record( enum.Enum):
 
             if k < len(self.dat) :#and  ( self.dat[k][self.ATAG_ID] >= 0):
 
-                self.dat[k][self.ATAG_ID] = self.count
 
                 #if not self.strict_next_to: self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
                 x, y, w, h = self._get_xywh(k)
                 zz = self._box_at_bottom(x, y, w, h)
                 while zz != -1:
                     h_calc = self.dat[zz][self.FACE_Y] + self.dat[zz][self.FACE_HEIGHT] - self.dat[k][self.FACE_Y]
+                    self.dat[k][self.ATAG_ID] = self.count
 
                     if True:
                         for a in range(len(self.dat)):
@@ -291,10 +291,9 @@ class Record( enum.Enum):
                         if True: #y != self.dat[k][self.FACE_Y]:
                             y = self.dat[k][self.FACE_Y]
                             h = h_calc
-                            #h = self.dat[zz][self.FACE_HEIGHT]
+
                             zz = self._box_at_bottom(x, y, w, h)
-                            #if zz != -1: x,y,w,h = self._get_xywh(zz)
-                            #h = h_calc
+
                         else :
                             zz = -1
 
