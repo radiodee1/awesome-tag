@@ -99,7 +99,7 @@ class Read( enum.Enum) :
 
         if not self.predict_mc and True :
             ll.dat = ll.record.aggregate_dat_list(ll.dat)
-            ll.record.renumber_dat_list(ll.dat)
+            #ll.record.renumber_dat_list(ll.dat)
             print "len-dat1", len(ll.dat)
 
         if False:

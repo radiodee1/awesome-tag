@@ -12,7 +12,7 @@ class Record( enum.Enum):
         self.a = atag
         self.predict_filename = self.a.VAR_LOCAL_DATABASE + os.sep + "predict" + ".csv"
         self.strict_columns = False
-        self.allow_skipping = False
+        self.allow_skipping = True
         self.strict_next_to = True
         self.dim_x = 28
         self.dim_y = 28
@@ -152,9 +152,10 @@ class Record( enum.Enum):
                     if not self.strict_next_to : self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
                     ii = i
                     break
-            self._make_row(ii)
+            self._make_row()
             print "---"
-
+            if self.strict_next_to:
+                self.dat = self._make_boxes()
             self._delete_marked()
             ''' renumber '''
             for i in range(len(self.dat)):
@@ -167,10 +168,9 @@ class Record( enum.Enum):
                     ii = i
                     break
             self._make_column(ii)
-            self._delete_marked()
             if self.strict_next_to:
-                self._make_boxes()
-
+                self.dat = self._make_boxes()
+            self._delete_marked()
         for i in range(len(self.dat) -1, -1, -1) :
             ''' delete odd sizes '''
             if (self.dat[i][self.FACE_WIDTH] >= float(self.dat[i][self.FACE_HEIGHT]) * float(2.5) or
@@ -196,7 +196,7 @@ class Record( enum.Enum):
 
     def _box_at_right(self, x, y, w, h):
         for i in range(len(self.dat)) :
-            if self.dat[i][self.ATAG_ID] == self.AGGREGATE_START:
+            if self.dat[i][self.ATAG_ID] == self.AGGREGATE_START:# or self.strict_next_to:
                 xx,yy,ww,hh = self._get_xywh(i)
                 if  yy >= y and x + w + 2 >= xx and y + h >= yy and x < xx and x + w -2 <= xx:
                     #print "boxatright"
@@ -209,7 +209,7 @@ class Record( enum.Enum):
 
     def _box_at_bottom(self, x, y, w, h):
         for i in range(len(self.dat)) :
-            if self.dat[i][self.ATAG_ID] == self.AGGREGATE_START:
+            if self.dat[i][self.ATAG_ID] == self.AGGREGATE_START or self.strict_next_to:
                 xx,yy,ww,hh = self._get_xywh(i)
                 if  y + h + 2 + self.dim_y >= yy and y < yy + self.dim_y:
                     if self.strict_columns and x + w == xx + ww and xx == x :
@@ -234,34 +234,32 @@ class Record( enum.Enum):
         return True
 
 
-    def _make_row(self, box_id):
+    def _make_row(self):
 
         zz = 0
-        i = box_id
+        #i = box_id
 
         k = 0
         #if True:
         while  k < len(self.dat):
 
-            if (i < len(self.dat) and (self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE or
-                             (self.strict_next_to and  self.dat[i][self.ATAG_ID] == self.AGGREGATE_START))):
-                self.dat[i][self.ATAG_ID] =  self.AGGREGATE_TOUCHED
-                if self.strict_next_to : self.dat[i][self.ATAG_ID] = self.count # self.AGGREGATE_TOUCHED
+            if (k < len(self.dat) and (self.strict_next_to and  self.dat[k][self.ATAG_ID] == self.AGGREGATE_START)):
+
+                self.dat[k][self.ATAG_ID] =  self.AGGREGATE_TOUCHED
+                if self.strict_next_to : self.dat[k][self.ATAG_ID] = self.count # self.AGGREGATE_TOUCHED
 
                 x,y,w,h = self._get_xywh(k) # i
                 zz = self._box_at_right(x,y,w,h)
                 while zz != -1:
-                    w_calc = self.dat[zz][self.FACE_X] + self.dat[zz][self.FACE_WIDTH] - self.dat[i][self.FACE_X]
+                    w_calc = self.dat[zz][self.FACE_X] + self.dat[zz][self.FACE_WIDTH] - self.dat[k][self.FACE_X]
 
-                    if not self.strict_next_to:
-                        #w_calc = self.dat[zz][self.FACE_X] + self.dat[zz][self.FACE_WIDTH] - self.dat[i][self.FACE_X]
-                        self.dat[i][self.FACE_WIDTH] = w_calc
-                        self.dat[zz][self.ATAG_ID] = self.AGGREGATE_DELETE
-                        zz = -1
-                    else:
-                        self.dat[zz][self.ATAG_ID] = self.count #self.dat[i][self.ATAG_ID]
-                        w = w_calc
-                        zz = self._box_at_right(x, y, w, h)
+                    if True:
+                        if w != w_calc and x == self.dat[k][self.FACE_X]:
+                            self.dat[zz][self.ATAG_ID] = self.count #self.dat[i][self.ATAG_ID]
+                            w = w_calc
+                            zz = self._box_at_right(x, y, w, h)
+                        else:
+                            zz = -1
 
                     print "row", k
 
@@ -274,45 +272,34 @@ class Record( enum.Enum):
     def _make_column(self, box_id):
 
         zz = 0
-        i = box_id
+        #i = box_id
 
         k = 0
         #if True:
         while k < len(self.dat):
 
-            if i < len(self.dat) and (self.dat[i][self.ATAG_ID] != self.AGGREGATE_DELETE or
-                            (self.strict_next_to and self.dat[i][self.ATAG_ID] >= 0)):
-                if not self.strict_next_to: self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
+            if k < len(self.dat) and  (self.strict_next_to and self.dat[k][self.ATAG_ID] >= 0):
+
+                #if not self.strict_next_to: self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
                 x, y, w, h = self._get_xywh(k)
                 zz = self._box_at_bottom(x, y, w, h)
                 while zz != -1:
-                    h_calc = self.dat[zz][self.FACE_Y] + self.dat[zz][self.FACE_HEIGHT] - self.dat[i][self.FACE_Y]
+                    h_calc = self.dat[zz][self.FACE_Y] + self.dat[zz][self.FACE_HEIGHT] - self.dat[k][self.FACE_Y]
 
-                    if not self.strict_next_to:
-                        #h_calc = self.dat[zz][self.FACE_Y] + self.dat[zz][self.FACE_HEIGHT] - self.dat[i][self.FACE_Y]
-                        self.dat[i][self.FACE_HEIGHT] = h_calc # self.dat[i][self.FACE_HEIGHT] + self.dat[zz][self.FACE_HEIGHT]
+                    if True:
+                        for a in range(len(self.dat)):
+                            if a != zz and self.dat[a][self.ATAG_ID] == self.dat[zz][self.ATAG_ID] and self.dat[a][self.ATAG_ID] >= 0 :
+                                self.dat[a][self.ATAG_ID] = self.dat[k][self.ATAG_ID]
+                                print "renumber", self.dat[zz][self.ATAG_ID]
 
-                        if not self.strict_columns :
-                            ''' move right side '''
-                            if (self.dat[i][self.FACE_WIDTH] + self.dat[i][self.FACE_X]  >
-                                            self.dat[zz][self.FACE_WIDTH] + self.dat[zz][self.FACE_X] + self.dim_x ):
-                                w_calc = self.dat[zz][self.FACE_X] + self.dat[zz][self.FACE_WIDTH] - self.dat[i][self.FACE_X]
-                                self.dat[i][self.FACE_WIDTH] = w_calc #self.dat[zz][self.FACE_WIDTH]
-                            ''' move left side '''
-                            if self.dat[i][self.FACE_X] < self.dat[zz][self.FACE_X] - self.dim_x   :
+                        self.dat[zz][self.ATAG_ID] = self.dat[k][self.ATAG_ID]
+                        if y != self.dat[k][self.FACE_Y]:
+                            y = self.dat[k][self.FACE_Y]
 
-                                w_calc = self.dat[zz][self.FACE_X] + self.dat[zz][self.FACE_WIDTH] # - self.dat[i][self.FACE_X]
-                                if self.dat[zz][self.FACE_WIDTH] > 2:
-                                    self.dat[i][self.FACE_WIDTH] = self.dat[zz][self.FACE_WIDTH] #w_calc
-                                    self.dat[i][self.FACE_X] = self.dat[zz][self.FACE_X]
-
-                            self.dat[zz][self.ATAG_ID] = self.AGGREGATE_DELETE
+                            h = h_calc
+                            zz = self._box_at_bottom(x, y, w, h)
+                        else :
                             zz = -1
-
-                    else:
-                        self.dat[zz][self.ATAG_ID] = self.dat[i][self.ATAG_ID]
-                        h = h_calc
-                        zz = self._box_at_bottom(x, y, w, h)
 
                     print "column" , k
 
@@ -359,9 +346,10 @@ class Record( enum.Enum):
                         v = self.dat[j][self.FACE_HEIGHT]
                         print "start", x, y, h, v, "i=", i
                         break
-                    if j >= len(self.dat) - 1:
+                    if j >= self.dat[len(self.dat) - 1][self.ATAG_ID] :
                         not_found = True
-                if not_found == True:
+                if not_found == True : #or (False and x == 0 and y == 0 and h == 0 and v == 0):
+                    print "skip i", i
                     i = i + 1
                     continue
 
@@ -370,10 +358,9 @@ class Record( enum.Enum):
                 if self.dat[j][self.ATAG_ID] == i:
                     if self.dat[j][self.FACE_X] < x:
                         x = self.dat[j][self.FACE_X]
-                        # h = self.dat[j][self.FACE_WIDTH] + self.dat[j][self.FACE_X] - x
+
                     if self.dat[j][self.FACE_Y] < y:
                         y = self.dat[j][self.FACE_Y]
-                        # v = self.dat[j][self.FACE_HEIGHT] + self.dat[j][self.FACE_Y] - y
 
             for j in range(len(self.dat)):
                 if self.dat[j][self.ATAG_ID] == i:
@@ -381,16 +368,18 @@ class Record( enum.Enum):
                         h = self.dat[j][self.FACE_WIDTH] + self.dat[j][self.FACE_X] - x
                     if self.dat[j][self.FACE_Y] + self.dat[j][self.FACE_HEIGHT] > y + v:
                         v = self.dat[j][self.FACE_HEIGHT] + self.dat[j][self.FACE_Y] - y
-            for k in range(self.TOTAL):
-                num = self.dat[0][k]
-                if k == self.FACE_X: num = x
-                if k == self.FACE_Y: num = y
-                if k == self.FACE_WIDTH: num = h
-                if k == self.FACE_HEIGHT: num = v
-                if k == self.ATAG_ID: num = i
-                one_box.append(num)
-            new_dat.append(one_box)
+            if not (x == 0 and y == 0 and h == 0 and v == 0):
+                for k in range(self.TOTAL):
+                    num = self.dat[0][k]
+                    if k == self.FACE_X: num = x
+                    if k == self.FACE_Y: num = y
+                    if k == self.FACE_WIDTH: num = h
+                    if k == self.FACE_HEIGHT: num = v
+                    if k == self.ATAG_ID: num = i
+                    one_box.append(num)
+                new_dat.append(one_box)
             #self.dat = new_dat
             i = i + 1
         self.dat = new_dat
         print self.dat
+        return self.dat
