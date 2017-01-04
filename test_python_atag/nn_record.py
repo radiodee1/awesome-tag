@@ -295,7 +295,8 @@ class Record( enum.Enum):
                         if True: #y != self.dat[k][self.FACE_Y]:
                             y = self.dat[k][self.FACE_Y]
                             h = h_calc
-
+                            x = self.dat[zz][self.FACE_X]
+                            w = self.dat[zz][self.FACE_WIDTH]
                             zz = self._box_at_bottom(x, y, w, h)
 
                         else :

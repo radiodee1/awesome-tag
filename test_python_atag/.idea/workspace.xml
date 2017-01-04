@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c15ed38a-2fe7-44d1-b032-ae199cd14d43" name="Default" comment="">
+    <list default="true" id="c15ed38a-2fe7-44d1-b032-ae199cd14d43" name="Default" comment="two pa">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_launch_train.py" afterPath="$PROJECT_DIR$/nn_launch_train.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_record.py" afterPath="$PROJECT_DIR$/nn_record.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -30,11 +31,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="nn_launch_train.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="nn_launch_train.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nn_launch_train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="282">
-              <caret line="99" column="39" lean-forward="false" selection-start-line="99" selection-start-column="39" selection-end-line="99" selection-end-column="39" />
+            <state relative-caret-position="387">
+              <caret line="106" column="15" lean-forward="false" selection-start-line="106" selection-start-column="15" selection-end-line="106" selection-end-column="15" />
               <folding>
                 <element signature="e#19#28#0" expanded="true" />
               </folding>
@@ -42,11 +43,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="nn_record.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="nn_record.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nn_record.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="296">
-              <caret line="276" column="23" lean-forward="false" selection-start-line="276" selection-start-column="23" selection-end-line="276" selection-end-column="23" />
+            <state relative-caret-position="491">
+              <caret line="298" column="60" lean-forward="false" selection-start-line="298" selection-start-column="60" selection-end-line="298" selection-end-column="60" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -112,11 +113,11 @@
       <find>print</find>
       <find>get_nn_next_predict</find>
       <find>normal_train</find>
-      <find>count</find>
       <find>row</find>
       <find>_reject_box</find>
       <find>AGGREGATE_START</find>
       <find>AGGREGATE_DELETE</find>
+      <find>count</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -140,8 +141,8 @@
         <option value="$PROJECT_DIR$/nn_model.py" />
         <option value="$PROJECT_DIR$/nn_kmeans.py" />
         <option value="$PROJECT_DIR$/atag_csv.py" />
-        <option value="$PROJECT_DIR$/nn_launch_train.py" />
         <option value="$PROJECT_DIR$/nn_record.py" />
+        <option value="$PROJECT_DIR$/nn_launch_train.py" />
       </list>
     </option>
   </component>
@@ -372,13 +373,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1480257882064</updated>
-    </task>
-    <task id="LOCAL-00071" summary="must enable loading of model in predict section">
-      <created>1482500928543</created>
-      <option name="number" value="00071" />
-      <option name="presentableId" value="LOCAL-00071" />
-      <option name="project" value="LOCAL" />
-      <updated>1482500928544</updated>
     </task>
     <task id="LOCAL-00072" summary="runs without error but does nothing special">
       <created>1482501295380</created>
@@ -716,7 +710,14 @@
       <option name="project" value="LOCAL" />
       <updated>1483567886984</updated>
     </task>
-    <option name="localTasksCounter" value="120" />
+    <task id="LOCAL-00120" summary="fair results">
+      <created>1483569302634</created>
+      <option name="number" value="00120" />
+      <option name="presentableId" value="LOCAL-00120" />
+      <option name="project" value="LOCAL" />
+      <updated>1483569302634</updated>
+    </task>
+    <option name="localTasksCounter" value="121" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -765,7 +766,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="aggregate code started -- not working but interesting output" />
     <MESSAGE value="aggregate code started -- make_rows() seems to work" />
     <MESSAGE value="aggregate code started -- make_rows() seems to work, make_columns() may also work" />
     <MESSAGE value="does not work well" />
@@ -790,7 +790,8 @@
     <MESSAGE value="throw out old aggregate functions in favor of new" />
     <MESSAGE value="while loop problems" />
     <MESSAGE value="very interesting. probably not right, but very interesting" />
-    <option name="LAST_COMMIT_MESSAGE" value="very interesting. probably not right, but very interesting" />
+    <MESSAGE value="fair results" />
+    <option name="LAST_COMMIT_MESSAGE" value="fair results" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1183,22 +1184,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nn_launch_train.py">
+    <entry file="file://$PROJECT_DIR$/nn_record.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="282">
-          <caret line="99" column="39" lean-forward="false" selection-start-line="99" selection-start-column="39" selection-end-line="99" selection-end-column="39" />
+        <state relative-caret-position="491">
+          <caret line="298" column="60" lean-forward="false" selection-start-line="298" selection-start-column="60" selection-end-line="298" selection-end-column="60" />
           <folding>
-            <element signature="e#19#28#0" expanded="true" />
+            <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nn_record.py">
+    <entry file="file://$PROJECT_DIR$/nn_launch_train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="276" column="23" lean-forward="false" selection-start-line="276" selection-start-column="23" selection-end-line="276" selection-end-column="23" />
+        <state relative-caret-position="387">
+          <caret line="106" column="15" lean-forward="false" selection-start-line="106" selection-start-column="15" selection-end-line="106" selection-end-column="15" />
           <folding>
-            <element signature="e#0#13#0" expanded="true" />
+            <element signature="e#19#28#0" expanded="true" />
           </folding>
         </state>
       </provider>
