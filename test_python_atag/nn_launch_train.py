@@ -82,7 +82,6 @@ class Read( enum.Enum) :
         if self.predict_mc :
             ll.dat = ll.record.make_boxes_mc(self.pic)
 
-        #km = kmeans.Kmeans(self.a)
 
         self.nn.load_ckpt = True
         self.nn.save_ckpt = False
@@ -90,7 +89,7 @@ class Read( enum.Enum) :
         self.nn.test = False
         self.nn.set_loader(ll)
 
-        if not self.predict_mc:
+        if not self.predict_mc and True:
             ''' initial simple neural network '''
             self.nn.predict_remove_symbol = 1
             self.nn.set_vars(len(ll.dat), 100, 0)
@@ -100,10 +99,11 @@ class Read( enum.Enum) :
         if False:
             pass
             ''' old k-means code '''
+            #km = kmeans.Kmeans(self.a)
             #ll.dat = km.do_km(ll.dat, 4) # 3
             #ll.record.renumber_dat_list(ll.dat)
 
-        if not self.predict_mc and True :
+        if not self.predict_mc and False :
             ''' two passes through aggregate function '''
             ll.dat = ll.record.aggregate_dat_list(ll.dat)
             ll.record.renumber_dat_list(ll.dat)
@@ -111,7 +111,7 @@ class Read( enum.Enum) :
             ll.record.renumber_dat_list(ll.dat)
             print "len-dat1", len(ll.dat)
 
-        if True:
+        if False:
             ''' final convolution neural network '''
             self.nn.predict_remove_symbol = 1
             self.nn.set_vars(len(ll.dat), 100,  0)  # 50, 'conv', 676
