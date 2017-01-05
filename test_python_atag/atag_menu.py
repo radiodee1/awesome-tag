@@ -326,9 +326,9 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         ii = easygui.buttonbox("Test Only, Etc.","Choose",choices=("SKIN","CONVOLUTION"))
         print "run from command line!"
         if ii == "SKIN":
-            subprocess.call(["python", "./nn_launch_train.py", "-dot-only", "-test"])
+            subprocess.call(["python", "./nn_launch_train.py", "-dot-only", "-test", "-no-save"])
         elif ii == "CONVOLUTION":
-            subprocess.call(["python", "./nn_launch_train.py", "-conv-only", "-test"])
+            subprocess.call(["python", "./nn_launch_train.py", "-conv-only", "-test", "-no-save"])
 
 
     ''' threading etc '''
