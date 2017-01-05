@@ -113,7 +113,7 @@ class Read( enum.Enum) :
             ll.record.renumber_dat_list(ll.dat)
             print "len-dat1", len(ll.dat)
 
-        if False:
+        if True:
             ''' final convolution neural network '''
             self.nn.predict_remove_symbol = 1
             self.nn.set_vars(len(ll.dat), 100,  0)

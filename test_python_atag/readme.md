@@ -1,0 +1,2 @@
+# awesome-tag
+Facial detection and tagging experiments -- this project was not working for several months. Presently, though, it does a better job of detection than it did. It does not, however, do that detection any faster than before. It presently takes several minutes for each image.
