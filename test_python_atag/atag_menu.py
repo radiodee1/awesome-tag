@@ -323,6 +323,13 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     def on_button_options(self, widget):
         print 5
+        ii = easygui.buttonbox("Test Only, Etc.","Choose",choices=("SKIN","CONVOLUTION"))
+        print "run from command line!"
+        if ii == "SKIN":
+            subprocess.call(["python", "./nn_launch_train.py", "-dot-only", "-test"])
+        elif ii == "CONVOLUTION":
+            subprocess.call(["python", "./nn_launch_train.py", "-conv-only", "-test"])
+
 
     ''' threading etc '''
     def run_draw_compile(self):
@@ -348,8 +355,12 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     def run_csv_read(self):
         #read.Read(self)
+        ii = easygui.buttonbox("Type of training","Choose", choices=("SKIN","CONVOLUTION"))
         print "run from command line!"
-        subprocess.call(["python","./nn_launch_train.py",""])
+        if ii == "SKIN":
+            subprocess.call(["python","./nn_launch_train.py","-dot-only","-train"])
+        elif ii == "CONVOLUTION":
+            subprocess.call(["python","./nn_launch_train.py","-conv-only","-train"])
 
     ''' utility and atag var callback '''
     def show_window(self):

@@ -38,17 +38,16 @@ class Read( enum.Enum) :
 
         signal.signal(signal.SIGINT, self.signal_handler)
 
-
-        self.nn.load_ckpt = True
-        self.nn.save_ckpt = True
-        self.nn.train = False
-        self.nn.test = True
         self.nn.set_loader(ll)
 
-        switch = True
+        switch = False
         if switch:
             self.dot_only = True
             self.conv_only = False
+            self.nn.load_ckpt = True
+            self.nn.save_ckpt = True
+            self.nn.train = False
+            self.nn.test = True
 
         if self.dot_only :
             pass
