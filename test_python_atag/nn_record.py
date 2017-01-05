@@ -157,15 +157,21 @@ class Record( enum.Enum):
             ''' make columns '''
 
             self._make_column()
-
             self.dat = self._make_boxes()
             self._delete_marked()
-        for i in range(len(self.dat) -1, -1, -1) :
-            ''' delete odd sizes '''
-            if (self.dat[i][self.FACE_WIDTH] >= float(self.dat[i][self.FACE_HEIGHT]) * float(2.5) or
-                float(self.dat[i][self.FACE_WIDTH]) * float(2.5) <= self.dat[i][self.FACE_HEIGHT] ):
-                pass
-                if del_shapes: del self.dat[i]
+
+            #self._make_column()
+            #self.dat = self._make_boxes()
+            #self._delete_marked()
+        if del_shapes:
+            for i in range(len(self.dat) -1, -1, -1) :
+                ''' delete odd sizes '''
+                if (self.dat[i][self.FACE_WIDTH] >= float(self.dat[i][self.FACE_HEIGHT]) * float(2.5) or
+                    float(self.dat[i][self.FACE_WIDTH]) * float(2.5) <= self.dat[i][self.FACE_HEIGHT] or
+                    self.dat[i][self.FACE_HEIGHT] <= self.dim_y * 2 or
+                    self.dat[i][self.FACE_WIDTH] <= self.dim_x * 2):
+                    pass
+                    del self.dat[i]
 
         return self.dat
 
@@ -183,28 +189,28 @@ class Record( enum.Enum):
         h = self.dat[i][self.FACE_HEIGHT]
         return x,y,w,h
 
-    def _box_at_right(self, x, y, w, h):
+    def _box_at_right(self, x, y, w, h, k):
         for i in range(len(self.dat)) :
-            if self.dat[i][self.ATAG_ID] == self.AGGREGATE_START:# or self.strict_next_to:
+            if self.dat[i][self.ATAG_ID] == self.AGGREGATE_START and k != i:# or self.strict_next_to:
                 xx,yy,ww,hh = self._get_xywh(i)
-                if  yy >= y and x + w + 2 >= xx and y + h >= yy and x < xx and x + w -2 <= xx:
+                if  yy >= y and x + w + 2 >= xx and y + h >= yy and x <= xx and x + w -2 <= xx:
                     print "boxatright"
                     return i
-                if  self.allow_skipping and x + w + 2 + self.dim_x >= xx and x < xx and ((yy >= y and y + h >= yy) or
+                if  self.allow_skipping and x + w + 2 + self.dim_x >= xx and x <= xx and ((yy >= y and y + h >= yy) or
                                                                      (y >= yy and y <= yy+hh))  :
                     print "boxatright skipping"
                     return i
         #self.count = self.count + 1
         return -1
 
-    def _box_at_bottom(self, x, y, w, h):
+    def _box_at_bottom(self, x, y, w, h, k):
         for i in range(len(self.dat)) :
-            if self.dat[i][self.ATAG_ID] == self.AGGREGATE_START: #
+            if self.dat[i][self.ATAG_ID] == self.AGGREGATE_START and k != i: #
                 #self.dat[i][self.ATAG_ID] = self.count # self.AGGREGATE_TOUCHED #or self.strict_next_to:
                 xx,yy,ww,hh = self._get_xywh(i)
-                if yy +hh +2 >=  y and yy < y:
+                if yy +hh +2 >=  y and yy <= y:
                     print "y is reversed"
-                if  y + h + 2  >= yy and y < yy :
+                if  y + h + 2  >= yy and y <= yy :
                     print "y is good", y, h, yy, hh
                     if self.strict_columns and x + w == xx + ww and xx == x :
                         print "boxatbottom strict"
@@ -212,10 +218,10 @@ class Record( enum.Enum):
                     elif (not self.strict_columns): # and not self._reject_box(i, w)) : #and
                         if ((xx >=x and xx <= x+w ) or
                                 ( xx + ww >= x and xx + ww <= x+w   ) or
-                                ( x + w >=xx and x < xx)):
+                                ( x + w >=xx and x <= xx)):
                             print "boxatbottom loose"
                             return i
-                        if self.allow_skipping and x + w + 2 + self.dim_x >=xx and x < xx :
+                        if self.allow_skipping and x + w + 2 + self.dim_x >=xx and x <= xx :
                             print "boxatbottom skipping"
                             return i
                     #else : print "boxatbottom none"
@@ -242,7 +248,7 @@ class Record( enum.Enum):
                 self.dat[k][self.ATAG_ID] = self.count
 
                 x,y,w,h = self._get_xywh(k)
-                zz = self._box_at_right(x,y,w,h)
+                zz = self._box_at_right(x,y,w,h,k)
                 while zz != -1:
                     w_calc = self.dat[zz][self.FACE_X] + self.dat[zz][self.FACE_WIDTH] - self.dat[k][self.FACE_X]
 
@@ -251,7 +257,7 @@ class Record( enum.Enum):
                             self.dat[zz][self.ATAG_ID] = self.count
                             #w = w_calc
                             #self.dat[zz][self.FACE_WIDTH] = w
-                            zz = self._box_at_right(x, y, w, h)
+                            zz = self._box_at_right(x, y, w, h,k)
                             #if zz != -1: x,y,w,h = self._get_xywh(zz)
                             w = w_calc
                         else:
@@ -281,7 +287,7 @@ class Record( enum.Enum):
 
                 #if not self.strict_next_to: self.dat[i][self.ATAG_ID] = self.AGGREGATE_TOUCHED
                 x, y, w, h = self._get_xywh(k)
-                zz = self._box_at_bottom(x, y, w, h)
+                zz = self._box_at_bottom(x, y, w, h,k)
                 while zz != -1:
                     h_calc = self.dat[zz][self.FACE_Y] + self.dat[zz][self.FACE_HEIGHT] - self.dat[k][self.FACE_Y]
                     self.dat[k][self.ATAG_ID] = self.count
@@ -299,7 +305,7 @@ class Record( enum.Enum):
                             h = h_calc
                             x = self.dat[zz][self.FACE_X]
                             w = self.dat[zz][self.FACE_WIDTH]
-                            zz = self._box_at_bottom(x, y, w, h)
+                            zz = self._box_at_bottom(x, y, w, h,k)
 
                         else :
                             zz = -1
