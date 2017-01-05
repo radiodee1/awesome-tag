@@ -12,7 +12,7 @@ class Record( enum.Enum):
         self.a = atag
         self.predict_filename = self.a.VAR_LOCAL_DATABASE + os.sep + "predict" + ".csv"
         self.strict_columns = False
-        self.allow_skipping = False
+        self.allow_skipping = True
         self.strict_next_to = True
         self.dim_x = 28
         self.dim_y = 28
