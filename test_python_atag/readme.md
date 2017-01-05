@@ -7,3 +7,6 @@ Tensorflow is used to implement the neural networks on the author's computer usi
 
 When the experment was tried for the first time Java was used. This worked poorly and good results were never fully realized. The java code is included in the github repository for completeness. Also included in the repository is some python code that uses tensorflow to work on the MNIST dataset, just as is suggested by the Tensorflow 'getting started' page.
 
+The training data that I use came from www.nist.gov . They have a dataset of labled facial images for a facial recognition challenge (note, this is for facial recognition, not really detection). The dataset is called the 'IJB-A' dataset. The download is large and you must apply for permission to access the download page. I beleive most students of computer science would be approved, if you are clear that you are interested in research.
+
+The first step to using this project is downloading the dataset. Then the working environment must be set up. The project uses, among other things, a dot-folder in your home directory called '.atag' for storing the location of the IJB-A database as well as the location of several of its own files. Then you must train the two databases on the images in the dataset folders. Then you can go ahead and test the facial detector on the images in the database or any image of your own.
