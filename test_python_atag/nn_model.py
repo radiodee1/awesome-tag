@@ -224,7 +224,7 @@ class NN(enum.Enum):
             self.loader.record.remove_lines_from_dat(self.dat_remove)
             self.loader.record.renumber_dat_list(self.loader.dat)
 
-
+    '''
     def skintone_setup(self):
 
         if self.load_ckpt : self.load_group()
@@ -271,7 +271,7 @@ class NN(enum.Enum):
             self.loader.record.remove_lines_from_dat(self.dat_remove)
             self.loader.record.renumber_dat_list(self.loader.dat)
             print "remove skintone", self.dat_remove
-
+    '''
 
     def conv_setup(self):
         #c_output = 2

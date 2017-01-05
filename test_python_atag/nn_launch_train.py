@@ -78,9 +78,11 @@ class Read( enum.Enum) :
         ''' make initial box grid '''
         if not  self.predict_mc :
             ll.dat = ll.record.make_boxes(self.pic, dim=7) # 7
+            print "num-boxes", len(ll.dat)
         ''' make box grid for monte carlo '''
         if self.predict_mc :
             ll.dat = ll.record.make_boxes_mc(self.pic)
+            print "num-boxes", len(ll.dat)
 
 
         self.nn.load_ckpt = True
@@ -103,7 +105,7 @@ class Read( enum.Enum) :
             #ll.dat = km.do_km(ll.dat, 4) # 3
             #ll.record.renumber_dat_list(ll.dat)
 
-        if not self.predict_mc and False :
+        if not self.predict_mc and True :
             ''' two passes through aggregate function '''
             ll.dat = ll.record.aggregate_dat_list(ll.dat)
             ll.record.renumber_dat_list(ll.dat)
@@ -114,7 +116,7 @@ class Read( enum.Enum) :
         if False:
             ''' final convolution neural network '''
             self.nn.predict_remove_symbol = 1
-            self.nn.set_vars(len(ll.dat), 100,  0)  # 50, 'conv', 676
+            self.nn.set_vars(len(ll.dat), 100,  0)
             self.nn.conv_setup()
             print "len-dat2", len(ll.dat)
 
