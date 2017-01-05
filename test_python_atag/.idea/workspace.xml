@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c15ed38a-2fe7-44d1-b032-ae199cd14d43" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/readme.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_launch_train.py" afterPath="$PROJECT_DIR$/nn_launch_train.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/readme.md" afterPath="$PROJECT_DIR$/readme.md" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -46,8 +45,8 @@
       <file leaf-file-name="readme.md" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/readme.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" column="273" lean-forward="false" selection-start-line="1" selection-start-column="273" selection-end-line="1" selection-end-column="273" />
+            <state relative-caret-position="45">
+              <caret line="3" column="429" lean-forward="false" selection-start-line="3" selection-start-column="429" selection-end-line="3" selection-end-column="429" />
               <folding />
             </state>
           </provider>
@@ -399,13 +398,6 @@
       <option name="presentableId" value="Default" />
       <updated>1480257882064</updated>
     </task>
-    <task id="LOCAL-00080" summary="aggregate code started -- not working but interesting output">
-      <created>1482784587160</created>
-      <option name="number" value="00080" />
-      <option name="presentableId" value="LOCAL-00080" />
-      <option name="project" value="LOCAL" />
-      <updated>1482784587160</updated>
-    </task>
     <task id="LOCAL-00081" summary="aggregate code started -- not working but interesting output">
       <created>1482785014061</created>
       <option name="number" value="00081" />
@@ -742,7 +734,14 @@
       <option name="project" value="LOCAL" />
       <updated>1483634239619</updated>
     </task>
-    <option name="localTasksCounter" value="129" />
+    <task id="LOCAL-00129" summary="readme.md file">
+      <created>1483635519731</created>
+      <option name="number" value="00129" />
+      <option name="presentableId" value="LOCAL-00129" />
+      <option name="project" value="LOCAL" />
+      <updated>1483635519731</updated>
+    </task>
+    <option name="localTasksCounter" value="130" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -772,7 +771,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="working on train for dot -- not helpful" />
     <MESSAGE value="white space" />
     <MESSAGE value="three channels" />
     <MESSAGE value="rgb,rgb,rgb" />
@@ -797,7 +795,8 @@
     <MESSAGE value="more test images" />
     <MESSAGE value="add some test images" />
     <MESSAGE value="some of my test png images are not read correctly, whereas a jpg version works fine" />
-    <option name="LAST_COMMIT_MESSAGE" value="some of my test png images are not read correctly, whereas a jpg version works fine" />
+    <MESSAGE value="readme.md file" />
+    <option name="LAST_COMMIT_MESSAGE" value="readme.md file" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1202,8 +1201,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/readme.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="273" lean-forward="false" selection-start-line="1" selection-start-column="273" selection-end-line="1" selection-end-column="273" />
+        <state relative-caret-position="45">
+          <caret line="3" column="429" lean-forward="false" selection-start-line="3" selection-start-column="429" selection-end-line="3" selection-end-column="429" />
           <folding />
         </state>
       </provider>
