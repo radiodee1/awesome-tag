@@ -208,8 +208,8 @@ class Record( enum.Enum):
             if self.dat[i][self.ATAG_ID] == self.AGGREGATE_START and k != i: #
                 #self.dat[i][self.ATAG_ID] = self.count # self.AGGREGATE_TOUCHED #or self.strict_next_to:
                 xx,yy,ww,hh = self._get_xywh(i)
-                if yy +hh +2 >=  y and yy <= y:
-                    print "y is reversed"
+                #if yy +hh +2 >=  y and yy <= y:
+                #    print "y is reversed"
                 if  y + h + 2  >= yy and y <= yy :
                     print "y is good", y, h, yy, hh
                     if self.strict_columns and x + w == xx + ww and xx == x :
@@ -218,7 +218,8 @@ class Record( enum.Enum):
                     elif (not self.strict_columns): # and not self._reject_box(i, w)) : #and
                         if ((xx >=x and xx <= x+w ) or
                                 ( xx + ww >= x and xx + ww <= x+w   ) or
-                                ( x + w >=xx and x <= xx)):
+                                ( x + w >=xx and x <= xx) or
+                                ( x + w >= xx and x + w <= xx + ww)):
                             print "boxatbottom loose"
                             return i
                         if self.allow_skipping and x + w + 2 + self.dim_x >=xx and x <= xx :

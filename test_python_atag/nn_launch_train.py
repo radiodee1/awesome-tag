@@ -7,7 +7,7 @@ import atag_csv as enum
 import nn_loader as loader
 import atag_dotfolder as aa
 import nn_model as model
-import nn_kmeans as kmeans
+#import nn_kmeans as kmeans
 import argparse
 
 '''
@@ -75,10 +75,14 @@ class Read( enum.Enum) :
 
         ll = loader.Load(self.a, self.pic)
 
-        if not  self.predict_mc : ll.dat = ll.record.make_boxes(self.pic, dim=7) # 7
-        if self.predict_mc : ll.dat = ll.record.make_boxes_mc(self.pic)
+        ''' make initial box grid '''
+        if not  self.predict_mc :
+            ll.dat = ll.record.make_boxes(self.pic, dim=7) # 7
+        ''' make box grid for monte carlo '''
+        if self.predict_mc :
+            ll.dat = ll.record.make_boxes_mc(self.pic)
 
-        km = kmeans.Kmeans(self.a)
+        #km = kmeans.Kmeans(self.a)
 
         self.nn.load_ckpt = True
         self.nn.save_ckpt = False
@@ -87,17 +91,20 @@ class Read( enum.Enum) :
         self.nn.set_loader(ll)
 
         if not self.predict_mc:
+            ''' initial simple neural network '''
             self.nn.predict_remove_symbol = 1
             self.nn.set_vars(len(ll.dat), 100, 0)
             self.nn.dot_setup()
-            #self.nn.conv_setup()
             print "len-dat0", len(ll.dat)
 
         if False:
-            ll.dat = km.do_km(ll.dat, 4) # 3
-            ll.record.renumber_dat_list(ll.dat)
+            pass
+            ''' old k-means code '''
+            #ll.dat = km.do_km(ll.dat, 4) # 3
+            #ll.record.renumber_dat_list(ll.dat)
 
         if not self.predict_mc and True :
+            ''' two passes through aggregate function '''
             ll.dat = ll.record.aggregate_dat_list(ll.dat)
             ll.record.renumber_dat_list(ll.dat)
             ll.dat = ll.record.aggregate_dat_list(ll.dat, del_shapes=True)
@@ -105,6 +112,7 @@ class Read( enum.Enum) :
             print "len-dat1", len(ll.dat)
 
         if True:
+            ''' final convolution neural network '''
             self.nn.predict_remove_symbol = 1
             self.nn.set_vars(len(ll.dat), 100,  0)  # 50, 'conv', 676
             self.nn.conv_setup()
