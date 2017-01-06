@@ -85,6 +85,7 @@ class NN(enum.Enum):
         self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
 
         ''' SOFTMAX NEXT '''
+
         input_num = 784 * 3  # like mnist but with three channels
         mid_num = 50  # 10
         output_num = 2
@@ -111,6 +112,7 @@ class NN(enum.Enum):
         # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
         self.y_out = tf.argmax(self.y, 1)  ## for prediction
+
 
         ''' CONVOLUTION NEXT '''
         c_output = 2
