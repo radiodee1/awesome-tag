@@ -47,7 +47,8 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.label = Gtk.Label("Checkpoint Base Name")
         self.grid.attach(self.label, 3, 0, 1, 1)
 
-        ''' row 1 '''
+        ''' row 1  x '''
+        '''
         self.label = Gtk.Label(self.shorten(self.VAR_CSV_FILE_SECOND))
         self.grid.attach(self.label, 0, 1, 1, 1)
 
@@ -64,8 +65,10 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
         self.label = Gtk.Label("Second CSV")
         self.grid.attach(self.label, 3, 1, 1, 1)
+        '''
 
-        ''' row 2 '''
+        ''' row 2  x '''
+        '''
         self.label = Gtk.Label(self.shorten(self.VAR_CSV_FILE_SINGLE))
         self.grid.attach(self.label, 0, 2, 1, 1)
 
@@ -82,6 +85,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
         self.label = Gtk.Label("Single CSV")
         self.grid.attach(self.label, 3, 2, 1, 1)
+        '''
 
         ''' row 3 '''
         self.label = Gtk.Label(self.shorten(self.VAR_IMAGE_NAME))
@@ -156,7 +160,8 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.label = Gtk.Label("Root Database")
         self.grid.attach(self.label, 3, 6, 1, 1)
 
-        ''' row 7 '''
+        ''' row 7  x '''
+        '''
         self.label = Gtk.Label(self.shorten(self.VAR_SAVED_CURSOR))
         self.grid.attach(self.label, 0, 7, 1, 1)
 
@@ -174,8 +179,10 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
         self.label = Gtk.Label("Saved Cursor Position (#)")
         self.grid.attach(self.label, 3, 7, 1, 1)
+        '''
 
-        ''' row 8 '''
+        ''' row 8  x '''
+        '''
         self.label = Gtk.Label(self.shorten(self.VAR_SAVED_SPLIT))
         self.grid.attach(self.label, 0, 8, 1, 1)
 
@@ -193,6 +200,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
         self.label = Gtk.Label("Saved Split (#)")
         self.grid.attach(self.label, 3, 8, 1, 1)
+        '''
 
         ''' row 9 '''
         self.label = Gtk.Label(self.shorten(self.VAR_SPLIT_CURRENT))
@@ -213,7 +221,8 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.label = Gtk.Label("Current Split (#)")
         self.grid.attach(self.label, 3, 9, 1, 1)
 
-        ''' row 10 '''
+        ''' row 10  x '''
+        '''
         self.label = Gtk.Label(self.shorten(self.VAR_SPLIT_END))
         self.grid.attach(self.label, 0, 10, 1, 1)
 
@@ -231,6 +240,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
         self.label = Gtk.Label("Split End (#)")
         self.grid.attach(self.label, 3, 10, 1, 1)
+        '''
 
         ''' row 11 '''
         position12 = 12
@@ -251,7 +261,8 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.label = Gtk.Label("Split Foldername")
         self.grid.attach(self.label, 3, position12, 1, 1)
 
-        ''' row 12 '''
+        ''' row 12  x '''
+        '''
         position11 = 11
         self.label = Gtk.Label(self.shorten(self.VAR_SPLIT_START))
         self.grid.attach(self.label, 0, position11, 1, 1)
@@ -270,6 +281,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
         self.label = Gtk.Label("Split Start (#)")
         self.grid.attach(self.label, 3, position11, 1, 1)
+        '''
 
         ''' some buttons in one row '''
         self.grid2 = Gtk.Grid()
