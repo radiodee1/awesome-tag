@@ -12,3 +12,7 @@ The training data that I use came from www.nist.gov . They have a dataset of lab
 You are required to add the following text to any publication: This product contains or makes use of the following data made available by the Intelligence Advanced Research Projects Activity (IARPA): IARPA Janus Benchmark A (IJB-A) data detailed at http://www.nist.gov/itl/iad/ig/facechallenges.cfm .
 
 The first step to using this project is downloading the dataset. Then the working environment must be set up. The project uses, among other things, a dot-folder in your home directory called '.atag' for storing the location of the IJB-A database as well as the location of several of its own files. Then you must train the two databases on the images in the dataset folders. Then you can go ahead and test the facial detector on the images in the database or any image of your own.
+
+-----
+
+Programming was done in python on a Ubuntu 16.10 linux computer, using the nvidia card, and a sophisticated programming IDE (PyCharm Community Edition). Some of the python libraries used in this project are: python2.7, python-numpy, python-pil, Tensorflow, python-easygui, python-opengl. The link to the Tensorflow website is: https://www.tensorflow.org/ . Instructions on installing Tensorflow can be found there. The link to the PyCharm website is: https://www.jetbrains.com/pycharm/ . At the time of this writing I am using Tensorflow 0.11.0. 
