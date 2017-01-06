@@ -34,7 +34,8 @@ class Write( enum.Enum) :
                 self.process_read_line(line)
             f.close()
 
-        print self.csv_output
+        print self.csv_input, "input file"
+        print self.csv_output, "output file"
         self.f = open(self.csv_output, "w")
         self.f = open(self.csv_output, "a")
 
