@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c15ed38a-2fe7-44d1-b032-ae199cd14d43" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/atag_csv_write.py" afterPath="$PROJECT_DIR$/atag_csv_write.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/atag_menu.py" afterPath="$PROJECT_DIR$/atag_menu.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -33,7 +33,7 @@
       <file leaf-file-name="nn_launch_train.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nn_launch_train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
+            <state relative-caret-position="615">
               <caret line="49" column="12" lean-forward="false" selection-start-line="49" selection-start-column="12" selection-end-line="49" selection-end-column="12" />
               <folding>
                 <element signature="e#19#28#0" expanded="true" />
@@ -45,14 +45,14 @@
       <file leaf-file-name="atag_dotfolder.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/atag_dotfolder.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1050">
+            <state relative-caret-position="1410">
               <caret line="95" column="29" lean-forward="false" selection-start-line="95" selection-start-column="29" selection-end-line="95" selection-end-column="29" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="atag_csv_write.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="atag_csv_write.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/atag_csv_write.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="303">
@@ -62,11 +62,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="atag_menu.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="atag_menu.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/atag_menu.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="220" column="48" lean-forward="false" selection-start-line="220" selection-start-column="48" selection-end-line="220" selection-end-column="48" />
+            <state relative-caret-position="180">
+              <caret line="260" column="48" lean-forward="false" selection-start-line="260" selection-start-column="48" selection-end-line="260" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -97,7 +97,7 @@
       <file leaf-file-name="nn_model.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nn_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="552">
+            <state relative-caret-position="1590">
               <caret line="114" column="0" lean-forward="false" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
               <folding>
                 <element signature="e#18#27#0" expanded="true" />
@@ -198,6 +198,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -227,7 +228,6 @@
         </subPane>
       </pane>
       <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -417,13 +417,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1480257882064</updated>
-    </task>
-    <task id="LOCAL-00092" summary="working on train for dot -- not helpful">
-      <created>1483039115341</created>
-      <option name="number" value="00092" />
-      <option name="presentableId" value="LOCAL-00092" />
-      <option name="project" value="LOCAL" />
-      <updated>1483039115341</updated>
     </task>
     <task id="LOCAL-00093" summary="working on train for dot -- not helpful">
       <created>1483039568035</created>
@@ -761,7 +754,14 @@
       <option name="project" value="LOCAL" />
       <updated>1483709477316</updated>
     </task>
-    <option name="localTasksCounter" value="141" />
+    <task id="LOCAL-00141" summary="edit menu to remove unused elements">
+      <created>1483710528137</created>
+      <option name="number" value="00141" />
+      <option name="presentableId" value="LOCAL-00141" />
+      <option name="project" value="LOCAL" />
+      <updated>1483710528137</updated>
+    </task>
+    <option name="localTasksCounter" value="142" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1180,7 +1180,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nn_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="552">
+        <state relative-caret-position="1590">
           <caret line="114" column="0" lean-forward="false" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
           <folding>
             <element signature="e#18#27#0" expanded="true" />
@@ -1189,25 +1189,23 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/readme.md">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+        </state>
+      </provider>
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="0">
             <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-            <folding />
           </first_editor>
           <second_editor />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/nn_launch_train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
+        <state relative-caret-position="615">
           <caret line="49" column="12" lean-forward="false" selection-start-line="49" selection-start-column="12" selection-end-line="49" selection-end-column="12" />
           <folding>
             <element signature="e#19#28#0" expanded="true" />
@@ -1217,16 +1215,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/atag_dotfolder.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1050">
+        <state relative-caret-position="1410">
           <caret line="95" column="29" lean-forward="false" selection-start-line="95" selection-start-column="29" selection-end-line="95" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/atag_menu.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="220" column="48" lean-forward="false" selection-start-line="220" selection-start-column="48" selection-end-line="220" selection-end-column="48" />
           <folding />
         </state>
       </provider>
@@ -1235,6 +1225,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="303">
           <caret line="36" column="41" lean-forward="false" selection-start-line="36" selection-start-column="41" selection-end-line="36" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/atag_menu.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="260" column="48" lean-forward="false" selection-start-line="260" selection-start-column="48" selection-end-line="260" selection-end-column="48" />
           <folding />
         </state>
       </provider>

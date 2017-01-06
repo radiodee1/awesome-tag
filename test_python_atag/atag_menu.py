@@ -258,7 +258,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
                             self.label)
         self.grid.attach(self.button, 2, position12, 1, 1)
 
-        self.label = Gtk.Label("Split Foldername")
+        self.label = Gtk.Label("Split Folder for Base Name")
         self.grid.attach(self.label, 3, position12, 1, 1)
 
         ''' row 12  x '''
