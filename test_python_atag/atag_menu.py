@@ -205,17 +205,16 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.label = Gtk.Label(self.shorten(self.VAR_SPLIT_CURRENT))
         self.grid.attach(self.label, 0, 9, 1, 1)
 
-        self.entry = Gtk.Entry()
-        self.entry.set_text("")
-        self.entry.connect("activate", self.enter_image_name_callback, self.VAR_SPLIT_CURRENT, self.FOLDER_SPLIT_CURRENT,
-                           self.label)
-        self.grid.attach(self.entry, 1, 9, 1, 1)
+        self.spin = Gtk.SpinButton()
+        self.spin_adjust = Gtk.Adjustment(int(self.VAR_SPLIT_CURRENT),0,100,1,10,0)
+        self.spin.set_adjustment(self.spin_adjust)
+        policy = Gtk.SpinButtonUpdatePolicy.IF_VALID
+        self.spin.set_update_policy(policy)
+        self.spin.set_numeric(True)
+        self.spin.connect("value-changed", self.on_spinner_change, self.VAR_SPLIT_CURRENT, self.FOLDER_SPLIT_CURRENT,
+                          self.label)
+        self.grid.attach(self.spin, 1, 9, 2, 1)
 
-        self.button = Gtk.Button(label="Picker")
-        self.button.set_sensitive(False)
-        self.button.connect("clicked", self.on_image_name_button, self.VAR_SPLIT_CURRENT, self.FOLDER_SPLIT_CURRENT,
-                            self.label)
-        self.grid.attach(self.button, 2, 9, 1, 1)
 
         self.label = Gtk.Label("Current Split (#)")
         self.grid.attach(self.label, 3, 9, 1, 1)
@@ -286,7 +285,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.grid2 = Gtk.Grid()
         self.grid2.set_border_width(10)
 
-        self.button = Gtk.Button(label="Read CSV, Show Boxes")
+        self.button = Gtk.Button(label="Show Boxes")
         self.button.connect("clicked", self.on_button_show_csv)
         self.grid2.attach(self.button, 0, 0, 1, 1)
         self.button = Gtk.Button(label="Read And Write CSV")
@@ -295,12 +294,16 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.button = Gtk.Button(label="Train")
         self.button.connect("clicked", self.on_button_train)
         self.grid2.attach(self.button, 2, 0, 1, 1)
+        self.button = Gtk.Button(label="Test")
+        self.button.connect("clicked", self.on_button_options)
+        self.grid2.attach(self.button, 3, 0, 1, 1)
         self.button = Gtk.Button(label="Predict")
         self.button.connect("clicked", self.on_button_test)
-        self.grid2.attach(self.button, 3, 0, 1, 1)
-        self.button = Gtk.Button(label="More Options")
-        self.button.connect("clicked", self.on_button_options)
         self.grid2.attach(self.button, 4, 0, 1, 1)
+        self.button = Gtk.Button(label="More")
+        self.button.connect("clicked", self.on_button_more)
+        self.grid2.attach(self.button, 5, 0, 1, 1)
+
 
         self.grid.attach(self.grid2, 0, 13, 4,1)
 
@@ -340,10 +343,17 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         print 2
 
     def on_button_train(self, widget):
-        self.run_csv_read()
-        #thread = threading.Thread(target=self.run_csv_read)
-        #thread.daemon = True
-        #thread.start()
+        #self.run_csv_read()
+        self.ii = easygui.buttonbox("Type of training", "Choose", choices=("SKIN", "CONVOLUTION"))
+        print "run from command line!"
+        if self.ii == "SKIN":
+            self.ii = "-dot-only"
+        elif self.ii == "CONVOLUTION":
+            self.ii = "-conv-only"
+
+        thread = threading.Thread(target=self.run_csv_read)
+        thread.daemon = True
+        thread.start()
         print 3
 
     def on_button_test(self, widget):
@@ -359,12 +369,21 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         elif ii == "CONVOLUTION":
             subprocess.call(["python", "./nn_launch_train.py", "-conv-only", "-test", "-no-save"])
 
+    def on_spinner_change(self, widget, var, folder, label):
+        print 6
+        result = self.spin.get_value_as_int()
+        #print result
+        self.enter_image_name_callback(widget,var,folder,label)
+
+    def on_button_more(self, widget):
+        print 7
+        pass
 
     ''' threading etc '''
     def run_draw_compile(self):
-        ii = easygui.buttonbox("Type of Diagram","Choose",choices=("TRAIN","DOT","PREDICT"))
+        ii = easygui.buttonbox("Type of Diagram","Choose",choices=("CONVOLUTION","DOT","PREDICT"))
         r = draw.Read(self)
-        if ii == "TRAIN" :
+        if ii == "CONVOLUTION" :
             r.process_read_file_simple()
             self.drawingarea.boxlist_red = r.boxlist_r
         elif ii == "PREDICT" :
@@ -384,12 +403,11 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     def run_csv_read(self):
         #read.Read(self)
-        ii = easygui.buttonbox("Type of training","Choose", choices=("SKIN","CONVOLUTION"))
+        #ii = easygui.buttonbox("Type of training","Choose", choices=("SKIN","CONVOLUTION"))
         print "run from command line!"
-        if ii == "SKIN":
-            subprocess.call(["python","./nn_launch_train.py","-dot-only","-train","-test"])
-        elif ii == "CONVOLUTION":
-            subprocess.call(["python","./nn_launch_train.py","-conv-only","-train", "-test"])
+        subprocess.call(["python","./nn_launch_train.py",self.ii,"-train","-test"])
+        #elif ii == "CONVOLUTION":
+        #    subprocess.call(["python","./nn_launch_train.py","-conv-only","-train", "-test"])
 
     ''' utility and atag var callback '''
     def show_window(self):
