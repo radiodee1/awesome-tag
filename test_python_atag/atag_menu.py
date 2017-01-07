@@ -306,7 +306,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
         ''' end of list -- add drawingarea '''
         self.grid3 = Gtk.Grid()
-        #self.viewport = Gtk.Viewport()
+
         self.viewport = Gtk.ScrolledWindow()
         self.viewport.set_size_request(500,500)
         self.viewport.set_hexpand(True)
@@ -315,7 +315,6 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.drawingarea.set_imagename(self.VAR_IMAGE_NAME)
         self.viewport.add(self.drawingarea)
 
-        #self.drawingarea.boxlist_red = draw.Read(self).boxlist
         vadjustment = self.viewport.get_vadjustment()
         hadjustment = self.viewport.get_hadjustment()
 
@@ -323,10 +322,10 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         hscrollbar = Gtk.Scrollbar(orientation=Gtk.Orientation.HORIZONTAL, adjustment=hadjustment)
         vscrollbar.set_adjustment(vadjustment)
         hscrollbar.set_adjustment(hadjustment)
-        self.grid3.attach(self.viewport, 1, 1, 1, 1)#, gtk.FILL|gtk.EXPAND, gtk.FILL|gtk.EXPAND, 0, 0)
+        self.grid3.attach(self.viewport, 1, 1, 1, 1)
         self.grid3.attach(hscrollbar, 1, 0, 2, 1)
         self.grid3.attach(vscrollbar, 0, 1, 1, 2)
-        #self.grid3.
+
         self.grid.attach(self.grid3, 0, 14, 4, 1)
 
     ''' button callback '''
@@ -341,9 +340,10 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         print 2
 
     def on_button_train(self, widget):
-        thread = threading.Thread(target=self.run_csv_read)
-        thread.daemon = True
-        thread.start()
+        self.run_csv_read()
+        #thread = threading.Thread(target=self.run_csv_read)
+        #thread.daemon = True
+        #thread.start()
         print 3
 
     def on_button_test(self, widget):
@@ -387,9 +387,9 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         ii = easygui.buttonbox("Type of training","Choose", choices=("SKIN","CONVOLUTION"))
         print "run from command line!"
         if ii == "SKIN":
-            subprocess.call(["python","./nn_launch_train.py","-dot-only","-train"])
+            subprocess.call(["python","./nn_launch_train.py","-dot-only","-train","-test"])
         elif ii == "CONVOLUTION":
-            subprocess.call(["python","./nn_launch_train.py","-conv-only","-train"])
+            subprocess.call(["python","./nn_launch_train.py","-conv-only","-train", "-test"])
 
     ''' utility and atag var callback '''
     def show_window(self):
