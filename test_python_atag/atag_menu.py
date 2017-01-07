@@ -5,7 +5,6 @@ import easygui
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GdkPixbuf, Gdk
-#import cairo
 import threading
 
 import atag_dotfolder as atag
@@ -306,11 +305,29 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.grid.attach(self.grid2, 0, 13, 4,1)
 
         ''' end of list -- add drawingarea '''
+        self.grid3 = Gtk.Grid()
+        #self.viewport = Gtk.Viewport()
+        self.viewport = Gtk.ScrolledWindow()
+        self.viewport.set_size_request(500,500)
+        self.viewport.set_hexpand(True)
+        self.viewport.set_vexpand(True)
         self.drawingarea = dra.DrawingArea()
         self.drawingarea.set_imagename(self.VAR_IMAGE_NAME)
-        #self.drawingarea.boxlist_red = draw.Read(self).boxlist
+        self.viewport.add(self.drawingarea)
 
-        self.grid.attach(self.drawingarea, 0, 14, 4, 1)
+        #self.drawingarea.boxlist_red = draw.Read(self).boxlist
+        vadjustment = self.viewport.get_vadjustment()
+        hadjustment = self.viewport.get_hadjustment()
+
+        vscrollbar = Gtk.Scrollbar(orientation=Gtk.Orientation.VERTICAL, adjustment=vadjustment)
+        hscrollbar = Gtk.Scrollbar(orientation=Gtk.Orientation.HORIZONTAL, adjustment=hadjustment)
+        vscrollbar.set_adjustment(vadjustment)
+        hscrollbar.set_adjustment(hadjustment)
+        self.grid3.attach(self.viewport, 1, 1, 1, 1)#, gtk.FILL|gtk.EXPAND, gtk.FILL|gtk.EXPAND, 0, 0)
+        self.grid3.attach(hscrollbar, 1, 0, 2, 1)
+        self.grid3.attach(vscrollbar, 0, 1, 1, 2)
+        #self.grid3.
+        self.grid.attach(self.grid3, 0, 14, 4, 1)
 
     ''' button callback '''
     def on_button_show_csv(self, widget):
