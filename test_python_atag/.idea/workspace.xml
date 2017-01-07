@@ -4,7 +4,6 @@
     <list default="true" id="c15ed38a-2fe7-44d1-b032-ae199cd14d43" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/atag_drawingarea.py" afterPath="$PROJECT_DIR$/atag_drawingarea.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/atag_menu.py" afterPath="$PROJECT_DIR$/atag_menu.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -76,8 +75,8 @@
       <file leaf-file-name="atag_drawingarea.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/atag_drawingarea.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" column="30" lean-forward="false" selection-start-line="15" selection-start-column="30" selection-end-line="15" selection-end-column="30" />
+            <state relative-caret-position="270">
+              <caret line="18" column="8" lean-forward="false" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -429,13 +428,6 @@
       <option name="presentableId" value="Default" />
       <updated>1480257882064</updated>
     </task>
-    <task id="LOCAL-00094" summary="white space">
-      <created>1483045721114</created>
-      <option name="number" value="00094" />
-      <option name="presentableId" value="LOCAL-00094" />
-      <option name="project" value="LOCAL" />
-      <updated>1483045721114</updated>
-    </task>
     <task id="LOCAL-00095" summary="three channels">
       <created>1483057328336</created>
       <option name="number" value="00095" />
@@ -772,7 +764,14 @@
       <option name="project" value="LOCAL" />
       <updated>1483711754671</updated>
     </task>
-    <option name="localTasksCounter" value="143" />
+    <task id="LOCAL-00143" summary="add scrollbars for large images">
+      <created>1483800503249</created>
+      <option name="number" value="00143" />
+      <option name="presentableId" value="LOCAL-00143" />
+      <option name="project" value="LOCAL" />
+      <updated>1483800503249</updated>
+    </task>
+    <option name="localTasksCounter" value="144" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -802,7 +801,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="good conv score at two epochs. must try three." />
     <MESSAGE value="same score at three epochs as two. must train dot()" />
     <MESSAGE value="argparse" />
     <MESSAGE value="doesn't do a very good job and takes a long time." />
@@ -827,7 +825,8 @@
     <MESSAGE value="should use allow_skipping all the time" />
     <MESSAGE value="enable menu control for training, etc" />
     <MESSAGE value="edit menu to remove unused elements" />
-    <option name="LAST_COMMIT_MESSAGE" value="edit menu to remove unused elements" />
+    <MESSAGE value="add scrollbars for large images" />
+    <option name="LAST_COMMIT_MESSAGE" value="add scrollbars for large images" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1243,8 +1242,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/atag_drawingarea.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="30" lean-forward="false" selection-start-line="15" selection-start-column="30" selection-end-line="15" selection-end-column="30" />
+        <state relative-caret-position="270">
+          <caret line="18" column="8" lean-forward="false" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="8" />
           <folding />
         </state>
       </provider>
