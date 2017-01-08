@@ -27,6 +27,8 @@ class Read( enum.Enum) :
         self.dot_only = False
         self.conv_only = False
 
+        self.pipeline_stage = 10
+
         self.predict_mc = False
 
     def run_nn(self):
@@ -75,7 +77,7 @@ class Read( enum.Enum) :
         ll = loader.Load(self.a, self.pic)
 
         ''' make initial box grid '''
-        if not  self.predict_mc :
+        if not  self.predict_mc and self.pipeline_stage >= 1:
             ll.dat = ll.record.make_boxes(self.pic, dim=7) # 7
             print "num-boxes", len(ll.dat)
         ''' make box grid for monte carlo '''
@@ -92,12 +94,12 @@ class Read( enum.Enum) :
         self.nn.test = False
         self.nn.set_loader(ll)
 
-        if not self.predict_mc and True:
+        if not self.predict_mc and self.pipeline_stage >=2:
             ''' initial simple neural network '''
             self.nn.predict_remove_symbol = 1
             self.nn.set_vars(len(ll.dat), 100, 0)
             self.nn.dot_setup()
-            print "len-dat0", len(ll.dat)
+            print "len-dat2", len(ll.dat)
 
         if False:
             pass
@@ -106,7 +108,7 @@ class Read( enum.Enum) :
             #ll.dat = km.do_km(ll.dat, 4) # 3
             #ll.record.renumber_dat_list(ll.dat)
 
-        if not self.predict_mc and True :
+        if not self.predict_mc and self.pipeline_stage >=3 :
             ''' two passes through aggregate function '''
             ll.dat = ll.record.aggregate_dat_list(ll.dat)
             ll.record.renumber_dat_list(ll.dat)
@@ -114,14 +116,14 @@ class Read( enum.Enum) :
             ll.record.renumber_dat_list(ll.dat)
             print "len-dat1", len(ll.dat)
 
-        if True:
+        if self.pipeline_stage >=4 :
             ''' final convolution neural network '''
             self.nn.predict_remove_symbol = 1
             self.nn.set_vars(len(ll.dat), 100,  0)
             self.nn.conv_setup()
             print "len-dat2", len(ll.dat)
 
-        if True:
+        if self.pipeline_stage >=5 :
             ''' try to improve box '''
             see_boxes = False
             self.nn.dat_best = []
