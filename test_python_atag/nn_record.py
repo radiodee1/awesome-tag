@@ -73,11 +73,11 @@ class Record( enum.Enum):
             xx, yy = Image.open(filename).size
 
             mc_num = dim # xx / dim # random.randint(0,xx) #(xx, xx*yy)
-
+            div = 4
             print "do mc file prediction"
             for i in range(mc_num):
-                sizex = random.randint(width - mc_num, width + mc_num)
-                sizey = random.randint(height - mc_num, height + mc_num)
+                sizex = random.randint(width - width/div, width + width/div)
+                sizey = random.randint(height - height/div, height + height/div)
 
                 temp = []
                 for j in range(self.TOTAL):
@@ -92,10 +92,10 @@ class Record( enum.Enum):
 
                     elif j is self.FACE_X:
 
-                        num = random.randint(xpos - mc_num, xpos + mc_num)
+                        num = random.randint(xpos - width/div, xpos + width/div)
                     elif j is self.FACE_Y:
 
-                        num = random.randint(ypos - mc_num, ypos + mc_num)
+                        num = random.randint(ypos - height/div, ypos + height/div)
 
                     elif j is self.COLOR :
                         num = self.RED

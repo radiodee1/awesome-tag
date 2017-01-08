@@ -41,6 +41,8 @@ class NN(enum.Enum):
         self.predict_dot = False
 
         self.dat_remove = []
+        self.dat_best = []
+
 
         self.nn_out_skintone = None
         self.nn_out_softmax = None
@@ -327,7 +329,48 @@ class NN(enum.Enum):
             print "remove conv", self.dat_remove
 
         #self.sess.close()
+    def conv_setup_mc(self):
+        if self.predict_conv :
+            self.cursor = 0
+            self.dat_remove = []
 
+            out = []
+            start = 0 # self.start_train
+            stop = self.cursor_tot
+            if len(self.loader.dat) > self.cursor_tot * self.batchsize :
+                stop = self.cursor_tot + 1
+                print stop
+
+            for i in range(start, stop ) :
+                batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, self.CONST_THREE_CHANNEL)
+                #self.c_y_out = tf.argmax(self.y_conv,1) ## 1
+                if len(batch_0) > 0  :
+                    #print batch_0
+                    out.extend( self.sess.run(self.y_conv, feed_dict={self.c_x : batch_0, self.c_y_: batch_1, self.keep_prob: 1.0}))
+                    #print out, len(out) , i, self.cursor_tot
+
+            if True:
+                print "out", len(out)
+                numlow = 0.5
+                numhigh = 0.5
+                numhigh_index = 0
+                for j in range(len(out)) :
+                    zz = out[j][0]
+                    if float(zz) < numlow : # int(self.predict_remove_symbol ) : ## 1
+                        numlow = zz
+                        self.dat_remove.append( j)
+                    if float(zz) > numhigh:
+                        numhigh = zz
+                        numhigh_index = j
+
+                self.dat_best.append(self.loader.dat[numhigh_index])
+
+
+            print out
+            #self.loader.record.remove_lines_from_dat(self.dat_remove)
+            #self.loader.dat = self.loader.record.renumber_dat_list(self.loader.dat)
+            #print "remove conv mc", self.dat_remove
+            print "best conv mc", self.dat_best
 
     def save_group(self):
         filename = "group" # self.save_name

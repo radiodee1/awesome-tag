@@ -122,15 +122,19 @@ class Read( enum.Enum) :
             print "len-dat2", len(ll.dat)
 
         if True:
-            for k in range(len(ll.dat)):
-                ll.dat = ll.record.make_boxes_mc(self.pic, dat=[ll.dat[k]])
+            ''' try to improve box '''
+            see_boxes = False
+            self.nn.dat_best = []
+            self.dat_mc = ll.dat[:]
+            for k in range(len(self.dat_mc)):
+                ll.dat = ll.record.make_boxes_mc(self.pic,dim=56 ,dat=[self.dat_mc[k]])
                 ll.record.renumber_dat_list(ll.dat)
-                print ll.dat
+
                 self.nn.predict_remove_symbol = 1
                 self.nn.set_vars(len(ll.dat), 100, 0)
-                self.nn.conv_setup()
-                print "len-dat3", len(ll.dat)
-
+                if not see_boxes: self.nn.conv_setup_mc()
+            if not see_boxes: ll.dat = ll.record.renumber_dat_list(self.nn.dat_best)
+            print "len-dat3", len(self.nn.dat_best)
 
         ll.record.save_dat_to_file(ll.dat)
 
