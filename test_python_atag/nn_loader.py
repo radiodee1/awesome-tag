@@ -25,6 +25,9 @@ class Load(enum.Enum):
         self.start_num = 0
 
         self.filename = filename
+        self.filename_old = ""
+        self.img = None
+
         self.record = rec.Record(atag)
         self.normal_train = True
 
@@ -100,9 +103,14 @@ class Load(enum.Enum):
             width = self.dat[self.iter][self.FACE_WIDTH]
             height = self.dat[self.iter][self.FACE_HEIGHT]
 
+            self.filename = filename
+            if self.filename != self.filename_old:
+                self.img = Image.open(filename)
+            self.filename_old = self.filename
+
             #print filename, "fullname..."
             if not (os.path.isfile(filename) and width >=28 and height >= 28
-                    and len(Image.open(filename).getbands()) >=3) and self.normal_train :
+                    and len(self.img.getbands()) >=3) and self.normal_train :
                 self.iter = self.iter + 1
                 stop = stop + 1
                 print "skipping 1"
@@ -118,7 +126,8 @@ class Load(enum.Enum):
             skin, img , three = self._look_at_img(filename,x,y,width,height)
             #print len(three) , three, "three"
 
-            print self.iter, " -- ", int(self.iter / float(len(self.dat)) * 100) , "% -- " , filename, len(self.dat)
+            if self.filename != self.filename_old:
+                print self.iter, " -- ", int(self.iter / float(len(self.dat)) * 100) , "% -- " , filename, len(self.dat)
 
             if (len(img) != 28 * 28 or len(three) != 28 * 28 * 3) and self.normal_train :
                 self.iter = self.iter + 1
@@ -161,7 +170,10 @@ class Load(enum.Enum):
 
     def _look_at_img(self, filename, x = 0, y = 0, width = 28, height = 28):
         #img = Image.open(open(filename))
-        img = Image.open(filename)
+        #self.filename = filename
+        #if self.filename != self.filename_old:
+        #    self.img = Image.open(filename)
+        #self.filename_old = self.filename
 
         #img2 = [[0] * 28] * 28
         img2 = [[0] * 28 for _ in range(28)]
@@ -184,12 +196,12 @@ class Load(enum.Enum):
         multy = height / float(mnist_dim)
 
         xy_list = []
-        dimx, dimy = img.size
+        dimx, dimy = self.img.size
 
         counter = 0
 
         ''' Put in shrunk form. '''
-        if  len (img.getbands()) == 3 :
+        if  len (self.img.getbands()) == 3 :
             if not (x + width > dimx and y + height > dimy) :
 
                 for aa in range(28) :
@@ -198,8 +210,8 @@ class Load(enum.Enum):
                         bstart = y + bb * multy
 
                         if  astart >= 0 and astart < dimx and bstart >= 0 and bstart < dimy :
-                            item = [ aa, bb, list(img.getpixel((int(astart) ,int(bstart))))]
-                            oneimg_rgb.extend(list(img.getpixel((int(astart) ,int(bstart)))))
+                            item = [ aa, bb, list(self.img.getpixel((int(astart) ,int(bstart))))]
+                            oneimg_rgb.extend(list(self.img.getpixel((int(astart) ,int(bstart)))))
                             xy_list.append(item)
                             counter = counter + 1
 
@@ -208,7 +220,7 @@ class Load(enum.Enum):
         if len(xy_list) == 0:
             xy_list = [[0, 0,[0,0,0]]]
         ''' just one color '''
-        high = img.getextrema()[0][1] /2
+        high = self.img.getextrema()[0][1] /2
         for i in range(len(xy_list)):
             q = xy_list[i]
             color = q[2][0]
@@ -224,7 +236,7 @@ class Load(enum.Enum):
             if len(xy_list) >= 28 * 28 or True:
                 img3 = [[0] * 28] * 28
                 img3 = np.asarray(img3, dtype="float32")
-                high = img.getextrema()[0][1] / 2
+                high = self.img.getextrema()[0][1] / 2
 
                 for i in range(len(xy_list)):
                     q = xy_list[i]
@@ -236,7 +248,7 @@ class Load(enum.Enum):
 
                 img3 = [[0] * 28] * 28
                 img3 = np.asarray(img3, dtype="float32")
-                high = img.getextrema()[1][1] / 2
+                high = self.img.getextrema()[1][1] / 2
 
                 for i in range(len(xy_list)):
                     q = xy_list[i]
@@ -248,7 +260,7 @@ class Load(enum.Enum):
 
                 img3 = [[0] * 28] * 28
                 img3 = np.asarray(img3, dtype="float32")
-                high = img.getextrema()[2][1] / 2
+                high = self.img.getextrema()[2][1] / 2
 
                 for i in range(len(xy_list)):
                     q = xy_list[i]
