@@ -117,7 +117,7 @@ class Load(enum.Enum):
                     and len(self.img.getbands()) >=3) and self.normal_train :
                 self.iter = self.iter + 1
                 stop = stop + 1
-                print "skipping 1, b-n-w:",filename
+                print "skipping 1, b-n-w:" , filename
                 continue
 
             lbl_1 = 0
@@ -133,7 +133,7 @@ class Load(enum.Enum):
             if (len(img) != 28 * 28 or len(three) != 28 * 28 * 3) and self.normal_train :
                 self.iter = self.iter + 1
                 stop = stop + 1
-                print "skipping 2"
+                print "skipping 2, output sizes"
                 continue
 
             if self.inspection_num >= self.iter and False :
