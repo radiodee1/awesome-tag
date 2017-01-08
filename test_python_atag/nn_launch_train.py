@@ -79,10 +79,12 @@ class Read( enum.Enum) :
             ll.dat = ll.record.make_boxes(self.pic, dim=7) # 7
             print "num-boxes", len(ll.dat)
         ''' make box grid for monte carlo '''
+
+        '''
         if self.predict_mc :
             ll.dat = ll.record.make_boxes_mc(self.pic)
             print "num-boxes", len(ll.dat)
-
+        '''
 
         self.nn.load_ckpt = True
         self.nn.save_ckpt = False
@@ -119,7 +121,16 @@ class Read( enum.Enum) :
             self.nn.conv_setup()
             print "len-dat2", len(ll.dat)
 
-        if self.predict_mc : ll.record.aggregate_dat_list(ll.dat)
+        if True:
+            for k in range(len(ll.dat)):
+                ll.dat = ll.record.make_boxes_mc(self.pic, dat=[ll.dat[k]])
+                ll.record.renumber_dat_list(ll.dat)
+                print ll.dat
+                self.nn.predict_remove_symbol = 1
+                self.nn.set_vars(len(ll.dat), 100, 0)
+                self.nn.conv_setup()
+                print "len-dat3", len(ll.dat)
+
 
         ll.record.save_dat_to_file(ll.dat)
 

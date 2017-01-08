@@ -58,43 +58,56 @@ class Record( enum.Enum):
             self.dat.append(temp)
         return self.dat
 
-    def make_boxes_mc(self, filename, dim=28):
+    def make_boxes_mc(self, filename, dim=28, dat = []):
         self.dim_x = dim
         self.dim_y = dim
-        xx, yy = Image.open(filename).size
 
-        mc_num = xx / dim # random.randint(0,xx) #(xx, xx*yy)
+        self.dat = []
 
-        print "do mc file prediction"
-        for i in range(mc_num):
-            size = random.randint(dim, xx)
+        for k in range(len(dat)) :
+            xpos = dat[k][self.FACE_X]
+            ypos = dat[k][self.FACE_Y]
+            width = dat[k][self.FACE_WIDTH]
+            height = dat[k][self.FACE_HEIGHT]
 
-            temp = []
-            for j in range(self.TOTAL):
-                num = 0
-                if j is self.FILE:
-                    num = filename
-                elif j is self.FACE_WIDTH:
-                    num = size #xx / w
+            xx, yy = Image.open(filename).size
 
-                elif j is self.FACE_HEIGHT:
-                    num = size #yy / h
+            mc_num = dim # xx / dim # random.randint(0,xx) #(xx, xx*yy)
 
-                elif j is self.FACE_X:
-                    xxx = 0
-                    if xx - size > 0 : xxx = xx - size
-                    num = random.randint(0, xxx)
-                elif j is self.FACE_Y:
-                    yyy = 0
-                    if yy - size > 0 : yyy = yy - size
-                    num = random.randint(0, yyy)
+            print "do mc file prediction"
+            for i in range(mc_num):
+                sizex = random.randint(width - mc_num, width + mc_num)
+                sizey = random.randint(height - mc_num, height + mc_num)
 
-                elif j is self.COLOR :
-                    num = self.RED
-                elif j is self.ATAG_ID :
-                    num = i
-                temp.append(num)
-            self.dat.append(temp)
+                temp = []
+                for j in range(self.TOTAL):
+                    num = 0
+                    if j is self.FILE:
+                        num = filename
+                    elif j is self.FACE_WIDTH:
+                        num = sizex #xx / w
+
+                    elif j is self.FACE_HEIGHT:
+                        num = sizey #yy / h
+
+                    elif j is self.FACE_X:
+
+                        num = random.randint(xpos - mc_num, xpos + mc_num)
+                    elif j is self.FACE_Y:
+
+                        num = random.randint(ypos - mc_num, ypos + mc_num)
+
+                    elif j is self.COLOR :
+                        num = self.RED
+                    elif j is self.ATAG_ID :
+                        num = i
+                    temp.append(num)
+
+                if not (temp[self.FACE_X] + temp[self.FACE_WIDTH] >= xx or temp[self.FACE_Y] + temp[self.FACE_HEIGHT] >= yy or
+                    temp[self.FACE_X] < 0 or temp[self.FACE_Y] < 0):
+                    self.dat.append(temp)
+            self.dat.append(dat[k])
+
         return self.dat
 
     def save_dat_to_file(self, dat = []):

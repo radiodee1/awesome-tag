@@ -106,17 +106,18 @@ class Load(enum.Enum):
             if filename != self.filename_old:
                 print self.iter, " -- ", int(self.iter / float(len(self.dat)) * 100) , "% -- " , filename, len(self.dat)
 
+            ''' open image if it is new! '''
             self.filename = filename
             if self.filename != self.filename_old:
                 self.img = Image.open(filename)
             self.filename_old = self.filename
 
-            #print filename, "fullname..."
+
             if not (os.path.isfile(filename) and width >=28 and height >= 28
                     and len(self.img.getbands()) >=3) and self.normal_train :
                 self.iter = self.iter + 1
                 stop = stop + 1
-                print "skipping 1"
+                print "skipping 1, b-n-w:",filename
                 continue
 
             lbl_1 = 0

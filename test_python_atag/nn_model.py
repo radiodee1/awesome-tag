@@ -313,6 +313,7 @@ class NN(enum.Enum):
                 batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, self.CONST_THREE_CHANNEL)
                 #self.c_y_out = tf.argmax(self.y_conv,1) ## 1
                 if len(batch_0) > 0  :
+                    #print batch_0
                     out.extend( self.sess.run(self.c_y_out, feed_dict={self.c_x : batch_0, self.c_y_: batch_1, self.keep_prob: 1.0}))
                     #print out, len(out) , i, self.cursor_tot
 
@@ -354,6 +355,7 @@ class NN(enum.Enum):
         self.use_loader = True
 
     def set_vars(self, length,  batchsize, start = 1):
+        self.batchsize = batchsize
         self.dat_len = length
         self.cursor_tot = int(length / batchsize) ## -1
         self.save_name = "group-miss"
