@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c15ed38a-2fe7-44d1-b032-ae199cd14d43" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/atag_menu.py" afterPath="$PROJECT_DIR$/atag_menu.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -65,7 +64,7 @@
       <file leaf-file-name="atag_menu.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/atag_menu.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
+            <state relative-caret-position="330">
               <caret line="351" column="34" lean-forward="false" selection-start-line="351" selection-start-column="34" selection-end-line="351" selection-end-column="34" />
               <folding />
             </state>
@@ -428,13 +427,6 @@
       <option name="presentableId" value="Default" />
       <updated>1480257882064</updated>
     </task>
-    <task id="LOCAL-00098" summary="rgb,rgb,rgb">
-      <created>1483196355988</created>
-      <option name="number" value="00098" />
-      <option name="presentableId" value="LOCAL-00098" />
-      <option name="project" value="LOCAL" />
-      <updated>1483196355989</updated>
-    </task>
     <task id="LOCAL-00099" summary="good conv score at two epochs. must try three.">
       <created>1483197331192</created>
       <option name="number" value="00099" />
@@ -771,7 +763,14 @@
       <option name="project" value="LOCAL" />
       <updated>1483811721828</updated>
     </task>
-    <option name="localTasksCounter" value="147" />
+    <task id="LOCAL-00147" summary="try to fix threading">
+      <created>1483822082723</created>
+      <option name="number" value="00147" />
+      <option name="presentableId" value="LOCAL-00147" />
+      <option name="project" value="LOCAL" />
+      <updated>1483822082724</updated>
+    </task>
+    <option name="localTasksCounter" value="148" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -783,7 +782,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26013514" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26013514" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -801,7 +800,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="argparse" />
     <MESSAGE value="doesn't do a very good job and takes a long time." />
     <MESSAGE value="try to predict using some kind of Monte Carlo scheme" />
     <MESSAGE value="try to predict using some kind of Monte Carlo scheme - revert to regular scheme" />
@@ -826,7 +824,8 @@
     <MESSAGE value="edit menu to remove unused elements" />
     <MESSAGE value="add scrollbars for large images" />
     <MESSAGE value="remove nn model called 'SOFTMAX'. Start training again" />
-    <option name="LAST_COMMIT_MESSAGE" value="remove nn model called 'SOFTMAX'. Start training again" />
+    <MESSAGE value="try to fix threading" />
+    <option name="LAST_COMMIT_MESSAGE" value="try to fix threading" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1242,7 +1241,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/atag_menu.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
+        <state relative-caret-position="330">
           <caret line="351" column="34" lean-forward="false" selection-start-line="351" selection-start-column="34" selection-end-line="351" selection-end-column="34" />
           <folding />
         </state>
