@@ -103,6 +103,9 @@ class Load(enum.Enum):
             width = self.dat[self.iter][self.FACE_WIDTH]
             height = self.dat[self.iter][self.FACE_HEIGHT]
 
+            if filename != self.filename_old:
+                print self.iter, " -- ", int(self.iter / float(len(self.dat)) * 100) , "% -- " , filename, len(self.dat)
+
             self.filename = filename
             if self.filename != self.filename_old:
                 self.img = Image.open(filename)
@@ -125,9 +128,6 @@ class Load(enum.Enum):
 
             skin, img , three = self._look_at_img(filename,x,y,width,height)
             #print len(three) , three, "three"
-
-            if self.filename != self.filename_old:
-                print self.iter, " -- ", int(self.iter / float(len(self.dat)) * 100) , "% -- " , filename, len(self.dat)
 
             if (len(img) != 28 * 28 or len(three) != 28 * 28 * 3) and self.normal_train :
                 self.iter = self.iter + 1
