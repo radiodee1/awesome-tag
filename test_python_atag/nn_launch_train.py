@@ -180,8 +180,10 @@ if __name__ == '__main__':
 
     if args.pipeline != None: r.pipeline_stage = int(args.pipeline[0])
     if args.zero_dot :
+        a.dot_write(a.FOLDER_SAVED_CURSOR_DOT, str(0))
         pass
     if args.zero_conv :
+        a.dot_write(a.FOLDER_SAVED_CURSOR_CONV, str(0))
         pass
 
     if len(pic) > 0 :
