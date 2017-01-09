@@ -89,35 +89,6 @@ class NN(enum.Enum):
 
         self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
 
-        ''' SOFTMAX NEXT '''
-        '''
-        input_num = 784 * 3  # like mnist but with three channels
-        mid_num = 50  # 10
-        output_num = 2
-
-        self.x = tf.placeholder(tf.float32, [None, input_num])
-        self.W_1 = tf.Variable(tf.random_normal([input_num, mid_num], stddev=0.0004))  # 0.0004
-        self.b_1 = tf.Variable(tf.random_normal([mid_num], stddev=0.5))
-
-        # y_mid = tf.nn.relu(tf.matmul(x,W_1) + b_1)
-        self.y_mid = tf.nn.relu(tf.matmul(self.x, self.W_1) + self.b_1)
-
-        self.W_2 = tf.Variable(tf.random_normal([mid_num, output_num], stddev=0.0004))
-        self.b_2 = tf.Variable(tf.random_normal([output_num], stddev=0.5))
-
-        self.y_logits = tf.matmul(self.y_mid, self.W_2) + self.b_2
-        self.y = tf.nn.softmax(self.y_logits)
-
-        self.y_ = tf.placeholder(tf.float32, [None, output_num])
-
-        # cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
-        self.cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(self.y_logits, self.y_))
-
-        self.train_step = tf.train.GradientDescentOptimizer(0.0001).minimize(self.cross_entropy)  # 0.0001
-        # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
-
-        self.y_out = tf.argmax(self.y, 1)  ## for prediction
-        '''
 
         ''' CONVOLUTION NEXT '''
         c_output = 2
@@ -222,7 +193,7 @@ class NN(enum.Enum):
                 print "batch_0", len(batch_0)
                 if len(batch_0) > 0 :
                     out.extend( self.sess.run(self.d_y_out, feed_dict={self.d_x : batch_0, self.d_y_: batch_1}))
-                    print "out" , len(out) , i, self.cursor_tot, out
+                    print "out" , len(out) , i, self.cursor_tot, out[:10],"..."
 
             for j in range(len(out)) :
                 zz = out[j]
@@ -233,54 +204,6 @@ class NN(enum.Enum):
             self.loader.record.remove_lines_from_dat(self.dat_remove)
             self.loader.record.renumber_dat_list(self.loader.dat)
 
-    '''
-    def skintone_setup(self):
-
-        if self.load_ckpt : self.load_group()
-
-        if self.train :
-            self.cursor = 0
-
-            for i in range(self.start_train,self.cursor_tot): #1000
-                batch_xs, batch_ys = self.get_nn_next_train(self.batchsize, self.CONST_THREE_CHANNEL)
-                self.sess.run(self.train_step, feed_dict={self.x: batch_xs, self.y_: batch_ys})
-
-        if self.save_ckpt and self.train : self.save_group()
-
-        if self.test :
-            correct_prediction = tf.equal(tf.argmax(self.y,1), tf.argmax(self.y_,1))
-            accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-
-            if self.use_loader : self.get_nn_next_test(self.batchsize, self.CONST_THREE_CHANNEL)
-            print(self.sess.run(accuracy, feed_dict={self.x: self.mnist_test.images, self.y_: self.mnist_test.labels}))
-
-        if self.predict_softmax :
-            self.cursor = 0
-            self.dat_remove = []
-
-            out = []
-            start = 0 # self.start_train
-            stop = self.cursor_tot
-            if len(self.loader.dat) > self.cursor_tot * self.batchsize:
-                stop = self.cursor_tot + 1
-                print stop
-
-            for i in range(start, stop ) :
-                batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, self.CONST_THREE_CHANNEL)
-                #self.y_out = tf.argmax(self.y,1) # 1
-                if len(batch_0) > 0:
-                    out.extend( self.sess.run(self.y_out, feed_dict={self.x : batch_0, self.y_: batch_1}))
-                    print out, len(out) , i, self.cursor_tot
-
-            for j in range(len(out)) :
-                zz = out[j]
-                if int(zz) == int(self.predict_remove_symbol) : ## 1
-                    self.dat_remove.append( j )
-
-            self.loader.record.remove_lines_from_dat(self.dat_remove)
-            self.loader.record.renumber_dat_list(self.loader.dat)
-            print "remove skintone", self.dat_remove
-    '''
 
     def conv_setup(self):
 
@@ -335,7 +258,7 @@ class NN(enum.Enum):
 
             self.loader.record.remove_lines_from_dat(self.dat_remove)
             self.loader.dat = self.loader.record.renumber_dat_list(self.loader.dat)
-            print "remove conv", self.dat_remove
+            print "remove conv", self.dat_remove[:10],"..."
 
         #self.sess.close()
     def conv_setup_mc(self):
@@ -375,11 +298,11 @@ class NN(enum.Enum):
                 self.dat_best.append(self.loader.dat[numhigh_index])
 
 
-            print out
+            print out [:3], "..."
             #self.loader.record.remove_lines_from_dat(self.dat_remove)
             #self.loader.dat = self.loader.record.renumber_dat_list(self.loader.dat)
             #print "remove conv mc", self.dat_remove
-            print "best conv mc", self.dat_best
+            print "best conv mc", self.dat_best[:]
 
     def save_group(self):
         filename = "group" # self.save_name
