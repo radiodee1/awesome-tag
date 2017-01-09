@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c15ed38a-2fe7-44d1-b032-ae199cd14d43" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/atag_dotfolder.py" afterPath="$PROJECT_DIR$/atag_dotfolder.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_launch_train.py" afterPath="$PROJECT_DIR$/nn_launch_train.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_model.py" afterPath="$PROJECT_DIR$/nn_model.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -23,8 +21,8 @@
       <file leaf-file-name="nn_loader.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nn_loader.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1695">
-              <caret line="119" column="45" lean-forward="false" selection-start-line="119" selection-start-column="45" selection-end-line="119" selection-end-column="45" />
+            <state relative-caret-position="780">
+              <caret line="52" column="19" lean-forward="false" selection-start-line="52" selection-start-column="13" selection-end-line="52" selection-end-column="19" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -32,7 +30,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="nn_launch_train.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="nn_launch_train.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nn_launch_train.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="2172">
@@ -106,11 +104,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="nn_model.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="nn_model.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nn_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="441" column="56" lean-forward="false" selection-start-line="441" selection-start-column="50" selection-end-line="441" selection-end-column="56" />
+            <state relative-caret-position="386">
+              <caret line="410" column="66" lean-forward="false" selection-start-line="410" selection-start-column="66" selection-end-line="410" selection-end-column="66" />
               <folding>
                 <element signature="e#18#27#0" expanded="true" />
               </folding>
@@ -429,13 +427,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1480257882064</updated>
-    </task>
-    <task id="LOCAL-00106" summary="try to predict using some kind of Monte Carlo scheme - revert to regular scheme">
-      <created>1483304832958</created>
-      <option name="number" value="00106" />
-      <option name="presentableId" value="LOCAL-00106" />
-      <option name="project" value="LOCAL" />
-      <updated>1483304832959</updated>
     </task>
     <task id="LOCAL-00107" summary="errors cleared to make better results at 'dot' phase">
       <created>1483390818829</created>
@@ -773,19 +764,26 @@
       <option name="project" value="LOCAL" />
       <updated>1483973245879</updated>
     </task>
-    <option name="localTasksCounter" value="155" />
+    <task id="LOCAL-00155" summary="save cursor">
+      <created>1483982125222</created>
+      <option name="number" value="00155" />
+      <option name="presentableId" value="LOCAL-00155" />
+      <option name="project" value="LOCAL" />
+      <updated>1483982125223</updated>
+    </task>
+    <option name="localTasksCounter" value="156" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="445" y="54" width="1400" height="1000" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26013514" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26013514" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -803,7 +801,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="maybe try kmeans?" />
     <MESSAGE value="maybe try kmeans? -- back to aggregate?" />
     <MESSAGE value="throw out old aggregate functions in favor of new" />
     <MESSAGE value="while loop problems" />
@@ -828,7 +825,8 @@
     <MESSAGE value="starting monte carlo setup again" />
     <MESSAGE value="start pipeline_stage option" />
     <MESSAGE value="working on menu and 'more options'" />
-    <option name="LAST_COMMIT_MESSAGE" value="working on menu and 'more options'" />
+    <MESSAGE value="save cursor" />
+    <option name="LAST_COMMIT_MESSAGE" value="save cursor" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1196,16 +1194,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nn_loader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1695">
-          <caret line="119" column="45" lean-forward="false" selection-start-line="119" selection-start-column="45" selection-end-line="119" selection-end-column="45" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/atag_drawingarea.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="420">
@@ -1222,6 +1210,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/nn_launch_train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2172">
+          <caret line="185" column="0" lean-forward="false" selection-start-line="185" selection-start-column="0" selection-end-line="185" selection-end-column="0" />
+          <folding>
+            <element signature="e#19#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nn_loader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="780">
+          <caret line="52" column="19" lean-forward="false" selection-start-line="52" selection-start-column="13" selection-end-line="52" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/atag_dotfolder.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="867">
@@ -1232,20 +1240,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nn_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="441" column="56" lean-forward="false" selection-start-line="441" selection-start-column="50" selection-end-line="441" selection-end-column="56" />
+        <state relative-caret-position="386">
+          <caret line="410" column="66" lean-forward="false" selection-start-line="410" selection-start-column="66" selection-end-line="410" selection-end-column="66" />
           <folding>
             <element signature="e#18#27#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nn_launch_train.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2172">
-          <caret line="185" column="0" lean-forward="false" selection-start-line="185" selection-start-column="0" selection-end-line="185" selection-end-column="0" />
-          <folding>
-            <element signature="e#19#28#0" expanded="true" />
           </folding>
         </state>
       </provider>

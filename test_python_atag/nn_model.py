@@ -289,7 +289,7 @@ class NN(enum.Enum):
         if self.train :
 
             self.cursor = self.load_cursor(self.a.FOLDER_SAVED_CURSOR_CONV)
-
+            print self.cursor , "cursor"
             self.conv_only = True
             for i in range(self.start_train, self.cursor_tot ):
                 batch_0, batch_1 = self.get_nn_next_train(self.batchsize, self.CONST_THREE_CHANNEL)
@@ -408,7 +408,7 @@ class NN(enum.Enum):
 
     def load_cursor(self, folder):
         default = 0
-        if  os.path.isfile(folder):
+        if  os.path.isfile(self.a.FOLDER_FULL_DOTFOLDER + os.sep +folder):
             try:
                 default = int(self.a.dot_read(folder))
             except:
