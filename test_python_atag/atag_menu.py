@@ -388,13 +388,13 @@ class Interface(Gtk.Window, atag.Dotfolder) :
             print self.predict_list
             pass
         if ii == "RESET-CURSOR":
-            jj = easygui.buttonbox("Training Cursor Reset","Choose",choices=("SKIN","CONVOLUTION"))
+            jj = easygui.buttonbox("Training Cursor To Reset On Next Run!","Choose",choices=("SKIN","CONVOLUTION"))
             if jj == "SKIN":
                 pass
-                self.train_list = ["-zero-dot"]
+                self.train_list = "-zero-dot"
             if jj == "CONVOLUTION":
                 pass
-                self.train_list = ["-zero-conv"]
+                self.train_list = "-zero-conv"
             pass
         print 7
         pass
@@ -425,7 +425,13 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         #read.Read(self)
         #ii = easygui.buttonbox("Type of training","Choose", choices=("SKIN","CONVOLUTION"))
         print "run from command line!"
-        subprocess.call(["python","./nn_launch_train.py",self.ii,"-train","-test"])
+        call = ["python","./nn_launch_train.py",self.ii,"-train","-test"]
+        if self.ii == "-dot-only" and self.train_list == "-zero-dot": call.append(self.train_list)
+        if self.ii == "-conv-only" and self.train_list == "-zero-conv": call.append(self.train_list)
+        self.train_list = ""
+        print call
+        subprocess.call(call)
+        #subprocess.call(["python","./nn_launch_train.py",self.ii,"-train","-test"])
         #elif ii == "CONVOLUTION":
         #    subprocess.call(["python","./nn_launch_train.py","-conv-only","-train", "-test"])
 
