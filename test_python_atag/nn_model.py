@@ -195,6 +195,7 @@ class NN(enum.Enum):
         if self.save_ckpt and self.train : self.save_group()
 
         if self.test :
+            self.cursor = 0
             d_correct_prediction = tf.equal(tf.argmax(self.d_y,1), tf.argmax(self.d_y_,1))
             d_accuracy = tf.reduce_mean(tf.cast(d_correct_prediction, tf.float32))
 
@@ -303,6 +304,7 @@ class NN(enum.Enum):
         if self.save_ckpt and self.train  : self.save_group()
 
         if self.test :
+            self.cursor = 0
             if self.use_loader : self.get_nn_next_test(self.batchsize, self.CONST_THREE_CHANNEL)
             print("test accuracy %g" % self.c_accuracy.eval(feed_dict={
                 self.c_x: self.mnist_test.images, self.c_y_: self.mnist_test.labels, self.keep_prob: 1.0}))
@@ -449,8 +451,9 @@ class NN(enum.Enum):
                 images, lables = self.loader.get_nn_next_train(batchsize, self.cursor, num_channels)
                 #print ("next train batch")
             else:
-                pass
-                self.save()
+                self.cursor = 0
+                self.save_group()
+                print "exit prematurely"
                 sys.exit()
 
             self.cursor = self.cursor + 1

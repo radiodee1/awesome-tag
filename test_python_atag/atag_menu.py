@@ -13,6 +13,8 @@ import atag_csv_write as write
 #import atag_csv_read_tf as read
 import atag_csv_draw as draw
 import subprocess
+import os
+import sys
 
 class Interface(Gtk.Window, atag.Dotfolder) :
 
@@ -24,6 +26,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         #self.image = cairo.ImageSurface.create_from_png(self.VAR_IMAGE_NAME)
         self.predict_list = []
         self.train_list = []
+        self.train_thread = None
 
         self.grid = Gtk.Grid()
         self.add(self.grid)
@@ -431,9 +434,16 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.train_list = ""
         print call
         subprocess.call(call)
-        #subprocess.call(["python","./nn_launch_train.py",self.ii,"-train","-test"])
-        #elif ii == "CONVOLUTION":
-        #    subprocess.call(["python","./nn_launch_train.py","-conv-only","-train", "-test"])
+
+        if False:
+            self.train_thread = subprocess.Popen(call, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True, preexec_fn=os.setsid)
+
+            while self.train_thread.poll() is None:
+                out = self.train_thread.stdout.read(1)
+                sys.stdout.write(out)
+                sys.stdout.flush()
+
+
 
     ''' utility and atag var callback '''
     def show_window(self):
