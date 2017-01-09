@@ -22,7 +22,8 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.set_border_width(10)
 
         #self.image = cairo.ImageSurface.create_from_png(self.VAR_IMAGE_NAME)
-
+        self.predict_list = []
+        self.train_list = []
 
         self.grid = Gtk.Grid()
         self.add(self.grid)
@@ -358,7 +359,11 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     def on_button_test(self, widget):
         print 4
-        subprocess.call(["python","./nn_launch_train.py",self.VAR_IMAGE_NAME])
+        call = ["python","./nn_launch_train.py",str(self.VAR_IMAGE_NAME[:])]
+        #print call, self.predict_list
+        call.extend(self.predict_list)
+        #print call
+        subprocess.call(call) #["python","./nn_launch_train.py",self.VAR_IMAGE_NAME])
 
     def on_button_options(self, widget):
         print 5
@@ -376,6 +381,21 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.enter_image_name_callback(widget,var,folder,label)
 
     def on_button_more(self, widget):
+        ii = easygui.buttonbox("Further Options","Choose",choices=("PIPELINE","RESET-CURSOR"))
+        if ii == "PIPELINE":
+            jj = easygui.buttonbox("Pipeline Options","Choose",choices=("1","2","3","4","5","6","7"))
+            self.predict_list = ["-pipeline", str(jj)]
+            print self.predict_list
+            pass
+        if ii == "RESET-CURSOR":
+            jj = easygui.buttonbox("Training Cursor Reset","Choose",choices=("SKIN","CONVOLUTION"))
+            if jj == "SKIN":
+                pass
+                self.train_list = ["-zero-dot"]
+            if jj == "CONVOLUTION":
+                pass
+                self.train_list = ["-zero-conv"]
+            pass
         print 7
         pass
 

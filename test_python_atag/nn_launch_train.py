@@ -161,10 +161,10 @@ if __name__ == '__main__':
     parser.add_argument("-no-load", action="store_false")
     parser.add_argument("-dot-only", action="store_true")
     parser.add_argument("-conv-only", action="store_true")
+    parser.add_argument("-pipeline", nargs=1)
 
     args = parser.parse_args()
     #print args
-    #print args.filename == None
     #sys.exit()
 
     pic = ""
@@ -175,6 +175,9 @@ if __name__ == '__main__':
     print pic
     a = aa.Dotfolder()
     r = Read(a, pic)
+
+    if args.pipeline != None: r.pipeline_stage = int(args.pipeline[0])
+
     if len(pic) > 0 :
         ''' any combination '''
         r.nn.predict_softmax = True
@@ -190,4 +193,5 @@ if __name__ == '__main__':
         r.conv_only = args.conv_only
         r.run_nn()
 
+    print "pipeline", r.pipeline_stage
     print("done")

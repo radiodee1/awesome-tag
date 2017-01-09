@@ -24,6 +24,9 @@ class DrawingArea(Gtk.DrawingArea) :
 
     def set_imagename(self, imagename):
         self.imagename = imagename
+        self.boxlist_red = []
+        self.boxlist_green = []
+        self.boxlist_blue = []
 
     def set_red(self, red):
         self.boxlist_red = red
