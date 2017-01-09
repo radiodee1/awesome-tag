@@ -17,6 +17,8 @@ class Dotfolder(object):
         self.FOLDER_MY_CSV_NAME = "my_csv_name"
         self.FOLDER_ROOT_DATABASE = "root_database"
         self.FOLDER_SAVED_CURSOR = "saved_cursor"
+        self.FOLDER_SAVED_CURSOR_DOT = "saved_cursor_dot"
+        self.FOLDER_SAVED_CURSOR_CONV = "saved_cursor_conv"
         self.FOLDER_SAVED_SPLIT = "saved_split"
         self.FOLDER_SPLIT_CURRENT = "split_current"
         self.FOLDER_SPLIT_END = "split_end"
@@ -31,6 +33,8 @@ class Dotfolder(object):
         self.VAR_MY_CSV_NAME = "name"
         self.VAR_ROOT_DATABASE = os.sep
         self.VAR_SAVED_CURSOR = 0
+        self.VAR_SAVED_CURSOR_DOT = 0
+        self.VAR_SAVED_CURSOR_CONV = 0
         self.VAR_SAVED_SPLIT = 0
         self.VAR_SPLIT_CURRENT = 0
         self.VAR_SPLIT_END = 0
@@ -66,6 +70,8 @@ class Dotfolder(object):
         self.VAR_MY_CSV_NAME = self.dot_read(self.FOLDER_MY_CSV_NAME)
         self.VAR_ROOT_DATABASE = self.dot_read(self.FOLDER_ROOT_DATABASE)
         self.VAR_SAVED_CURSOR = self.dot_read(self.FOLDER_SAVED_CURSOR)
+        self.VAR_SAVED_CURSOR_DOT = self.dot_read(self.FOLDER_SAVED_CURSOR_DOT)
+        self.VAR_SAVED_CURSOR_CONV = self.dot_read(self.FOLDER_SAVED_CURSOR_CONV)
         self.VAR_SAVED_SPLIT = self.dot_read(self.FOLDER_SAVED_SPLIT)
         self.VAR_SPLIT_CURRENT = self.dot_read(self.FOLDER_SPLIT_CURRENT)
         self.VAR_SPLIT_END = self.dot_read(self.FOLDER_SPLIT_END)
@@ -82,6 +88,8 @@ class Dotfolder(object):
         self.dot_write(self.FOLDER_MY_CSV_NAME, self.VAR_MY_CSV_NAME)
         self.dot_write(self.FOLDER_ROOT_DATABASE, self.VAR_ROOT_DATABASE)
         self.dot_write(self.FOLDER_SAVED_CURSOR, self.VAR_SAVED_CURSOR)
+        self.dot_write(self.FOLDER_SAVED_CURSOR_DOT, self.VAR_SAVED_CURSOR_DOT)
+        self.dot_write(self.FOLDER_SAVED_CURSOR_CONV, self.VAR_SAVED_CURSOR_CONV)
         self.dot_write(self.FOLDER_SAVED_SPLIT, self.VAR_SAVED_SPLIT)
         self.dot_write(self.FOLDER_SPLIT_CURRENT, self.VAR_SPLIT_CURRENT)
         self.dot_write(self.FOLDER_SPLIT_END, self.VAR_SPLIT_END)

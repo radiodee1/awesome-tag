@@ -162,6 +162,8 @@ if __name__ == '__main__':
     parser.add_argument("-dot-only", action="store_true")
     parser.add_argument("-conv-only", action="store_true")
     parser.add_argument("-pipeline", nargs=1)
+    parser.add_argument("-zero-dot", action="store_true")
+    parser.add_argument("-zero-conv", action="store_true")
 
     args = parser.parse_args()
     #print args
@@ -177,6 +179,10 @@ if __name__ == '__main__':
     r = Read(a, pic)
 
     if args.pipeline != None: r.pipeline_stage = int(args.pipeline[0])
+    if args.zero_dot :
+        pass
+    if args.zero_conv :
+        pass
 
     if len(pic) > 0 :
         ''' any combination '''

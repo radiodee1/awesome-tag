@@ -13,6 +13,7 @@ class NN(enum.Enum):
     def __init__(self, atag):
         enum.Enum.__init__(self)
 
+        self.a = atag
         self.ckpt_folder = atag.VAR_LOCAL_DATABASE
         self.ckpt_name = atag.VAR_BASE_NAME
         self.train = False
@@ -43,6 +44,8 @@ class NN(enum.Enum):
         self.dat_remove = []
         self.dat_best = []
 
+        self.dot_only = False
+        self.conv_only = False
 
         self.nn_out_skintone = None
         self.nn_out_softmax = None
@@ -182,7 +185,8 @@ class NN(enum.Enum):
         if self.load_ckpt : self.load_group()
 
         if self.train :
-            self.cursor = 0
+            self.dot_only = True
+            self.cursor = self.load_cursor(self.a.FOLDER_SAVED_CURSOR_DOT)
 
             for i in range(self.start_train,self.cursor_tot): #1000
                 batch_xs, batch_ys = self.get_nn_next_train(self.batchsize, self.CONST_DOT)
@@ -278,12 +282,15 @@ class NN(enum.Enum):
     '''
 
     def conv_setup(self):
-        #c_output = 2
+
 
         if self.load_ckpt : self.load_group()
 
         if self.train :
-            #self.cursor = 0
+
+            self.cursor = self.load_cursor(self.a.FOLDER_SAVED_CURSOR_CONV)
+
+            self.conv_only = True
             for i in range(self.start_train, self.cursor_tot ):
                 batch_0, batch_1 = self.get_nn_next_train(self.batchsize, self.CONST_THREE_CHANNEL)
 
@@ -380,6 +387,14 @@ class NN(enum.Enum):
             os.makedirs(folder)
         saver = tf.train.Saver()
         save_path = saver.save(self.sess, folder + os.sep + self.ckpt_name + "."+ filename)
+        if self.train:
+            if self.conv_only:
+                self.a.dot_write(self.a.FOLDER_SAVED_CURSOR_CONV,str(self.cursor))
+                pass
+            elif self.dot_only:
+                self.a.dot_write(self.a.FOLDER_SAVED_CURSOR_DOT, str(self.cursor))
+                pass
+
         print ("saved?", filename)
 
     def load_group(self):
@@ -391,6 +406,14 @@ class NN(enum.Enum):
             saver.restore(self.sess, file)
             print ("load?", filename)
 
+    def load_cursor(self, folder):
+        default = 0
+        if  os.path.isfile(folder):
+            try:
+                default = int(self.a.dot_read(folder))
+            except:
+                default = 0
+        return default
 
     def set_loader(self, load):
         self.loader = load
