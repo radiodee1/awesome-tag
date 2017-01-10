@@ -23,10 +23,11 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         Gtk.Window.__init__(self, title="Tag")
         self.set_border_width(10)
 
-        #self.image = cairo.ImageSurface.create_from_png(self.VAR_IMAGE_NAME)
         self.predict_list = []
         self.train_list = []
         self.train_thread = None
+
+        self.progress_text = ""
 
         self.grid = Gtk.Grid()
         self.add(self.grid)
@@ -335,6 +336,11 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
         self.grid.attach(self.grid3, 0, 14, 4, 1)
 
+        ''' progress text '''
+        self.progress_label = Gtk.Label()
+        self.grid.attach(self.progress_label, 0, 15, 4, 1)
+        self.set_progress_text("started")
+
     ''' button callback '''
     def on_button_show_csv(self, widget):
         self.run_draw_compile()
@@ -449,6 +455,9 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
 
     ''' utility and atag var callback '''
+    def set_progress_text(self, text):
+        self.progress_label.set_text("Progress: "+ text)
+
     def show_window(self):
         win = self  # Interface()
         win.connect("delete-event", Gtk.main_quit)
