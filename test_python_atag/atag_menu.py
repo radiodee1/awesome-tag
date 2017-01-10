@@ -390,7 +390,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.enter_image_name_callback(widget,var,folder,label)
 
     def on_button_more(self, widget):
-        ii = easygui.buttonbox("Further Options","Choose",choices=("PIPELINE","RESET-CURSOR","CANCEL"))
+        ii = easygui.buttonbox("Further Options","Choose",choices=("PIPELINE","RESET-CURSOR","SHOW-WEIGHTS","CANCEL"))
         if ii == "PIPELINE":
             jj = easygui.buttonbox("Pipeline Options","Choose",choices=("1","2","3","4","5","6","7"))
             self.predict_list = ["-pipeline", str(jj)]
@@ -406,6 +406,10 @@ class Interface(Gtk.Window, atag.Dotfolder) :
                 self.train_list = "-zero-conv"
             pass
             call = ["python", "./nn_launch_train.py", self.train_list]
+            subprocess.call(call)
+        if ii == "SHOW-WEIGHTS" :
+            pass
+            call = ["python", "./nn_launch_train.py", "-weight-img"]
             subprocess.call(call)
         print 7
         pass

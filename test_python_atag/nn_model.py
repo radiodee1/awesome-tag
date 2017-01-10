@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import os
 import sys
+from PIL import Image, ImageDraw, ImageFont
 
 from tensorflow.examples.tutorials.mnist import input_data
 #mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
@@ -303,6 +304,36 @@ class NN(enum.Enum):
             #self.loader.dat = self.loader.record.renumber_dat_list(self.loader.dat)
             #print "remove conv mc", self.dat_remove
             print "best conv mc", self.dat_best[:]
+
+    def conv_weight_img(self):
+        if self.load_ckpt : self.load_group()
+        weights = self.sess.run(self.W_conv1)
+        size = (5*8* 10,5*4*2*10)
+        img = Image.new("RGBA", size, color=0)
+        xy = (0,0)
+        rgba = (0,0,0,0)
+        if True:
+            for i in range(5* 10):
+                for j in range(5*10):
+                    for k in range(8):
+                        for n in range(4 * 2):
+                            for m in range(2):
+
+                                xy = (i *8+  k    , j *4 *2 +n  + m )
+                                #print len(weights), len(weights[0]), len(weights[0][0]), len(weights[0][0][0])
+                                rgba = (128,128,128,0)#(i,j,i,j)
+                                if ( k == 0 and n == 0)or m == 0: rgba = (255,255,255,0)
+                                if m == 1: rgba = (255,0,0,0)
+                                try:
+                                    img.putpixel(xy,rgba)
+                                except:
+                                    print size,xy
+
+        #d = ImageDraw.Draw(img)
+        #txt = Image.new('RGBA', size, (255, 255, 255, 0))
+        #out = Image.alpha_composite(d, txt)
+        print size, xy
+        img.show()
 
     def save_group(self):
         filename = "group" # self.save_name

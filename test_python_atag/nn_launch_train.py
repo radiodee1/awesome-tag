@@ -140,6 +140,11 @@ class Read( enum.Enum) :
 
         ll.record.save_dat_to_file(ll.dat)
 
+    def run_weight_img(self):
+        print "weight img"
+        self.nn.conv_weight_img()
+        pass
+
     def signal_handler(self, signum, frame):
         if self.nn.save_ckpt:
             self.nn.save_group()
@@ -164,6 +169,7 @@ if __name__ == '__main__':
     parser.add_argument("-pipeline", nargs=1)
     parser.add_argument("-zero-dot", action="store_true")
     parser.add_argument("-zero-conv", action="store_true")
+    parser.add_argument("-weight-img", action="store_true")
 
     args = parser.parse_args()
     print args
@@ -199,6 +205,9 @@ if __name__ == '__main__':
         r.nn.predict_conv = True
         r.nn.predict_dot = True
         r.run_predict()
+    elif args.weight_img == True:
+        r.run_weight_img()
+        pass
     else:
         r.nn.save_ckpt = args.no_save
         r.nn.load_ckpt = args.no_load
