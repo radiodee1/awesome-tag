@@ -384,14 +384,14 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.enter_image_name_callback(widget,var,folder,label)
 
     def on_button_more(self, widget):
-        ii = easygui.buttonbox("Further Options","Choose",choices=("PIPELINE","RESET-CURSOR"))
+        ii = easygui.buttonbox("Further Options","Choose",choices=("PIPELINE","RESET-CURSOR","CANCEL"))
         if ii == "PIPELINE":
             jj = easygui.buttonbox("Pipeline Options","Choose",choices=("1","2","3","4","5","6","7"))
             self.predict_list = ["-pipeline", str(jj)]
             print self.predict_list
             pass
         if ii == "RESET-CURSOR":
-            jj = easygui.buttonbox("Training Cursor To Reset On Next Run!","Choose",choices=("SKIN","CONVOLUTION"))
+            jj = easygui.buttonbox("Training Cursor To Reset On Next Run!","Choose",choices=("SKIN","CONVOLUTION","CANCEL"))
             if jj == "SKIN":
                 pass
                 self.train_list = "-zero-dot"
@@ -399,6 +399,8 @@ class Interface(Gtk.Window, atag.Dotfolder) :
                 pass
                 self.train_list = "-zero-conv"
             pass
+            call = ["python", "./nn_launch_train.py", self.train_list]
+            subprocess.call(call)
         print 7
         pass
 
@@ -428,9 +430,10 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         #read.Read(self)
         #ii = easygui.buttonbox("Type of training","Choose", choices=("SKIN","CONVOLUTION"))
         print "run from command line!"
+
         call = ["python","./nn_launch_train.py",self.ii,"-train","-test"]
-        if self.ii == "-dot-only" and self.train_list == "-zero-dot": call.append(self.train_list)
-        if self.ii == "-conv-only" and self.train_list == "-zero-conv": call.append(self.train_list)
+        #if self.ii == "-dot-only" and self.train_list == "-zero-dot": call.append(self.train_list)
+        #if self.ii == "-conv-only" and self.train_list == "-zero-conv": call.append(self.train_list)
         self.train_list = ""
         print call
         subprocess.call(call)

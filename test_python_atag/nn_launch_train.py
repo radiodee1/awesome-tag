@@ -6,12 +6,12 @@ import sys
 import atag_csv as enum
 import nn_loader as loader
 import atag_dotfolder as aa
-import nn_model as model
+#import nn_model as model
 #import nn_kmeans as kmeans
 import argparse
 
 '''
-Here we read the csv file that we made and train the models
+Here we read the csv file that we made and train the models. NOTE: nn_model is imported BELOW.
 '''
 
 class Read( enum.Enum) :
@@ -176,15 +176,22 @@ if __name__ == '__main__':
     #print sys.argv
     print pic
     a = aa.Dotfolder()
-    r = Read(a, pic)
+    #r = Read(a, pic)
 
-    if args.pipeline != None: r.pipeline_stage = int(args.pipeline[0])
-    if args.zero_dot :
+    if args.zero_dot and not args.test and not args.train:
         a.dot_write(a.FOLDER_SAVED_CURSOR_DOT, str(0))
+        sys.exit()
         pass
-    if args.zero_conv :
+    if args.zero_conv and not args.test and not args.train:
         a.dot_write(a.FOLDER_SAVED_CURSOR_CONV, str(0))
+        sys.exit()
         pass
+
+    import nn_model as model
+
+    #a = aa.Dotfolder()
+    r = Read(a, pic)
+    if args.pipeline != None: r.pipeline_stage = int(args.pipeline[0])
 
     if len(pic) > 0 :
         ''' any combination '''
