@@ -307,13 +307,17 @@ class NN(enum.Enum):
 
     def conv_weight_img(self):
         if self.load_ckpt : self.load_group()
+        filename = self.ckpt_folder + os.sep+ "visualize_weights.bmp"
         weights = self.sess.run(self.W_conv1)
+        show1 = False
+        show2 = True
         size = (5*8* 10,5*4*2*10)
-
+        size2 = (5*8*10, 5 * 4* 10)
         img = Image.new("RGBA", size, color=0)
-        #img2 = Image.new("RGBA", size, color=0)
+        img2 = Image.new("RGBA", size2, color=0)
         xy = (0,0)
         rgba = (0,0,0,0)
+        rgba2 = (0,0,0,0)
         if True:
             for i in range(5):
                 for j in range(5):
@@ -323,34 +327,44 @@ class NN(enum.Enum):
                                 for p in range(10):
                                     for q in range(10):
                                         pass
-
-                                        xy = ((i *8+  k) * 10 + p   , (j *4  +m  )  * 10 *2 + n * 10 + q)
-                                        print len(weights), len(weights[0]), len(weights[0][0]), len(weights[0][0][0])
-                                        r = weights[i][j][0][k*4+m] * 255.0 * math.pow(10,3)
-                                        g = weights[i][j][1][k*4+m] * 255.0 * math.pow(10,3)
-                                        b = weights[i][j][2][k*4+m] * 255.0 * math.pow(10,3)
-
-                                        if r > 255: r = 255
-                                        if g > 255: g = 255
-                                        if b > 255: b = 255
-                                        if r < 0: r = 0
-                                        if g < 0: g = 0
-                                        if b < 0: b = 0
-                                        rgba = (int(r),int(g),int(b),0)
-                                        print rgba, (i,j,0, k*4+m)
-                                        if ( q == 0 and m == 0 and n == 0)or (k == 0 and p == 0): rgba = (255,255,255,0)
-                                        #if m == 1: rgba = (255,0,0,0)
-                                        try:
+                                        if show1:
+                                            xy = ((i *8+  k) * 10 + p   , (j *4  +m  )  * 10 *2 + n * 10 + q)
+                                            r = weights[i][j][0][k*4+m] * 255.0 * math.pow(10,3)
+                                            g = weights[i][j][1][k*4+m] * 255.0 * math.pow(10,3)
+                                            b = weights[i][j][2][k*4+m] * 255.0 * math.pow(10,3)
+                                            if r > 255: r = 255
+                                            if g > 255: g = 255
+                                            if b > 255: b = 255
+                                            if r < 0: r = 0
+                                            if g < 0: g = 0
+                                            if b < 0: b = 0
+                                            rgba = (int(r),int(g),int(b),0)
+                                            if (q == 0 and m == 0 and n == 0) or (k == 0 and p == 0):
+                                                rgba = (255, 255, 255, 0)
                                             img.putpixel(xy,rgba)
-                                        except:
-                                            print size,xy
 
-        #d = ImageDraw.Draw(img)
-        #txt = Image.new('RGBA', size, (255, 255, 255, 0))
-        #out = Image.alpha_composite(d, txt)
-        print size, xy
-        print weights
-        img.show()
+                                        if show2:
+                                            xy2 = ((k * 5 + i) * 10 + p  , (m*n * 5 + j) * 10 * n + q )
+                                            rr = weights[i][j][0][k * 4 + m] * 255.0 * math.pow(10, 3)
+                                            gg = weights[i][j][1][k * 4 + m] * 255.0 * math.pow(10, 3)
+                                            bb = weights[i][j][2][k * 4 + m] * 255.0 * math.pow(10, 3)
+                                            if rr > 255: rr = 255
+                                            if gg > 255: gg = 255
+                                            if bb > 255: bb = 255
+                                            if rr < 0: rr = 0
+                                            if gg < 0: gg = 0
+                                            if bb < 0: bb = 0
+                                            rgba2 = (int(rr),int(gg),int(bb),0)
+
+                                            if (k != 0 and i == 0 and p == 0) or ( m != 0 and j == 0 and q == 0) :
+                                                rgba2 = (255,255,255,0)
+                                            img2.putpixel(xy2, rgba2)
+
+        #print weights
+        if show1: img.show()
+        if show2:
+            img2.show()
+            img2.save(filename)
 
     def save_group(self):
         filename = "group" # self.save_name

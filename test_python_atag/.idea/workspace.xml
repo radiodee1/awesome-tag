@@ -109,8 +109,8 @@
       <file leaf-file-name="nn_model.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nn_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="313" column="9" lean-forward="false" selection-start-line="313" selection-start-column="9" selection-end-line="313" selection-end-column="9" />
+            <state relative-caret-position="27">
+              <caret line="309" column="64" lean-forward="false" selection-start-line="309" selection-start-column="64" selection-end-line="309" selection-end-column="64" />
               <folding>
                 <element signature="e#18#27#0" expanded="true" />
               </folding>
@@ -429,13 +429,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1480257882064</updated>
-    </task>
-    <task id="LOCAL-00116" summary="throw out old aggregate functions in favor of new">
-      <created>1483552715615</created>
-      <option name="number" value="00116" />
-      <option name="presentableId" value="LOCAL-00116" />
-      <option name="project" value="LOCAL" />
-      <updated>1483552715616</updated>
     </task>
     <task id="LOCAL-00117" summary="while loop problems">
       <created>1483563565892</created>
@@ -773,7 +766,14 @@
       <option name="project" value="LOCAL" />
       <updated>1484144333673</updated>
     </task>
-    <option name="localTasksCounter" value="165" />
+    <task id="LOCAL-00165" summary="maybe visualize weights">
+      <created>1484144837893</created>
+      <option name="number" value="00165" />
+      <option name="presentableId" value="LOCAL-00165" />
+      <option name="project" value="LOCAL" />
+      <updated>1484144837893</updated>
+    </task>
+    <option name="localTasksCounter" value="166" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1244,8 +1244,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nn_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="313" column="9" lean-forward="false" selection-start-line="313" selection-start-column="9" selection-end-line="313" selection-end-column="9" />
+        <state relative-caret-position="27">
+          <caret line="309" column="64" lean-forward="false" selection-start-line="309" selection-start-column="64" selection-end-line="309" selection-end-column="64" />
           <folding>
             <element signature="e#18#27#0" expanded="true" />
           </folding>
