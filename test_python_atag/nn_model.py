@@ -309,7 +309,9 @@ class NN(enum.Enum):
         if self.load_ckpt : self.load_group()
         weights = self.sess.run(self.W_conv1)
         size = (5*8* 10,5*4*2*10)
+
         img = Image.new("RGBA", size, color=0)
+        #img2 = Image.new("RGBA", size, color=0)
         xy = (0,0)
         rgba = (0,0,0,0)
         if True:
