@@ -23,6 +23,7 @@ class Load(enum.Enum):
         #self.dat_subset = []
         self.iter = 0
         self.start_num = 0
+        #self.images_used = 0
 
         self.filename = filename
         self.filename_old = ""
@@ -150,6 +151,7 @@ class Load(enum.Enum):
             self.image_skin.append(skin)
             self.label.append([lbl_1,lbl_2])
             self.iter = self.iter + 1
+
         return self.image_skin, self.image_x3, self.image, self.label
 
     def _process_read_line(self, line):

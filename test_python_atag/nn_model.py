@@ -307,9 +307,10 @@ class NN(enum.Enum):
 
     def conv_weight_img(self):
         if self.load_ckpt : self.load_group()
-        filename = self.ckpt_folder + os.sep+ "visualize_weights.bmp"
+        filename2 = self.ckpt_folder + os.sep+ "visualize_weights.bmp"
+        filename = self.ckpt_folder + os.sep + "visualize_weights_alternate.bmp"
         weights = self.sess.run(self.W_conv1)
-        show1 = False
+        show1 = True
         show2 = True
         size = (5*8* 10,5*4*2*10)
         size2 = (5*8*10, 5 * 4* 10)
@@ -361,10 +362,12 @@ class NN(enum.Enum):
                                             img2.putpixel(xy2, rgba2)
 
         #print weights
-        if show1: img.show()
+        if show1:
+            img.show()
+            img.save(filename)
         if show2:
             img2.show()
-            img2.save(filename)
+            img2.save(filename2)
 
     def save_group(self):
         filename = "group" # self.save_name
@@ -438,7 +441,7 @@ class NN(enum.Enum):
             else:
                 self.cursor = 0
                 self.save_group()
-                print "exit prematurely"
+                print "exit at end"
                 sys.exit()
 
             self.cursor = self.cursor + 1
