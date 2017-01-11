@@ -2,7 +2,7 @@
 import os
 import sys
 from PIL import Image, ImageDraw, ImageFont
-
+import math
 from tensorflow.examples.tutorials.mnist import input_data
 #mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
@@ -313,26 +313,41 @@ class NN(enum.Enum):
         xy = (0,0)
         rgba = (0,0,0,0)
         if True:
-            for i in range(5* 10):
-                for j in range(5*10):
+            for i in range(5):
+                for j in range(5):
                     for k in range(8):
-                        for n in range(4 * 2):
-                            for m in range(2):
+                        for m in range(4 ):
+                            for n in range(2):
+                                for p in range(10):
+                                    for q in range(10):
+                                        pass
 
-                                xy = (i *8+  k    , j *4 *2 +n  + m )
-                                #print len(weights), len(weights[0]), len(weights[0][0]), len(weights[0][0][0])
-                                rgba = (128,128,128,0)#(i,j,i,j)
-                                if ( k == 0 and n == 0)or m == 0: rgba = (255,255,255,0)
-                                if m == 1: rgba = (255,0,0,0)
-                                try:
-                                    img.putpixel(xy,rgba)
-                                except:
-                                    print size,xy
+                                        xy = ((i *8+  k) * 10 + p   , (j *4  +m  )  * 10 *2 + n * 10 + q)
+                                        print len(weights), len(weights[0]), len(weights[0][0]), len(weights[0][0][0])
+                                        r = weights[i][j][0][k*4+m] * 255.0 * math.pow(10,3)
+                                        g = weights[i][j][1][k*4+m] * 255.0 * math.pow(10,3)
+                                        b = weights[i][j][2][k*4+m] * 255.0 * math.pow(10,3)
+
+                                        if r > 255: r = 255
+                                        if g > 255: g = 255
+                                        if b > 255: b = 255
+                                        if r < 0: r = 0
+                                        if g < 0: g = 0
+                                        if b < 0: b = 0
+                                        rgba = (int(r),int(g),int(b),0)
+                                        print rgba, (i,j,0, k*4+m)
+                                        if ( q == 0 and m == 0 and n == 0)or (k == 0 and p == 0): rgba = (255,255,255,0)
+                                        #if m == 1: rgba = (255,0,0,0)
+                                        try:
+                                            img.putpixel(xy,rgba)
+                                        except:
+                                            print size,xy
 
         #d = ImageDraw.Draw(img)
         #txt = Image.new('RGBA', size, (255, 255, 255, 0))
         #out = Image.alpha_composite(d, txt)
         print size, xy
+        print weights
         img.show()
 
     def save_group(self):
