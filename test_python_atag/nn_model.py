@@ -310,7 +310,7 @@ class NN(enum.Enum):
         filename2 = self.ckpt_folder + os.sep+ "visualize_weights.bmp"
         filename = self.ckpt_folder + os.sep + "visualize_weights_alternate.bmp"
         weights = self.sess.run(self.W_conv1)
-        show1 = True
+        show1 = False
         show2 = True
         size = (5*8* 10,5*4*2*10)
         size2 = (5*8*10, 5 * 4* 10)
