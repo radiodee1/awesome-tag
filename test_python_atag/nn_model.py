@@ -309,16 +309,24 @@ class NN(enum.Enum):
         if self.load_ckpt : self.load_group()
         filename2 = self.ckpt_folder + os.sep+ "visualize_weights.bmp"
         filename = self.ckpt_folder + os.sep + "visualize_weights_alternate.bmp"
+        filename3 = self.ckpt_folder + os.sep + "visualize_weights_skintone.bmp"
         weights = self.sess.run(self.W_conv1)
+        skin = self.sess.run(self.d_W_1)
         show1 = False
         show2 = True
+        show3 = True
         size = (5*8* 10,5*4*2*10)
         size2 = (5*8*10, 5 * 4* 10)
+        size3 = (2* 50,2* 50)
         img = Image.new("RGBA", size, color=0)
         img2 = Image.new("RGBA", size2, color=0)
+        img3 = Image.new("RGBA", size3, color=0)
         xy = (0,0)
+        xy2 = (0,0)
+        xy3 = (0,0)
         rgba = (0,0,0,0)
         rgba2 = (0,0,0,0)
+        rgba3 = (0,0,0,0)
         if True:
             for i in range(5):
                 for j in range(5):
@@ -362,12 +370,37 @@ class NN(enum.Enum):
                                             img2.putpixel(xy2, rgba2)
 
         #print weights
+        if True:
+            index = 0
+            for i in range(2):
+                for j in range(2):
+                    for m in range(50):
+                        for n in range(50):
+                            xy3 = ((i*1) * 50 + m, (j * 1) * 50 + n)
+                            rr = skin[(j * 2 + i) * 3 + 0][index] * 255.0 * math.pow(10, 1)
+                            gg = skin[(j * 2 + i) * 3 + 1][index] * 255.0 * math.pow(10, 1)
+                            bb = skin[(j * 2 + i) * 3 + 2][index] * 255.0 * math.pow(10, 1)
+                            if rr > 255: rr = 255
+                            if gg > 255: gg = 255
+                            if bb > 255: bb = 255
+                            if rr < 0: rr = 0
+                            if gg < 0: gg = 0
+                            if bb < 0: bb = 0
+                            rgba3 = (int(rr), int(gg), int(bb), 0)
+
+                            if ( m == 0 ) or ( n == 0 ):
+                                rgba3 = (255, 255, 255, 0)
+                            img3.putpixel(xy3, rgba3)
         if show1:
-            img.show()
+            img.show("Conv Weights B")
             img.save(filename)
         if show2:
-            img2.show()
+            img2.show("Conv Weights A")
             img2.save(filename2)
+        if show3:
+            img3.show("Skintone Weights A")
+            print skin
+            img3.save(filename3)
 
     def save_group(self):
         filename = "group" # self.save_name

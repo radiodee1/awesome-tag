@@ -73,7 +73,7 @@ class Record( enum.Enum):
             xx, yy = Image.open(filename).size
 
             mc_num = dim # xx / dim # random.randint(0,xx) #(xx, xx*yy)
-            div = 4
+            div = 2 # 4
             print "do mc file prediction"
             for i in range(mc_num):
                 sizex = random.randint(width - width/div, width + width/div)
