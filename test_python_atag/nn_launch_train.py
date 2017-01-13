@@ -126,10 +126,11 @@ class Read( enum.Enum) :
         if self.pipeline_stage >=5 :
             ''' try to improve box '''
             see_boxes = False
+            if self.pipeline_stage == 5: see_boxes = True
             self.nn.dat_best = []
             self.dat_mc = ll.dat[:]
             for k in range(len(self.dat_mc)):
-                ll.dat = ll.record.make_boxes_mc(self.pic,dim=56 ,dat=[self.dat_mc[k]])
+                ll.dat = ll.record.make_boxes_mc(self.pic,dim=100 ,dat=[self.dat_mc[k]])
                 ll.record.renumber_dat_list(ll.dat)
 
                 self.nn.predict_remove_symbol = 1

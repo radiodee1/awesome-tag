@@ -317,7 +317,7 @@ class NN(enum.Enum):
         show3 = True
         size = (5*8* 10,5*4*2*10)
         size2 = (5*8*10, 5 * 4* 10)
-        size3 = (2* 50,2* 50)
+        size3 = (2* 50 * 3, 2* 50)
         img = Image.new("RGBA", size, color=0)
         img2 = Image.new("RGBA", size2, color=0)
         img3 = Image.new("RGBA", size3, color=0)
@@ -372,25 +372,41 @@ class NN(enum.Enum):
         #print weights
         if True:
             index = 0
-            for i in range(2):
-                for j in range(2):
-                    for m in range(50):
-                        for n in range(50):
-                            xy3 = ((i*1) * 50 + m, (j * 1) * 50 + n)
-                            rr = skin[(j * 2 + i) * 3 + 0][index] * 255.0 * math.pow(10, 1)
-                            gg = skin[(j * 2 + i) * 3 + 1][index] * 255.0 * math.pow(10, 1)
-                            bb = skin[(j * 2 + i) * 3 + 2][index] * 255.0 * math.pow(10, 1)
-                            if rr > 255: rr = 255
-                            if gg > 255: gg = 255
-                            if bb > 255: bb = 255
-                            if rr < 0: rr = 0
-                            if gg < 0: gg = 0
-                            if bb < 0: bb = 0
-                            rgba3 = (int(rr), int(gg), int(bb), 0)
+            for index in range(3):
+                for i in range(2):
+                    for j in range(2):
+                        for m in range(50):
+                            for n in range(50):
+                                xy3 = ((i*1) * 50 + m + index * 50 * 2, (j * 1) * 50 + n)
+                                if index < 2:
+                                    rr = (skin[(j * 2 + i) * 3 + 0][index] + 1.0) * 255.0 * math.pow(10, 0)
+                                    gg = (skin[(j * 2 + i) * 3 + 1][index] + 1.0) * 255.0 * math.pow(10, 0)
+                                    bb = (skin[(j * 2 + i) * 3 + 2][index] + 1.0) * 255.0 * math.pow(10, 0)
+                                    if m == 0 and n == 0 :print rr,gg,bb
+                                else:
+                                    r1 = (skin[(j * 2 + i) * 3 + 0][0] + 0.0)# * 255.0 * math.pow(10, 1)
+                                    g1 = (skin[(j * 2 + i) * 3 + 1][0] + 0.0)# * 255.0 * math.pow(10, 1)
+                                    b1 = (skin[(j * 2 + i) * 3 + 2][0] + 0.0)# * 255.0 * math.pow(10, 1)
+                                    r2 = (skin[(j * 2 + i) * 3 + 0][1] + 0.0)# * 255.0 * math.pow(10, 1)
+                                    g2 = (skin[(j * 2 + i) * 3 + 1][1] + 0.0)# * 255.0 * math.pow(10, 1)
+                                    b2 = (skin[(j * 2 + i) * 3 + 2][1] + 0.0)# * 255.0 * math.pow(10, 1)
+                                    rr = (r1 + r2) /2.0  * 255.0 * math.pow(10, 4)
+                                    gg = (g1 + g2) /2.0  * 255.0 * math.pow(10, 4)
+                                    bb = (b1 + b2) /2.0  * 255.0 * math.pow(10, 4)
+                                    #print rr, gg, bb
+                                    pass
 
-                            if ( m == 0 ) or ( n == 0 ):
-                                rgba3 = (255, 255, 255, 0)
-                            img3.putpixel(xy3, rgba3)
+                                if rr > 255: rr = 255
+                                if gg > 255: gg = 255
+                                if bb > 255: bb = 255
+                                if rr < 0: rr = 0
+                                if gg < 0: gg = 0
+                                if bb < 0: bb = 0
+                                rgba3 = (int(rr), int(gg), int(bb), 0)
+
+                                if ( m == 0 ) or ( n == 0 ):
+                                    rgba3 = (255, 255, 255, 0)
+                                img3.putpixel(xy3, rgba3)
         if show1:
             img.show("Conv Weights B")
             img.save(filename)
@@ -399,7 +415,7 @@ class NN(enum.Enum):
             img2.save(filename2)
         if show3:
             img3.show("Skintone Weights A")
-            print skin
+            #print skin
             img3.save(filename3)
 
     def save_group(self):

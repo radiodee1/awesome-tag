@@ -77,8 +77,10 @@ class Record( enum.Enum):
             print "do mc file prediction"
             for i in range(mc_num):
                 sizex = random.randint(width - width/div, width + width/div)
-                sizey = random.randint(height - height/div, height + height/div)
-
+                #sizey = random.randint(height - height/div, height + height/div)
+                mult = random.randint(0,100)
+                mult = 1 +  mult/100.0
+                #print mult, "mult"
                 temp = []
                 for j in range(self.TOTAL):
                     num = 0
@@ -88,8 +90,8 @@ class Record( enum.Enum):
                         num = sizex #xx / w
 
                     elif j is self.FACE_HEIGHT:
-                        num = sizey #yy / h
-
+                        #num = sizey #yy / h
+                        num =int( sizex * mult)
                     elif j is self.FACE_X:
 
                         num = random.randint(xpos - width/div, xpos + width/div)
