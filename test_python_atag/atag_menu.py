@@ -308,7 +308,9 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.button = Gtk.Button(label="More")
         self.button.connect("clicked", self.on_button_more)
         self.grid2.attach(self.button, 5, 0, 1, 1)
-
+        self.button = Gtk.Button(label="List")
+        self.button.connect("clicked", self.on_button_list)
+        self.grid2.attach(self.button, 6, 0, 1, 1)
 
         self.grid.attach(self.grid2, 0, 13, 4,1)
 
@@ -413,6 +415,11 @@ class Interface(Gtk.Window, atag.Dotfolder) :
             call = ["python", "./nn_launch_train.py", "-weight-img"]
             subprocess.call(call)
         print 7
+        pass
+
+    def on_button_list(self, widget):
+        ii = easygui.buttonbox("List Viewing Options","Choose",choices=("NEXT","PREV","LAUNCH","CANCEL"))
+        print 8
         pass
 
     ''' threading etc '''

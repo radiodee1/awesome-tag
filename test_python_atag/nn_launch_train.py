@@ -148,7 +148,7 @@ class Read( enum.Enum) :
         print "make list", self.list_end
         self.check_folder_exists()
 
-        ll = loader.Load(self.a, "") # self.pic)
+        ll = loader.Load(self.a, "")
         ll.read_csv()
         self.list_dat = ll.dat[:]
 
