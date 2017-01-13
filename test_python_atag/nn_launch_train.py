@@ -29,7 +29,7 @@ class Read( enum.Enum) :
 
         self.pipeline_stage = 10
 
-        self.predict_mc = False
+        #self.predict_mc = False
 
     def run_nn(self):
 
@@ -83,12 +83,12 @@ class Read( enum.Enum) :
         self.nn.set_loader(ll)
 
         ''' make initial box grid '''
-        if not  self.predict_mc and self.pipeline_stage >= 1:
+        if self.pipeline_stage >= 1:
             ll.dat = ll.record.make_boxes(self.pic, dim=4) # 7
             print "num-boxes", len(ll.dat)
 
 
-        if not self.predict_mc and self.pipeline_stage >=2:
+        if self.pipeline_stage >=2:
             ''' initial simple neural network '''
             self.nn.predict_remove_symbol = 1
             self.nn.set_vars(len(ll.dat), 100, 0)
@@ -96,8 +96,8 @@ class Read( enum.Enum) :
             print "len-dat2", len(ll.dat)
 
 
-        if not self.predict_mc and self.pipeline_stage >=3 :
-            ''' two passes through aggregate function '''
+        if self.pipeline_stage >=3 :
+            ''' two passes through aggregate box function '''
             ll.dat = ll.record.aggregate_dat_list(ll.dat)
             ll.record.renumber_dat_list(ll.dat)
             ll.dat = ll.record.aggregate_dat_list(ll.dat, del_shapes=True)
