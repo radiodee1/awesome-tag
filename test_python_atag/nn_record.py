@@ -75,7 +75,9 @@ class Record( enum.Enum):
             mc_num = dim # xx / dim # random.randint(0,xx) #(xx, xx*yy)
             div = 2 # 4
             print "do mc file prediction"
-            for i in range(mc_num):
+            #for i in range(mc_num):
+            i = 0
+            while i < mc_num:
                 sizex = random.randint(width - width/div, width + width/div)
                 #sizey = random.randint(height - height/div, height + height/div)
                 mult = random.randint(0,100)
@@ -108,6 +110,7 @@ class Record( enum.Enum):
                 if not (temp[self.FACE_X] + temp[self.FACE_WIDTH] >= xx or temp[self.FACE_Y] + temp[self.FACE_HEIGHT] >= yy or
                     temp[self.FACE_X] < 0 or temp[self.FACE_Y] < 0):
                     self.dat.append(temp)
+                    i += 1
             self.dat.append(dat[k])
 
         return self.dat

@@ -76,23 +76,17 @@ class Read( enum.Enum) :
 
         ll = loader.Load(self.a, self.pic)
 
-        ''' make initial box grid '''
-        if not  self.predict_mc and self.pipeline_stage >= 1:
-            ll.dat = ll.record.make_boxes(self.pic, dim=7) # 7
-            print "num-boxes", len(ll.dat)
-        ''' make box grid for monte carlo '''
-
-        '''
-        if self.predict_mc :
-            ll.dat = ll.record.make_boxes_mc(self.pic)
-            print "num-boxes", len(ll.dat)
-        '''
-
         self.nn.load_ckpt = True
         self.nn.save_ckpt = False
         self.nn.train = False
         self.nn.test = False
         self.nn.set_loader(ll)
+
+        ''' make initial box grid '''
+        if not  self.predict_mc and self.pipeline_stage >= 1:
+            ll.dat = ll.record.make_boxes(self.pic, dim=4) # 7
+            print "num-boxes", len(ll.dat)
+
 
         if not self.predict_mc and self.pipeline_stage >=2:
             ''' initial simple neural network '''
@@ -101,12 +95,6 @@ class Read( enum.Enum) :
             self.nn.dot_setup()
             print "len-dat2", len(ll.dat)
 
-        if False:
-            pass
-            ''' old k-means code '''
-            #km = kmeans.Kmeans(self.a)
-            #ll.dat = km.do_km(ll.dat, 4) # 3
-            #ll.record.renumber_dat_list(ll.dat)
 
         if not self.predict_mc and self.pipeline_stage >=3 :
             ''' two passes through aggregate function '''
@@ -127,16 +115,19 @@ class Read( enum.Enum) :
             ''' try to improve box '''
             see_boxes = False
             if self.pipeline_stage == 5: see_boxes = True
+            see_list = []
             self.nn.dat_best = []
             self.dat_mc = ll.dat[:]
             for k in range(len(self.dat_mc)):
                 ll.dat = ll.record.make_boxes_mc(self.pic,dim=100 ,dat=[self.dat_mc[k]])
                 ll.record.renumber_dat_list(ll.dat)
+                if see_boxes: see_list.extend(ll.dat[:])
 
                 self.nn.predict_remove_symbol = 1
                 self.nn.set_vars(len(ll.dat), 100, 0)
                 if not see_boxes: self.nn.conv_setup_mc()
             if not see_boxes: ll.dat = ll.record.renumber_dat_list(self.nn.dat_best)
+            else : ll.dat = see_list[:]
             print "len-dat3", len(self.nn.dat_best)
 
         ll.record.save_dat_to_file(ll.dat)

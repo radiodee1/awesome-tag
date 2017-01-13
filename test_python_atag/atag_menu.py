@@ -23,7 +23,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         Gtk.Window.__init__(self, title="Tag")
         self.set_border_width(10)
 
-        self.predict_list = []
+        self.predict_list = ["-pipeline","10"]
         self.train_list = []
         self.train_thread = None
 
@@ -395,6 +395,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
             jj = easygui.buttonbox("Pipeline Options","Choose",choices=("1","2","3","4","5","6","7"))
             self.predict_list = ["-pipeline", str(jj)]
             print self.predict_list
+            self.set_progress_text("started")
             pass
         if ii == "RESET-CURSOR":
             jj = easygui.buttonbox("Training Cursor To Reset On Next Run!","Choose",choices=("SKIN","CONVOLUTION","CANCEL"))
@@ -460,7 +461,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     ''' utility and atag var callback '''
     def set_progress_text(self, text):
-        self.progress_label.set_text("Progress: "+ text)
+        self.progress_label.set_text("Pipeline:" +self.predict_list[1] +", Progress: "+ text)
 
     def show_window(self):
         win = self  # Interface()
