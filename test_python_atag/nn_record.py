@@ -115,10 +115,11 @@ class Record( enum.Enum):
 
         return self.dat
 
-    def save_dat_to_file(self, dat = []):
+    def save_dat_to_file(self, dat = [], erase=True):
         self.dat = dat
         #print self.dat
-        f = open(self.predict_filename, "w")
+        if not erase: self.predict_filename = self.a.VAR_LOCAL_DATABASE + os.sep + "predict-list" + ".csv"
+        if erase: f = open(self.predict_filename, "w")
         f = open(self.predict_filename, "a")
         for i in self.dat :
             temp = ""

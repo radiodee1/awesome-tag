@@ -29,7 +29,12 @@ class Read( enum.Enum) :
 
         self.pipeline_stage = 10
 
-        #self.predict_mc = False
+        self.make_list = True
+        self.list_end = 0
+        self.list_dat = []
+
+        self.image_folder = atag.VAR_ROOT_DATABASE
+
 
     def run_nn(self):
 
@@ -71,7 +76,8 @@ class Read( enum.Enum) :
             self.nn.conv_setup()
             self.a.dot_write(a.FOLDER_SAVED_CURSOR_CONV, str(0))
 
-    def run_predict(self):
+    def run_predict(self, picture):
+        self.pic = picture
         self.check_folder_exists()
 
         ll = loader.Load(self.a, self.pic)
@@ -130,11 +136,44 @@ class Read( enum.Enum) :
             else : ll.dat = see_list[:]
             print "len-dat3", len(self.nn.dat_best)
 
-        ll.record.save_dat_to_file(ll.dat)
+        ll.record.save_dat_to_file(ll.dat, erase=(not self.make_list))
+
 
     def run_weight_img(self):
         print "weight img"
         self.nn.conv_weight_img()
+        pass
+
+    def run_make_list(self):
+        print "make list", self.list_end
+        self.check_folder_exists()
+
+        ll = loader.Load(self.a, "") # self.pic)
+        ll.read_csv()
+        self.list_dat = ll.dat[:]
+
+        signal.signal(signal.SIGINT, self.signal_handler)
+
+        predict_filename = self.a.VAR_LOCAL_DATABASE + os.sep + "predict-list" + ".csv"
+        f = open(predict_filename, "w")
+        f.write("")
+
+        filename = ""
+        filename_old = None
+        iterate = 0
+        iterfile = 0
+        while iterate < self.list_end and iterfile < len(self.list_dat):
+            filename = self.list_dat[iterfile][self.FILE]
+            if not filename.startswith(self.image_folder + os.sep) and not (filename.startswith(os.sep)) :
+                filename = self.image_folder + os.sep + filename
+            print filename, self.list_dat[iterfile]
+            #sys.exit()
+            if filename != filename_old:
+                self.run_predict(filename)
+                iterate += 1
+            filename_old = filename
+            iterfile += 1
+            print iterate, "make-list"
         pass
 
     def signal_handler(self, signum, frame):
@@ -162,19 +201,18 @@ if __name__ == '__main__':
     parser.add_argument("-zero-dot", action="store_true")
     parser.add_argument("-zero-conv", action="store_true")
     parser.add_argument("-weight-img", action="store_true")
+    parser.add_argument("-make-list", nargs=1)
 
     args = parser.parse_args()
     print args
     #sys.exit()
 
     pic = ""
-    #if len(sys.argv) > 1 :
-    #    pic = str(sys.argv[1])
+
     if args.filename != None: pic = args.filename
     #print sys.argv
     print pic
     a = aa.Dotfolder()
-    #r = Read(a, pic)
 
     if args.zero_dot and not args.test and not args.train:
         a.dot_write(a.FOLDER_SAVED_CURSOR_DOT, str(0))
@@ -187,7 +225,6 @@ if __name__ == '__main__':
 
     import nn_model as model
 
-    #a = aa.Dotfolder()
     r = Read(a, pic)
     if args.pipeline != None: r.pipeline_stage = int(args.pipeline[0])
 
@@ -196,10 +233,17 @@ if __name__ == '__main__':
         r.nn.predict_softmax = True
         r.nn.predict_conv = True
         r.nn.predict_dot = True
-        r.run_predict()
+        r.run_predict(pic)
     elif args.weight_img == True:
         r.run_weight_img()
         pass
+    elif args.make_list != None:
+        r.nn.predict_softmax = True
+        r.nn.predict_conv = True
+        r.nn.predict_dot = True
+        r.make_list = True
+        r.list_end = int(args.make_list[0])
+        r.run_make_list()
     else:
         r.nn.save_ckpt = args.no_save
         r.nn.load_ckpt = args.no_load
