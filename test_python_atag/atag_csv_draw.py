@@ -25,6 +25,7 @@ class Read( enum.Enum) :
         self.csv_input = atag.VAR_LOCAL_DATABASE + os.sep + atag.VAR_MY_CSV_NAME + ".csv"
         self.csv_input_predict = atag.VAR_LOCAL_DATABASE + os.sep + "predict" + ".csv"
         self.csv_input_dot = atag.VAR_LOCAL_DATABASE + os.sep + atag.VAR_MY_CSV_NAME + ".dot.csv"
+        self.csv_input_predict_list = atag.VAR_LOCAL_DATABASE + os.sep + "predict-list" + ".csv"
 
     def process_read_line(self, line):
         line = line.split(",")
@@ -43,25 +44,37 @@ class Read( enum.Enum) :
                                        int(line[self.FACE_WIDTH]), int(line[self.FACE_HEIGHT])])
 
     def process_read_file_simple(self):
-        with open(self.csv_input, 'r') as f:
-            for line in f:
-                self.process_read_line(line)
-        f.close()
-        print "num of boxes", self.num
-        pass
+        if os.path.isfile(self.csv_input):
+            with open(self.csv_input, 'r') as f:
+                for line in f:
+                    self.process_read_line(line)
+            f.close()
+            print "num of boxes", self.num
+            pass
 
     def process_read_file_predict(self):
-        with open(self.csv_input_predict, 'r') as f:
-            for line in f:
-                self.process_read_line(line)
-        f.close()
-        print "num of boxes", self.num
-        pass
+        if os.path.isfile(self.csv_input_predict):
+            with open(self.csv_input_predict, 'r') as f:
+                for line in f:
+                    self.process_read_line(line)
+            f.close()
+            print "num of boxes", self.num
+            pass
 
     def process_read_file_dot(self):
-        with open(self.csv_input_dot, 'r') as f:
-            for line in f:
-                self.process_read_line(line)
-        f.close()
-        print "num of boxes", self.num
-        pass
+        if os.path.isfile(self.csv_input_dot):
+            with open(self.csv_input_dot, 'r') as f:
+                for line in f:
+                    self.process_read_line(line)
+            f.close()
+            print "num of boxes", self.num
+            pass
+
+    def process_read_file_predict_list(self):
+        if os.path.isfile(self.csv_input_predict_list):
+            with open(self.csv_input_predict_list, 'r') as f:
+                for line in f:
+                    self.process_read_line(line)
+            f.close()
+            print "num of boxes", self.num
+            pass

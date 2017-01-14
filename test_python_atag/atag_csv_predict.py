@@ -25,6 +25,7 @@ class PredictRead(enum.Enum):
     def predict_next(self, pic):
         list = self.dat[:]
         num = self.pic_num
+        if num + 1 >= len(list): return pic
         oldpic = pic # list[num][self.FILE]
         while oldpic.endswith(pic) and num < len(list):
             num += 1
@@ -37,6 +38,7 @@ class PredictRead(enum.Enum):
     def predict_prev(self, pic):
         list = self.dat[:]
         num = self.pic_num
+        if num - 1 < 0: return pic
         oldpic = pic # list[num][self.FILE]
         while oldpic.endswith(pic) and num > 0:
             num -= 1

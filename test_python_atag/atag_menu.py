@@ -426,8 +426,9 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         if ii == "CANCEL" : return
 
         p = predict.PredictRead(self)
-        p.read_predict_list()
         p.filename = self.VAR_IMAGE_NAME
+        p.read_predict_list()
+        #p.filename = self.VAR_IMAGE_NAME
 
         if ii == "NEXT" : self.VAR_IMAGE_NAME = p.predict_next(self.VAR_IMAGE_NAME)
         if ii == "PREV" : self.VAR_IMAGE_NAME = p.predict_prev(self.VAR_IMAGE_NAME)
@@ -440,16 +441,21 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
             self.label_image.set_text(self.shorten(var))
             self.switch_folder_var(folder, var)
-            r.process_read_file_predict()
+            r.process_read_file_predict_list()
             self.drawingarea.boxlist_red = r.boxlist_r
             self.drawingarea.boxlist_green = r.boxlist_g
             self.drawingarea.boxlist_blue = r.boxlist_b
+        if ii == "LAUNCH":
+            jj = easygui.buttonbox("Number of Pictures","Choose",choices=("2","5","10","50","100","CANCEL"))
+            if jj != "CANCEL":
+                call =  ["python", "./nn_launch_train.py", "-make-list", str(jj)]
+                subprocess.call(call)
         print 8
         pass
 
     ''' threading etc '''
     def run_draw_compile(self):
-        ii = easygui.buttonbox("Type of Diagram","Choose",choices=("CONVOLUTION","DOT","PREDICT"))
+        ii = easygui.buttonbox("Type of Diagram","Choose",choices=("CONVOLUTION","DOT","PREDICT","LIST"))
         r = draw.Read(self)
         if ii == "CONVOLUTION" :
             r.process_read_file_simple()
@@ -464,6 +470,11 @@ class Interface(Gtk.Window, atag.Dotfolder) :
             pass
             r.process_read_file_dot()
             self.drawingarea.boxlist_red = r.boxlist_r
+        elif ii == "LIST":
+            r.process_read_file_predict_list()
+            self.drawingarea.boxlist_red = r.boxlist_r
+            self.drawingarea.boxlist_green = r.boxlist_g
+            self.drawingarea.boxlist_blue = r.boxlist_b
         self.drawingarea.queue_draw()
 
     def run_csv_write(self):
