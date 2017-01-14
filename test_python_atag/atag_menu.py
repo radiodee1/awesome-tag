@@ -11,6 +11,7 @@ import atag_dotfolder as atag
 import atag_drawingarea as dra
 import atag_csv_write as write
 #import atag_csv_read_tf as read
+import atag_csv_predict as predict
 import atag_csv_draw as draw
 import subprocess
 import os
@@ -21,6 +22,8 @@ class Interface(Gtk.Window, atag.Dotfolder) :
     def __init__(self):
         atag.Dotfolder.__init__(self)
         Gtk.Window.__init__(self, title="Tag")
+
+
         self.set_border_width(10)
 
         self.predict_list = ["-pipeline","10"]
@@ -94,6 +97,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         ''' row 3 '''
         self.label = Gtk.Label(self.shorten(self.VAR_IMAGE_NAME))
         self.grid.attach(self.label, 0, 3, 1, 1)
+        self.label_image = self.label
 
         self.entry = Gtk.Entry()
         self.entry.set_text("")
@@ -419,6 +423,27 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     def on_button_list(self, widget):
         ii = easygui.buttonbox("List Viewing Options","Choose",choices=("NEXT","PREV","LAUNCH","CANCEL"))
+        if ii == "CANCEL" : return
+
+        p = predict.PredictRead(self)
+        p.read_predict_list()
+        p.filename = self.VAR_IMAGE_NAME
+
+        if ii == "NEXT" : self.VAR_IMAGE_NAME = p.predict_next(self.VAR_IMAGE_NAME)
+        if ii == "PREV" : self.VAR_IMAGE_NAME = p.predict_prev(self.VAR_IMAGE_NAME)
+        if ii == "NEXT" or ii == "PREV" :
+            r = draw.Read(self)
+            folder = self.FOLDER_IMAGE_NAME
+            var = self.VAR_IMAGE_NAME
+            print var, "new image"
+            self.dot_write(folder, var)
+
+            self.label_image.set_text(self.shorten(var))
+            self.switch_folder_var(folder, var)
+            r.process_read_file_predict()
+            self.drawingarea.boxlist_red = r.boxlist_r
+            self.drawingarea.boxlist_green = r.boxlist_g
+            self.drawingarea.boxlist_blue = r.boxlist_b
         print 8
         pass
 

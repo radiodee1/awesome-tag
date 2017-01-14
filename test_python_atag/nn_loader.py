@@ -7,7 +7,7 @@ import atag_csv as enum
 import nn_record as rec
 
 class Load(enum.Enum):
-    def __init__(self, atag, filename):
+    def __init__(self, atag, filename, csv_filename=None):
         enum.Enum.__init__(self)
         self.mnist_train = {}
         self.mnist_test = {}
@@ -15,6 +15,7 @@ class Load(enum.Enum):
         self.image_folder = atag.VAR_ROOT_DATABASE
 
         self.csv_input = atag.VAR_LOCAL_DATABASE + os.sep + atag.VAR_MY_CSV_NAME + ".csv"
+        if csv_filename != None: self.csv_input = csv_filename
         self.label = []
         self.image = []
         self.image_x3 = []
