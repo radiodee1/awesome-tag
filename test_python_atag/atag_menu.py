@@ -422,17 +422,21 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         pass
 
     def on_button_list(self, widget):
-        ii = easygui.buttonbox("List Viewing Options","Choose",choices=("NEXT","PREV","LAUNCH","CANCEL"))
-        if ii == "CANCEL" : return
 
         p = predict.PredictRead(self)
         p.filename = self.VAR_IMAGE_NAME
         p.read_predict_list()
-        #p.filename = self.VAR_IMAGE_NAME
+        self.set_progress_text("List:" + str(p.external_count + 1))
+        print "short list length", len(p.dat), p.external_count + 1
+
+
+        ii = easygui.buttonbox("List Viewing Options","Choose",choices=("NEXT","PREV","LAUNCH","CANCEL"))
+        if ii == "CANCEL" : return
 
         if ii == "NEXT" : self.VAR_IMAGE_NAME = p.predict_next(self.VAR_IMAGE_NAME)
         if ii == "PREV" : self.VAR_IMAGE_NAME = p.predict_prev(self.VAR_IMAGE_NAME)
         if ii == "NEXT" or ii == "PREV" :
+            self.set_progress_text("List:" + str(p.external_count+1))
             r = draw.Read(self)
             folder = self.FOLDER_IMAGE_NAME
             var = self.VAR_IMAGE_NAME

@@ -11,14 +11,24 @@ class PredictRead(enum.Enum):
         self.filename = ""
         self.pic_num = 0
         self.dat = []
+        self.external_count = 0
 
     def read_predict_list(self):
         self.ll.read_csv()
         self.dat = self.ll.dat
         if len(self.dat) > 0 and self.dat[self.pic_num][self.FILE].endswith(self.filename) : return
+        count = 0
+        self.external_count = 0
+        filename_old = ""
         for i in range(len(self.dat)):
+
             if self.dat[i][self.FILE].endswith(self.filename) :
                 if i != self.pic_num: self.pic_num = i
+                break
+            if not filename_old.endswith(self.dat[i][self.FILE]):
+                count += 1
+            filename_old = self.dat[i][self.FILE]
+        self.external_count = count
 
         pass
 
@@ -26,6 +36,7 @@ class PredictRead(enum.Enum):
         list = self.dat[:]
         num = self.pic_num
         if num + 1 >= len(list): return pic
+        self.external_count += 1
         oldpic = pic # list[num][self.FILE]
         while oldpic.endswith(pic) and num < len(list):
             num += 1
@@ -39,6 +50,7 @@ class PredictRead(enum.Enum):
         list = self.dat[:]
         num = self.pic_num
         if num - 1 < 0: return pic
+        self.external_count -= 1
         oldpic = pic # list[num][self.FILE]
         while oldpic.endswith(pic) and num > 0:
             num -= 1
