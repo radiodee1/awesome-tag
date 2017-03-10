@@ -1,0 +1,38 @@
+--------------------------------------------------------------------------------
+Processing file 'nn_model.py'
+ outputting to 'nn_model_1.0.py'
+--------------------------------------------------------------------------------
+
+'nn_model.py' Line 142
+--------------------------------------------------------------------------------
+
+Added keyword 'logits' to reordered function 'tf.nn.softmax_cross_entropy_with_logits'
+Added keyword 'labels' to reordered function 'tf.nn.softmax_cross_entropy_with_logits'
+
+    Old:         self.c_cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(self.y_conv, self.c_y_))
+                                                                                                                        
+    New:         self.c_cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=self.y_conv, labels=self.c_y_))
+                                                                                               ~~~~~~~             ~~~~~~~            
+
+'nn_model.py' Line 86
+--------------------------------------------------------------------------------
+
+Added keyword 'logits' to reordered function 'tf.nn.softmax_cross_entropy_with_logits'
+Added keyword 'labels' to reordered function 'tf.nn.softmax_cross_entropy_with_logits'
+
+    Old:         self.d_cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(self.d_y_logits, self.d_y_))
+                                                                                                                            
+    New:         self.d_cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=self.d_y_logits, labels=self.d_y_))
+                                                                                               ~~~~~~~                 ~~~~~~~            
+
+'nn_model.py' Line 149
+--------------------------------------------------------------------------------
+
+Renamed function 'tf.initialize_all_variables' to 'tf.global_variables_initializer'
+
+    Old:         init = tf.initialize_all_variables()
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~   
+    New:         init = tf.global_variables_initializer()
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   
+
+

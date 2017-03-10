@@ -83,7 +83,7 @@ class NN(enum.Enum):
         self.d_y_ = tf.placeholder(tf.float32, [None, output_num])
 
         # cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
-        self.d_cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=self.d_y_logits, labels=self.d_y_))
+        self.d_cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(self.d_y_logits, self.d_y_))
 
         self.d_train_step = tf.train.GradientDescentOptimizer(0.001).minimize(self.d_cross_entropy)  # 0.0001
         # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
@@ -139,14 +139,14 @@ class NN(enum.Enum):
 
         self.y_conv = tf.matmul(self.h_fc1_drop, self.W_fc2) + self.b_fc2
 
-        self.c_cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=self.y_conv, labels=self.c_y_))
+        self.c_cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(self.y_conv, self.c_y_))
         self.c_train_step = tf.train.AdamOptimizer(1e-4).minimize(self.c_cross_entropy)
         self.c_correct_prediction = tf.equal(tf.argmax(self.y_conv, 1), tf.argmax(self.c_y_, 1))
         self.c_accuracy = tf.reduce_mean(tf.cast(self.c_correct_prediction, tf.float32))
 
         self.c_y_out = tf.argmax(self.y_conv, 1)  ## for prediction
 
-        init = tf.global_variables_initializer()
+        init = tf.initialize_all_variables()
         self.sess.run(init)
 
         #summary_writer = tf.train.SummaryWriter(self.ckpt_folder + os.sep + "logs" + os.sep, self.sess.graph)
