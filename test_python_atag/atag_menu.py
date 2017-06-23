@@ -211,6 +211,9 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         '''
 
         ''' row 9 '''
+        
+        if self.VAR_SPLIT_CURRENT == '' :
+            self.VAR_SPLIT_CURRENT = '0'
         self.label = Gtk.Label(self.shorten(self.VAR_SPLIT_CURRENT))
         self.grid.attach(self.label, 0, 9, 1, 1)
 
