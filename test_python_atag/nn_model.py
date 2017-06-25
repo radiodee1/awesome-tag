@@ -9,10 +9,12 @@ from tensorflow.examples.tutorials.mnist import input_data
 import tensorflow as tf
 #import atag_dotfolder as aa
 import atag_csv as enum
+import nn_dim as dim
 
-class NN(enum.Enum):
+class NN(enum.Enum, dim.Enum):
     def __init__(self, atag):
         enum.Enum.__init__(self)
+        dim.Enum.__init__(self)
 
         self.a = atag
         self.ckpt_folder = atag.VAR_LOCAL_DATABASE
