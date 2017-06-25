@@ -462,7 +462,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     ''' threading etc '''
     def run_draw_compile(self):
-        ii = easygui.buttonbox("Type of Diagram","Choose",choices=("CONVOLUTION","DOT","PREDICT","LIST"))
+        ii = easygui.buttonbox("Type of Diagram","Choose",choices=("CONVOLUTION","IN-DEPTH","DOT","PREDICT","LIST"))
         r = draw.Read(self)
         if ii == "CONVOLUTION" :
             r.process_read_file_simple()
@@ -482,6 +482,9 @@ class Interface(Gtk.Window, atag.Dotfolder) :
             self.drawingarea.boxlist_red = r.boxlist_r
             self.drawingarea.boxlist_green = r.boxlist_g
             self.drawingarea.boxlist_blue = r.boxlist_b
+        elif ii == "IN-DEPTH":
+            r.process_read_file_convolution_in_depth()
+            pass
         self.drawingarea.queue_draw()
 
     def run_csv_write(self):

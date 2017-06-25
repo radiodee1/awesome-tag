@@ -137,7 +137,7 @@ class Load(enum.Enum, dim.Enum):
             else:
                 lbl_2 = 1
 
-            skin, img , three = self._look_at_img(filename,x,y,width,height)
+            skin, img , three = self.look_at_img(filename,x,y,width,height)
             #print len(three) , three, "three"
 
             if (len(img) != self.dim_x * self.dim_y or len(three) != self.dim_x * self.dim_y * 3) and self.normal_train :
@@ -180,7 +180,7 @@ class Load(enum.Enum, dim.Enum):
         self.dat.append(row)
 
 
-    def _look_at_img(self, filename, x = 0, y = 0, width = -1, height = -1):
+    def look_at_img(self, filename, x = 0, y = 0, width = -1, height = -1):
 
         if width == -1 : width = self.dim_x
         if height == -1 : height = self.dim_y

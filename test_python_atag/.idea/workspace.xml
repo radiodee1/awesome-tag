@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c15ed38a-2fe7-44d1-b032-ae199cd14d43" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_dim.py" afterPath="$PROJECT_DIR$/nn_dim.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/atag_csv_draw.py" afterPath="$PROJECT_DIR$/atag_csv_draw.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/atag_menu.py" afterPath="$PROJECT_DIR$/atag_menu.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_loader.py" afterPath="$PROJECT_DIR$/nn_loader.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,8 +22,8 @@
       <file leaf-file-name="nn_loader.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nn_loader.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="140">
-              <caret line="241" column="62" lean-forward="false" selection-start-line="241" selection-start-column="62" selection-end-line="241" selection-end-column="62" />
+            <state relative-caret-position="420">
+              <caret line="21" column="18" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -33,7 +34,7 @@
       <file leaf-file-name="nn_launch_train.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nn_launch_train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2840">
+            <state relative-caret-position="2532">
               <caret line="150" column="36" lean-forward="false" selection-start-line="150" selection-start-column="36" selection-end-line="150" selection-end-column="36" />
               <folding>
                 <element signature="e#19#28#0" expanded="true" />
@@ -52,11 +53,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="atag_menu.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="atag_menu.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/atag_menu.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-468">
-              <caret line="429" column="40" lean-forward="false" selection-start-line="429" selection-start-column="40" selection-end-line="429" selection-end-column="40" />
+            <state relative-caret-position="652">
+              <caret line="485" column="54" lean-forward="false" selection-start-line="485" selection-start-column="54" selection-end-line="485" selection-end-column="54" />
               <folding>
                 <element signature="e#19#33#0" expanded="true" />
               </folding>
@@ -64,12 +65,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="atag_csv_draw.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="atag_csv_draw.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/atag_csv_draw.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1020">
-              <caret line="52" column="16" lean-forward="false" selection-start-line="47" selection-start-column="12" selection-end-line="52" selection-end-column="16" />
-              <folding />
+            <state relative-caret-position="608">
+              <caret line="130" column="36" lean-forward="false" selection-start-line="130" selection-start-column="36" selection-end-line="130" selection-end-column="36" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -89,8 +92,8 @@
       <file leaf-file-name="nn_model.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nn_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="542">
-              <caret line="477" column="62" lean-forward="false" selection-start-line="477" selection-start-column="62" selection-end-line="477" selection-end-column="62" />
+            <state relative-caret-position="257">
+              <caret line="492" column="18" lean-forward="false" selection-start-line="492" selection-start-column="12" selection-end-line="492" selection-end-column="18" />
               <folding>
                 <element signature="e#18#27#0" expanded="true" />
               </folding>
@@ -142,7 +145,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>get_nn_next_predict</find>
       <find>normal_train</find>
       <find>row</find>
       <find>_reject_box</find>
@@ -171,6 +173,7 @@
       <find>dra</find>
       <find>dimx</find>
       <find>dim_x</find>
+      <find>loader</find>
       <find>_look_at_img</find>
     </findStrings>
   </component>
@@ -193,13 +196,13 @@
         <option value="$PROJECT_DIR$/atag_dotfolder.py" />
         <option value="$PROJECT_DIR$/nn_record.py" />
         <option value="$PROJECT_DIR$/nn_launch_train.py" />
-        <option value="$PROJECT_DIR$/atag_csv_draw.py" />
-        <option value="$PROJECT_DIR$/atag_menu.py" />
         <option value="$PROJECT_DIR$/atag_csv_predict.py" />
         <option value="$PROJECT_DIR$/atag_csv.py" />
         <option value="$PROJECT_DIR$/nn_model.py" />
         <option value="$PROJECT_DIR$/nn_dim.py" />
+        <option value="$PROJECT_DIR$/atag_menu.py" />
         <option value="$PROJECT_DIR$/nn_loader.py" />
+        <option value="$PROJECT_DIR$/atag_csv_draw.py" />
       </list>
     </option>
   </component>
@@ -1156,24 +1159,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nn_launch_train.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2840">
-          <caret line="150" column="36" lean-forward="false" selection-start-line="150" selection-start-column="36" selection-end-line="150" selection-end-column="36" />
-          <folding>
-            <element signature="e#19#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/atag_csv_draw.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1020">
-          <caret line="52" column="16" lean-forward="false" selection-start-line="47" selection-start-column="12" selection-end-line="52" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/atag_csv_predict.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
@@ -1218,16 +1203,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nn_model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="542">
-          <caret line="477" column="62" lean-forward="false" selection-start-line="477" selection-start-column="62" selection-end-line="477" selection-end-column="62" />
-          <folding>
-            <element signature="e#18#27#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/nn_dim.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
@@ -1236,22 +1211,52 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/atag_menu.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="652">
+          <caret line="485" column="54" lean-forward="false" selection-start-line="485" selection-start-column="54" selection-end-line="485" selection-end-column="54" />
+          <folding>
+            <element signature="e#19#33#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nn_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="257">
+          <caret line="492" column="18" lean-forward="false" selection-start-line="492" selection-start-column="12" selection-end-line="492" selection-end-column="18" />
+          <folding>
+            <element signature="e#18#27#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nn_launch_train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2532">
+          <caret line="150" column="36" lean-forward="false" selection-start-line="150" selection-start-column="36" selection-end-line="150" selection-end-column="36" />
+          <folding>
+            <element signature="e#19#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/nn_loader.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="241" column="62" lean-forward="false" selection-start-line="241" selection-start-column="62" selection-end-line="241" selection-end-column="62" />
+        <state relative-caret-position="420">
+          <caret line="21" column="18" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/atag_menu.py">
+    <entry file="file://$PROJECT_DIR$/atag_csv_draw.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-468">
-          <caret line="429" column="40" lean-forward="false" selection-start-line="429" selection-start-column="40" selection-end-line="429" selection-end-column="40" />
+        <state relative-caret-position="608">
+          <caret line="130" column="36" lean-forward="false" selection-start-line="130" selection-start-column="36" selection-end-line="130" selection-end-column="36" />
           <folding>
-            <element signature="e#19#33#0" expanded="true" />
+            <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
