@@ -102,4 +102,4 @@ class Enum(object) :
 
         ]
 
-        print self.DIMENSIONS[self.ROW_NAME_ORIGINAL_28]
+        print self.DIMENSIONS[self.key]

@@ -5,10 +5,16 @@ import os
 import sys
 import atag_csv as enum
 import nn_record as rec
+import nn_dim as dim
 
-class Load(enum.Enum):
+class Load(enum.Enum, dim.Enum):
     def __init__(self, atag, filename, csv_filename=None):
         enum.Enum.__init__(self)
+        dim.Enum.__init__(self)
+
+        self.dim_x = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][0]
+        self.dim_y = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][1]
+
         self.mnist_train = {}
         self.mnist_test = {}
         self.load_official_mnist = True
@@ -116,7 +122,7 @@ class Load(enum.Enum):
             self.filename_old = self.filename
 
 
-            if not (os.path.isfile(filename) and width >=28 and height >= 28
+            if not (os.path.isfile(filename) and width >= self.dim_x and height >= self.dim_y
                     and len(self.img.getbands()) >=3) and self.normal_train :
                 self.iter = self.iter + 1
                 stop = stop + 1
@@ -133,7 +139,7 @@ class Load(enum.Enum):
             skin, img , three = self._look_at_img(filename,x,y,width,height)
             #print len(three) , three, "three"
 
-            if (len(img) != 28 * 28 or len(three) != 28 * 28 * 3) and self.normal_train :
+            if (len(img) != self.dim_x * self.dim_y or len(three) != self.dim_x * self.dim_y * 3) and self.normal_train :
                 self.iter = self.iter + 1
                 stop = stop + 1
                 print "skipping 2, output sizes"
@@ -142,9 +148,9 @@ class Load(enum.Enum):
             if self.inspection_num >= self.iter and False :
                 self.print_block(img)
                 print "========="
-                self.print_block(three[:28*28])
-                self.print_block(three[28*28:28*28*2])
-                self.print_block(three[28*28*2:])
+                self.print_block(three[:self.dim_x * self.dim_y])
+                self.print_block(three[ self.dim_x * self.dim_y : self.dim_x * self.dim_y *2])
+                self.print_block(three[ self.dim_x * self.dim_y *2:])
                 print [lbl_1, lbl_2]
                 sys.exit()
 
@@ -173,19 +179,14 @@ class Load(enum.Enum):
         self.dat.append(row)
 
 
-    def _look_at_img(self, filename, x = 0, y = 0, width = 28, height = 28):
-        #img = Image.open(open(filename))
-        #self.filename = filename
-        #if self.filename != self.filename_old:
-        #    self.img = Image.open(filename)
-        #self.filename_old = self.filename
+    def _look_at_img(self, filename, x = 0, y = 0, width = -1, height = -1):
 
-        #img2 = [[0] * 28] * 28
-        img2 = [[0] * 28 for _ in range(28)]
+        if width == -1 : width = self.dim_x
+        if height == -1 : height = self.dim_y
+
+        img2 = [[0] * self.dim_x for _ in range(self.dim_y)]
         img2 = np.asarray(img2, dtype="float32") ## 'img2' MUST BE A NUMPY ARRAY!!
 
-        #img3 = [[0] * 28 for _ in range(28)] #[[0] * 28 ] * 28
-        #img3 = np.asarray(img3, dtype="float32")
 
         img_skin = [[0] *3] * 4
         img_skin = np.asarray(img_skin, dtype="float32")
@@ -195,7 +196,7 @@ class Load(enum.Enum):
         skin = []
         oneimg_rgb = []
 
-        mnist_dim = 28
+        mnist_dim = self.dim_x
 
         multx = width / float(mnist_dim)
         multy = height / float(mnist_dim)
@@ -209,8 +210,8 @@ class Load(enum.Enum):
         if  len (self.img.getbands()) == 3 :
             if not (x + width > dimx and y + height > dimy) :
 
-                for aa in range(28) :
-                    for bb in range(28) :
+                for aa in range(self.dim_x) :
+                    for bb in range(self.dim_y) :
                         astart = x + aa * multx
                         bstart = y + bb * multy
 
@@ -232,14 +233,14 @@ class Load(enum.Enum):
             if color > high : img2[int(q[0]), int(q[1])] =   color # / float(high * 2)
 
         ''' Then add entire array to oneimg variable and flatten.'''
-        for yz in range(28):
-            for xz in range(28):
+        for yz in range(self.dim_x):
+            for xz in range(self.dim_y):
                 oneimg.append(img2[yz][xz])
 
         ''' Three color channels '''
         if False:
-            if len(xy_list) >= 28 * 28 or True:
-                img3 = [[0] * 28] * 28
+            if len(xy_list) >= self.dim_x * self.dim_y or True:
+                img3 = [[0] * self.dim_x] * self.dim_y
                 img3 = np.asarray(img3, dtype="float32")
                 high = self.img.getextrema()[0][1] / 2
 
@@ -247,11 +248,11 @@ class Load(enum.Enum):
                     q = xy_list[i]
                     color = q[2][0]
                     if color > high or True: img3 [int(q[0]), int(q[1])] = color  / float(high * 2)
-                for yz in range(28):
-                    for xz in range(28):
+                for yz in range(self.dim_x):
+                    for xz in range(self.dim_y):
                         threeimg.append(img3[yz][xz])
 
-                img3 = [[0] * 28] * 28
+                img3 = [[0] * self.dim_x] * self.dim_y
                 img3 = np.asarray(img3, dtype="float32")
                 high = self.img.getextrema()[1][1] / 2
 
@@ -259,11 +260,11 @@ class Load(enum.Enum):
                     q = xy_list[i]
                     color = q[2][1]
                     if color > high or True: img3 [int(q[0]), int(q[1])] = color  / float(high * 2)
-                for yz in range(28):
-                    for xz in range(28):
+                for yz in range(self.dim_x):
+                    for xz in range(self.dim_y):
                         threeimg.append(img3[yz][xz])
 
-                img3 = [[0] * 28] * 28
+                img3 = [[0] * self.dim_x] * self.dim_y
                 img3 = np.asarray(img3, dtype="float32")
                 high = self.img.getextrema()[2][1] / 2
 
@@ -271,8 +272,8 @@ class Load(enum.Enum):
                     q = xy_list[i]
                     color = q[2][2]
                     if color > high  or True: img3 [int(q[0]), int(q[1])] = color  / float(high * 2)
-                for yz in range(28):
-                    for xz in range(28):
+                for yz in range(self.dim_x):
+                    for xz in range(self.dim_y):
                         threeimg.append(img3[yz][xz])
         else:
             for i in range(len(oneimg_rgb)):
@@ -299,11 +300,11 @@ class Load(enum.Enum):
         return skin, oneimg, threeimg
 
     def print_block(self, img):
-        for x in range(28):
-            for y in range(28):
+        for x in range(self.dim_x):
+            for y in range(self.dim_y):
                 out = " "
-                if img[y * 28 + x] > 200: out = "X"
-                out = str(img[x *28 + y]) +" "
+                if img[y * self.dim_x + x] > 200: out = "X"
+                out = str(img[x * self.dim_x + y]) +" "
                 sys.stdout.write(out)
             print ("|")
         print ("---------------")
