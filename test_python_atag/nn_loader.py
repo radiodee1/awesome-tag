@@ -14,6 +14,7 @@ class Load(enum.Enum, dim.Enum):
 
         self.dim_x = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][0]
         self.dim_y = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][1]
+        self.pixel_enum = self.DIMENSIONS[self.key][self.COLUMN_LOADTYPE]
 
         self.mnist_train = {}
         self.mnist_test = {}
@@ -238,7 +239,7 @@ class Load(enum.Enum, dim.Enum):
                 oneimg.append(img2[yz][xz])
 
         ''' Three color channels '''
-        if False:
+        if self.pixel_enum == self.ENUM_LOAD_CONV_GRADIENT : #False:
             if len(xy_list) >= self.dim_x * self.dim_y or True:
                 img3 = [[0] * self.dim_x] * self.dim_y
                 img3 = np.asarray(img3, dtype="float32")

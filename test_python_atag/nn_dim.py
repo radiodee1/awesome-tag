@@ -64,9 +64,9 @@ class Enum(object) :
 
             ],
             [
-                self.ENUM_LOAD_ALL_CUTOFF,
+                self.ENUM_LOAD_CONV_GRADIENT,
                 'big_input',
-                'load all as default',
+                'load all as big input',
                 dim_ab(4 * 3, 2),
                 dim_ab(28 * 28 * 3, 2),
                 dim_xy(28, 28),
