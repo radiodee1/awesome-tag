@@ -57,6 +57,7 @@ class NN(enum.Enum, dim.Enum):
         self.group_initialize = False
         self.predict_remove_symbol = 1 ## 1 or 0 ??
 
+
         self.nn_configure()
 
     def nn_configure(self):
@@ -65,19 +66,17 @@ class NN(enum.Enum, dim.Enum):
         self.sess = tf.InteractiveSession()
 
         ''' DOT FIRST '''
-        input_num = 4 * 3  # like mnist but with three channels
-        #mid_num = 5  # 10
-        output_num = 2
+        #input_num = 4 * 3  # like mnist but with three channels
+        #output_num = 2
+
+        ## DIM BLOCK ##
+        input_num = self.DIMENSIONS[self.key][self.COLUMN_IN_OUT_DOT][0]
+        output_num = self.DIMENSIONS[self.key][self.COLUMN_IN_OUT_DOT][1]
 
         self.d_x = tf.placeholder(tf.float32, [None, input_num])
         self.d_W_1 = tf.Variable(tf.random_normal([input_num, output_num], stddev=0.0001))  # 0.0004
         self.d_b_1 = tf.Variable(tf.zeros([output_num]))
 
-        # y_mid = tf.nn.relu(tf.matmul(x,W_1) + b_1)
-        #self.d_y_mid = tf.nn.relu(tf.matmul(self.d_x, self.d_W_1) + self.d_b_1)
-
-        #self.d_W_2 = tf.Variable(tf.random_normal([mid_num, output_num], stddev=0.0001))
-        #self.d_b_2 = tf.Variable(tf.random_normal([output_num], stddev=0.5))
 
         self.d_y_logits = tf.matmul(self.d_x, self.d_W_1) + self.d_b_1
         self.d_y = tf.nn.softmax(self.d_y_logits)
@@ -97,6 +96,22 @@ class NN(enum.Enum, dim.Enum):
         c_output = 2
         c_input = 784 * 3
 
+        ## DIM BLOCK ##
+        c_input = self.DIMENSIONS[self.key][self.COLUMN_IN_OUT_CONV][0]
+        c_output = self.DIMENSIONS[self.key][self.COLUMN_IN_OUT_CONV][1]
+        c_dimx = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][0]
+        c_dimy = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][1]
+        c_weight_dim_1 = self.DIMENSIONS[self.key][self.COLUMN_CWEIGHT_1]
+        c_bias_dim_1 = self.DIMENSIONS[self.key][self.COLUMN_CBIAS_1]
+        c_weight_dim_2 = self.DIMENSIONS[self.key][self.COLUMN_CWEIGHT_2]
+        c_bias_dim_2 = self.DIMENSIONS[self.key][self.COLUMN_CBIAS_2]
+        c_reshape_dim_1 = self.DIMENSIONS[self.key][self.COLUMN_RESHAPE_1]
+        c_reshape_dim_2 = self.DIMENSIONS[self.key][self.COLUMN_RESHAPE_2]
+        c_fc_weight_dim_1 = self.DIMENSIONS[self.key][self.COLUMN_FULL_CONNECTED_W1]
+        c_fc_bias_dim_1 = self.DIMENSIONS[self.key][self.COLUMN_FULL_CONNECTED_B1]
+        c_fc_weight_dim_2 = self.DIMENSIONS[self.key][self.COLUMN_FULL_CONNECTED_W2]
+        c_fc_bias_dim_2 = self.DIMENSIONS[self.key][self.COLUMN_FULL_CONNECTED_B2]
+
         def weight_variable(shape):
             initial = tf.truncated_normal(shape, stddev=0.0001) #0.1
             return tf.Variable(initial)
@@ -115,29 +130,46 @@ class NN(enum.Enum, dim.Enum):
         self.c_x = tf.placeholder(tf.float32, shape=[None, c_input])
         self.c_y_ = tf.placeholder(tf.float32, shape=[None, c_output])
 
-        self.W_conv1 = weight_variable([5, 5, 3, 32])
-        self.b_conv1 = bias_variable([32])
-        self.x_image = tf.reshape(self.c_x, [-1, 28, 28  , 3])
+        self.W_conv1 = weight_variable(c_weight_dim_1)
+        #self.W_conv1 = weight_variable([5, 5, 3, 32])
+
+        self.b_conv1 = bias_variable(c_bias_dim_1)
+        #self.b_conv1 = bias_variable([32])
+
+        self.x_image = tf.reshape(self.c_x, c_reshape_dim_1)
+        #self.x_image = tf.reshape(self.c_x, [-1, 28, 28  , 3])
+
         self.h_conv1 = tf.nn.relu(conv2d(self.x_image, self.W_conv1) + self.b_conv1)
         self.h_pool1 = max_pool_2x2(self.h_conv1)
 
-        self.W_conv2 = weight_variable([5, 5, 32, 64])
-        self.b_conv2 = bias_variable([64])
+        self.W_conv2 = weight_variable(c_weight_dim_2)
+        self.b_conv2 = bias_variable(c_bias_dim_2)
+
+        #self.W_conv2 = weight_variable([5, 5, 32, 64])
+        #self.b_conv2 = bias_variable([64])
 
         self.h_conv2 = tf.nn.relu(conv2d(self.h_pool1, self.W_conv2) + self.b_conv2)
         self.h_pool2 = max_pool_2x2(self.h_conv2)
 
-        self.W_fc1 = weight_variable([7 * 7 * 64, 1024])
-        self.b_fc1 = bias_variable([1024])
+        self.W_fc1 = weight_variable(c_fc_weight_dim_1)
+        self.b_fc1 = bias_variable(c_fc_bias_dim_1)
 
-        self.h_pool2_flat = tf.reshape(self.h_pool2, [-1, 7 * 7 * 64 ])
+        #self.W_fc1 = weight_variable([7 * 7 * 64, 1024])
+        #self.b_fc1 = bias_variable([1024])
+
+        self.h_pool2_flat = tf.reshape(self.h_pool2, c_reshape_dim_2)
+        #self.h_pool2_flat = tf.reshape(self.h_pool2, [-1, 7 * 7 * 64 ])
+
         self.h_fc1 = tf.nn.relu(tf.matmul(self.h_pool2_flat, self.W_fc1) + self.b_fc1)
 
         self.keep_prob = tf.placeholder(tf.float32)
         self.h_fc1_drop = tf.nn.dropout(self.h_fc1, self.keep_prob)
 
-        self.W_fc2 = weight_variable([1024, c_output])
-        self.b_fc2 = bias_variable([c_output])
+        self.W_fc2 = weight_variable(c_fc_weight_dim_2)
+        self.b_fc2 = bias_variable(c_fc_bias_dim_2)
+
+        #self.W_fc2 = weight_variable([1024, c_output])
+        #self.b_fc2 = bias_variable([c_output])
 
         self.y_conv = tf.matmul(self.h_fc1_drop, self.W_fc2) + self.b_fc2
 
@@ -421,9 +453,10 @@ class NN(enum.Enum, dim.Enum):
             img3.save(filename3)
 
     def save_group(self):
-        filename = "group" # self.save_name
+        extraname = self.DIMENSIONS[self.key][self.COLUMN_NAME]
+        filename = "group_" + extraname # self.save_name
         #self.ckpt_name = filename
-        folder = self.ckpt_folder + os.sep + "ckpt"
+        folder = self.ckpt_folder + os.sep + "ckpt-" + extraname
         if not os.path.exists(folder) :
             os.makedirs(folder)
         saver = tf.train.Saver()
@@ -439,9 +472,10 @@ class NN(enum.Enum, dim.Enum):
         print ("saved?", filename)
 
     def load_group(self):
-        filename = "group"
+        extraname = self.DIMENSIONS[self.key][self.COLUMN_NAME]
+        filename = "group_" + extraname
         #self.ckpt_name = filename
-        file = self.ckpt_folder + os.sep + "ckpt" + os.sep + self.ckpt_name + "." + filename
+        file = self.ckpt_folder + os.sep + "ckpt-" + extraname + os.sep + self.ckpt_name + "." + filename
         if os.path.isfile(file):
             saver = tf.train.Saver()
             saver.restore(self.sess, file)

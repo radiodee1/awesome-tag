@@ -28,6 +28,8 @@ class Enum(object) :
         self.ROW_NAME_LARGER_XY = 1
         self.ROW_NAME_LARGER_OUT = 2
 
+        self.key = self.ROW_NAME_ORIGINAL_28
+
         def dim_xy(w, h):
             return [w , h]
 
@@ -63,7 +65,7 @@ class Enum(object) :
             ],
             [
                 self.ENUM_LOAD_ALL_CUTOFF,
-                'load_all',
+                'big_input',
                 'load all as default',
                 dim_ab(4 * 3, 2),
                 dim_ab(28 * 28 * 3, 2),
@@ -81,7 +83,7 @@ class Enum(object) :
             ],
             [
                 self.ENUM_LOAD_ALL_CUTOFF,
-                'load_all',
+                'change_output',
                 'load all as default',
                 dim_ab(4 * 3, 2),
                 dim_ab(28 * 28 * 3, 2),
