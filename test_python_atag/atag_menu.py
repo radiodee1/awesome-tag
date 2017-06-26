@@ -462,8 +462,9 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     ''' threading etc '''
     def run_draw_compile(self):
-        ii = easygui.buttonbox("Type of Diagram","Choose",choices=("CONVOLUTION","IN-DEPTH","DOT","PREDICT","LIST"))
+        ii = easygui.buttonbox("Type of Diagram","Choose",choices=("CONVOLUTION","INSET","DOT","PREDICT","LIST"))
         r = draw.Read(self)
+        self.drawingarea.draw_enum = self.drawingarea.ENUM_BOXES
         if ii == "CONVOLUTION" :
             r.process_read_file_simple()
             self.drawingarea.boxlist_red = r.boxlist_r
@@ -482,9 +483,14 @@ class Interface(Gtk.Window, atag.Dotfolder) :
             self.drawingarea.boxlist_red = r.boxlist_r
             self.drawingarea.boxlist_green = r.boxlist_g
             self.drawingarea.boxlist_blue = r.boxlist_b
-        elif ii == "IN-DEPTH":
-            skin, img, three = r.process_read_file_convolution_in_depth()
-            print three
+        elif ii == "INSET":
+            ii = easygui.buttonbox("Number of Diagram", "Choose",
+                                   choices=("0", "1", "2", "3", "4","5","6","7", "CANCEL"))
+            if ii == "CANCEL" :
+                self.drawingarea.queue_draw()
+                return
+            skin, img, three = r.process_read_file_convolution_in_depth(num=(int(ii) * 2 - 1))
+            #print three
             self.drawingarea.set_gradient_info(skin, img, three)
             pass
         self.drawingarea.queue_draw()
