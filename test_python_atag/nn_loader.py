@@ -91,6 +91,41 @@ class Load(enum.Enum, dim.Enum):
         if num_channels == self.CONST_DOT : return skin, labels
         return images, labels
 
+
+    def outside_get_pixels_from_dat(self, filename, chosen):
+        print ("work with dat var")
+        self.image = []
+        self.label = []
+        self.image_x3 = []
+        self.image_skin = []
+
+        self.line_chosen = chosen
+
+        if True: #self.iter < stop and stop <= len(self.dat) and self.iter < len(self.dat):
+            #filename = self.dat[self.iter][self.FILE]
+            #filename = self.picname
+            if not filename.startswith(self.image_folder + os.sep) and not (filename.startswith(os.sep)) :
+                filename = self.image_folder + os.sep + filename
+            x = int(self.line_chosen[self.FACE_X])
+            y = int(self.line_chosen[self.FACE_Y])
+            width = int(self.line_chosen[self.FACE_WIDTH])
+            height = int(self.line_chosen[self.FACE_HEIGHT])
+
+            #if True: #filename != self.filename_old:
+            print " -- " , filename
+
+            ''' open image if it is new! '''
+            self.filename = filename
+            #if True: #self.filename != self.filename_old:
+            self.img = Image.open(filename)
+            #self.filename_old = self.filename
+
+            #ll = loader.Load(self.a, self.picname)
+            #ll.__init__(atag,atag.VAR_ROOT_DATABASE, atag.VAR_LOCAL_DATABASE, atag.VAR_MY_CSV_NAME)
+            skin, img , three = self.look_at_img(filename, x, y, width, height)
+            print len(skin), len(img), len(three)
+            return skin, img, three
+
     def _get_pixels_from_dat(self, start, stop):
         print ("work with dat var")
         self.image = []
