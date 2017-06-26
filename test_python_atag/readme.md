@@ -48,4 +48,13 @@ For the purposes of this project I'm defining an epoch as one compelete run of t
 
 The current 'Prediction' scheme is a two stage operation. First you click the 'Predict' button. Then the program launches and loads the neural network models and then saves a file that contains the prediction results. Then you click the 'Show Boxes' button and select the 'PREDICT' option. Results from the prediction operation are superimposed on the currently loaded image.
 
+-----
+
+### PACKAGES
+
+These are some, but not all the packages you need to install. Some of these are easier to install with pip, some are easier to install with the linux package manager.
+
+PIL(Pillow) , python-resize-image, python-easygui, numpy, tensorflow-gpu, python-gi-cairo, python-gtk2-dev
+
+
 
