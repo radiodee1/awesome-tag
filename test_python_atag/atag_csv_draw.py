@@ -97,10 +97,8 @@ class Read( enum.Enum, dim.Enum) :
     def process_read_file_convolution_in_depth(self, num = 1):
         self.num_chosen = num
         self.process_read_file_simple()
-        #if self.num_chosen > self.num : self.num_chosen = 0
         print self.num_chosen
         ll = loader.Load(self.a, self.picname)
-        ll.outside_get_pixels_from_dat(self.picname, self.line_chosen)
-        #self._get_pixels_from_dat()
+        return ll.outside_get_pixels_from_dat(self.picname, self.line_chosen)
         pass
 

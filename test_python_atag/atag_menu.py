@@ -483,7 +483,9 @@ class Interface(Gtk.Window, atag.Dotfolder) :
             self.drawingarea.boxlist_green = r.boxlist_g
             self.drawingarea.boxlist_blue = r.boxlist_b
         elif ii == "IN-DEPTH":
-            r.process_read_file_convolution_in_depth()
+            skin, img, three = r.process_read_file_convolution_in_depth()
+            print three
+            self.drawingarea.set_gradient_info(skin, img, three)
             pass
         self.drawingarea.queue_draw()
 

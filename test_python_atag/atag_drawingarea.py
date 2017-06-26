@@ -17,6 +17,11 @@ class DrawingArea(Gtk.DrawingArea) :
 
         self.connect("draw", self.draw)
 
+        self.ENUM_BOXES = 0
+        self.ENUM_GRADIENT_1 = 1
+        self.ENUM_GRADIENT_RGB = 2
+        self.gradient_list = []
+        self.draw_enum = self.ENUM_BOXES
 
         self.boxlist_red = []#[(0,0,10,20),(5,5,10,20)]
         self.boxlist_green = []#[(3,3,3,3),(7,7,7,7)]
@@ -36,6 +41,11 @@ class DrawingArea(Gtk.DrawingArea) :
 
     def set_blue(self, blue):
         self.boxlist_blue = blue
+
+    def set_gradient_info(self, skin, img, three):
+        self.draw_enum = self.ENUM_GRADIENT_RGB
+        self.gradient_list = three
+
 
     def draw(self, widget, context):
         name = self.imagename.strip("\n")
@@ -58,15 +68,18 @@ class DrawingArea(Gtk.DrawingArea) :
             self.set_size_request(self.dim.width, self.dim.height)
             #print 'jpg image'
 
-
-        context.set_line_width(1)
-        context.set_source_rgb(1, 0, 0)
-        self.box_list(context, self.boxlist_red)
-        context.set_source_rgb(0, 1, 0)
-        self.box_list(context, self.boxlist_green)
-        context.set_source_rgb(0, 0, 1)
-        self.box_list(context, self.boxlist_blue)
-        return False
+        if self.draw_enum == self.ENUM_BOXES:
+            context.set_line_width(1)
+            context.set_source_rgb(1, 0, 0)
+            self.box_list(context, self.boxlist_red)
+            context.set_source_rgb(0, 1, 0)
+            self.box_list(context, self.boxlist_green)
+            context.set_source_rgb(0, 0, 1)
+            self.box_list(context, self.boxlist_blue)
+            return False
+        elif self.draw_enum == self.ENUM_GRADIENT_RGB:
+            self.gradient_rgb()
+            pass
 
     def box_list(self, context, list):
         for red in list:
@@ -76,3 +89,6 @@ class DrawingArea(Gtk.DrawingArea) :
             context.line_to(red[0] + self.space_left + red[2], red[1] + self.space_top)
             context.line_to(red[0] + self.space_left, red[1] + self.space_top)
         context.stroke()
+
+    def gradient_rgb(self):
+        pass
