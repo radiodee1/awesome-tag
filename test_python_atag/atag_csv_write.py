@@ -3,14 +3,19 @@ import random
 import atag_csv as enum
 from PIL import Image
 import sys
+import nn_dim as dim
 
 '''
 Here we read the split file and write our own csv file for training later on.
 '''
 
-class Write( enum.Enum) :
+class Write( enum.Enum, dim.Dimension) :
     def __init__(self, atag):
         enum.Enum.__init__(self)
+        dim.Dimension.__init__(self)
+
+        self.dim_x = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][0]
+        self.dim_y = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][1]
 
         self.dat = []
 
@@ -73,6 +78,7 @@ class Write( enum.Enum) :
             if True : dimx, dimy = Image.open(filename).size # get image bounds... slow!!
             if dimy == 0 or dimx == 0 : return
         except:
+            print "bad jpg " + filename
             return
 
         try:
@@ -99,7 +105,10 @@ class Write( enum.Enum) :
                     self.f.write(str(r))
                 elif (y == 1 or y == 2) and x == self.FACE_Y:
                     r = 0
-                    if top - height > 0 : r = random.randint(0,top - height)
+                    #g = 0
+
+                    #if top - height <= 0 : g = 0 - (top - height)
+                    if top - height > 0 : r = random.randint(0, top - height)
                     self.f.write(str(r))
                 else:
                     self.f.write(line[x])
@@ -114,12 +123,14 @@ class Write( enum.Enum) :
                     self.f.write(","+self.RED+",0,0\n")
 
     def process_write_line_for_dot(self, line):
-        space = 25
+        #space = 25
+        space = self.dim_y - 3
         filename = line[self.FILE]
         if not filename.startswith(self.a.VAR_ROOT_DATABASE + os.sep):
             filename = self.a.VAR_ROOT_DATABASE + os.sep + line[self.FILE]
 
         if not os.path.isfile(filename): return
+
 
         try:
             if True: dimx, dimy = Image.open(filename).size  # get image bounds... slow!!
@@ -153,7 +164,7 @@ class Write( enum.Enum) :
                         elif x == self.FACE_Y:
                             self.f.write(str(int(line[x]) + z * 2 + space))
                         elif x == self.FACE_WIDTH or x == self.FACE_HEIGHT:
-                            self.f.write(str(28))
+                            self.f.write(str(self.dim_x))
 
                     elif (y % 2 == 1 ) and x == self.FACE_X:
                         r = 0
@@ -164,7 +175,7 @@ class Write( enum.Enum) :
                         if top - height > 0: r = random.randint(0, top - height)
                         self.f.write(str(r))
                     elif (y % 2 == 1) and (x == self.FACE_WIDTH or x == self.FACE_HEIGHT):
-                        self.f.write(str(28))
+                        self.f.write(str(self.dim_y))
                     else :
                         self.f.write(line[x])
 

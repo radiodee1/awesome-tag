@@ -1,6 +1,6 @@
 
 
-class Enum(object) :
+class Dimension(object) :
     def __init__(self):
         self.ENUM_LOAD_ALL_CUTOFF = 0
         self.ENUM_LOAD_DOT_ONLY = 1
@@ -28,7 +28,7 @@ class Enum(object) :
         self.ROW_NAME_LARGER_XY = 1
         self.ROW_NAME_LARGER_OUT = 2
 
-        self.key = self.ROW_NAME_ORIGINAL_28
+        self.key = self.ROW_NAME_LARGER_XY
 
         def dim_xy(w, h):
             return [w , h]
@@ -64,17 +64,17 @@ class Enum(object) :
 
             ],
             [
-                self.ENUM_LOAD_CONV_GRADIENT,
+                self.ENUM_LOAD_ALL_CUTOFF,
                 'big_input',
                 'load all as big input',
                 dim_ab(4 * 3, 2),
-                dim_ab(28 * 28 * 3, 2),
-                dim_xy(28, 28),
+                dim_ab(50 * 50 * 3, 2),
+                dim_xy(50, 50),
                 dim_abcd(5, 5, 3, 32),
                 dim_bias(32),
                 dim_abcd(5, 5, 32, 64),
                 dim_bias(64),
-                dim_abcd(-1, 28, 28, 3),
+                dim_abcd(-1, 50, 50, 3),
                 dim_ab(-1, 7 * 7 * 64),
                 dim_ab(7 * 7 * 64, 1024),
                 dim_bias(1024),

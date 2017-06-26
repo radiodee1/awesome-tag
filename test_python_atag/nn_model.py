@@ -11,10 +11,10 @@ import tensorflow as tf
 import atag_csv as enum
 import nn_dim as dim
 
-class NN(enum.Enum, dim.Enum):
+class NN(enum.Enum, dim.Dimension):
     def __init__(self, atag):
         enum.Enum.__init__(self)
-        dim.Enum.__init__(self)
+        dim.Dimension.__init__(self)
 
         self.a = atag
         self.ckpt_folder = atag.VAR_LOCAL_DATABASE

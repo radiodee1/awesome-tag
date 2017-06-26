@@ -8,10 +8,10 @@ from gi.repository import Gtk, GdkPixbuf, Gdk
 import cairo
 import nn_dim as dim
 
-class DrawingArea(Gtk.DrawingArea, dim.Enum) :
+class DrawingArea(Gtk.DrawingArea, dim.Dimension) :
     def __init__(self):
         Gtk.DrawingArea.__init__(self)
-        dim.Enum.__init__(self)
+        dim.Dimension.__init__(self)
         self.space_top = 0#10
         self.space_left = 0
         self.imagename = None

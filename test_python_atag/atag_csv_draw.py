@@ -8,10 +8,10 @@ from PIL import Image, ImageFile
 Here we read the csv file that we made and train the models
 '''
 
-class Read( enum.Enum, dim.Enum) :
+class Read( enum.Enum, dim.Dimension) :
     def __init__(self, atag):
         enum.Enum.__init__(self)
-        dim.Enum.__init__(self)
+        dim.Dimension.__init__(self)
 
 
         self.boxlist_r = []

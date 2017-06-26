@@ -7,10 +7,10 @@ import atag_csv as enum
 import nn_record as rec
 import nn_dim as dim
 
-class Load(enum.Enum, dim.Enum):
+class Load(enum.Enum, dim.Dimension):
     def __init__(self, atag, filename, csv_filename=None):
         enum.Enum.__init__(self)
-        dim.Enum.__init__(self)
+        dim.Dimension.__init__(self)
 
         self.dim_x = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][0]
         self.dim_y = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][1]
