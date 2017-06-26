@@ -56,8 +56,8 @@ class Dimension(object) :
                 dim_abcd( 5, 5, 32, 64),
                 dim_bias(64),
                 dim_abcd(-1, 28, 28, 3),
-                dim_ab(-1, 7 * 7 * 64),
-                dim_ab(7 * 7 * 64, 1024),
+                dim_ab(-1, 7 * 7 * 64), # -1, 3136
+                dim_ab(7 * 7 * 64, 1024), # 3136, 1024
                 dim_bias(1024),
                 dim_ab(1024, 2),
                 dim_bias(2)
@@ -74,9 +74,9 @@ class Dimension(object) :
                 dim_bias(44), # conv bias 1
                 dim_abcd(5, 5, 44, 88), # conv weight 2
                 dim_bias(88),
-                dim_abcd(-1, 44, 44, 3),
-                dim_ab(-1, 11 * 11 * 88), # -1, 10648
-                dim_ab(11 * 11 * 88, 1024), # 10648 , 1024
+                dim_abcd(-1, 40, 40, 3),
+                dim_ab(-1, 10 * 10 * 88), # -1, 8800
+                dim_ab(10 * 10 * 88, 1024), # 8800 , 1024
                 dim_bias(1024),
                 dim_ab(1024, 2),
                 dim_bias(2)
