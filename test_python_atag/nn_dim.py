@@ -67,16 +67,16 @@ class Dimension(object) :
                 self.ENUM_LOAD_ALL_CUTOFF,
                 'big_input',
                 'load all as big input',
-                dim_ab(4 * 3, 2),
-                dim_ab(50 * 50 * 3, 2),
-                dim_xy(50, 50),
-                dim_abcd(5, 5, 3, 32),
-                dim_bias(32),
-                dim_abcd(5, 5, 32, 64),
-                dim_bias(64),
-                dim_abcd(-1, 50, 50, 3),
-                dim_ab(-1, 7 * 7 * 64),
-                dim_ab(7 * 7 * 64, 1024),
+                dim_ab(4 * 3, 2), # in out dot
+                dim_ab(40 * 40 * 3, 2), # in out conv
+                dim_xy(40, 40), # x y
+                dim_abcd(5, 5, 3, 44), # conv weight 1
+                dim_bias(44), # conv bias 1
+                dim_abcd(5, 5, 44, 88), # conv weight 2
+                dim_bias(88),
+                dim_abcd(-1, 44, 44, 3),
+                dim_ab(-1, 11 * 11 * 88), # -1, 10648
+                dim_ab(11 * 11 * 88, 1024), # 10648 , 1024
                 dim_bias(1024),
                 dim_ab(1024, 2),
                 dim_bias(2)
