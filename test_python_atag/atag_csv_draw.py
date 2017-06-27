@@ -64,7 +64,7 @@ class Read( enum.Enum, dim.Dimension) :
                 for line in f:
                     self.process_read_line(line)
             f.close()
-            print "num of boxes", self.num
+            print "num of boxes simple", self.num
             pass
 
     def process_read_file_predict(self):
@@ -82,7 +82,7 @@ class Read( enum.Enum, dim.Dimension) :
                 for line in f:
                     self.process_read_line(line)
             f.close()
-            print "num of boxes", self.num
+            print "num of boxes dot", self.num
             pass
 
     def process_read_file_predict_list(self):

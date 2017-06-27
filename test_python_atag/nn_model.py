@@ -64,6 +64,7 @@ class NN(enum.Enum, dim.Dimension):
 
         self.group_initialize = True
         self.sess = tf.InteractiveSession()
+        #self.sess = tf.Session()
 
         ''' DOT FIRST '''
         #input_num = 4 * 3  # like mnist but with three channels
@@ -462,13 +463,19 @@ class NN(enum.Enum, dim.Dimension):
 
     def save_group(self):
         extraname = self.DIMENSIONS[self.key][self.COLUMN_NAME]
-        filename = "group_" + extraname # self.save_name
-        #self.ckpt_name = filename
+        filename = "group_" + extraname #+ ".ckpt"
+
+        meta = True
         folder = self.ckpt_folder + os.sep + "ckpt-" + extraname
         if not os.path.exists(folder) :
             os.makedirs(folder)
+        else:
+            meta = False
+            pass
         saver = tf.train.Saver()
-        save_path = saver.save(self.sess, folder + os.sep + self.ckpt_name + "."+ filename)
+        #with tf.Session() as sess:
+        save_path = saver.save(self.sess,  folder + os.sep + self.ckpt_name + "." + filename,
+                               write_meta_graph=meta)
         if self.train:
             if self.conv_only:
                 self.a.dot_write(self.a.FOLDER_SAVED_CURSOR_CONV,str(self.cursor))
@@ -477,17 +484,29 @@ class NN(enum.Enum, dim.Dimension):
                 self.a.dot_write(self.a.FOLDER_SAVED_CURSOR_DOT, str(self.cursor))
                 pass
 
-        print ("saved?", filename)
+        print ("saved?", filename, save_path)
 
     def load_group(self):
+        #tf.reset_default_graph()
         extraname = self.DIMENSIONS[self.key][self.COLUMN_NAME]
-        filename = "group_" + extraname
-        #self.ckpt_name = filename
+        filename = "group_" + extraname  +  ".meta"
+        file2 = self.ckpt_folder + os.sep + "ckpt-" + extraname + os.sep
+        ckpt = tf.train.get_checkpoint_state(file2 + ".")
+
         file = self.ckpt_folder + os.sep + "ckpt-" + extraname + os.sep + self.ckpt_name + "." + filename
-        if os.path.isfile(file):
-            saver = tf.train.Saver()
-            saver.restore(self.sess, file)
-            print ("load?", filename)
+        if ckpt and ckpt.model_checkpoint_path: # os.path.isfile(file) or True:
+            new_graph = tf.Graph()
+            #self.sess = tf.InteractiveSession(graph=new_graph)
+            #tf.reset_default_graph()
+            with tf.Session(graph=new_graph) as sess:
+                saver = tf.train.import_meta_graph(file )
+                #saver = tf.train.Saver()
+                #saver.restore(sess, file)
+                saver.restore(sess, tf.train.latest_checkpoint(file2 + "."))
+            print ("load?", filename, file)
+        else :
+            print "not loaded -- " + file
+            #exit()
 
     def load_cursor(self, folder):
         default = 0
