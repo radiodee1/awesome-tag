@@ -340,6 +340,14 @@ class NN(enum.Enum, dim.Dimension):
             print "best conv mc", self.dat_best[:]
 
     def conv_weight_img(self):
+        sl8 = 8
+        sl4 = 4
+        sl2 = 2
+
+        sl8 = int(self.DIMENSIONS[self.key][self.COLUMN_CWEIGHT_1][3] / 4)
+        sl4 = int(self.DIMENSIONS[self.key][self.COLUMN_CWEIGHT_1][3] / 8) - 1
+        print sl8, sl4
+
         if self.load_ckpt : self.load_group()
         filename2 = self.ckpt_folder + os.sep+ "visualize_weights.bmp"
         filename = self.ckpt_folder + os.sep + "visualize_weights_alternate.bmp"
@@ -349,9 +357,9 @@ class NN(enum.Enum, dim.Dimension):
         show1 = False
         show2 = True
         show3 = True
-        size = (5*8* 10,5*4*2*10)
-        size2 = (5*8*10, 5 * 4* 10)
-        size3 = (2* 50 * 3, 2* 50)
+        size = (5* sl8 * 10, 5 * sl4 * sl2 *10)
+        size2 = (5 * sl8 * 10, 5 * sl4 * 10)
+        size3 = (sl2 * 50 * 3, sl2 * 50)
         img = Image.new("RGBA", size, color=0)
         img2 = Image.new("RGBA", size2, color=0)
         img3 = Image.new("RGBA", size3, color=0)
@@ -364,17 +372,17 @@ class NN(enum.Enum, dim.Dimension):
         if True:
             for i in range(5):
                 for j in range(5):
-                    for k in range(8):
-                        for m in range(4 ):
-                            for n in range(2):
+                    for k in range(sl8):
+                        for m in range(sl4 ):
+                            for n in range(sl2):
                                 for p in range(10):
                                     for q in range(10):
                                         pass
                                         if show1:
-                                            xy = ((i *8+  k) * 10 + p   , (j *4  +m  )  * 10 *2 + n * 10 + q)
-                                            r = weights[i][j][0][k*4+m] * 255.0 * math.pow(10,3)
-                                            g = weights[i][j][1][k*4+m] * 255.0 * math.pow(10,3)
-                                            b = weights[i][j][2][k*4+m] * 255.0 * math.pow(10,3)
+                                            xy = ((i * sl8+  k) * 10 + p   , (j *  sl4  +m  )  * 10 * sl2 + n * 10 + q)
+                                            r = weights[i][j][0][k* sl4 + m] * 255.0 * math.pow(10,3)
+                                            g = weights[i][j][1][k* sl4 + m] * 255.0 * math.pow(10,3)
+                                            b = weights[i][j][2][k* sl4 + m] * 255.0 * math.pow(10,3)
                                             if r > 255: r = 255
                                             if g > 255: g = 255
                                             if b > 255: b = 255
@@ -388,9 +396,9 @@ class NN(enum.Enum, dim.Dimension):
 
                                         if show2:
                                             xy2 = ((k * 5 + i) * 10 + p  , (m*n * 5 + j) * 10 * n + q )
-                                            rr = weights[i][j][0][k * 4 + m] * 255.0 * math.pow(10, 3)
-                                            gg = weights[i][j][1][k * 4 + m] * 255.0 * math.pow(10, 3)
-                                            bb = weights[i][j][2][k * 4 + m] * 255.0 * math.pow(10, 3)
+                                            rr = weights[i][j][0][k * sl4 + m] * 255.0 * math.pow(10, 3)
+                                            gg = weights[i][j][1][k * sl4 + m] * 255.0 * math.pow(10, 3)
+                                            bb = weights[i][j][2][k * sl4 + m] * 255.0 * math.pow(10, 3)
                                             if rr > 255: rr = 255
                                             if gg > 255: gg = 255
                                             if bb > 255: bb = 255
