@@ -103,7 +103,8 @@ class DrawingArea(Gtk.DrawingArea, dim.Dimension) :
                 c0 = c
                 c1 = c + 1
                 c2 = c + 2
-                context.set_source_rgb(self.gradient_list[c0] * 2,
+                if c2 < len(self.gradient_list) :
+                    context.set_source_rgb(self.gradient_list[c0] * 2,
                                self.gradient_list[c1] * 2,
                                self.gradient_list[c2] * 2)
 
