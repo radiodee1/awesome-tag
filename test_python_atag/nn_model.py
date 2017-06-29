@@ -24,7 +24,7 @@ class NN(enum.Enum, dim.Dimension):
         self.load_ckpt = True
         self.save_ckpt = False
 
-        self.sess = tf.InteractiveSession()
+        #self.sess = tf.InteractiveSession()
         self.mnist = []
         self.mnist_train = []
         self.mnist_test = []
@@ -470,11 +470,12 @@ class NN(enum.Enum, dim.Dimension):
         if not os.path.exists(folder) :
             os.makedirs(folder)
         else:
-            meta = False
+            #meta = False
             pass
-        saver = tf.train.Saver()
-        #with tf.Session() as sess:
-        save_path = saver.save(self.sess,  folder + os.sep + self.ckpt_name + "." + filename,
+        if True: #with tf.Session() as sess:
+            saver = tf.train.Saver()
+            #with tf.Session() as sess:
+            save_path = saver.save(self.sess,  folder + os.sep + self.ckpt_name + "." + filename,
                                write_meta_graph=meta)
         if self.train:
             if self.conv_only:
@@ -489,20 +490,21 @@ class NN(enum.Enum, dim.Dimension):
     def load_group(self):
         #tf.reset_default_graph()
         extraname = self.DIMENSIONS[self.key][self.COLUMN_NAME]
-        filename = "group_" + extraname  +  ".meta"
+        filename = "group_" + extraname  #+  ".index"
         file2 = self.ckpt_folder + os.sep + "ckpt-" + extraname + os.sep
         ckpt = tf.train.get_checkpoint_state(file2 + ".")
 
         file = self.ckpt_folder + os.sep + "ckpt-" + extraname + os.sep + self.ckpt_name + "." + filename
         if ckpt and ckpt.model_checkpoint_path: # os.path.isfile(file) or True:
-            new_graph = tf.Graph()
+            #new_graph = tf.Graph()
             #self.sess = tf.InteractiveSession(graph=new_graph)
             #tf.reset_default_graph()
-            with tf.Session(graph=new_graph) as sess:
-                saver = tf.train.import_meta_graph(file )
-                #saver = tf.train.Saver()
-                #saver.restore(sess, file)
-                saver.restore(sess, tf.train.latest_checkpoint(file2 + "."))
+            if True: #with tf.Session() as sess:
+                #saver = tf.train.import_meta_graph(file )
+                saver = tf.train.Saver()
+                saver.restore(self.sess, file)
+                #saver.restore(sess, tf.train.latest_checkpoint(file2 + "."))
+                #self.sess = sess
             print ("load?", filename, file)
         else :
             print "not loaded -- " + file
