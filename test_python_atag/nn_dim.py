@@ -102,4 +102,4 @@ class Dimension(object) :
 
         ]
 
-        print self.DIMENSIONS[self.key]
+        #print self.DIMENSIONS[self.key]
