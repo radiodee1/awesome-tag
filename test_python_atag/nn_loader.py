@@ -230,7 +230,7 @@ class Load(enum.Enum, dim.Dimension):
         #multx = width / float(mnist_dim)
         multy = height / float(mnist_dim)
         multx = multy
-        if False:
+        if width > height:
             multx = width / float(mnist_dim)
 
         xy_list = []
@@ -238,20 +238,11 @@ class Load(enum.Enum, dim.Dimension):
 
         counter = 0
 
-        if True:
-            xsurplus = int ((width - 0) / 2)
-            newcenter = int(((width - 0 ) / 2 )/ multx )
-            #xoffset = int (( width * multx - width) / 2)
-
-            if width > self.dim_x or True:
-                x = x - newcenter/2 # ( xsurplus - newcenter)
-                width = self.dim_x * multx
-                #print "greater", x, xsurplus, newcenter, width, multx, self.dim_x, self.dim_x * multx, dimx
-            else :
-                x = x - newcenter/2
-                width =  self.dim_x * multx
-                #print "lesser", x, width, multx, self.dim_x
-
+        ''' center image in x direction '''
+        if height > width:
+            xoffset = int (( width  - self.dim_x * multx) / 2)
+            if  True:
+                x = x + xoffset
 
         ''' Put in shrunk form. '''
         if  len (self.img.getbands()) == 3 :
