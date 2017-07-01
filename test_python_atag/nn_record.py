@@ -348,7 +348,7 @@ class Record( enum.Enum, dim.Dimension):
             return list[self.ATAG_ID]
         self.dat.sort(key=sort_key)
 
-        print "end dat",self.dat[0:1],"..."
+        #print "end dat",self.dat[0:1],"..."
         new_dat = []
         loop = True
 
@@ -424,5 +424,5 @@ class Record( enum.Enum, dim.Dimension):
 
             i = i + 1
         self.dat = new_dat
-        print self.dat[:10],"..."
+        #print self.dat[:10],"..."
         return self.dat

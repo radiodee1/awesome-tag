@@ -113,7 +113,7 @@ class Read( enum.Enum) :
         if self.pipeline_stage >=4 :
             ''' final convolution neural network '''
             self.nn.predict_remove_symbol = 1
-            self.nn.set_vars(len(ll.dat), 1,  0) # 100,0
+            self.nn.set_vars(len(ll.dat), 100,  0) # 100,0
             self.nn.conv_setup()
             print "len-dat2", len(ll.dat)
 

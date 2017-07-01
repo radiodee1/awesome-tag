@@ -248,8 +248,9 @@ class Load(enum.Enum, dim.Dimension):
         ''' center image in x direction '''
         if height > width:
             xoffset = int (( width  - self.dim_x * multx) / 2)
-            if  True:
+            if not (x + xoffset <= 0 or x + xoffset + width > dimx) :
                 x = x + xoffset
+
 
         ''' Put in shrunk form. '''
         if  len (self.img.getbands()) == 3 :
