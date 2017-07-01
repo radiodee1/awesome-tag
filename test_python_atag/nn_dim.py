@@ -28,7 +28,8 @@ class Dimension(object) :
         self.ROW_NAME_LARGER_XY = 1
         self.ROW_NAME_LARGER_OUT = 2
 
-        self.key = self.ROW_NAME_LARGER_XY
+        #self.key = self.ROW_NAME_ORIGINAL_28 #
+        self.key =  self.ROW_NAME_LARGER_XY
 
         def dim_xy(w, h):
             return [w , h]
@@ -68,7 +69,7 @@ class Dimension(object) :
                 'big_input',
                 'load all as big input',
                 dim_ab(4 * 3, 2), # in out dot
-                dim_ab(40 * 40 * 3, 2), # in out conv
+                dim_ab(40 * 40 * 3, 2), # in out conv 4800, 2
                 dim_xy(40, 40), # x y
                 dim_abcd(5, 5, 3, 44), # conv weight 1
                 dim_bias(44), # conv bias 1
@@ -83,18 +84,18 @@ class Dimension(object) :
             ],
             [
                 self.ENUM_LOAD_ALL_CUTOFF,
-                'change_output',
-                'load all as default',
-                dim_ab(4 * 3, 2),
-                dim_ab(28 * 28 * 3, 2),
-                dim_xy(28, 28),
-                dim_abcd(5, 5, 3, 32),
-                dim_bias(32),
-                dim_abcd(5, 5, 32, 64),
-                dim_bias(64),
-                dim_abcd(-1, 28, 28, 3),
-                dim_ab(-1, 7 * 7 * 64),
-                dim_ab(7 * 7 * 64, 1024),
+                'big_input_2',
+                'load all as big input',
+                dim_ab(4 * 3, 2),  # in out dot
+                dim_ab(40 * 40 * 3, 2),  # in out conv 4800, 2
+                dim_xy(40, 40),  # x y
+                dim_abcd(5, 5, 3, 44),  # conv weight 1
+                dim_bias(44),  # conv bias 1
+                dim_abcd(5, 5, 44, 88),  # conv weight 2
+                dim_bias(88),
+                dim_abcd(-1, 40, 40, 3),
+                dim_ab(-1, 10 * 10 * 88),  # -1, 8800
+                dim_ab(10 * 10 * 88, 1024),  # 8800 , 1024
                 dim_bias(1024),
                 dim_ab(1024, 2),
                 dim_bias(2)

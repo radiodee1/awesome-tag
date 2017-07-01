@@ -183,11 +183,18 @@ class Load(enum.Enum, dim.Dimension):
                 print [lbl_1, lbl_2]
                 sys.exit()
 
-            self.image.append(img)
-            self.image_x3.append(three)
-            self.image_skin.append(skin)
-            self.label.append([lbl_1,lbl_2])
-            self.iter = self.iter + 1
+            if True:
+                self.image.append(img)
+                self.image_x3.append(three)
+                self.image_skin.append(skin)
+                self.label.append([lbl_1,lbl_2])
+                self.iter = self.iter + 1
+            if False:
+                self.image.extend(img)
+                self.image_x3.extend(three)
+                self.image_skin.extend(skin)
+                self.label.extend([lbl_1, lbl_2])
+                self.iter = self.iter + 1
 
         return self.image_skin, self.image_x3, self.image, self.label
 

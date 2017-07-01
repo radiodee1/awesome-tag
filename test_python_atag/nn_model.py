@@ -94,8 +94,8 @@ class NN(enum.Enum, dim.Dimension):
 
 
         ''' CONVOLUTION NEXT '''
-        c_output = 2
-        c_input = 784 * 3
+        #c_output = 2
+        #c_input = 784 * 3
 
         ## DIM BLOCK ##
         c_input = self.DIMENSIONS[self.key][self.COLUMN_IN_OUT_CONV][0]
@@ -283,7 +283,8 @@ class NN(enum.Enum, dim.Dimension):
                 batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, self.CONST_THREE_CHANNEL)
                 #self.c_y_out = tf.argmax(self.y_conv,1) ## 1
                 if len(batch_0) > 0  :
-                    #print batch_0
+
+                    #print len(batch_0), "len batch_0 2"
                     out.extend( self.sess.run(self.c_y_out, feed_dict={self.c_x : batch_0, self.c_y_: batch_1, self.keep_prob: 1.0}))
                     #print out, len(out) , i, self.cursor_tot
 

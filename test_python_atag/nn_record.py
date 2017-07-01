@@ -3,10 +3,12 @@ import os
 import atag_csv as enum
 #import nn_kmeans as kmeans
 from PIL import Image
+import nn_dim as dim
 
-class Record( enum.Enum):
+class Record( enum.Enum, dim.Dimension):
     def __init__(self, atag):
         enum.Enum.__init__(self)
+        dim.Dimension.__init__(self)
         print
         self.dat = []
         self.a = atag
@@ -14,14 +16,17 @@ class Record( enum.Enum):
         self.strict_columns = False
         self.allow_skipping = True
         self.strict_next_to = True
-        self.dim_x = 28
-        self.dim_y = 28
+        self.xy = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][0]
+        self.dim_x = self.xy
+        self.dim_y = self.xy
         self.count = 0
+        print self.xy , "xy"
 
     def set_dat(self, dat):
         self.dat = dat
 
-    def make_boxes(self, filename, dim=28):
+    def make_boxes(self, filename, dim=-1):
+        if dim == -1 : dim = self.xy
         self.dim_x = dim
         self.dim_y = dim
         xx, yy = Image.open(filename).size
@@ -58,7 +63,8 @@ class Record( enum.Enum):
             self.dat.append(temp)
         return self.dat
 
-    def make_boxes_mc(self, filename, dim=28, dat = []):
+    def make_boxes_mc(self, filename, dim=-1, dat = []):
+        if dim == -1 : dim = self.xy
         self.dim_x = dim
         self.dim_y = dim
 
