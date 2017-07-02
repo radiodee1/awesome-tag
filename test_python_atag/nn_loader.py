@@ -267,6 +267,11 @@ class Load(enum.Enum, dim.Dimension):
                             oneimg_rgb.extend(list(self.img.getpixel((int(astart) ,int(bstart)))))
                             xy_list.append(item)
                             counter = counter + 1
+                        else:
+                            item = [aa, bb, list((0.0, 0.0))]
+                            oneimg_rgb.extend(list((0.0, 0.0)))
+                            xy_list.append(item)
+                            counter = counter + 1
             else:
                 print "change size??"
 
