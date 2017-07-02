@@ -189,12 +189,7 @@ class Load(enum.Enum, dim.Dimension):
                 self.image_skin.append(skin)
                 self.label.append([lbl_1,lbl_2])
                 self.iter = self.iter + 1
-            if False:
-                self.image.extend(img)
-                self.image_x3.extend(three)
-                self.image_skin.extend(skin)
-                self.label.extend([lbl_1, lbl_2])
-                self.iter = self.iter + 1
+
 
         return self.image_skin, self.image_x3, self.image, self.label
 
@@ -268,8 +263,8 @@ class Load(enum.Enum, dim.Dimension):
                             xy_list.append(item)
                             counter = counter + 1
                         else:
-                            item = [aa, bb, list((0.0, 0.0))]
-                            oneimg_rgb.extend(list((0.0, 0.0)))
+                            item = [aa, bb, list((0.0, 0.0, 0.0))]
+                            oneimg_rgb.extend(list((0.0, 0.0, 0.0)))
                             xy_list.append(item)
                             counter = counter + 1
             else:
