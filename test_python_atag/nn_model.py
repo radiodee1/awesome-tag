@@ -348,7 +348,9 @@ class NN(enum.Enum, dim.Dimension):
 
         sl8 = int(self.DIMENSIONS[self.key][self.COLUMN_CWEIGHT_1][3] / 4)
         sl4 = int(self.DIMENSIONS[self.key][self.COLUMN_CWEIGHT_1][3] / 8) - 1
-        print sl8, sl4
+        skin2 = int(math.sqrt(self.DIMENSIONS[self.key][self.COLUMN_IN_OUT_DOT][0] / 3))
+
+        print sl8, sl4, skin2
 
         if self.load_ckpt : self.load_group()
         filename2 = self.ckpt_folder + os.sep+ "visualize_weights.bmp"
@@ -361,7 +363,7 @@ class NN(enum.Enum, dim.Dimension):
         show3 = True
         size = (5* sl8 * 10, 5 * sl4 * sl2 *10)
         size2 = (5 * sl8 * 10, 5 * sl4 * 10)
-        size3 = (sl2 * 50 * 3, sl2 * 50)
+        size3 = (skin2 * 50 * 3, skin2 * 50)
         img = Image.new("RGBA", size, color=0)
         img2 = Image.new("RGBA", size2, color=0)
         img3 = Image.new("RGBA", size3, color=0)
@@ -416,24 +418,25 @@ class NN(enum.Enum, dim.Dimension):
         #print weights
         if True:
             index = 0
+
             for index in range(3):
-                for i in range(2):
-                    for j in range(2):
+                for i in range(skin2):
+                    for j in range(skin2):
                         for m in range(50):
                             for n in range(50):
-                                xy3 = ((i*1) * 50 + m + index * 50 * 2, (j * 1) * 50 + n)
+                                xy3 = ((i*1) * 50 + m + index * 50 * skin2, (j * 1) * 50 + n)
                                 if index < 2:
-                                    rr = (skin[(j * 2 + i) * 3 + 0][index] + 1.0) * 255.0 * math.pow(10, 0)
-                                    gg = (skin[(j * 2 + i) * 3 + 1][index] + 1.0) * 255.0 * math.pow(10, 0)
-                                    bb = (skin[(j * 2 + i) * 3 + 2][index] + 1.0) * 255.0 * math.pow(10, 0)
+                                    rr = (skin[(j * skin2 + i) * 3 + 0][index] + 1.0) * 255.0 * math.pow(10, 0)
+                                    gg = (skin[(j * skin2 + i) * 3 + 1][index] + 1.0) * 255.0 * math.pow(10, 0)
+                                    bb = (skin[(j * skin2 + i) * 3 + 2][index] + 1.0) * 255.0 * math.pow(10, 0)
                                     if m == 0 and n == 0 :print rr,gg,bb
                                 else:
-                                    r1 = (skin[(j * 2 + i) * 3 + 0][0] + 0.0)# * 255.0 * math.pow(10, 1)
-                                    g1 = (skin[(j * 2 + i) * 3 + 1][0] + 0.0)# * 255.0 * math.pow(10, 1)
-                                    b1 = (skin[(j * 2 + i) * 3 + 2][0] + 0.0)# * 255.0 * math.pow(10, 1)
-                                    r2 = (skin[(j * 2 + i) * 3 + 0][1] + 0.0)# * 255.0 * math.pow(10, 1)
-                                    g2 = (skin[(j * 2 + i) * 3 + 1][1] + 0.0)# * 255.0 * math.pow(10, 1)
-                                    b2 = (skin[(j * 2 + i) * 3 + 2][1] + 0.0)# * 255.0 * math.pow(10, 1)
+                                    r1 = (skin[(j * skin2 + i) * 3 + 0][0] + 0.0)# * 255.0 * math.pow(10, 1)
+                                    g1 = (skin[(j * skin2 + i) * 3 + 1][0] + 0.0)# * 255.0 * math.pow(10, 1)
+                                    b1 = (skin[(j * skin2 + i) * 3 + 2][0] + 0.0)# * 255.0 * math.pow(10, 1)
+                                    r2 = (skin[(j * skin2 + i) * 3 + 0][1] + 0.0)# * 255.0 * math.pow(10, 1)
+                                    g2 = (skin[(j * skin2 + i) * 3 + 1][1] + 0.0)# * 255.0 * math.pow(10, 1)
+                                    b2 = (skin[(j * skin2 + i) * 3 + 2][1] + 0.0)# * 255.0 * math.pow(10, 1)
                                     rr = (r1 + r2) /2.0  * 255.0 * math.pow(10, 4)
                                     gg = (g1 + g2) /2.0  * 255.0 * math.pow(10, 4)
                                     bb = (b1 + b2) /2.0  * 255.0 * math.pow(10, 4)

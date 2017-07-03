@@ -16,6 +16,7 @@ class Load(enum.Enum, dim.Dimension):
         self.dim_x = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][0]
         self.dim_y = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][1]
         self.pixel_enum = self.DIMENSIONS[self.key][self.COLUMN_LOADTYPE]
+        self.dot_xy =int(math.sqrt(self.DIMENSIONS[self.key][self.COLUMN_IN_OUT_DOT][0] / 3))
 
         self.mnist_train = {}
         self.mnist_test = {}
@@ -221,7 +222,7 @@ class Load(enum.Enum, dim.Dimension):
         img2 = np.asarray(img2, dtype="float32") ## 'img2' MUST BE A NUMPY ARRAY!!
 
 
-        img_skin = [[0] *3] * 4
+        img_skin = [[0] *3] * self.dot_xy * self.dot_xy
         img_skin = np.asarray(img_skin, dtype="float32")
 
         oneimg = []
@@ -358,12 +359,12 @@ class Load(enum.Enum, dim.Dimension):
         for i in range(len(xy_list)):
             q = xy_list[i]
             color = q[2]
-            if q[0] == 0 and q[1] == 0 : img_skin[0] = color #/ float(255)
-            if q[0] == 1 and q[1] == 0 : img_skin[1] = color #/ float(255)
-            if q[0] == 0 and q[1] == 1 : img_skin[2] = color #/ float(255)
-            if q[0] == 1 and q[1] == 1 : img_skin[3] = color #/ float(255)
+            if q[0] == 0 and q[1] == 0 and len(img_skin) >= 1: img_skin[0] = color #/ float(255)
+            if q[0] == 1 and q[1] == 0 and len(img_skin) >= 2: img_skin[1] = color #/ float(255)
+            if q[0] == 0 and q[1] == 1 and len(img_skin) >= 3: img_skin[2] = color #/ float(255)
+            if q[0] == 1 and q[1] == 1 and len(img_skin) >= 4: img_skin[3] = color #/ float(255)
 
-        for i in range(4) :
+        for i in range(int(self.dot_xy * self.dot_xy)): #len(img_skin)) :
             skin.extend(list(img_skin[i]))
 
         for s in range(len(skin)):
