@@ -118,6 +118,8 @@ class Load(enum.Enum, dim.Dimension):
             ''' open image if it is new! '''
             self.filename = filename
             self.img = Image.open(filename)
+            
+            self.special_horizontal_align = True
 
             skin, img , three = self.look_at_img(filename, x, y, width, height)
             print len(skin), len(img), len(three)
@@ -236,7 +238,7 @@ class Load(enum.Enum, dim.Dimension):
         #multx = width / float(mnist_dim)
         multy = height / float(mnist_dim)
         multx = multy
-        if width > height:
+        if width > height or not self.special_horizontal_align:
             multx = width / float(mnist_dim)
 
         xy_list = []
