@@ -39,6 +39,7 @@ class Load(enum.Enum, dim.Dimension):
         self.filename_old = ""
         self.img = None
         self.crop_resize_special = False
+        self.special_horizontal_align = True
 
         self.record = rec.Record(atag)
         self.normal_train = True
@@ -244,7 +245,7 @@ class Load(enum.Enum, dim.Dimension):
         counter = 0
 
         ''' center image in x direction '''
-        if height > width:
+        if height > width and self.special_horizontal_align:
             xoffset = int (( width  - self.dim_x * multx) / 2)
             if not (x + xoffset <= 0 or x + xoffset + width > dimx) :
                 x = x + xoffset

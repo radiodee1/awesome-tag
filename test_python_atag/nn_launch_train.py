@@ -87,6 +87,7 @@ class Read( enum.Enum) :
         self.nn.train = False
         self.nn.test = False
         self.nn.set_loader(ll)
+        ll.special_horizontal_align = False
 
         ''' make initial box grid '''
         if self.pipeline_stage >= 1:
