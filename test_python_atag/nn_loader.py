@@ -1,5 +1,6 @@
 import numpy as np
 from PIL import Image, ImageFile
+from resizeimage import resizeimage
 import math
 import os
 import sys
@@ -36,6 +37,7 @@ class Load(enum.Enum, dim.Dimension):
         self.filename = filename
         self.filename_old = ""
         self.img = None
+        self.crop_resize_special = False
 
         self.record = rec.Record(atag)
         self.normal_train = True
@@ -248,27 +250,51 @@ class Load(enum.Enum, dim.Dimension):
 
 
         ''' Put in shrunk form. '''
-        if  len (self.img.getbands()) == 3 :
-            if not (x + width > dimx and y + height > dimy) :
+        if self.crop_resize_special:
+            #self.img.show()
+            print x, y, width, height, "dimensions"
+            cropped = self.img.crop((x,y,x + width, y + height))
+            #cropped.show()
+            resize = cropped.resize((self.dim_x, self.dim_y))
+            #resize = resizeimage.resize_height(resize, self.dim_y)
+            for aa in range(self.dim_x):
+                for bb in range(self.dim_y):
+                    astart = aa #x + aa * multx
+                    bstart = bb #y + bb * multy
 
-                for aa in range(self.dim_x) :
-                    for bb in range(self.dim_y) :
-                        astart = x + aa * multx
-                        bstart = y + bb * multy
+                    if astart >= 0 and astart < dimx and bstart >= 0 and bstart < dimy:
+                        item = [aa, bb, list(resize.getpixel((int(astart), int(bstart)))[:3])]
+                        oneimg_rgb.extend(list(resize.getpixel((int(astart), int(bstart)))[:3]))
+                        xy_list.append(item)
+                        counter = counter + 1
+                    else:
+                        item = [aa, bb, list((0.0, 0.0, 0.0))]
+                        oneimg_rgb.extend(list((0.0, 0.0, 0.0)))
+                        xy_list.append(item)
+                        counter = counter + 1
+
+        if not self.crop_resize_special:
+            if  len (self.img.getbands()) == 3 :
+                if not (x + width > dimx and y + height > dimy) :
+
+                    for aa in range(self.dim_x) :
+                        for bb in range(self.dim_y) :
+                            astart = x + aa * multx
+                            bstart = y + bb * multy
 
 
-                        if  astart >= 0 and astart < dimx and bstart >= 0 and bstart < dimy :
-                            item = [ aa, bb, list(self.img.getpixel((int(astart) ,int(bstart))))]
-                            oneimg_rgb.extend(list(self.img.getpixel((int(astart) ,int(bstart)))))
-                            xy_list.append(item)
-                            counter = counter + 1
-                        else:
-                            item = [aa, bb, list((0.0, 0.0, 0.0))]
-                            oneimg_rgb.extend(list((0.0, 0.0, 0.0)))
-                            xy_list.append(item)
-                            counter = counter + 1
-            else:
-                print "change size??"
+                            if  astart >= 0 and astart < dimx and bstart >= 0 and bstart < dimy :
+                                item = [ aa, bb, list(self.img.getpixel((int(astart) ,int(bstart))))]
+                                oneimg_rgb.extend(list(self.img.getpixel((int(astart) ,int(bstart)))))
+                                xy_list.append(item)
+                                counter = counter + 1
+                            else:
+                                item = [aa, bb, list((0.0, 0.0, 0.0))]
+                                oneimg_rgb.extend(list((0.0, 0.0, 0.0)))
+                                xy_list.append(item)
+                                counter = counter + 1
+                else:
+                    print "change size??"
 
         ''' Put list in 28 x 28 array. '''
         if len(xy_list) == 0:
