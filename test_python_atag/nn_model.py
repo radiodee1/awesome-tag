@@ -29,7 +29,7 @@ class NN(enum.Enum, dim.Dimension):
         self.mnist_train = []
         self.mnist_test = []
 
-        self.loader = []
+        self.loader = None # []
         self.use_loader = False
 
         self.cursor = 0
@@ -500,9 +500,7 @@ class NN(enum.Enum, dim.Dimension):
 
         file = self.ckpt_folder + os.sep + "ckpt-" + extraname + os.sep + self.ckpt_name + "." + filename
         if ckpt and ckpt.model_checkpoint_path: # os.path.isfile(file) or True:
-            #new_graph = tf.Graph()
-            #self.sess = tf.InteractiveSession(graph=new_graph)
-            #tf.reset_default_graph()
+
             if True: #with tf.Session() as sess:
                 #saver = tf.train.import_meta_graph(file )
                 saver = tf.train.Saver()
@@ -528,7 +526,7 @@ class NN(enum.Enum, dim.Dimension):
         self.cursor = 0
         self.use_loader = True
 
-    def set_vars(self, length,  batchsize, start = 1):
+    def set_vars(self, length,  batchsize, start = 1, adjust_x=False):
         self.batchsize = batchsize
         self.dat_len = length
         self.cursor_tot = int(length / batchsize) ## -1
@@ -537,6 +535,8 @@ class NN(enum.Enum, dim.Dimension):
         #self.loader.start_num = start
         self.cursor = start
         #print "vars", self.cursor_tot, self.save_name
+        if self.loader != None:
+            self.loader.special_horizontal_align = adjust_x
 
     def get_nn_next_predict(self, batchsize, num_channels = 1):
         print self.cursor, num_channels, "cursor, num-channels"

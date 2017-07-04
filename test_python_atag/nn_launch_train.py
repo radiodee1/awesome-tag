@@ -72,7 +72,7 @@ class Read( enum.Enum) :
             #self.nn.set_vars(len(ll.dat), 100, 0)
             #self.nn.skintone_setup()
 
-            self.nn.set_vars(len(ll.dat), 100, 0)
+            self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=self.nn.train)
             self.nn.conv_setup()
             self.a.dot_write(a.FOLDER_SAVED_CURSOR_CONV, str(0))
 
@@ -115,7 +115,7 @@ class Read( enum.Enum) :
             ''' final convolution neural network '''
             #ll.normal_train = False
             self.nn.predict_remove_symbol = 1
-            self.nn.set_vars(len(ll.dat), 100,  0) # 100,0
+            self.nn.set_vars(len(ll.dat), 100,  0, adjust_x=True)
             self.nn.conv_setup()
             print "len-dat2", len(ll.dat)
 
@@ -132,7 +132,7 @@ class Read( enum.Enum) :
                 if see_boxes: see_list.extend(ll.dat[:])
 
                 self.nn.predict_remove_symbol = 1
-                self.nn.set_vars(len(ll.dat), 100, 0)
+                self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=True)
                 if not see_boxes: self.nn.conv_setup_mc()
             if not see_boxes: ll.dat = ll.record.renumber_dat_list(self.nn.dat_best)
             else : ll.dat = see_list[:]

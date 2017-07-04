@@ -39,7 +39,7 @@ class Load(enum.Enum, dim.Dimension):
         self.filename_old = ""
         self.img = None
         self.crop_resize_special = False
-        self.special_horizontal_align = True
+        self.special_horizontal_align = False
 
         self.record = rec.Record(atag)
         self.normal_train = True
@@ -118,7 +118,7 @@ class Load(enum.Enum, dim.Dimension):
             ''' open image if it is new! '''
             self.filename = filename
             self.img = Image.open(filename)
-            
+
             self.special_horizontal_align = True
 
             skin, img , three = self.look_at_img(filename, x, y, width, height)
