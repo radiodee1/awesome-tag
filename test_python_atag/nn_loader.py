@@ -1,6 +1,6 @@
 import numpy as np
 from PIL import Image, ImageFile
-from resizeimage import resizeimage
+#from resizeimage import resizeimage
 import math
 import os
 import sys
@@ -238,7 +238,7 @@ class Load(enum.Enum, dim.Dimension):
         #multx = width / float(mnist_dim)
         multy = height / float(mnist_dim)
         multx = multy
-        if width > height or not self.special_horizontal_align:
+        if width > height: # and not self.special_horizontal_align:
             multx = width / float(mnist_dim)
 
         xy_list = []
@@ -362,10 +362,17 @@ class Load(enum.Enum, dim.Dimension):
         for i in range(len(xy_list)):
             q = xy_list[i]
             color = q[2]
-            if q[0] == 0 and q[1] == 0 and len(img_skin) >= 1: img_skin[0] = color #/ float(255)
-            if q[0] == 1 and q[1] == 0 and len(img_skin) >= 2: img_skin[1] = color #/ float(255)
-            if q[0] == 0 and q[1] == 1 and len(img_skin) >= 3: img_skin[2] = color #/ float(255)
-            if q[0] == 1 and q[1] == 1 and len(img_skin) >= 4: img_skin[3] = color #/ float(255)
+            if True:
+                if q[0] == 0 and q[1] == 0 and len(img_skin) >= 1: img_skin[0] = color #/ float(255)
+                if q[0] == 1 and q[1] == 0 and len(img_skin) >= 2: img_skin[1] = color #/ float(255)
+                if q[0] == 2 and q[1] == 0 and len(img_skin) >= 3: img_skin[2] = color #/ float(255)
+                if q[0] == 3 and q[1] == 0 and len(img_skin) >= 4: img_skin[3] = color #/ float(255)
+            if False:
+                if q[0] == 0 and q[1] == 0 and len(img_skin) >= 1: img_skin[0] = color #/ float(255)
+                if q[0] == 1 and q[1] == 0 and len(img_skin) >= 2: img_skin[1] = color #/ float(255)
+                if q[0] == 0 and q[1] == 1 and len(img_skin) >= 3: img_skin[2] = color #/ float(255)
+                if q[0] == 1 and q[1] == 1 and len(img_skin) >= 4: img_skin[3] = color #/ float(255)
+
 
         for i in range(int(self.dot_xy * self.dot_xy)): #len(img_skin)) :
             skin.extend(list(img_skin[i]))

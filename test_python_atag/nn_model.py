@@ -298,7 +298,7 @@ class NN(enum.Enum, dim.Dimension):
             print "remove conv", self.dat_remove[:10],"..."
 
         #self.sess.close()
-    def conv_setup_mc(self):
+    def conv_setup_mc(self, remove_low = False):
         if self.predict_conv :
             self.cursor = 0
             self.dat_remove = []
@@ -336,9 +336,11 @@ class NN(enum.Enum, dim.Dimension):
 
 
             print out [:3], "..."
-            #self.loader.record.remove_lines_from_dat(self.dat_remove)
-            #self.loader.dat = self.loader.record.renumber_dat_list(self.loader.dat)
-            #print "remove conv mc", self.dat_remove
+            if remove_low:
+                pass
+                self.loader.record.remove_lines_from_dat(self.dat_remove)
+                self.loader.dat = self.loader.record.renumber_dat_list(self.loader.dat)
+                print "remove conv mc", self.dat_remove
             print "best conv mc", self.dat_best[:]
 
     def conv_weight_img(self):

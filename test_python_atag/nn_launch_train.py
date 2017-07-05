@@ -6,6 +6,7 @@ import sys
 import atag_csv as enum
 import nn_loader as loader
 import atag_dotfolder as aa
+import nn_dim as dim
 #import nn_model as model
 #import nn_kmeans as kmeans
 import argparse
@@ -14,9 +15,10 @@ import argparse
 Here we read the csv file that we made and train the models. NOTE: nn_model is imported BELOW.
 '''
 
-class Read( enum.Enum) :
+class Read( enum.Enum, dim.Dimension) :
     def __init__(self, atag, pic):
         enum.Enum.__init__(self)
+        dim.Dimension.__init__(self)
 
         self.pic = pic
 
@@ -34,6 +36,7 @@ class Read( enum.Enum) :
         self.list_dat = []
 
         self.image_folder = atag.VAR_ROOT_DATABASE
+        self.pipeline_enum = self.DIMENSIONS[self.key][self.COLUMN_ENUM_PIPELINE]
 
 
     def run_nn(self):
@@ -89,56 +92,111 @@ class Read( enum.Enum) :
         self.nn.set_loader(ll)
         ll.special_horizontal_align = False
 
-        ''' make initial box grid '''
-        if self.pipeline_stage >= 1:
-            ll.dat = ll.record.make_boxes(self.pic, dim=4) # 7
-            print "num-boxes", len(ll.dat)
+        if self.pipeline_enum == self.ENUM_PIPELINE_1:
+            ''' make initial box grid '''
+            if self.pipeline_stage >= 1:
+                ll.dat = ll.record.make_boxes(self.pic, dim=4) # 7
+                print "num-boxes", len(ll.dat)
 
 
-        if self.pipeline_stage >=2:
-            ''' initial simple neural network '''
-            self.nn.predict_remove_symbol = 1
-            self.nn.set_vars(len(ll.dat), 100, 0)
-            self.nn.dot_setup()
-            print "len-dat2", len(ll.dat)
+            if self.pipeline_stage >=2:
+                ''' initial simple neural network '''
+                self.nn.predict_remove_symbol = 1
+                self.nn.set_vars(len(ll.dat), 100, 0)
+                self.nn.dot_setup()
+                print "len-dat2", len(ll.dat)
 
 
-        if self.pipeline_stage >=3 :
-            ''' two passes through aggregate box function '''
-            ll.dat = ll.record.aggregate_dat_list(ll.dat)
-            ll.record.renumber_dat_list(ll.dat)
-            ll.dat = ll.record.aggregate_dat_list(ll.dat, del_shapes=True)
-            ll.record.renumber_dat_list(ll.dat)
-            print "len-dat1", len(ll.dat)
-
-        if self.pipeline_stage >=4 :
-            ''' final convolution neural network '''
-            #ll.normal_train = False
-            self.nn.predict_remove_symbol = 1
-            self.nn.set_vars(len(ll.dat), 100,  0, adjust_x=True)
-            self.nn.conv_setup()
-            print "len-dat2", len(ll.dat)
-
-        if self.pipeline_stage >=5 and True:
-            ''' try to improve box '''
-            see_boxes = False
-            if self.pipeline_stage == 5: see_boxes = True
-            see_list = []
-            self.nn.dat_best = []
-            self.dat_mc = ll.dat[:]
-            for k in range(len(self.dat_mc)):
-                ll.dat = ll.record.make_boxes_mc(self.pic,dim=100 ,dat=[self.dat_mc[k]])
+            if self.pipeline_stage >=3 :
+                ''' two passes through aggregate box function '''
+                ll.dat = ll.record.aggregate_dat_list(ll.dat)
                 ll.record.renumber_dat_list(ll.dat)
-                if see_boxes: see_list.extend(ll.dat[:])
+                ll.dat = ll.record.aggregate_dat_list(ll.dat, del_shapes=True)
+                ll.record.renumber_dat_list(ll.dat)
+                print "len-dat1", len(ll.dat)
 
+            if self.pipeline_stage >=4 :
+                ''' final convolution neural network '''
+                #ll.normal_train = False
+                self.nn.predict_remove_symbol = 1
+                self.nn.set_vars(len(ll.dat), 100,  0, adjust_x=True)
+                self.nn.conv_setup()
+                print "len-dat2", len(ll.dat)
+
+            if self.pipeline_stage >=5 and True:
+                ''' try to improve box '''
+                see_boxes = False
+                if self.pipeline_stage == 5: see_boxes = True
+                see_list = []
+                self.nn.dat_best = []
+                self.dat_mc = ll.dat[:]
+                for k in range(len(self.dat_mc)):
+                    ll.dat = ll.record.make_boxes_mc(self.pic,dim=100 ,dat=[self.dat_mc[k]])
+                    ll.record.renumber_dat_list(ll.dat)
+                    if see_boxes: see_list.extend(ll.dat[:])
+
+                    self.nn.predict_remove_symbol = 1
+                    self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=True)
+                    if not see_boxes: self.nn.conv_setup_mc()
+                if not see_boxes: ll.dat = ll.record.renumber_dat_list(self.nn.dat_best)
+                else : ll.dat = see_list[:]
+                print "len-dat3", len(self.nn.dat_best)
+
+            print "pipeline enum 1"
+            ll.record.save_dat_to_file(ll.dat, erase=(not self.make_list))
+
+        if self.pipeline_enum == self.ENUM_PIPELINE_2:
+            ''' make initial box grid '''
+            if self.pipeline_stage >= 1:
+                ll.dat = ll.record.make_boxes(self.pic, dim=4)  # 7
+                print "num-boxes", len(ll.dat)
+
+            if self.pipeline_stage >= 2:
+                ''' initial simple neural network '''
+                self.nn.predict_remove_symbol = 1
+                self.nn.set_vars(len(ll.dat), 100, 0)
+                self.nn.dot_setup()
+                print "len-dat2", len(ll.dat)
+
+            if self.pipeline_stage >= 3:
+                ''' two passes through aggregate box function '''
+                ll.dat = ll.record.aggregate_dat_list(ll.dat)
+                ll.record.renumber_dat_list(ll.dat)
+                ll.dat = ll.record.aggregate_dat_list(ll.dat, del_shapes=True)
+                ll.record.renumber_dat_list(ll.dat)
+                print "len-dat1", len(ll.dat)
+
+            if self.pipeline_stage >= 4 and False:
+                ''' final convolution neural network '''
+                # ll.normal_train = False
                 self.nn.predict_remove_symbol = 1
                 self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=True)
-                if not see_boxes: self.nn.conv_setup_mc()
-            if not see_boxes: ll.dat = ll.record.renumber_dat_list(self.nn.dat_best)
-            else : ll.dat = see_list[:]
-            print "len-dat3", len(self.nn.dat_best)
+                self.nn.conv_setup()
+                print "len-dat2", len(ll.dat)
 
-        ll.record.save_dat_to_file(ll.dat, erase=(not self.make_list))
+            if self.pipeline_stage >= 5 and True:
+                ''' try to improve box '''
+                see_boxes = False
+                if self.pipeline_stage == 5: see_boxes = True
+                see_list = []
+                self.nn.dat_best = []
+                self.dat_mc = ll.dat[:]
+                for k in range(len(self.dat_mc)):
+                    ll.dat = ll.record.make_boxes_mc(self.pic, dim=100, dat=[self.dat_mc[k]])
+                    ll.record.renumber_dat_list(ll.dat)
+                    if see_boxes: see_list.extend(ll.dat[:])
+
+                    self.nn.predict_remove_symbol = 1
+                    self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=True)
+                    if not see_boxes: self.nn.conv_setup_mc(remove_low=True)
+                if not see_boxes:
+                    ll.dat = ll.record.renumber_dat_list(self.nn.dat_best)
+                else:
+                    ll.dat = see_list[:]
+                print "len-dat3", len(self.nn.dat_best)
+
+            print "pipeline enum 2"
+            ll.record.save_dat_to_file(ll.dat, erase=(not self.make_list))
 
 
     def run_weight_img(self):
