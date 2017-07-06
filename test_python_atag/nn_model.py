@@ -74,16 +74,6 @@ class NN(enum.Enum, dim.Dimension):
         output_num = self.DIMENSIONS[self.key][self.COLUMN_IN_OUT_DOT][1]
 
         if mid_num > 0:
-            #y_mid = tf.nn.relu(tf.matmul(x,W_1) + b_1)
-            #self.d_y_mid = tf.nn.relu(tf.matmul(self.d_x, self.d_W_1) + self.d_b_1)
-            self.d_y_logits_2 = tf.matmul(self.d_x, self.d_W_1) + self.d_b_1
-            self.d_y_mid = tf.nn.softmax(self.d_y_logits_2)
-
-            self.d_cross_entropy_2 = tf.reduce_mean(
-                tf.nn.softmax_cross_entropy_with_logits(logits=self.d_y_logits_2, labels=self.d_y_mid))
-
-            self.d_train_step = tf.train.GradientDescentOptimizer(0.001).minimize(self.d_cross_entropy_2)  # 0.0001
-
             self.d_W_2 = tf.Variable(tf.random_normal([mid_num, output_num], stddev=0.0001))
             self.d_b_2 = tf.Variable(tf.random_normal([output_num], stddev=0.5))
 
@@ -91,16 +81,30 @@ class NN(enum.Enum, dim.Dimension):
             self.d_W_1 = tf.Variable(tf.random_normal([input_num, mid_num], stddev=0.0001))  # 0.0004
             self.d_b_1 = tf.Variable(tf.zeros([mid_num]))
 
-            self.d_y_logits_1 = tf.matmul(self.d_x, self.d_W_1) + self.d_b_1
-            self.d_y = tf.nn.softmax(self.d_y_logits_1)
-
             self.d_y_ = tf.placeholder(tf.float32, [None, output_num])
 
-            # cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
-            self.d_cross_entropy_1 = tf.reduce_mean(
-                tf.nn.softmax_cross_entropy_with_logits(logits=self.d_y_logits_1, labels=self.d_y_))
+            self.d_y_logits_1 = tf.matmul(self.d_x, self.d_W_1) + self.d_b_1
+            self.d_y_mid = tf.nn.relu(self.d_y_logits_1)
 
-            self.d_train_step = tf.train.GradientDescentOptimizer(0.001).minimize(self.d_cross_entropy_1)  # 0.0001
+            # cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
+                        # y_mid = tf.nn.relu(tf.matmul(x,W_1) + b_1)
+            # self.d_y_mid = tf.nn.relu(tf.matmul(self.d_x, self.d_W_1) + self.d_b_1)
+            self.d_y_logits_2 = tf.matmul(self.d_y_mid, self.d_W_2) + self.d_b_2
+            self.d_y = tf.nn.relu(self.d_y_logits_2)
+
+            #self.d_cross_entropy_1 = tf.reduce_mean(
+            #    tf.nn.softmax_cross_entropy_with_logits(logits=self.d_y_logits_1, labels=self.d_y_mid))
+
+            #self.d_cross_entropy_2 = tf.reduce_mean(
+            #    tf.nn.softmax_cross_entropy_with_logits(logits=self.d_y_logits_2, labels=self.d_y_))
+            self.d_y_softmax = tf.nn.softmax_cross_entropy_with_logits(logits=self.d_y_logits_2, labels=self.d_y_)
+
+            self.d_cross_entropy_2 = tf.reduce_mean(self.d_y_softmax)
+
+            #self.d_train_step = tf.train.GradientDescentOptimizer(0.001).minimize(self.d_cross_entropy_1)  # 0.0001
+
+            self.d_train_step = tf.train.GradientDescentOptimizer(0.1).minimize(self.d_cross_entropy_2)  # 0.0001
+
             # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
             self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
@@ -219,7 +223,9 @@ class NN(enum.Enum, dim.Dimension):
         #summary_writer = tf.train.SummaryWriter(self.ckpt_folder + os.sep + "logs" + os.sep, self.sess.graph)
 
 
-    def dot_setup(self):
+    def dot_setup(self, mid_num = 0):
+        mid_num = 3
+        #if mid_num == 0: self.d_train_step_2 = None
 
         if self.load_ckpt : self.load_group()
 
@@ -235,7 +241,10 @@ class NN(enum.Enum, dim.Dimension):
 
         if self.test :
             self.cursor = 0
-            d_correct_prediction = tf.equal(tf.argmax(self.d_y,1), tf.argmax(self.d_y_,1))
+
+            #if mid_num == 0 : d_correct_prediction = tf.equal(tf.argmax(self.d_y,1), tf.argmax(self.d_y_,1))
+            d_correct_prediction = tf.equal(tf.argmax(self.d_y, 1), tf.argmax(self.d_y_, 1))
+
             d_accuracy = tf.reduce_mean(tf.cast(d_correct_prediction, tf.float32))
 
             if self.use_loader : self.get_nn_next_test(self.batchsize, self.CONST_DOT)
