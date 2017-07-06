@@ -68,7 +68,7 @@ class NN(enum.Enum, dim.Dimension):
 
         ''' DOT FIRST '''
 
-        mid_num = 6
+        mid_num = self.DIMENSIONS[self.key][self.COLUMN_MID_DOT]
         ## DIM BLOCK ##
         input_num = self.DIMENSIONS[self.key][self.COLUMN_IN_OUT_DOT][0]
         output_num = self.DIMENSIONS[self.key][self.COLUMN_IN_OUT_DOT][1]
@@ -86,24 +86,16 @@ class NN(enum.Enum, dim.Dimension):
             self.d_y_logits_1 = tf.matmul(self.d_x, self.d_W_1) + self.d_b_1
             self.d_y_mid = tf.nn.relu(self.d_y_logits_1)
 
-            # cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
-                        # y_mid = tf.nn.relu(tf.matmul(x,W_1) + b_1)
-            # self.d_y_mid = tf.nn.relu(tf.matmul(self.d_x, self.d_W_1) + self.d_b_1)
+
             self.d_y_logits_2 = tf.matmul(self.d_y_mid, self.d_W_2) + self.d_b_2
             self.d_y = tf.nn.relu(self.d_y_logits_2)
 
-            #self.d_cross_entropy_1 = tf.reduce_mean(
-            #    tf.nn.softmax_cross_entropy_with_logits(logits=self.d_y_logits_1, labels=self.d_y_mid))
 
-            #self.d_cross_entropy_2 = tf.reduce_mean(
-            #    tf.nn.softmax_cross_entropy_with_logits(logits=self.d_y_logits_2, labels=self.d_y_))
             self.d_y_softmax = tf.nn.softmax_cross_entropy_with_logits(logits=self.d_y_logits_2, labels=self.d_y_)
 
             self.d_cross_entropy_2 = tf.reduce_mean(self.d_y_softmax)
 
-            #self.d_train_step = tf.train.GradientDescentOptimizer(0.001).minimize(self.d_cross_entropy_1)  # 0.0001
-
-            self.d_train_step = tf.train.GradientDescentOptimizer(0.1).minimize(self.d_cross_entropy_2)  # 0.0001
+            self.d_train_step = tf.train.GradientDescentOptimizer(0.001).minimize(self.d_cross_entropy_2)  # 0.0001
 
             # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 

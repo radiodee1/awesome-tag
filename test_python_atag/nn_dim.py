@@ -13,20 +13,21 @@ class Dimension(object) :
         self.COLUMN_LOADTYPE = 0
         self.COLUMN_NAME = 1
         self.COLUMN_DESCRIPTION = 2
-        self.COLUMN_IN_OUT_DOT = 3
-        self.COLUMN_IN_OUT_CONV = 4
-        self.COLUMN_XY_CONV = 5
-        self.COLUMN_CWEIGHT_1 = 6
-        self.COLUMN_CBIAS_1 = 7
-        self.COLUMN_CWEIGHT_2 = 8
-        self.COLUMN_CBIAS_2 = 9
-        self.COLUMN_RESHAPE_1 = 10
-        self.COLUMN_RESHAPE_2 = 11
-        self.COLUMN_FULL_CONNECTED_W1 = 12
-        self.COLUMN_FULL_CONNECTED_B1 = 13
-        self.COLUMN_FULL_CONNECTED_W2 = 14
-        self.COLUMN_FULL_CONNECTED_B2 = 15
-        self.COLUMN_ENUM_PIPELINE = 16
+        self.COLUMN_MID_DOT = 3
+        self.COLUMN_IN_OUT_DOT = 4
+        self.COLUMN_IN_OUT_CONV = 5
+        self.COLUMN_XY_CONV = 6
+        self.COLUMN_CWEIGHT_1 = 7
+        self.COLUMN_CBIAS_1 = 8
+        self.COLUMN_CWEIGHT_2 = 9
+        self.COLUMN_CBIAS_2 = 10
+        self.COLUMN_RESHAPE_1 = 11
+        self.COLUMN_RESHAPE_2 = 12
+        self.COLUMN_FULL_CONNECTED_W1 = 13
+        self.COLUMN_FULL_CONNECTED_B1 = 14
+        self.COLUMN_FULL_CONNECTED_W2 = 15
+        self.COLUMN_FULL_CONNECTED_B2 = 16
+        self.COLUMN_ENUM_PIPELINE = 17
 
         self.ROW_NAME_ORIGINAL_28 = 0
         self.ROW_NAME_LARGER_XY = 1
@@ -54,6 +55,7 @@ class Dimension(object) :
                 self.ENUM_LOAD_ALL_GRADIENT,
                 'load_all',
                 'load all as default',
+                0,
                 dim_ab(4 * 3, 2),
                 dim_ab(28 * 28 * 3 , 2),
                 dim_xy(28, 28),
@@ -74,6 +76,7 @@ class Dimension(object) :
                 self.ENUM_LOAD_ALL_GRADIENT,
                 'big_input',
                 'load all as big input',
+                0,
                 dim_ab(4 * 3, 2), # in out dot
                 dim_ab(40 * 40 * 3, 2), # in out conv 4800, 2
                 dim_xy(40, 40), # x y
@@ -93,6 +96,7 @@ class Dimension(object) :
                 self.ENUM_LOAD_ALL_GRADIENT,
                 'big_input_pipeline',
                 'load all as big input, experiment with pipeline',
+                6,
                 dim_ab(4 * 3, 2),  # in out dot
                 dim_ab(40 * 40 * 3, 2),  # in out conv 4800, 2
                 dim_xy(40, 40),  # x y
