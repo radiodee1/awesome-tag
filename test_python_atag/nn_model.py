@@ -67,30 +67,62 @@ class NN(enum.Enum, dim.Dimension):
         #self.sess = tf.Session()
 
         ''' DOT FIRST '''
-        #input_num = 4 * 3  # like mnist but with three channels
-        #output_num = 2
 
+        mid_num = 6
         ## DIM BLOCK ##
         input_num = self.DIMENSIONS[self.key][self.COLUMN_IN_OUT_DOT][0]
         output_num = self.DIMENSIONS[self.key][self.COLUMN_IN_OUT_DOT][1]
 
-        self.d_x = tf.placeholder(tf.float32, [None, input_num])
-        self.d_W_1 = tf.Variable(tf.random_normal([input_num, output_num], stddev=0.0001))  # 0.0004
-        self.d_b_1 = tf.Variable(tf.zeros([output_num]))
+        if mid_num > 0:
+            #y_mid = tf.nn.relu(tf.matmul(x,W_1) + b_1)
+            #self.d_y_mid = tf.nn.relu(tf.matmul(self.d_x, self.d_W_1) + self.d_b_1)
+            self.d_y_logits_2 = tf.matmul(self.d_x, self.d_W_1) + self.d_b_1
+            self.d_y_mid = tf.nn.softmax(self.d_y_logits_2)
+
+            self.d_cross_entropy_2 = tf.reduce_mean(
+                tf.nn.softmax_cross_entropy_with_logits(logits=self.d_y_logits_2, labels=self.d_y_mid))
+
+            self.d_train_step = tf.train.GradientDescentOptimizer(0.001).minimize(self.d_cross_entropy_2)  # 0.0001
+
+            self.d_W_2 = tf.Variable(tf.random_normal([mid_num, output_num], stddev=0.0001))
+            self.d_b_2 = tf.Variable(tf.random_normal([output_num], stddev=0.5))
+
+            self.d_x = tf.placeholder(tf.float32, [None, input_num])
+            self.d_W_1 = tf.Variable(tf.random_normal([input_num, mid_num], stddev=0.0001))  # 0.0004
+            self.d_b_1 = tf.Variable(tf.zeros([mid_num]))
+
+            self.d_y_logits_1 = tf.matmul(self.d_x, self.d_W_1) + self.d_b_1
+            self.d_y = tf.nn.softmax(self.d_y_logits_1)
+
+            self.d_y_ = tf.placeholder(tf.float32, [None, output_num])
+
+            # cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
+            self.d_cross_entropy_1 = tf.reduce_mean(
+                tf.nn.softmax_cross_entropy_with_logits(logits=self.d_y_logits_1, labels=self.d_y_))
+
+            self.d_train_step = tf.train.GradientDescentOptimizer(0.001).minimize(self.d_cross_entropy_1)  # 0.0001
+            # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
+
+            self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
+
+        else:
+            self.d_x = tf.placeholder(tf.float32, [None, input_num])
+            self.d_W_1 = tf.Variable(tf.random_normal([input_num, output_num], stddev=0.0001))  # 0.0004
+            self.d_b_1 = tf.Variable(tf.zeros([output_num]))
 
 
-        self.d_y_logits = tf.matmul(self.d_x, self.d_W_1) + self.d_b_1
-        self.d_y = tf.nn.softmax(self.d_y_logits)
+            self.d_y_logits = tf.matmul(self.d_x, self.d_W_1) + self.d_b_1
+            self.d_y = tf.nn.softmax(self.d_y_logits)
 
-        self.d_y_ = tf.placeholder(tf.float32, [None, output_num])
+            self.d_y_ = tf.placeholder(tf.float32, [None, output_num])
 
-        # cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
-        self.d_cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=self.d_y_logits, labels=self.d_y_))
+            # cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
+            self.d_cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=self.d_y_logits, labels=self.d_y_))
 
-        self.d_train_step = tf.train.GradientDescentOptimizer(0.001).minimize(self.d_cross_entropy)  # 0.0001
-        # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
+            self.d_train_step = tf.train.GradientDescentOptimizer(0.001).minimize(self.d_cross_entropy)  # 0.0001
+            # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
-        self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
+            self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
 
 
         ''' CONVOLUTION NEXT '''
@@ -320,8 +352,8 @@ class NN(enum.Enum, dim.Dimension):
 
             if True:
                 print "out", len(out)
-                numlow = 0.5
-                numhigh = 0.5
+                numlow = 0.95
+                numhigh = 0.95
                 numhigh_index = 0
                 for j in range(len(out)) :
                     zz = out[j][0]
