@@ -85,22 +85,22 @@ class NN(enum.Enum, dim.Dimension):
 
             self.d_y_logits_1 = tf.matmul(self.d_x, self.d_W_1) + self.d_b_1
             self.d_y_mid = tf.nn.relu(self.d_y_logits_1)
-
+            #self.d_y_mid = self.d_y_logits_1
 
             self.d_y_logits_2 = tf.matmul(self.d_y_mid, self.d_W_2) + self.d_b_2
-            self.d_y = tf.nn.softmax(self.d_y_logits_2)
+            #self.d_y = tf.nn.softmax(self.d_y_logits_2)
 
 
             self.d_y_softmax = tf.nn.softmax_cross_entropy_with_logits(logits=self.d_y_logits_2, labels=self.d_y_)
 
             self.d_cross_entropy_2 = tf.reduce_mean(self.d_y_softmax)
 
-            self.d_train_step = tf.train.GradientDescentOptimizer(0.01).minimize(self.d_cross_entropy_2)  # 0.0001
+            self.d_train_step = tf.train.GradientDescentOptimizer(0.001).minimize(self.d_cross_entropy_2)  # 0.0001
 
             # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
-            self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
-            #self.d_y_out = tf.argmax(self.d_cross_entropy_2, 1)
+            #self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
+            self.d_y_out = tf.argmax(self.d_y_logits_2, 1, name="d_y_out")
 
         else:
             self.d_x = tf.placeholder(tf.float32, [None, input_num])
@@ -238,8 +238,8 @@ class NN(enum.Enum, dim.Dimension):
         if self.test :
             self.cursor = 0
 
-            #d_correct_prediction = tf.equal(self.d_y_out, tf.argmax(self.d_y_,1))
-            d_correct_prediction = tf.equal(tf.argmax(self.d_y , 1), tf.argmax(self.d_y_, 1))
+            d_correct_prediction = tf.equal(self.d_y_out, tf.argmax(self.d_y_,1))
+            #d_correct_prediction = tf.equal(tf.argmax(self.d_y , 1), tf.argmax(self.d_y_, 1))
 
             d_accuracy = tf.reduce_mean(tf.cast(d_correct_prediction, tf.float32))
 
