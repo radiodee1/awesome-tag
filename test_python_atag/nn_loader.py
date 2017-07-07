@@ -362,11 +362,14 @@ class Load(enum.Enum, dim.Dimension):
         for i in range(len(xy_list)):
             q = xy_list[i]
             color = q[2]
+            zx = int( width / 2 )
+            zy = int( height / 2 )
+
             if True:
-                if q[0] == 0 and q[1] == 0 and len(img_skin) >= 1: img_skin[0] = color #/ float(255)
-                if q[0] == 1 and q[1] == 0 and len(img_skin) >= 2: img_skin[1] = color #/ float(255)
-                if q[0] == 2 and q[1] == 0 and len(img_skin) >= 3: img_skin[2] = color #/ float(255)
-                if q[0] == 3 and q[1] == 0 and len(img_skin) >= 4: img_skin[3] = color #/ float(255)
+                if q[0] == zx + 0 and q[1] == zy + 0 and len(img_skin) >= 1: img_skin[0] = color #/ float(255)
+                if q[0] == zx + 1 and q[1] == zy + 0 and len(img_skin) >= 2: img_skin[1] = color #/ float(255)
+                if q[0] == zx + 2 and q[1] == zy + 0 and len(img_skin) >= 3: img_skin[2] = color #/ float(255)
+                if q[0] == zx + 3 and q[1] == zy + 0 and len(img_skin) >= 4: img_skin[3] = color #/ float(255)
             if False:
                 if q[0] == 0 and q[1] == 0 and len(img_skin) >= 1: img_skin[0] = color #/ float(255)
                 if q[0] == 1 and q[1] == 0 and len(img_skin) >= 2: img_skin[1] = color #/ float(255)
@@ -378,7 +381,7 @@ class Load(enum.Enum, dim.Dimension):
             skin.extend(list(img_skin[i]))
 
         for s in range(len(skin)):
-            skin[s] = skin[s] / float(127)
+            skin[s] = skin[s] / float(256) #float(127)
 
         #print skin
 
