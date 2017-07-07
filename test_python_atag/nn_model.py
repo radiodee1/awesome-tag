@@ -95,7 +95,7 @@ class NN(enum.Enum, dim.Dimension):
 
             self.d_cross_entropy_2 = tf.reduce_mean(self.d_y_softmax)
 
-            self.d_train_step = tf.train.GradientDescentOptimizer(0.001).minimize(self.d_cross_entropy_2)  # 0.0001
+            self.d_train_step = tf.train.GradientDescentOptimizer(2).minimize(self.d_cross_entropy_2)  # 0.0001
 
             # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
@@ -241,6 +241,7 @@ class NN(enum.Enum, dim.Dimension):
 
             if self.use_loader : self.get_nn_next_test(self.batchsize, self.CONST_DOT)
             print(self.sess.run(d_accuracy, feed_dict={self.d_x: self.mnist_test.images, self.d_y_: self.mnist_test.labels}))
+            print self.mnist_test.labels
 
         if self.predict_dot :
             self.cursor = 0
