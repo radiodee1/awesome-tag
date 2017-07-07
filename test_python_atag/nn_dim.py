@@ -96,7 +96,7 @@ class Dimension(object) :
                 self.ENUM_LOAD_ALL_GRADIENT,
                 'big_input_pipeline',
                 'load all as big input, experiment with pipeline',
-                6,
+                2,
                 dim_ab(4 * 3, 2),  # in out dot
                 dim_ab(40 * 40 * 3, 2),  # in out conv 4800, 2
                 dim_xy(40, 40),  # x y

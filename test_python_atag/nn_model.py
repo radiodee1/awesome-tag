@@ -84,7 +84,7 @@ class NN(enum.Enum, dim.Dimension):
             self.d_y_ = tf.placeholder(tf.float32, [None, output_num])
 
             self.d_y_logits_1 = tf.matmul(self.d_x, self.d_W_1) + self.d_b_1
-            self.d_y_mid = tf.nn.relu(self.d_y_logits_1)
+            self.d_y_mid = tf.nn.relu(self.d_y_logits_1) # relu
             #self.d_y_mid = self.d_y_logits_1
 
             self.d_y_logits_2 = tf.matmul(self.d_y_mid, self.d_W_2) + self.d_b_2
