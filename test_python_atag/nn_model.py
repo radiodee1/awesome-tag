@@ -74,35 +74,42 @@ class NN(enum.Enum, dim.Dimension):
         output_num = self.DIMENSIONS[self.key][self.COLUMN_IN_OUT_DOT][1]
 
         if mid_num > 0:
-            self.d_W_2 = tf.Variable(tf.random_normal([mid_num, output_num], stddev=0.0001))
-            self.d_b_2 = tf.Variable(tf.random_normal([output_num], stddev=0.5))
+            self.d_keep = tf.placeholder(tf.float32)
+            self.d_W_2 = tf.Variable(tf.random_normal([mid_num, output_num], stddev=0.01))
+            self.d_b_2 = tf.Variable(tf.random_normal([output_num], stddev=0.005))
 
             self.d_x = tf.placeholder(tf.float32, [None, input_num])
-            self.d_W_1 = tf.Variable(tf.random_normal([input_num, mid_num], stddev=0.0001))  # 0.0004
-            self.d_b_1 = tf.Variable(tf.zeros([mid_num]))
+            self.d_W_1 = tf.Variable(tf.random_normal([input_num, mid_num], stddev=0.01))  # 0.0001
+            self.d_b_1 = tf.Variable(tf.random_normal([mid_num], stddev=0.005))
 
             self.d_y_ = tf.placeholder(tf.float32, [None, output_num])
+
+            #self.d_bump = tf.Variable(0.5)
+            #self.d_x_drop = tf.nn.dropout(self.d_x, self.d_keep)
 
             self.d_y_logits_1 = tf.matmul(self.d_x, self.d_W_1) + self.d_b_1
             self.d_y_mid = tf.nn.relu(self.d_y_logits_1) # relu
             #self.d_y_mid = self.d_y_logits_1
+            self.d_y_mid_drop = tf.nn.dropout(self.d_y_mid, self.d_keep)
 
-            self.d_y_logits_2 = tf.matmul(self.d_y_mid, self.d_W_2) + self.d_b_2
-            #self.d_y = tf.nn.softmax(self.d_y_logits_2)
-
+            self.d_y_logits_2 = tf.matmul(self.d_y_mid_drop, self.d_W_2) + self.d_b_2
+            self.d_y = tf.nn.softmax(self.d_y_logits_2 )
 
             self.d_y_softmax = tf.nn.softmax_cross_entropy_with_logits(logits=self.d_y_logits_2, labels=self.d_y_)
 
-            self.d_cross_entropy_2 = tf.reduce_mean(self.d_y_softmax)
+            #self.d_cross_entropy = self.d_y_softmax
+            self.d_cross_entropy = tf.reduce_mean(self.d_y_softmax)
 
-            self.d_train_step = tf.train.GradientDescentOptimizer(0.001).minimize(self.d_cross_entropy_2)  # 0.0001
+            self.d_train_step = tf.train.GradientDescentOptimizer(0.01).minimize(self.d_cross_entropy)  # 0.0001
 
             # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
-            #self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
-            self.d_y_out = tf.argmax(self.d_y_logits_2, 1, name="d_y_out")
+            self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
+            #self.d_y_out = tf.argmax(self.d_y_logits_2, 1)
 
         else:
+            self.d_keep = tf.placeholder(tf.float32)
+
             self.d_x = tf.placeholder(tf.float32, [None, input_num])
             self.d_W_1 = tf.Variable(tf.random_normal([input_num, output_num], stddev=0.0001))  # 0.0004
             self.d_b_1 = tf.Variable(tf.zeros([output_num]))
@@ -115,6 +122,8 @@ class NN(enum.Enum, dim.Dimension):
 
             # cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
             self.d_cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=self.d_y_logits, labels=self.d_y_))
+
+            self.d_y_softmax = self.d_cross_entropy
 
             self.d_train_step = tf.train.GradientDescentOptimizer(0.001).minimize(self.d_cross_entropy)  # 0.0001
             # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
@@ -228,23 +237,23 @@ class NN(enum.Enum, dim.Dimension):
 
             for i in range(self.start_train,self.cursor_tot): #1000
                 batch_xs, batch_ys = self.get_nn_next_train(self.batchsize, self.CONST_DOT)
-                self.sess.run(self.d_train_step, feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys})
+                self.sess.run(self.d_train_step, feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys, self.d_keep: 0.75})
                 if True: #mid_num > 0:
-                    cost = self.sess.run([self.d_cross_entropy_2, self.d_train_step], feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys})
-                    print cost[0], "cost"
+                    cost = self.sess.run([self.d_cross_entropy], feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys, self.d_keep: 0.5})
+                    print cost, "cost"
 
         if self.save_ckpt and self.train : self.save_group()
 
         if self.test :
             self.cursor = 0
 
-            d_correct_prediction = tf.equal(self.d_y_out, tf.argmax(self.d_y_,1))
-            #d_correct_prediction = tf.equal(tf.argmax(self.d_y , 1), tf.argmax(self.d_y_, 1))
+            #d_correct_prediction = tf.equal(self.d_y_out, tf.argmax(self.d_y_,1))
+            d_correct_prediction = tf.equal(tf.argmax(self.d_y , 1), tf.argmax(self.d_y_, 1))
 
             d_accuracy = tf.reduce_mean(tf.cast(d_correct_prediction, tf.float32))
 
             if self.use_loader : self.get_nn_next_test(self.batchsize, self.CONST_DOT)
-            print(self.sess.run(d_accuracy, feed_dict={self.d_x: self.mnist_test.images, self.d_y_: self.mnist_test.labels}))
+            print(self.sess.run([d_accuracy, self.d_y_out, self.d_y_softmax], feed_dict={self.d_x: self.mnist_test.images, self.d_y_: self.mnist_test.labels, self.d_keep: 1.0}))
             #print cost
             #print self.mnist_test.labels
             #print self.d_y_out
@@ -268,7 +277,7 @@ class NN(enum.Enum, dim.Dimension):
                 batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, self.CONST_DOT)
                 print "batch_0", len(batch_0)
                 if len(batch_0) > 0 :
-                    out.extend( self.sess.run(self.d_y_out, feed_dict={self.d_x : batch_0, self.d_y_: batch_1}))
+                    out.extend( self.sess.run([self.d_y_out, self.d_cross_entropy], feed_dict={self.d_x : batch_0, self.d_y_: batch_1, self.d_keep: 1.0})[0])
                     print "out" , len(out) , i, self.cursor_tot, out[:10],"..."
 
             for j in range(len(out)) :
@@ -512,7 +521,7 @@ class NN(enum.Enum, dim.Dimension):
         filename = "group_" + extraname #+ ".ckpt"
 
         meta = True
-        folder = self.ckpt_folder + os.sep + "ckpt-" + extraname
+        folder = self.ckpt_folder + os.sep + "ckpt_" + extraname
         if not os.path.exists(folder) :
             os.makedirs(folder)
         else:
@@ -537,10 +546,10 @@ class NN(enum.Enum, dim.Dimension):
         #tf.reset_default_graph()
         extraname = self.DIMENSIONS[self.key][self.COLUMN_NAME]
         filename = "group_" + extraname  #+  ".index"
-        file2 = self.ckpt_folder + os.sep + "ckpt-" + extraname + os.sep
+        file2 = self.ckpt_folder + os.sep + "ckpt_" + extraname + os.sep
         ckpt = tf.train.get_checkpoint_state(file2 + ".")
 
-        file = self.ckpt_folder + os.sep + "ckpt-" + extraname + os.sep + self.ckpt_name + "." + filename
+        file = self.ckpt_folder + os.sep + "ckpt_" + extraname + os.sep + self.ckpt_name + "." + filename
         if ckpt and ckpt.model_checkpoint_path: # os.path.isfile(file) or True:
 
             if True: #with tf.Session() as sess:

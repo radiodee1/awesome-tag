@@ -166,13 +166,21 @@ class Load(enum.Enum, dim.Dimension):
 
             lbl_1 = 0
             lbl_2 = 0
+            skin_reject = False
             if self.dat[self.iter][self.IS_FACE] == 1:
                 lbl_1 = 1
             else:
                 lbl_2 = 1
+                skin_reject = True
 
-            skin, img , three = self.look_at_img(filename,x,y,width,height)
-            #print len(three) , three, "three"
+            skin, img , three = self.look_at_img(filename,x,y,width,height, skin_reject=skin_reject)
+
+            if skin[0] == 0.0 and skin[1] == 0.0:
+                self.iter = self.iter + 1
+                stop = stop + 1
+                continue
+
+            #print len(skin) , skin, "skin", lbl_1, lbl_2
 
             if (len(img) != self.dim_x * self.dim_y or len(three) != self.dim_x * self.dim_y * 3) and self.normal_train :
                 self.iter = self.iter + 1
@@ -216,7 +224,7 @@ class Load(enum.Enum, dim.Dimension):
         self.dat.append(row)
 
 
-    def look_at_img(self, filename, x = 0, y = 0, width = -1, height = -1):
+    def look_at_img(self, filename, x = 0, y = 0, width = -1, height = -1, skin_reject=False):
 
         if width == -1 : width = self.dim_x
         if height == -1 : height = self.dim_y
@@ -359,22 +367,32 @@ class Load(enum.Enum, dim.Dimension):
             threeimg = oneimg_rgb
 
         ''' Skin tone '''
+        remember = xy_list[0][2]
         for i in range(len(xy_list)):
             q = xy_list[i]
             color = q[2]
             zx = int( width / 2 )
             zy = int( height / 2 )
 
-            if True:
-                if q[0] == zx + 0 and q[1] == zy + 0 and len(img_skin) >= 1: img_skin[0] = color #/ float(255)
-                if q[0] == zx + 1 and q[1] == zy + 0 and len(img_skin) >= 2: img_skin[1] = color #/ float(255)
-                if q[0] == zx + 2 and q[1] == zy + 0 and len(img_skin) >= 3: img_skin[2] = color #/ float(255)
-                if q[0] == zx + 3 and q[1] == zy + 0 and len(img_skin) >= 4: img_skin[3] = color #/ float(255)
-            if False:
-                if q[0] == 0 and q[1] == 0 and len(img_skin) >= 1: img_skin[0] = color #/ float(255)
-                if q[0] == 1 and q[1] == 0 and len(img_skin) >= 2: img_skin[1] = color #/ float(255)
-                if q[0] == 0 and q[1] == 1 and len(img_skin) >= 3: img_skin[2] = color #/ float(255)
-                if q[0] == 1 and q[1] == 1 and len(img_skin) >= 4: img_skin[3] = color #/ float(255)
+            if not skin_reject:
+                if q[0] == zx + 0 and q[1] == zy + 0 and len(img_skin) >= 1:
+                    img_skin[0] = color #/ float(255)
+                if q[0] == zx + 1 and q[1] == zy + 0 and len(img_skin) >= 2:
+                    img_skin[1] = color #/ float(255)
+                if q[0] == zx + 2 and q[1] == zy + 0 and len(img_skin) >= 3:
+                    img_skin[2] = color #/ float(255)
+                if q[0] == zx + 3 and q[1] == zy + 0 and len(img_skin) >= 4:
+                    img_skin[3] = color #/ float(255)
+            else:
+                if q[0] == 0 and q[1] == 0 and len(img_skin) >= 1:
+                    remember = color
+                    img_skin[0] = remember #color #/ float(255)
+                if q[0] == 1 and q[1] == 0 and len(img_skin) >= 2:
+                    img_skin[1] = remember #color #/ float(255)
+                if q[0] == 0 and q[1] == 1 and len(img_skin) >= 3:
+                    img_skin[2] = remember #color #/ float(255)
+                if q[0] == 1 and q[1] == 1 and len(img_skin) >= 4:
+                    img_skin[3] = remember #color #/ float(255)
 
 
         for i in range(int(self.dot_xy * self.dot_xy)): #len(img_skin)) :
