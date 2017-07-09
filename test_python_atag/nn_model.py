@@ -93,7 +93,7 @@ class NN(enum.Enum, dim.Dimension):
             self.d_y_mid_drop = tf.nn.dropout(self.d_y_mid, self.d_keep)
 
             self.d_y_logits_2 = tf.matmul(self.d_y_mid_drop, self.d_W_2) + self.d_b_2
-            self.d_y = tf.nn.softmax(self.d_y_logits_2 )
+            self.d_y = tf.nn.softmax(self.d_y_logits_2 )# + self.d_cross_entropy
 
             self.d_y_softmax = tf.nn.softmax_cross_entropy_with_logits(logits=self.d_y_logits_2, labels=self.d_y_)
 
@@ -104,8 +104,9 @@ class NN(enum.Enum, dim.Dimension):
 
             # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
-            self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
-            #self.d_y_out = tf.argmax(self.d_y_logits_2, 1)
+
+            #self.d_y_out = tf.argmax(self.d_y , 1)  ## for prediction
+            self.d_y_out = tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.int64)
 
         else:
             self.d_keep = tf.placeholder(tf.float32)
@@ -119,16 +120,16 @@ class NN(enum.Enum, dim.Dimension):
             self.d_y = tf.nn.softmax(self.d_y_logits)
 
             self.d_y_ = tf.placeholder(tf.float32, [None, output_num])
+            self.d_y_softmax = tf.nn.softmax_cross_entropy_with_logits(logits=self.d_y_logits, labels=self.d_y_)
 
-            # cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
-            self.d_cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=self.d_y_logits, labels=self.d_y_))
-
-            self.d_y_softmax = self.d_cross_entropy
+            self.d_cross_entropy = tf.reduce_mean(self.d_y_softmax ) 
 
             self.d_train_step = tf.train.GradientDescentOptimizer(0.001).minimize(self.d_cross_entropy)  # 0.0001
             # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
-            self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
+            self.d_y_out = tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.int64)
+
+            #self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
 
 
         ''' CONVOLUTION NEXT '''
@@ -247,13 +248,13 @@ class NN(enum.Enum, dim.Dimension):
         if self.test :
             self.cursor = 0
 
-            #d_correct_prediction = tf.equal(self.d_y_out, tf.argmax(self.d_y_,1))
-            d_correct_prediction = tf.equal(tf.argmax(self.d_y , 1), tf.argmax(self.d_y_, 1))
+            #d_correct_prediction = tf.equal(tf.round(self.d_y_softmax ), tf.cast(tf.argmax(self.d_y_,1), tf.float32))
+            d_correct_prediction = tf.equal(self.d_y_out, tf.argmax(self.d_y_, 1))
 
             d_accuracy = tf.reduce_mean(tf.cast(d_correct_prediction, tf.float32))
 
             if self.use_loader : self.get_nn_next_test(self.batchsize, self.CONST_DOT)
-            print(self.sess.run([d_accuracy, self.d_y_out, self.d_y_softmax], feed_dict={self.d_x: self.mnist_test.images, self.d_y_: self.mnist_test.labels, self.d_keep: 1.0}))
+            print(self.sess.run([d_accuracy, self.d_y_out], feed_dict={self.d_x: self.mnist_test.images, self.d_y_: self.mnist_test.labels, self.d_keep: 1.0}))
             #print cost
             #print self.mnist_test.labels
             #print self.d_y_out
@@ -277,7 +278,7 @@ class NN(enum.Enum, dim.Dimension):
                 batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, self.CONST_DOT)
                 print "batch_0", len(batch_0)
                 if len(batch_0) > 0 :
-                    out.extend( self.sess.run([self.d_y_out, self.d_cross_entropy], feed_dict={self.d_x : batch_0, self.d_y_: batch_1, self.d_keep: 1.0})[0])
+                    out.extend( self.sess.run([self.d_y_softmax, self.d_y_out, self.d_cross_entropy], feed_dict={self.d_x : batch_0, self.d_y_: batch_1, self.d_keep: 1.0})[0])
                     print "out" , len(out) , i, self.cursor_tot, out[:10],"..."
 
             for j in range(len(out)) :
