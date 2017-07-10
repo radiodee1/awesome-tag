@@ -43,6 +43,7 @@ class Load(enum.Enum, dim.Dimension):
 
         self.record = rec.Record(atag)
         self.normal_train = True
+        self.skintone_training = False
 
         ImageFile.LOAD_TRUNCATED_IMAGES = True
         self.inspection_num = 2
@@ -61,6 +62,7 @@ class Load(enum.Enum, dim.Dimension):
 
 
     def get_nn_next_train(self, batchsize, cursor, num_channels = 1):
+        self.skintone_training = True
         if cursor * batchsize + batchsize >= len(self.dat):
             skin, three, images, lables = self._get_pixels_from_dat(cursor * batchsize, len(self.dat) -1 )
 
@@ -73,6 +75,7 @@ class Load(enum.Enum, dim.Dimension):
 
     def get_nn_next_test(self, batchsize, num_channels = 1):
         testframe = 0
+        self.skintone_training = False
         skin, three, images, labels = self._get_pixels_from_dat( testframe * batchsize, testframe * batchsize + batchsize) #len(self.dat) - batchsize, len(self.dat))
         print ("next test", len(images), batchsize, testframe)
         if num_channels == self.CONST_ONE_CHANNEL : self.mnist_test = Map({'images':images, 'labels': labels})
@@ -82,6 +85,7 @@ class Load(enum.Enum, dim.Dimension):
 
     def get_nn_next_predict(self, batchsize, cursor, num_channels = 1):
         self.normal_train = False
+        self.skintone_training = False
         tot_cursors = int(len(self.dat) / batchsize)
         if cursor > tot_cursors  :
             print cursor, tot_cursors, batchsize, len(self.dat), "end"
@@ -169,9 +173,10 @@ class Load(enum.Enum, dim.Dimension):
             skin_reject = False
             if self.dat[self.iter][self.IS_FACE] == 1:
                 lbl_1 = 1
+
             else:
                 lbl_2 = 1
-                skin_reject = True
+                if self.skintone_training and False: skin_reject = True
 
             skin, img , three = self.look_at_img(filename,x,y,width,height, skin_reject=skin_reject)
 
