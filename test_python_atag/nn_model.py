@@ -105,9 +105,9 @@ class NN(enum.Enum, dim.Dimension):
             # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
 
-            #self.d_y_out = tf.argmax(self.d_y , 1)  ## for prediction
+            self.d_y_out = tf.argmax(self.d_y , 1)  ## for prediction
             #self.d_y_out = tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.int64)
-            self.d_y_out = tf.cast(tf.logical_not(tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.bool)),tf.int64)
+            #self.d_y_out = tf.cast(tf.logical_not(tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.bool)),tf.int64)
 
         else:
             self.d_keep = tf.placeholder(tf.float32)
@@ -257,7 +257,7 @@ class NN(enum.Enum, dim.Dimension):
             d_accuracy = tf.reduce_mean(tf.cast(d_correct_prediction, tf.float32))
 
             if self.use_loader : self.get_nn_next_test(self.batchsize, self.CONST_DOT)
-            print(self.sess.run([d_accuracy, self.d_y_out, self.d_y], feed_dict={self.d_x: self.mnist_test.images, self.d_y_: self.mnist_test.labels, self.d_keep: 1.0}))
+            print(self.sess.run([d_accuracy, self.d_y_out], feed_dict={self.d_x: self.mnist_test.images, self.d_y_: self.mnist_test.labels, self.d_keep: 1.0}))
             #print cost
             #print self.mnist_test.labels
             #print self.d_y_out
