@@ -376,8 +376,8 @@ class Load(enum.Enum, dim.Dimension):
         for i in range(len(xy_list)):
             q = xy_list[i]
             color = q[2]
-            zx = int( width / 2 )
-            zy = int( height / 2 )
+            zx = int( self.dim_x / 2 )
+            zy = int( self.dim_y / 2 )
 
             if not skin_reject:
                 if q[0] == zx + 0 and q[1] == zy + 0 and len(img_skin) >= 1:

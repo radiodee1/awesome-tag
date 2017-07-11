@@ -118,6 +118,7 @@ class NN(enum.Enum, dim.Dimension):
 
 
             self.d_y_logits = tf.matmul(self.d_x, self.d_W_1) + self.d_b_1
+            #self.d_y = self.d_y_logits #tf.nn.softmax(self.d_y_logits)
             self.d_y = tf.nn.softmax(self.d_y_logits)
 
             self.d_y_ = tf.placeholder(tf.float32, [None, output_num])
@@ -129,9 +130,9 @@ class NN(enum.Enum, dim.Dimension):
             # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
             #self.d_y_out = tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.int64)
-            self.d_y_out = tf.cast(tf.logical_not(tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.bool)),tf.int64)
+            #self.d_y_out = tf.cast(tf.logical_not(tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.bool)),tf.int64)
 
-            #self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
+            self.d_y_out = tf.argmax(self.d_y, -1)  ## for prediction
 
 
         ''' CONVOLUTION NEXT '''
@@ -222,8 +223,8 @@ class NN(enum.Enum, dim.Dimension):
 
         self.c_y_out = tf.argmax(self.y_conv, 1)  ## for prediction
 
-        init = tf.global_variables_initializer()
-        self.sess.run(init)
+        init = tf.global_variables_initializer().run()
+        #self.sess.run(init)
 
         #summary_writer = tf.train.SummaryWriter(self.ckpt_folder + os.sep + "logs" + os.sep, self.sess.graph)
 
@@ -240,9 +241,9 @@ class NN(enum.Enum, dim.Dimension):
 
             for i in range(self.start_train,self.cursor_tot): #1000
                 batch_xs, batch_ys = self.get_nn_next_train(self.batchsize, self.CONST_DOT)
-                self.sess.run(self.d_train_step, feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys, self.d_keep: 0.75})
+                self.sess.run(self.d_train_step, feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys, self.d_keep: 0.85})
                 if True: #mid_num > 0:
-                    cost = self.sess.run([self.d_cross_entropy], feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys, self.d_keep: 0.5})
+                    cost = self.sess.run([self.d_cross_entropy], feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys, self.d_keep: 1.0})
                     print cost, "cost"
 
         if self.save_ckpt and self.train : self.save_group()
@@ -256,7 +257,7 @@ class NN(enum.Enum, dim.Dimension):
             d_accuracy = tf.reduce_mean(tf.cast(d_correct_prediction, tf.float32))
 
             if self.use_loader : self.get_nn_next_test(self.batchsize, self.CONST_DOT)
-            print(self.sess.run([d_accuracy, self.d_y_out, self.d_y_softmax], feed_dict={self.d_x: self.mnist_test.images, self.d_y_: self.mnist_test.labels, self.d_keep: 1.0}))
+            print(self.sess.run([d_accuracy, self.d_y_out, self.d_y], feed_dict={self.d_x: self.mnist_test.images, self.d_y_: self.mnist_test.labels, self.d_keep: 1.0}))
             #print cost
             #print self.mnist_test.labels
             #print self.d_y_out
