@@ -22,7 +22,7 @@ class NN(enum.Enum, dim.Dimension):
         self.train = False
         self.test = True
         self.load_ckpt = True
-        self.save_ckpt = False
+        self.save_ckpt = True
 
         #self.sess = tf.InteractiveSession()
         self.mnist = []
@@ -65,6 +65,8 @@ class NN(enum.Enum, dim.Dimension):
         self.group_initialize = True
         self.sess = tf.InteractiveSession()
         #self.sess = tf.Session()
+
+        self.save_string = tf.Variable("load random normal", validate_shape=False)
 
         ''' DOT FIRST '''
 
@@ -243,9 +245,9 @@ class NN(enum.Enum, dim.Dimension):
                 batch_xs, batch_ys = self.get_nn_next_train(self.batchsize, self.CONST_DOT)
                 self.sess.run(self.d_train_step, feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys, self.d_keep: 0.85})
                 if True: #mid_num > 0:
-                    cost = self.sess.run([self.d_cross_entropy], feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys, self.d_keep: 1.0})
+                    cost = self.sess.run([self.d_cross_entropy, self.save_string], feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys, self.d_keep: 1.0})
                     print cost, "cost"
-                    if (cost[0] < 0.670) :
+                    if (cost[0] < 0.570) :
                         self.save_group()
                         print "early exit"
                         exit()
@@ -261,7 +263,7 @@ class NN(enum.Enum, dim.Dimension):
             d_accuracy = tf.reduce_mean(tf.cast(d_correct_prediction, tf.float32))
 
             if self.use_loader : self.get_nn_next_test(self.batchsize, self.CONST_DOT)
-            print(self.sess.run([d_accuracy, self.d_y_out], feed_dict={self.d_x: self.mnist_test.images, self.d_y_: self.mnist_test.labels, self.d_keep: 1.0}))
+            print(self.sess.run([d_accuracy, self.d_y_out, self.save_string], feed_dict={self.d_x: self.mnist_test.images, self.d_y_: self.mnist_test.labels, self.d_keep: 1.0}))
             #print cost
             #print self.mnist_test.labels
             #print self.d_y_out
@@ -525,6 +527,10 @@ class NN(enum.Enum, dim.Dimension):
             img3.save(filename3)
 
     def save_group(self):
+        #self.save_string = tf.Variable("saved values")
+        op = tf.assign(self.save_string, "saved values")
+        self.sess.run(op)
+        
         extraname = self.DIMENSIONS[self.key][self.COLUMN_NAME]
         filename = "group_" + extraname #+ ".ckpt"
 
