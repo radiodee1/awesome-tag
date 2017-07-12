@@ -6,7 +6,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GdkPixbuf, Gdk
 import threading
-
+import signal
 import atag_dotfolder as atag
 import atag_drawingarea as dra
 import atag_csv_write as write
@@ -23,6 +23,8 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         atag.Dotfolder.__init__(self)
         Gtk.Window.__init__(self, title="Tag")
 
+        signal.signal(signal.SIGINT, self.signal_handler)
+        self.p = None # process instance
 
         self.set_border_width(10)
 
@@ -318,6 +320,9 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.button = Gtk.Button(label="List")
         self.button.connect("clicked", self.on_button_list)
         self.grid2.attach(self.button, 6, 0, 1, 1)
+        self.button = Gtk.Button(label="Stop")
+        self.button.connect("clicked", self.on_button_stop)
+        self.grid2.attach(self.button, 7, 0, 1, 1)
 
         self.grid.attach(self.grid2, 0, 13, 4,1)
 
@@ -460,6 +465,11 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         print 8
         pass
 
+    def on_button_stop(self, widget):
+        if self.p != None:
+            self.p.send_signal(signal.SIGINT)
+        pass
+
     ''' threading etc '''
     def run_draw_compile(self):
         ii = easygui.buttonbox("Type of Diagram","Choose",choices=("CONVOLUTION","INSET","DOT","PREDICT","LIST"))
@@ -508,7 +518,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         #if self.ii == "-conv-only" and self.train_list == "-zero-conv": call.append(self.train_list)
         self.train_list = ""
         print call
-        subprocess.call(call)
+        self.p = subprocess.Popen(call)
 
         if False:
             self.train_thread = subprocess.Popen(call, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True, preexec_fn=os.setsid)
@@ -589,6 +599,12 @@ class Interface(Gtk.Window, atag.Dotfolder) :
             self.VAR_SPLIT_FOLDER_NAME = var
         if folder == self.FOLDER_SPLIT_START :
             self.VAR_SPLIT_START = var
+
+    def signal_handler(self, signum, frame):
+        #if self.nn.save_ckpt:
+        #    self.nn.save_group()
+        sys.exit()
+
 
 if __name__ == '__main__':
     d = Interface()

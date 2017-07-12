@@ -132,7 +132,7 @@ class NN(enum.Enum, dim.Dimension):
             #self.d_y_out = tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.int64)
             #self.d_y_out = tf.cast(tf.logical_not(tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.bool)),tf.int64)
 
-            self.d_y_out = tf.argmax(self.d_y, -1)  ## for prediction
+            self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
 
 
         ''' CONVOLUTION NEXT '''
@@ -245,6 +245,10 @@ class NN(enum.Enum, dim.Dimension):
                 if True: #mid_num > 0:
                     cost = self.sess.run([self.d_cross_entropy], feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys, self.d_keep: 1.0})
                     print cost, "cost"
+                    if (cost[0] < 0.670) :
+                        self.save_group()
+                        print "early exit"
+                        exit()
 
         if self.save_ckpt and self.train : self.save_group()
 
