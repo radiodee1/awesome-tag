@@ -247,7 +247,7 @@ class NN(enum.Enum, dim.Dimension):
                 if True: #mid_num > 0:
                     cost = self.sess.run([self.d_cross_entropy, self.save_string], feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys, self.d_keep: 1.0})
                     print cost, "cost"
-                    if (cost[0] < 0.570) :
+                    if (cost[0] < 0.570) and False:
                         self.save_group()
                         print "early exit"
                         exit()
@@ -530,7 +530,7 @@ class NN(enum.Enum, dim.Dimension):
         #self.save_string = tf.Variable("saved values")
         op = tf.assign(self.save_string, "saved values")
         self.sess.run(op)
-        
+
         extraname = self.DIMENSIONS[self.key][self.COLUMN_NAME]
         filename = "group_" + extraname #+ ".ckpt"
 
