@@ -414,7 +414,7 @@ class Load(enum.Enum, dim.Dimension):
             skin.extend(list(img_skin[i]))
 
         for s in range(len(skin)):
-            skin[s] = skin[s] / float(256) #float(127)
+            skin[s] = skin[s] / float(127) #float(127)
 
         #print skin
 
