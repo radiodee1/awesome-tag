@@ -13,6 +13,7 @@ import atag_csv_write as write
 #import atag_csv_read_tf as read
 import atag_csv_predict as predict
 import atag_csv_draw as draw
+import nn_record as record
 import subprocess
 import os
 import sys
@@ -25,6 +26,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
         signal.signal(signal.SIGINT, self.signal_handler)
         self.p = None # process instance
+        self.record = record.Record(self)
 
         self.set_border_width(10)
 
@@ -472,7 +474,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     ''' threading etc '''
     def run_draw_compile(self):
-        ii = easygui.buttonbox("Type of Diagram","Choose",choices=("CONVOLUTION","INSET","DOT","PREDICT","LIST"))
+        ii = easygui.buttonbox("Type of Diagram","Choose",choices=("CONVOLUTION","INSET","DOT","PREDICT","CLEAR","LIST"))
         r = draw.Read(self)
         self.drawingarea.draw_enum = self.drawingarea.ENUM_BOXES
         if ii == "CONVOLUTION" :
@@ -502,6 +504,9 @@ class Interface(Gtk.Window, atag.Dotfolder) :
             skin, img, three = r.process_read_file_convolution_in_depth(num=(int(ii) * 2 - 1))
             #print three
             self.drawingarea.set_gradient_info(skin, img, three)
+            pass
+        elif ii == "CLEAR":
+            self.record.save_dat_to_list_file()
             pass
         self.drawingarea.queue_draw()
 

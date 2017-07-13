@@ -107,9 +107,9 @@ class NN(enum.Enum, dim.Dimension):
             # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
 
-            #self.d_y_out = tf.argmax(self.d_y , 1)  ## for prediction
+            self.d_y_out = tf.argmax(self.d_y , 1)  ## for prediction
             self.d_y_out_ = tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.int64)
-            self.d_y_out = tf.cast(tf.logical_not(tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.bool)),tf.int64)
+            #self.d_y_out = tf.cast(tf.logical_not(tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.bool)),tf.int64)
 
         else:
             self.d_keep = tf.placeholder(tf.float32)
@@ -132,9 +132,9 @@ class NN(enum.Enum, dim.Dimension):
             # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
             self.d_y_out_ = tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.int64)
-            self.d_y_out = tf.cast(tf.logical_not(tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.bool)),tf.int64)
+            #self.d_y_out = tf.cast(tf.logical_not(tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.bool)),tf.int64)
 
-            #self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
+            self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
 
 
         ''' CONVOLUTION NEXT '''
@@ -258,7 +258,7 @@ class NN(enum.Enum, dim.Dimension):
             self.cursor = 0
 
             #d_correct_prediction = tf.equal(tf.round(self.d_y_softmax ), tf.cast(tf.argmax(self.d_y_,1), tf.float32))
-            d_correct_prediction = tf.equal(self.d_y_out_, tf.argmax(self.d_y_, 1))
+            d_correct_prediction = tf.equal(self.d_y_out, tf.argmax(self.d_y_, 1))
 
             d_accuracy = tf.reduce_mean(tf.cast(d_correct_prediction, tf.float32))
 

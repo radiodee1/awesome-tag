@@ -136,6 +136,21 @@ class Record( enum.Enum, dim.Dimension):
             pass
             f.write(temp)
 
+    def save_dat_to_list_file(self, dat = [], erase=True):
+        self.dat = dat
+        #print self.dat
+        self.predict_filename = self.a.VAR_LOCAL_DATABASE + os.sep + "predict-list" + ".csv"
+        if erase: f = open(self.predict_filename, "w")
+        f = open(self.predict_filename, "a")
+        for i in self.dat :
+            temp = ""
+            for j in range(len(i)) :
+                temp = temp + str(i[j])
+                if j < len(i) -1 : temp = temp + ","
+                else: temp = temp + "\n"
+            pass
+            f.write(temp)
+
     def remove_lines_from_dat(self, lines):
         for line in lines:
             for num in range(len(self.dat)-1,-1,-1) :

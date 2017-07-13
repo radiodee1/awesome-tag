@@ -44,6 +44,7 @@ class Load(enum.Enum, dim.Dimension):
         self.record = rec.Record(atag)
         self.normal_train = True
         self.skintone_training = False
+        self.num_channels_global = 1
 
         ImageFile.LOAD_TRUNCATED_IMAGES = True
         self.inspection_num = 2
@@ -63,6 +64,7 @@ class Load(enum.Enum, dim.Dimension):
 
     def get_nn_next_train(self, batchsize, cursor, num_channels = 1):
         self.skintone_training = True
+        self.num_channels_global = num_channels
         if cursor * batchsize + batchsize >= len(self.dat):
             skin, three, images, lables = self._get_pixels_from_dat(cursor * batchsize, len(self.dat) -1 )
 
@@ -76,6 +78,7 @@ class Load(enum.Enum, dim.Dimension):
     def get_nn_next_test(self, batchsize, num_channels = 1):
         testframe = 0
         self.skintone_training = False
+        self.num_channels_global = num_channels
         skin, three, images, labels = self._get_pixels_from_dat( testframe * batchsize, testframe * batchsize + batchsize) #len(self.dat) - batchsize, len(self.dat))
         print ("next test", len(images), batchsize, testframe)
         if num_channels == self.CONST_ONE_CHANNEL : self.mnist_test = Map({'images':images, 'labels': labels})
@@ -86,6 +89,7 @@ class Load(enum.Enum, dim.Dimension):
     def get_nn_next_predict(self, batchsize, cursor, num_channels = 1):
         self.normal_train = False
         self.skintone_training = False
+        self.num_channels_global = num_channels
         tot_cursors = int(len(self.dat) / batchsize)
         if cursor > tot_cursors  :
             print cursor, tot_cursors, batchsize, len(self.dat), "end"
