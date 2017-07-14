@@ -102,7 +102,7 @@ class NN(enum.Enum, dim.Dimension):
             #self.d_cross_entropy = self.d_y_softmax
             self.d_cross_entropy = tf.reduce_mean(self.d_y_softmax)
 
-            self.d_train_step = tf.train.GradientDescentOptimizer(0.001).minimize(self.d_cross_entropy)  # 0.0001
+            self.d_train_step = tf.train.AdamOptimizer(0.001).minimize(self.d_cross_entropy)  # 0.0001
 
             # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
@@ -128,7 +128,7 @@ class NN(enum.Enum, dim.Dimension):
 
             self.d_cross_entropy = tf.reduce_mean(self.d_y_softmax )
 
-            self.d_train_step = tf.train.GradientDescentOptimizer(0.01).minimize(self.d_cross_entropy)  # 0.0001
+            self.d_train_step = tf.train.AdamOptimizer(0.01).minimize(self.d_cross_entropy)  # 0.0001
             # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
             self.d_y_out_ = tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.int64)
@@ -243,7 +243,7 @@ class NN(enum.Enum, dim.Dimension):
 
             for i in range(self.start_train,self.cursor_tot): #1000
                 batch_xs, batch_ys = self.get_nn_next_train(self.batchsize, self.CONST_DOT)
-                self.sess.run(self.d_train_step, feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys, self.d_keep: 0.85})
+                self.sess.run(self.d_train_step, feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys, self.d_keep: 1.0})
                 if True: #mid_num > 0:
                     cost = self.sess.run([self.d_cross_entropy, self.save_string], feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys, self.d_keep: 1.0})
                     print cost, "cost"

@@ -24,6 +24,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         atag.Dotfolder.__init__(self)
         Gtk.Window.__init__(self, title="Tag")
 
+        self.connect("destroy", self.exit)
         signal.signal(signal.SIGINT, self.signal_handler)
         self.p = None # process instance
         self.record = record.Record(self)
@@ -507,6 +508,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
             pass
         elif ii == "CLEAR":
             self.record.save_dat_to_list_file()
+            self.drawingarea.boxlist_red = []
             pass
         self.drawingarea.queue_draw()
 
@@ -608,12 +610,20 @@ class Interface(Gtk.Window, atag.Dotfolder) :
     def signal_handler(self, signum, frame):
         #if self.nn.save_ckpt:
         #    self.nn.save_group()
+        Gtk.main_quit()
         sys.exit()
 
+    def exit(self, widget):
+        if self.p != None:
+            self.p.send_signal(signal.SIGINT)
+        print "exit here"
+        Gtk.main_quit()
+        sys.exit()
 
 if __name__ == '__main__':
     d = Interface()
     d.show_window()
+    #d.connect("delete-event", d.exit)
     #d.dot_write(d.FOLDER_IMAGE_NAME, "/home/dave/image.png")
     #print (d.dot_read(d.FOLDER_IMAGE_NAME))
     #d.VAR_IMAGE_NAME = d.dot_read(d.FOLDER_IMAGE_NAME)
