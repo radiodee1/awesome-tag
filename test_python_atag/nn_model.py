@@ -108,7 +108,7 @@ class NN(enum.Enum, dim.Dimension):
 
 
             self.d_y_out = tf.argmax(self.d_y , 1)  ## for prediction
-            self.d_y_out_ = tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.int64)
+            #self.d_y_out_ = tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.int64)
             #self.d_y_out = tf.cast(tf.logical_not(tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.bool)),tf.int64)
 
         else:
@@ -131,7 +131,7 @@ class NN(enum.Enum, dim.Dimension):
             self.d_train_step = tf.train.AdamOptimizer(0.01).minimize(self.d_cross_entropy)  # 0.0001
             # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
-            self.d_y_out_ = tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.int64)
+            #self.d_y_out_ = tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.int64)
             #self.d_y_out = tf.cast(tf.logical_not(tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.bool)),tf.int64)
 
             self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
