@@ -150,7 +150,9 @@ class Write( enum.Enum, dim.Dimension) :
         width = int(line[self.FACE_WIDTH])
         height = int(line[self.FACE_HEIGHT])
 
-        for z in range(5):
+        num_repeated_samples = 1 # 5
+
+        for z in range(num_repeated_samples):
             for y in range(2):  # 3 # values of 2 or 3 are valid
 
                 for x in range(self.TOTAL_READ):
