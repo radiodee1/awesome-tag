@@ -102,7 +102,7 @@ class NN(enum.Enum, dim.Dimension):
             #self.d_cross_entropy = self.d_y_softmax
             self.d_cross_entropy = tf.reduce_mean(self.d_y_softmax)
 
-            self.d_train_step = tf.train.AdamOptimizer(0.001).minimize(self.d_cross_entropy)  # 0.0001
+            self.d_train_step = tf.train.AdamOptimizer(0.1).minimize(self.d_cross_entropy)  # 0.0001
 
             # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy) #0.5
 
