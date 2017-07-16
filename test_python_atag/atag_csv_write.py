@@ -14,7 +14,7 @@ class Write( enum.Enum, dim.Dimension) :
         enum.Enum.__init__(self)
         dim.Dimension.__init__(self)
 
-        self.random_dark_false_dot = True
+        self.random_dark_false_dot = False
 
         self.dim_x = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][0]
         self.dim_y = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][1]
@@ -159,7 +159,9 @@ class Write( enum.Enum, dim.Dimension) :
         ry = 0
 
         space = width / 2
-        num_repeated_samples = 2 # 5
+        num_repeated_samples = 1 # 5
+        if self.random_dark_false_dot:
+            num_repeated_samples = 2
 
         for z in range(num_repeated_samples):
             for y in range(2):  # 3 # values of 2 or 3 are valid
