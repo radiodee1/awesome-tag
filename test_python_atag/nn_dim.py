@@ -34,8 +34,8 @@ class Dimension(object) :
         self.ROW_NAME_PIPELINE_EXPERIMENT = 2
 
         #self.key = self.ROW_NAME_ORIGINAL_28 #
-        #self.key =  self.ROW_NAME_LARGER_XY
-        self.key = self.ROW_NAME_PIPELINE_EXPERIMENT
+        self.key =  self.ROW_NAME_LARGER_XY
+        #self.key = self.ROW_NAME_PIPELINE_EXPERIMENT
 
         def dim_xy(w, h):
             return [w , h]
