@@ -77,12 +77,12 @@ class NN(enum.Enum, dim.Dimension):
 
         if mid_num > 0:
             self.d_keep = tf.placeholder(tf.float32)
-            self.d_W_2 = tf.Variable(tf.random_normal([mid_num, output_num], stddev=0.01))
-            self.d_b_2 = tf.Variable(tf.random_normal([output_num], stddev=0.005))
+            self.d_W_2 = tf.Variable(tf.random_normal([mid_num, output_num], stddev=0.0001))
+            self.d_b_2 = tf.Variable(tf.random_normal([output_num], stddev=0.001))
 
             self.d_x = tf.placeholder(tf.float32, [None, input_num])
-            self.d_W_1 = tf.Variable(tf.random_normal([input_num, mid_num], stddev=0.01))  # 0.0001
-            self.d_b_1 = tf.Variable(tf.random_normal([mid_num], stddev=0.005))
+            self.d_W_1 = tf.Variable(tf.random_normal([input_num, mid_num], stddev=0.0001))  # 0.0001
+            self.d_b_1 = tf.Variable(tf.random_normal([mid_num], stddev=0.001))
 
             self.d_y_ = tf.placeholder(tf.float32, [None, output_num])
 
@@ -115,8 +115,8 @@ class NN(enum.Enum, dim.Dimension):
             self.d_keep = tf.placeholder(tf.float32)
 
             self.d_x = tf.placeholder(tf.float32, [None, input_num])
-            self.d_W_1 = tf.Variable(tf.random_normal([input_num, output_num], stddev=0.001))  # 0.0004
-            self.d_b_1 = tf.Variable(tf.zeros([output_num]))
+            self.d_W_1 = tf.Variable(tf.random_normal([input_num, output_num], stddev=0.0001))  # 0.0004
+            self.d_b_1 = tf.Variable(tf.random_normal([output_num], stddev=0.001))
 
 
             self.d_y_logits = tf.matmul(self.d_x, self.d_W_1) + self.d_b_1

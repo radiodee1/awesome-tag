@@ -14,6 +14,8 @@ class Write( enum.Enum, dim.Dimension) :
         enum.Enum.__init__(self)
         dim.Dimension.__init__(self)
 
+        self.random_dark_false_dot = True
+
         self.dim_x = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][0]
         self.dim_y = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][1]
 
@@ -49,10 +51,14 @@ class Write( enum.Enum, dim.Dimension) :
         self.f.close()
 
         print self.csv_output_dot , "dotfile"
+        print "wait... this could take time."
         self.f = open(self.csv_output_dot, "w")
         self.f = open(self.csv_output_dot, "a")
 
+        d = 0
         for l in self.dat:
+            d += 1
+            print "wait... this could take time. -- ", int(float(d)/len(self.dat) * 100) , "%"
             self.process_write_line_for_dot(l)
         self.f.close()
         print "done"
@@ -124,7 +130,7 @@ class Write( enum.Enum, dim.Dimension) :
 
     def process_write_line_for_dot(self, line):
         #space = 25
-        space = self.dim_y - 3
+        #space = self.dim_y / 2 # - 3
         filename = line[self.FILE]
         if not filename.startswith(self.a.VAR_ROOT_DATABASE + os.sep):
             filename = self.a.VAR_ROOT_DATABASE + os.sep + line[self.FILE]
@@ -149,12 +155,16 @@ class Write( enum.Enum, dim.Dimension) :
         bottom = int(line[self.FACE_Y]) + int(line[self.FACE_HEIGHT])
         width = int(line[self.FACE_WIDTH])
         height = int(line[self.FACE_HEIGHT])
+        rx = 0
+        ry = 0
 
-        num_repeated_samples = 1 # 5
+        space = width / 2
+        num_repeated_samples = 2 # 5
 
         for z in range(num_repeated_samples):
             for y in range(2):  # 3 # values of 2 or 3 are valid
-
+                if self.random_dark_false_dot and z == 1:
+                    rx, ry = self._get_false_dot_xy(filename, x=dimx, y=dimy)
                 for x in range(self.TOTAL_READ):
                     if y % 2 == 0:
                         if x != self.FACE_X and x != self.FACE_Y  and x != self.FACE_HEIGHT and x != self.FACE_WIDTH:
@@ -171,10 +181,14 @@ class Write( enum.Enum, dim.Dimension) :
                     elif (y % 2 == 1 ) and x == self.FACE_X:
                         r = 0
                         if left + width < dimx: r = random.randint(0, dimx - width)  # somewhere on top
+                        if self.random_dark_false_dot and z == 1:
+                            r = rx
                         self.f.write(str(r))
                     elif (y % 2 == 1 ) and x == self.FACE_Y:
                         r = 0
                         if top - height > 0: r = random.randint(0, top - height)
+                        if self.random_dark_false_dot and z == 1:
+                            r = ry
                         self.f.write(str(r))
                     elif (y % 2 == 1) and (x == self.FACE_WIDTH or x == self.FACE_HEIGHT):
                         self.f.write(str(self.dim_y))
@@ -189,3 +203,23 @@ class Write( enum.Enum, dim.Dimension) :
                     elif (y % 2 == 1 ):
                         # false
                         self.f.write("," + self.RED + ",0,0\n")
+
+    def _get_false_dot_xy(self, filename, x=0, y=0):
+        try:
+            img = Image.open(filename)
+            #x, y = img.size()
+            for z in range(20):
+                rx = random.randint(0,x-1)
+                ry = random.randint(0,y-1)
+                pixel = img.getpixel((rx,ry))
+                #print pixel
+                if len(pixel) >= 3 and pixel[0] < 128 and pixel[1] < 128 and pixel[2] < 128:
+                    return rx,ry
+                    pass
+                else:
+                    #return rx, ry
+                    pass
+            return int(x/2) , int(y/2)
+        except:
+            print "some error"
+            return int(x/2), int(y/2)

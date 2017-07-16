@@ -416,7 +416,7 @@ class Load(enum.Enum, dim.Dimension):
 
 
         for i in range(int(self.dot_xy * self.dot_xy)): #len(img_skin)) :
-            s =  int(img_skin[i][0]) * int(img_skin[i][1]) * int(img_skin[i][2])
+            s = 0 # int(img_skin[i][0]) * int(img_skin[i][1]) * int(img_skin[i][2])
             #print  img_skin[i]#math.pow(10,6)
             if False and s < self.mp:
                 #print "skip", sss
@@ -425,7 +425,8 @@ class Load(enum.Enum, dim.Dimension):
                 skin.extend(list(img_skin[i]))
 
         for s in range(len(skin)):
-            skin[s] = skin[s] / 128.0 #512.0 #float(127) #float(127)
+            skin[s] = skin[s] / 256.0 #128.0 #512.0 #float(127) #float(127)
+            #if  skin[s] < 0.5: skin[s] = 0.0
             #print skin[s]
 
         #print skin
