@@ -45,6 +45,7 @@ class Load(enum.Enum, dim.Dimension):
         self.normal_train = True
         self.skintone_training = False
         self.num_channels_global = 1
+        self.mp = math.pow(10,6) * 8
 
         ImageFile.LOAD_TRUNCATED_IMAGES = True
         self.inspection_num = 2
@@ -134,7 +135,7 @@ class Load(enum.Enum, dim.Dimension):
             return skin, img, three
 
     def _get_pixels_from_dat(self, start, stop):
-        print ("work with dat var")
+        #print ("work with dat var")
         self.image = []
         self.label = []
         self.image_x3 = []
@@ -415,10 +416,17 @@ class Load(enum.Enum, dim.Dimension):
 
 
         for i in range(int(self.dot_xy * self.dot_xy)): #len(img_skin)) :
-            skin.extend(list(img_skin[i]))
+            s =  int(img_skin[i][0]) * int(img_skin[i][1]) * int(img_skin[i][2])
+            #print  img_skin[i]#math.pow(10,6)
+            if False and s < self.mp:
+                #print "skip", sss
+                skin.extend(list((255.0 , 255.0 , 255.0)))
+            else:
+                skin.extend(list(img_skin[i]))
 
         for s in range(len(skin)):
-            skin[s] = skin[s] / float(127) #float(127)
+            skin[s] = skin[s] / 128.0 #512.0 #float(127) #float(127)
+            #print skin[s]
 
         #print skin
 

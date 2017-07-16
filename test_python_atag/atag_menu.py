@@ -371,12 +371,19 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     def on_button_train(self, widget):
         #self.run_csv_read()
-        self.ii = easygui.buttonbox("Type of training", "Choose", choices=("SKIN", "CONVOLUTION"))
+        self.ii = easygui.buttonbox("Type of training", "Choose", choices=("SKIN", "CONVOLUTION", "ZERO-COUNTERS", "CANCEL"))
         print "run from command line!"
         if self.ii == "SKIN":
             self.ii = "-dot-only"
         elif self.ii == "CONVOLUTION":
             self.ii = "-conv-only"
+        elif self.ii == "ZERO-COUNTERS":
+            self.dot_write(self.FOLDER_SAVED_CURSOR_DOT, str(0))
+            self.dot_write(self.FOLDER_SAVED_CURSOR_CONV, str(0))
+            return
+        elif self.ii == "CANCEL":
+            return
+
 
         thread = threading.Thread(target=self.run_csv_read)
         thread.daemon = True
@@ -393,7 +400,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     def on_button_options(self, widget):
         print 5
-        ii = easygui.buttonbox("Test Only, Etc.","Choose",choices=("SKIN","CONVOLUTION"))
+        ii = easygui.buttonbox("Test Only, Etc.","Choose",choices=("SKIN","CONVOLUTION","CANCEL"))
         print "run from command line!"
         if ii == "SKIN":
             subprocess.call(["python", "./nn_launch_train.py", "-dot-only", "-test", "-no-save"])
@@ -475,7 +482,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     ''' threading etc '''
     def run_draw_compile(self):
-        ii = easygui.buttonbox("Type of Diagram","Choose",choices=("CONVOLUTION","INSET","DOT","PREDICT","CLEAR","LIST"))
+        ii = easygui.buttonbox("Type of Diagram","Choose",choices=("CONVOLUTION","INSET","DOT","PREDICT","[CLEAR]","LIST"))
         r = draw.Read(self)
         self.drawingarea.draw_enum = self.drawingarea.ENUM_BOXES
         if ii == "CONVOLUTION" :
@@ -506,7 +513,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
             #print three
             self.drawingarea.set_gradient_info(skin, img, three)
             pass
-        elif ii == "CLEAR":
+        elif ii == "[CLEAR]":
             self.record.save_dat_to_list_file()
             self.drawingarea.boxlist_red = []
             pass

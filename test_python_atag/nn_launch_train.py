@@ -49,6 +49,7 @@ class Read( enum.Enum, dim.Dimension) :
         signal.signal(signal.SIGINT, self.signal_handler)
 
         self.nn.set_loader(ll)
+        self.zero_out_counter = False
 
         switch = False
         if switch:
@@ -66,7 +67,7 @@ class Read( enum.Enum, dim.Dimension) :
 
             self.nn.set_vars(len(ll.dat), 100, 0)
             self.nn.dot_setup()
-            self.a.dot_write(a.FOLDER_SAVED_CURSOR_DOT, str(0))
+            if self.zero_out_counter: self.a.dot_write(a.FOLDER_SAVED_CURSOR_DOT, str(0))
 
         if self.conv_only :
             ll.csv_input = self.a.VAR_LOCAL_DATABASE + os.sep + self.a.VAR_MY_CSV_NAME + ".csv"
@@ -77,7 +78,7 @@ class Read( enum.Enum, dim.Dimension) :
 
             self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=self.nn.train)
             self.nn.conv_setup()
-            self.a.dot_write(a.FOLDER_SAVED_CURSOR_CONV, str(0))
+            if self.zero_out_counter: self.a.dot_write(a.FOLDER_SAVED_CURSOR_CONV, str(0))
 
     def run_predict(self, picture):
         self.pic = picture

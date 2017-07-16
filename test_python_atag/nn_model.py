@@ -247,7 +247,7 @@ class NN(enum.Enum, dim.Dimension):
                 if True: #mid_num > 0:
                     cost = self.sess.run([self.d_cross_entropy, self.save_string], feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys, self.d_keep: 1.0})
                     print cost, "cost"
-                    if (cost[0] < 0.570) and False:
+                    if (cost[0] < 0.590) and False:
                         self.save_group()
                         print "early exit"
                         exit()
@@ -267,6 +267,7 @@ class NN(enum.Enum, dim.Dimension):
             print cost[0]
             print cost[1]
             print len(cost[2]) , cost[2]
+            print cost[3]
             #print self.mnist_test.labels
             #print self.d_y_out
 
