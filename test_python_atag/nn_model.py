@@ -303,7 +303,7 @@ class NN(enum.Enum, dim.Dimension):
             self.loader.record.renumber_dat_list(self.loader.dat)
 
 
-    def conv_setup(self):
+    def conv_setup(self, remove_low=False):
 
 
         if self.load_ckpt : self.load_group()
@@ -321,6 +321,8 @@ class NN(enum.Enum, dim.Dimension):
                         self.c_x: batch_0, self.c_y_: batch_1, self.keep_prob: 1.0})
                     print("step %d, training accuracy %g" % (i, train_accuracy))
                 self.c_train_step.run(feed_dict={self.c_x: batch_0, self.c_y_: batch_1, self.keep_prob: 0.5})
+                cost = self.sess.run([self.c_cross_entropy], feed_dict={self.c_x: batch_0, self.c_y_: batch_1, self.keep_prob: 1.0})
+                print cost, "cost"
 
         if self.save_ckpt and self.train  : self.save_group()
 
@@ -350,10 +352,27 @@ class NN(enum.Enum, dim.Dimension):
                     out.extend( self.sess.run(self.c_y_out, feed_dict={self.c_x : batch_0, self.c_y_: batch_1, self.keep_prob: 1.0}))
                     #print out, len(out) , i, self.cursor_tot
 
-            for j in range(len(out)) :
-                zz = out[j]
-                if int(zz) == int(self.predict_remove_symbol ) : ## 1
-                    self.dat_remove.append( j)
+
+            if not remove_low:
+                for j in range(len(out)) :
+                    zz = out[j]
+                    if int(zz) == int(self.predict_remove_symbol ) : ## 1
+                        self.dat_remove.append( j)
+
+            if remove_low:
+                print "out", len(out)
+                numlow = 0.95
+                numhigh = 0.95
+                numhigh_index = 0
+                for j in range(len(out)) :
+                    zz = out[j]
+                    #print zz, "raw z"
+                    if float(zz) < numlow : # int(self.predict_remove_symbol ) : ## 1
+                        numlow = zz
+                        self.dat_remove.append( j)
+                    if float(zz) > numhigh:
+                        numhigh = zz
+                        numhigh_index = j
 
             self.loader.record.remove_lines_from_dat(self.dat_remove)
             self.loader.dat = self.loader.record.renumber_dat_list(self.loader.dat)
@@ -387,6 +406,7 @@ class NN(enum.Enum, dim.Dimension):
                 numhigh_index = 0
                 for j in range(len(out)) :
                     zz = out[j][0]
+                    #print zz, "raw z"
                     if float(zz) < numlow : # int(self.predict_remove_symbol ) : ## 1
                         numlow = zz
                         self.dat_remove.append( j)

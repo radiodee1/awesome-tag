@@ -32,10 +32,12 @@ class Dimension(object) :
         self.ROW_NAME_ORIGINAL_28 = 0
         self.ROW_NAME_LARGER_XY = 1
         self.ROW_NAME_PIPELINE_EXPERIMENT = 2
+        self.ROW_NAME_PIPELINE_LARGEST_XY = 3
 
         #self.key = self.ROW_NAME_ORIGINAL_28 #
-        self.key =  self.ROW_NAME_LARGER_XY
+        #self.key =  self.ROW_NAME_LARGER_XY
         #self.key = self.ROW_NAME_PIPELINE_EXPERIMENT
+        self.key = self.ROW_NAME_PIPELINE_LARGEST_XY
 
         def dim_xy(w, h):
             return [w , h]
@@ -107,6 +109,26 @@ class Dimension(object) :
                 dim_abcd(-1, 40, 40, 3),
                 dim_ab(-1, 10 * 10 * 88),  # -1, 8800
                 dim_ab(10 * 10 * 88, 1024),  # 8800 , 1024
+                dim_bias(1024),
+                dim_ab(1024, 2),
+                dim_bias(2),
+                self.ENUM_PIPELINE_2
+            ],
+            [
+                self.ENUM_LOAD_ALL_GRADIENT,
+                'pipeline_biggest_input',
+                'load all as big input, experiment with pipeline',
+                6,
+                dim_ab(4 * 3, 2),  # in out dot
+                dim_ab(52 * 52 * 3, 2),  # in out conv 4800, 2
+                dim_xy(52, 52),  # x y
+                dim_abcd(5, 5, 3, 56),  # conv weight 1
+                dim_bias(56),  # conv bias 1
+                dim_abcd(5, 5, 56, 112),  # conv weight 2
+                dim_bias(112),
+                dim_abcd(-1, 52, 52, 3),
+                dim_ab(-1, 13 * 13 * 112),  # -1, 8800
+                dim_ab(13 * 13 * 112, 1024),  # 8800 , 1024
                 dim_bias(1024),
                 dim_ab(1024, 2),
                 dim_bias(2),
