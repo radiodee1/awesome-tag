@@ -167,7 +167,7 @@ class Read( enum.Enum, dim.Dimension) :
                 ll.record.renumber_dat_list(ll.dat)
                 print "len-dat1", len(ll.dat)
 
-            if self.pipeline_stage >= 4 and True:
+            if self.pipeline_stage >= 4 and False:
                 ''' final convolution neural network '''
                 # ll.normal_train = False
                 self.nn.predict_remove_symbol = 1

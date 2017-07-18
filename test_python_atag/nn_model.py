@@ -366,7 +366,7 @@ class NN(enum.Enum, dim.Dimension):
                 numhigh_index = 0
                 for j in range(len(out)) :
                     zz = out[j]
-                    #print zz, "raw z"
+                    print zz, "raw z"
                     if float(zz) < numlow : # int(self.predict_remove_symbol ) : ## 1
                         numlow = zz
                         self.dat_remove.append( j)
@@ -383,6 +383,7 @@ class NN(enum.Enum, dim.Dimension):
         if self.predict_conv :
             self.cursor = 0
             self.dat_remove = []
+            mean = 0.95
 
             out = []
             start = 0 # self.start_train
@@ -398,23 +399,30 @@ class NN(enum.Enum, dim.Dimension):
                     #print batch_0
                     out.extend( self.sess.run(self.y_conv, feed_dict={self.c_x : batch_0, self.c_y_: batch_1, self.keep_prob: 1.0}))
                     #print out, len(out) , i, self.cursor_tot
+                    mean = self.sess.run(self.c_cross_entropy, feed_dict={self.c_x: batch_0, self.c_y_: batch_1, self.keep_prob: 1.0})
+                    #mean = mean * 2 #1.5
+                    print mean, "mean"
 
             if True:
                 print "out", len(out)
-                numlow = 0.95
-                numhigh = 0.95
+                numlow = mean # 0.95
+                numhigh = mean # 0.95
                 numhigh_index = 0
+                save_index = False
                 for j in range(len(out)) :
                     zz = out[j][0]
-                    #print zz, "raw z"
+                    #print zz, "raw mc"
                     if float(zz) < numlow : # int(self.predict_remove_symbol ) : ## 1
                         numlow = zz
                         self.dat_remove.append( j)
-                    if float(zz) > numhigh:
+                        save_index = False
+                    elif float(zz) > numhigh:
+                        print zz, "numhigh"
                         numhigh = zz
                         numhigh_index = j
+                        save_index = True
 
-                self.dat_best.append(self.loader.dat[numhigh_index])
+                if save_index or not remove_low: self.dat_best.append(self.loader.dat[numhigh_index])
 
 
             print out [:3], "..."
@@ -485,7 +493,7 @@ class NN(enum.Enum, dim.Dimension):
                                             img.putpixel(xy,rgba)
 
                                         if show2:
-                                            
+
                                             xy2 = ((k * 5 + i) * 10 + p  , (m*n * 5 + j) * 10 * n + q )
                                             index = k * sl4 + m
                                             index = min(index, sl8 * 4 - 1)
