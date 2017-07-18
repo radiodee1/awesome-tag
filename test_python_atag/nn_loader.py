@@ -166,11 +166,11 @@ class Load(enum.Enum, dim.Dimension):
             self.filename_old = self.filename
 
 
-            if not (os.path.isfile(filename) and width >= self.dim_x and height >= self.dim_y
+            if not (os.path.isfile(filename) # and (width >= self.dim_x and height >= self.dim_y)
                     and len(self.img.getbands()) >=3) and self.normal_train :
                 self.iter = self.iter + 1
                 stop = stop + 1
-                print "skipping 1, b-n-w:" , filename
+                print "skipping 1, b-n-w or dim w-x-h:" , filename
                 continue
 
             lbl_1 = 0

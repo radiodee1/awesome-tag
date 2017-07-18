@@ -176,7 +176,9 @@ class Record( enum.Enum, dim.Dimension):
 
     ##############################################################
 
-    def aggregate_dat_list(self, dat, del_shapes=False):
+    def aggregate_dat_list(self, dat, del_shapes=False, dim_xy=-1):
+        if dim_xy == -1: dim_xy = self.xy
+
         self.dat = dat
         loop = True
         for i in range(len(self.dat)):
@@ -207,10 +209,13 @@ class Record( enum.Enum, dim.Dimension):
             for i in range(len(self.dat) -1, -1, -1) :
                 ''' delete odd sizes '''
                 if (self.dat[i][self.FACE_WIDTH] >= float(self.dat[i][self.FACE_HEIGHT]) * float(2.5) or
-                    float(self.dat[i][self.FACE_WIDTH]) * float(2.5) <= self.dat[i][self.FACE_HEIGHT] or
-                    self.dat[i][self.FACE_HEIGHT] <= self.dim_y * 2 or
-                    self.dat[i][self.FACE_WIDTH] <= self.dim_x * 2):
+                    float(self.dat[i][self.FACE_WIDTH]) * float(2.5) <= self.dat[i][self.FACE_HEIGHT] #or
+                    #or self.dat[i][self.FACE_HEIGHT] <= self.dim_y * 2 or
+                    #self.dat[i][self.FACE_WIDTH] <= self.dim_x * 2
+                    ):
                     pass
+                    del self.dat[i]
+                elif True and (self.dat[i][self.FACE_HEIGHT] <= dim_xy * 0.75 or self.dat[i][self.FACE_WIDTH] <= dim_xy * 0.75) :
                     del self.dat[i]
 
         return self.dat

@@ -51,6 +51,8 @@ class Dimension(object) :
         def dim_bias(b):
             return [b]
 
+        convdim = 9  # try 11
+        basedim = 13 # try 13
 
         self.DIMENSIONS = [
             [
@@ -116,19 +118,19 @@ class Dimension(object) :
             ],
             [
                 self.ENUM_LOAD_ALL_GRADIENT,
-                'pipeline_biggest_input',
+                'pipeline_biggest_input_' + str(basedim * 4) +"_" + str(convdim) ,
                 'load all as big input, experiment with pipeline',
                 6,
                 dim_ab(4 * 3, 2),  # in out dot
-                dim_ab(52 * 52 * 3, 2),  # in out conv 4800, 2
-                dim_xy(52, 52),  # x y
-                dim_abcd(5, 5, 3, 56),  # conv weight 1
-                dim_bias(56),  # conv bias 1
-                dim_abcd(5, 5, 56, 112),  # conv weight 2
-                dim_bias(112),
-                dim_abcd(-1, 52, 52, 3),
-                dim_ab(-1, 13 * 13 * 112),  # -1, 8800
-                dim_ab(13 * 13 * 112, 1024),  # 8800 , 1024
+                dim_ab(basedim * 4 * basedim * 4 * 3, 2),  # in out conv 4800, 2
+                dim_xy(basedim * 4, basedim * 4),  # x y
+                dim_abcd(convdim, convdim, 3, basedim * 4 + convdim - 1),  # conv weight 1
+                dim_bias(basedim * 4 + convdim - 1),  # conv bias 1
+                dim_abcd(convdim, convdim, basedim * 4 + convdim - 1, 2 * (basedim * 4 + convdim -1)),  # conv weight 2
+                dim_bias( 2 * (basedim * 4 + convdim - 1) ),
+                dim_abcd(-1, basedim * 4, basedim * 4, 3),
+                dim_ab(-1, basedim * basedim * 2 * (basedim * 4 + convdim - 1) ),  # -1, 8800
+                dim_ab( basedim * basedim * 2 * (basedim * 4 + convdim - 1) , 1024),   # 8800 , 1024
                 dim_bias(1024),
                 dim_ab(1024, 2),
                 dim_bias(2),

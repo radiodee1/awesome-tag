@@ -438,13 +438,14 @@ class NN(enum.Enum, dim.Dimension):
         sl4 = 4
         sl2 = 2
 
+        sl5 = int(self.DIMENSIONS[self.key][self.COLUMN_CWEIGHT_2][0])
         sl8 = int(self.DIMENSIONS[self.key][self.COLUMN_CWEIGHT_1][3] / 4)
         sl4 = int(self.DIMENSIONS[self.key][self.COLUMN_CWEIGHT_1][3] / 8)
         skin2 = int(math.sqrt(self.DIMENSIONS[self.key][self.COLUMN_IN_OUT_DOT][0] / 3))
 
         if sl4 % 2 == 1: sl4 -= 1
 
-        print sl8, sl4, skin2
+        print sl8, sl4, skin2, sl5
 
         if self.load_ckpt : self.load_group()
         filename2 = self.ckpt_folder + os.sep+ "visualize_weights.bmp"
@@ -455,8 +456,8 @@ class NN(enum.Enum, dim.Dimension):
         show1 = False
         show2 = True
         show3 = True
-        size = (5* sl8 * 10, 5 * sl4 * sl2 *10)
-        size2 = (5 * sl8 * 10, 5 * sl4 * 10)
+        size = (sl5* sl8 * 10, sl5 * sl4 * sl2 *10)
+        size2 = (sl5 * sl8 * 10, sl5 * sl4 * 10)
         size3 = (skin2 * 50 * 3, skin2 * 50)
         img = Image.new("RGBA", size, color=0)
         img2 = Image.new("RGBA", size2, color=0)
@@ -468,8 +469,8 @@ class NN(enum.Enum, dim.Dimension):
         rgba2 = (0,0,0,0)
         rgba3 = (0,0,0,0)
         if True:
-            for i in range(5):
-                for j in range(5):
+            for i in range(sl5):
+                for j in range(sl5):
                     for k in range(sl8 ):
                         for m in range(sl4  ):
                             for n in range(sl2):
@@ -478,9 +479,12 @@ class NN(enum.Enum, dim.Dimension):
                                         pass
                                         if show1:
                                             xy = ((i * sl8+  k) * 10 + p   , (j *  sl4  +m  )  * 10 * sl2 + n * 10 + q)
-                                            r = weights[i][j][0][k* sl4 + m] * 255.0 * math.pow(10,3)
-                                            g = weights[i][j][1][k* sl4 + m] * 255.0 * math.pow(10,3)
-                                            b = weights[i][j][2][k* sl4 + m] * 255.0 * math.pow(10,3)
+                                            index = k * 4 + m
+                                            index = min(index, sl8 * 4 - 1)
+
+                                            r = weights[i][j][0][index] * 255.0 * math.pow(10,3)
+                                            g = weights[i][j][1][index] * 255.0 * math.pow(10,3)
+                                            b = weights[i][j][2][index] * 255.0 * math.pow(10,3)
                                             if r > 255: r = 255
                                             if g > 255: g = 255
                                             if b > 255: b = 255
@@ -494,8 +498,8 @@ class NN(enum.Enum, dim.Dimension):
 
                                         if show2:
 
-                                            xy2 = ((k * 5 + i) * 10 + p  , (m*n * 5 + j) * 10 * n + q )
-                                            index = k * sl4 + m
+                                            xy2 = ((k * sl5 + i) * 10 + p  , (m*n * sl5 + j) * 10 * n + q )
+                                            index = k * 4 + m
                                             index = min(index, sl8 * 4 - 1)
 
                                             rr = weights[i][j][0][index] * 255.0 * math.pow(10, 3)
