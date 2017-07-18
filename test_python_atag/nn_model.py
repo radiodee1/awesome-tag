@@ -431,8 +431,10 @@ class NN(enum.Enum, dim.Dimension):
         sl2 = 2
 
         sl8 = int(self.DIMENSIONS[self.key][self.COLUMN_CWEIGHT_1][3] / 4)
-        sl4 = int(self.DIMENSIONS[self.key][self.COLUMN_CWEIGHT_1][3] / 8) - 1
+        sl4 = int(self.DIMENSIONS[self.key][self.COLUMN_CWEIGHT_1][3] / 8)
         skin2 = int(math.sqrt(self.DIMENSIONS[self.key][self.COLUMN_IN_OUT_DOT][0] / 3))
+
+        if sl4 % 2 == 1: sl4 -= 1
 
         print sl8, sl4, skin2
 
@@ -460,8 +462,8 @@ class NN(enum.Enum, dim.Dimension):
         if True:
             for i in range(5):
                 for j in range(5):
-                    for k in range(sl8):
-                        for m in range(sl4 ):
+                    for k in range(sl8 ):
+                        for m in range(sl4  ):
                             for n in range(sl2):
                                 for p in range(10):
                                     for q in range(10):
@@ -483,10 +485,14 @@ class NN(enum.Enum, dim.Dimension):
                                             img.putpixel(xy,rgba)
 
                                         if show2:
+                                            
                                             xy2 = ((k * 5 + i) * 10 + p  , (m*n * 5 + j) * 10 * n + q )
-                                            rr = weights[i][j][0][k * sl4 + m] * 255.0 * math.pow(10, 3)
-                                            gg = weights[i][j][1][k * sl4 + m] * 255.0 * math.pow(10, 3)
-                                            bb = weights[i][j][2][k * sl4 + m] * 255.0 * math.pow(10, 3)
+                                            index = k * sl4 + m
+                                            index = min(index, sl8 * 4 - 1)
+
+                                            rr = weights[i][j][0][index] * 255.0 * math.pow(10, 3)
+                                            gg = weights[i][j][1][index] * 255.0 * math.pow(10, 3)
+                                            bb = weights[i][j][2][index] * 255.0 * math.pow(10, 3)
                                             if rr > 255: rr = 255
                                             if gg > 255: gg = 255
                                             if bb > 255: bb = 255
