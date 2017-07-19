@@ -189,7 +189,7 @@ class Read( enum.Enum, dim.Dimension) :
 
                     self.nn.predict_remove_symbol = 1
                     self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=True)
-                    if not see_boxes: self.nn.conv_setup_mc(remove_low=True)
+                    if not see_boxes: self.nn.conv_setup_mc(remove_low=False)
                 if not see_boxes:
                     ll.dat = ll.record.renumber_dat_list(self.nn.dat_best)
                 else:

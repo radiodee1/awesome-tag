@@ -291,7 +291,7 @@ class NN(enum.Enum, dim.Dimension):
                 print "batch_0", len(batch_0)
                 if len(batch_0) > 0 :
                     out.extend( self.sess.run( self.d_y_out, feed_dict={self.d_x : batch_0, self.d_y_: batch_1, self.d_keep: 1.0}))
-                    print "out" , len(out) , i, self.cursor_tot, out[:10],"..."
+                    print "out" , len(out) , i, self.cursor_tot, out[-10:],"..."
 
             for j in range(len(out)) :
                 zz = out[j]

@@ -215,7 +215,7 @@ class Record( enum.Enum, dim.Dimension):
                     ):
                     pass
                     del self.dat[i]
-                elif True and (self.dat[i][self.FACE_HEIGHT] <= dim_xy * 0.75 or self.dat[i][self.FACE_WIDTH] <= dim_xy * 0.75) :
+                elif True and (self.dat[i][self.FACE_HEIGHT] <= dim_xy * 0.5 or self.dat[i][self.FACE_WIDTH] <= dim_xy * 0.5) :
                     del self.dat[i]
 
         return self.dat

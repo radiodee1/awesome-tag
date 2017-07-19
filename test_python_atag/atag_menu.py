@@ -392,11 +392,16 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     def on_button_test(self, widget):
         print 4
+        thread = threading.Thread(target=self.run_predict_single_image)
+        thread.daemon = False
+        thread.start()
+        '''
         call = ["python","./nn_launch_train.py",str(self.VAR_IMAGE_NAME[:])]
         #print call, self.predict_list
         call.extend(self.predict_list)
         #print call
         subprocess.call(call) #["python","./nn_launch_train.py",self.VAR_IMAGE_NAME])
+        '''
 
     def on_button_options(self, widget):
         print 5
@@ -542,7 +547,22 @@ class Interface(Gtk.Window, atag.Dotfolder) :
                 sys.stdout.write(out)
                 sys.stdout.flush()
 
+    def run_predict_single_image(self):
+        call = ["python", "./nn_launch_train.py", str(self.VAR_IMAGE_NAME[:])]
+        # print call, self.predict_list
+        call.extend(self.predict_list)
+        # print call
+        local_p = subprocess.Popen(call)
+        local_p.wait()
+        #print "waited"
+        r = draw.Read(self)
+        r.process_read_file_predict_list()
+        self.drawingarea.boxlist_red = r.boxlist_r
+        self.drawingarea.boxlist_green = r.boxlist_g
+        self.drawingarea.boxlist_blue = r.boxlist_b
+        self.drawingarea.queue_draw()
 
+        pass
 
     ''' utility and atag var callback '''
     def set_progress_text(self, text):
