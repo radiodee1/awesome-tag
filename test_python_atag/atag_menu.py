@@ -552,8 +552,8 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         # print call, self.predict_list
         call.extend(self.predict_list)
         # print call
-        local_p = subprocess.Popen(call)
-        local_p.wait()
+        self.p = subprocess.Popen(call)
+        self.p.wait()
         #print "waited"
         r = draw.Read(self)
         r.process_read_file_predict_list()
