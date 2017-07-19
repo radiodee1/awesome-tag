@@ -476,7 +476,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
             jj = easygui.buttonbox("Number of Pictures","Choose",choices=("2","5","10","50","100","CANCEL"))
             if jj != "CANCEL":
                 call =  ["python", "./nn_launch_train.py", "-make-list", str(jj)]
-                subprocess.call(call)
+                self.p = subprocess.Popen(call)
         print 8
         pass
 
