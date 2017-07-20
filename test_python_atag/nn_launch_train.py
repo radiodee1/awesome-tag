@@ -146,7 +146,7 @@ class Read( enum.Enum, dim.Dimension) :
             print "pipeline enum 1"
             ll.record.save_dat_to_file(ll.dat, erase=(not self.make_list))
 
-        if self.pipeline_enum == self.ENUM_PIPELINE_2:
+        if self.pipeline_enum == self.ENUM_PIPELINE_2 or self.pipeline_enum == self.ENUM_PIPELINE_3:
             ''' make initial box grid '''
             if self.pipeline_stage >= 1:
                 ll.dat = ll.record.make_boxes(self.pic, dim=4)  # 7

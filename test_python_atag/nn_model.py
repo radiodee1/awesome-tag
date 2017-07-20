@@ -57,13 +57,18 @@ class NN(enum.Enum, dim.Dimension):
         self.group_initialize = False
         self.predict_remove_symbol = 1 ## 1 or 0 ??
 
+        self.sess = tf.InteractiveSession()
 
-        self.nn_configure()
+        self.load_dot_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][0]
+        self.load_conv_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][1]
+        print self.load_dot_only, self.load_conv_only
 
-    def nn_configure(self):
+        if self.load_dot_only: self.nn_configure_dot()
+        if self.load_conv_only: self.nn_configure_conv()
+
+    def nn_configure_dot(self):
 
         self.group_initialize = True
-        self.sess = tf.InteractiveSession()
         #self.sess = tf.Session()
 
         self.save_string = tf.Variable("load random normal", validate_shape=False)
@@ -136,6 +141,7 @@ class NN(enum.Enum, dim.Dimension):
 
             self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
 
+    def nn_configure_conv(self):
 
         ''' CONVOLUTION NEXT '''
         #c_output = 2
@@ -301,6 +307,7 @@ class NN(enum.Enum, dim.Dimension):
             print "remove dot", len(self.dat_remove), self.dat_remove
             self.loader.record.remove_lines_from_dat(self.dat_remove)
             self.loader.record.renumber_dat_list(self.loader.dat)
+            print self.batchsize
 
 
     def conv_setup(self, remove_low=False):

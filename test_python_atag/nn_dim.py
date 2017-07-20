@@ -9,6 +9,7 @@ class Dimension(object) :
 
         self.ENUM_PIPELINE_1 = 0
         self.ENUM_PIPELINE_2 = 1
+        self.ENUM_PIPELINE_3 = 2
 
         self.COLUMN_LOADTYPE = 0
         self.COLUMN_NAME = 1
@@ -28,16 +29,19 @@ class Dimension(object) :
         self.COLUMN_FULL_CONNECTED_W2 = 15
         self.COLUMN_FULL_CONNECTED_B2 = 16
         self.COLUMN_ENUM_PIPELINE = 17
+        self.COLUMN_LOAD_DOT_CONV = 18
 
         self.ROW_NAME_ORIGINAL_28 = 0
         self.ROW_NAME_LARGER_XY = 1
         self.ROW_NAME_PIPELINE_EXPERIMENT = 2
         self.ROW_NAME_PIPELINE_LARGEST_XY = 3
+        self.ROW_NAME_PIPELINE_3_WORKING = 4
 
         #self.key = self.ROW_NAME_ORIGINAL_28 #
         #self.key =  self.ROW_NAME_LARGER_XY
         #self.key = self.ROW_NAME_PIPELINE_EXPERIMENT
-        self.key = self.ROW_NAME_PIPELINE_LARGEST_XY
+        #self.key = self.ROW_NAME_PIPELINE_LARGEST_XY
+        self.key = self.ROW_NAME_PIPELINE_3_WORKING
 
         def dim_xy(w, h):
             return [w , h]
@@ -50,6 +54,9 @@ class Dimension(object) :
 
         def dim_bias(b):
             return [b]
+
+        def dim_load_dot_conv(load_dot=True, load_conv=True):
+            return [load_dot, load_conv]
 
         convdim = 9  # try 11
         basedim = 13 # try 13
@@ -73,7 +80,8 @@ class Dimension(object) :
                 dim_bias(1024),
                 dim_ab(1024, 2),
                 dim_bias(2),
-                self.ENUM_PIPELINE_1
+                self.ENUM_PIPELINE_1,
+                dim_load_dot_conv()
 
             ],
             [
@@ -94,7 +102,8 @@ class Dimension(object) :
                 dim_bias(1024),
                 dim_ab(1024, 2),
                 dim_bias(2),
-                self.ENUM_PIPELINE_1
+                self.ENUM_PIPELINE_1,
+                dim_load_dot_conv()
             ],
             [
                 self.ENUM_LOAD_ALL_GRADIENT,
@@ -114,7 +123,8 @@ class Dimension(object) :
                 dim_bias(1024),
                 dim_ab(1024, 2),
                 dim_bias(2),
-                self.ENUM_PIPELINE_2
+                self.ENUM_PIPELINE_2,
+                dim_load_dot_conv()
             ],
             [
                 self.ENUM_LOAD_ALL_GRADIENT,
@@ -134,7 +144,29 @@ class Dimension(object) :
                 dim_bias(1024),
                 dim_ab(1024, 2),
                 dim_bias(2),
-                self.ENUM_PIPELINE_2
+                self.ENUM_PIPELINE_2,
+                dim_load_dot_conv()
+            ],
+            [
+                self.ENUM_LOAD_ALL_GRADIENT,
+                'pipeline_3_working_input_' + str(basedim * 4) +"_" + str(convdim) ,
+                'load all as big input, experiment with pipeline',
+                6,
+                dim_ab(4 * 3, 2),  # in out dot
+                dim_ab(basedim * 4 * basedim * 4 * 3, 2),  # in out conv 4800, 2
+                dim_xy(basedim * 4, basedim * 4),  # x y
+                dim_abcd(convdim, convdim, 3, basedim * 4 + convdim - 1),  # conv weight 1
+                dim_bias(basedim * 4 + convdim - 1),  # conv bias 1
+                dim_abcd(convdim, convdim, basedim * 4 + convdim - 1, 2 * (basedim * 4 + convdim -1)),  # conv weight 2
+                dim_bias( 2 * (basedim * 4 + convdim - 1) ),
+                dim_abcd(-1, basedim * 4, basedim * 4, 3),
+                dim_ab(-1, basedim * basedim * 2 * (basedim * 4 + convdim - 1) ),  # -1, 8800
+                dim_ab( basedim * basedim * 2 * (basedim * 4 + convdim - 1) , 1024),   # 8800 , 1024
+                dim_bias(1024),
+                dim_ab(1024, 2),
+                dim_bias(2),
+                self.ENUM_PIPELINE_3,
+                dim_load_dot_conv(load_dot=True, load_conv=True)
             ]
 
         ]
