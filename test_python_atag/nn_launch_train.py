@@ -291,9 +291,9 @@ if __name__ == '__main__':
     if args.pipeline != None: r.pipeline_stage = int(args.pipeline[0])
 
     if args.dim_config != None:
-        a.dot_write(a.VAR_DIM_CONFIG, int(args.dim_config[0] -1 ))
-        r.nn.key = int(args.dim_config[0] -1)
-        print int(args.dim_config[0] - 1) ,"dim_config"
+        a.dot_write(a.VAR_DIM_CONFIG, int(args.dim_config[0]  ))
+        r.nn.key = int(args.dim_config[0] )
+        print int(args.dim_config[0] ) ,"dim_config"
 
     if len(pic) > 0 :
         ''' any combination '''
