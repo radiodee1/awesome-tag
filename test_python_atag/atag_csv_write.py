@@ -4,6 +4,7 @@ import atag_csv as enum
 from PIL import Image
 import sys
 import nn_dim as dim
+import math
 
 '''
 Here we read the split file and write our own csv file for training later on.
@@ -47,9 +48,10 @@ class Write( enum.Enum, dim.Dimension) :
         self.f = open(self.csv_output, "a")
 
         for l in self.dat :
-            self.process_write_line(l)
+            self.process_write_line(l, filter_yaw=True)
         self.f.close()
 
+        #exit()
         print self.csv_output_dot , "dotfile"
         print "wait... this could take time."
         self.f = open(self.csv_output_dot, "w")
@@ -70,9 +72,9 @@ class Write( enum.Enum, dim.Dimension) :
             x = x.rstrip("\n\r")
             z.append(x)
         self.dat.append(z)
-        print z
+        print z, "strip"
 
-    def process_write_line(self, line):
+    def process_write_line(self, line, filter_yaw=False):
 
         filename = line[self.FILE]
         if not filename.startswith(self.a.VAR_ROOT_DATABASE + os.sep) :
@@ -80,7 +82,12 @@ class Write( enum.Enum, dim.Dimension) :
 
         if not os.path.isfile(filename) : return
 
+        dimx = 1
+        dimy = 1
+        #i = Image.open(filename)
+
         try:
+            #print filename, "try Image.open()"
             if True : dimx, dimy = Image.open(filename).size # get image bounds... slow!!
             if dimy == 0 or dimx == 0 : return
         except:
@@ -92,18 +99,38 @@ class Write( enum.Enum, dim.Dimension) :
         except ValueError:
             return
 
-        left = int(line[self.FACE_X])
-        right = int(line[self.FACE_X]) + int(line[self.FACE_WIDTH])
-        top = int(line[self.FACE_Y])
-        bottom = int(line[self.FACE_Y]) + int(line[self.FACE_HEIGHT])
-        width = int(line[self.FACE_WIDTH])
-        height = int(line[self.FACE_HEIGHT])
+        left = int(math.floor(float(line[self.FACE_X])))
+        right = int(math.floor(float(line[self.FACE_X]))) + int(math.floor(float(line[self.FACE_WIDTH])))
+        top = int(math.floor(float(line[self.FACE_Y])))
+        bottom = int(math.floor(float(line[self.FACE_Y]))) + int(math.floor(float(line[self.FACE_HEIGHT])))
+        width = int(math.floor(float(line[self.FACE_WIDTH])))
+        height = int(math.floor(float(line[self.FACE_HEIGHT])))
+
+        yaw = 3.5
+        has_yaw = False
+        if len(line) > self.FACE_YAW:
+            if len(line[self.FACE_YAW]) == 0:
+                line[self.FACE_YAW] = yaw
+            else:
+                yaw = float(line[self.FACE_YAW])
+                has_yaw = True
+            print yaw, line[self.FILE]
+
+        if filter_yaw and (yaw < - 4.0 or yaw > 4.0): # don't know what values to use here!!
+            #print "X"
+            return
 
         for y in range(2): #3 # values of 2 or 3 are valid
 
             for x in range(self.TOTAL_READ):
                 if y == 0  :
-                    self.f.write(line[x])
+                    if x != self.FILE and len(line[x]) > 0:
+                        #print line, x
+                        self.f.write(str(int(math.floor(float(line[x])))))
+                    elif len(line[x]) == 0:
+                        self.f.write("0")
+                    else:
+                        self.f.write(line[x])
 
                 elif (y == 1 or y == 2) and x == self.FACE_X:
                     r = 0
@@ -117,7 +144,12 @@ class Write( enum.Enum, dim.Dimension) :
                     if top - height > 0 : r = random.randint(0, top - height)
                     self.f.write(str(r))
                 else:
-                    self.f.write(line[x])
+                    if x != self.FILE and len(line[x]) > 0:
+                        self.f.write(str(int(math.floor(float(line[x])))))
+                    elif len(line[x]) == 0:
+                        self.f.write("0")
+                    else:
+                        self.f.write(line[x])
 
                 if x < self.TOTAL_READ - 1:
                     self.f.write(",")
@@ -149,12 +181,15 @@ class Write( enum.Enum, dim.Dimension) :
         except ValueError:
             return
 
-        left = int(line[self.FACE_X])
-        right = int(line[self.FACE_X]) + int(line[self.FACE_WIDTH])
-        top = int(line[self.FACE_Y])
-        bottom = int(line[self.FACE_Y]) + int(line[self.FACE_HEIGHT])
-        width = int(line[self.FACE_WIDTH])
-        height = int(line[self.FACE_HEIGHT])
+
+
+        left = int(math.floor(float(line[self.FACE_X])))
+        right = int(math.floor(float(line[self.FACE_X]))) + int(math.floor(float(line[self.FACE_WIDTH])))
+        top = int(math.floor(float(line[self.FACE_Y])))
+        bottom = int(math.floor(float(line[self.FACE_Y]))) + int(math.floor(float(line[self.FACE_HEIGHT])))
+        width = int(math.floor(float(line[self.FACE_WIDTH])))
+        height = int(math.floor(float(line[self.FACE_HEIGHT])))
+
         rx = 0
         ry = 0
 
@@ -174,9 +209,9 @@ class Write( enum.Enum, dim.Dimension) :
                         #else:
                         #    self.f.write(line[x])
                         if x == self.FACE_X:
-                            self.f.write(str(int(line[x]) + z * 2 + space))
+                            self.f.write(str(int(math.floor(float(line[x]))) + z * 2 + space))
                         elif x == self.FACE_Y:
-                            self.f.write(str(int(line[x]) + z * 2 + space))
+                            self.f.write(str(int(math.floor(float(line[x]))) + z * 2 + space))
                         elif x == self.FACE_WIDTH or x == self.FACE_HEIGHT:
                             self.f.write(str(self.dim_x))
 

@@ -13,6 +13,9 @@ class Enum(object) :
         self.FACE_WIDTH = 8
         self.FACE_HEIGHT = 9
 
+        # only in non-detection csv files
+        self.FACE_YAW = 16
+
         self.COLOR = 10 # THIS IS MY COLOR
         self.IS_FACE = 11 # THIS IS MY BOOBLEAN
         self.ATAG_ID = 12
