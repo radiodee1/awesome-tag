@@ -31,8 +31,9 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
         self.set_border_width(10)
 
+        if self.VAR_DIM_CONFIG == "" : self.VAR_DIM_CONFIG = 4
         self.predict_call_list = ["-pipeline","10"]
-        self.dim_key_call_list = ["-dim-config","4"]
+        self.dim_key_call_list = ["-dim-config", str(self.VAR_DIM_CONFIG)]
         self.train_list = []
         self.train_thread = None
 
@@ -414,12 +415,20 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.enter_image_name_callback(widget,var,folder,label)
 
     def on_button_more(self, widget):
-        ii = easygui.buttonbox("Further Options","Choose",choices=("PIPELINE","RESET-CURSOR","SHOW-WEIGHTS","CANCEL"))
+        ii = easygui.buttonbox("Further Options","Choose",choices=("PIPELINE","SET-DIM","RESET-CURSOR","SHOW-WEIGHTS","CANCEL"))
         if ii == "PIPELINE":
             jj = easygui.buttonbox("Pipeline Options","Choose",choices=("1","2","3","4","5","6","7"))
             self.predict_call_list = ["-pipeline", str(jj)]
             print self.predict_call_list
             self.set_progress_text("started")
+            pass
+        if ii == "SET-DIM":
+            jj = easygui.buttonbox("Dimension Options","Program Will Quit",choices=("0","1","2","3","4","5","6","7"))
+            self.dim_key_call_list = ["-dim-config", str(jj)]
+            #print self.dim_key_call_list
+            self.dot_write(self.FOLDER_DIM_CONFIG, str(jj))
+            self.exit(None)
+            #self.set_progress_text("started")
             pass
         if ii == "RESET-CURSOR":
             jj = easygui.buttonbox("Training Cursor To Reset On Next Run!","Choose",choices=("SKIN","CONVOLUTION","CANCEL"))
@@ -546,6 +555,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         call = ["python", "./nn_launch_train.py", str(self.VAR_IMAGE_NAME[:])]
         # print call, self.predict_list
         call.extend(self.predict_call_list)
+        call.extend(self.dim_key_call_list)
         # print call
         self.p = subprocess.Popen(call)
         self.p.wait()
@@ -561,7 +571,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     ''' utility and atag var callback '''
     def set_progress_text(self, text):
-        self.progress_label.set_text("Pipeline:" +self.predict_call_list[1] +", Progress: "+ text)
+        self.progress_label.set_text("Dimension Configuration:"+self.dim_key_call_list[1] +",Pipeline:" +self.predict_call_list[1] +", Progress: "+ text)
 
     def show_window(self):
         win = self  # Interface()
