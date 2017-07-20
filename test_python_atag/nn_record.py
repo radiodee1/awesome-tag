@@ -12,6 +12,10 @@ class Record( enum.Enum, dim.Dimension):
         print
         self.dat = []
         self.a = atag
+        if self.a.VAR_DIM_CONFIG == "":
+            print "reset dim_config"
+            self.a.dot_write(self.a.FOLDER_DIM_CONFIG, "4")
+        self.key = int(self.a.VAR_DIM_CONFIG)
         self.predict_filename = self.a.VAR_LOCAL_DATABASE + os.sep + "predict" + ".csv"
         self.strict_columns = False
         self.allow_skipping = True

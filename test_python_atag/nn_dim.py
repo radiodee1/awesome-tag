@@ -1,7 +1,15 @@
-
+import atag_dotfolder as aa
 
 class Dimension(object) :
     def __init__(self):
+
+        self.a = aa.Dotfolder()
+
+        if self.a.VAR_DIM_CONFIG == "":
+            print "reset dim_config"
+            self.a.dot_write(self.a.FOLDER_DIM_CONFIG, "4")
+        self.key = int(self.a.VAR_DIM_CONFIG)
+
         self.ENUM_LOAD_ALL_GRADIENT = 0
         self.ENUM_LOAD_DOT_ONLY = 1
         self.ENUM_LOAD_CONV_CUTOFF = 2
@@ -41,7 +49,7 @@ class Dimension(object) :
         #self.key =  self.ROW_NAME_LARGER_XY
         #self.key = self.ROW_NAME_PIPELINE_EXPERIMENT
         #self.key = self.ROW_NAME_PIPELINE_LARGEST_XY
-        self.key = self.ROW_NAME_PIPELINE_3_WORKING
+        self.dim_default = self.ROW_NAME_PIPELINE_3_WORKING
 
         def dim_xy(w, h):
             return [w , h]

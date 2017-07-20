@@ -54,6 +54,8 @@ class NN(enum.Enum, dim.Dimension):
         self.nn_out_softmax = None
         self.nn_out_conv = None
 
+        self.key = self.a.VAR_DIM_CONFIG
+
         self.group_initialize = False
         self.predict_remove_symbol = 1 ## 1 or 0 ??
 

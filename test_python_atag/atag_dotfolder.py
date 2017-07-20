@@ -24,6 +24,7 @@ class Dotfolder(object):
         self.FOLDER_SPLIT_END = "split_end"
         self.FOLDER_SPLIT_FOLDER_NAME = "split_folder_name"
         self.FOLDER_SPLIT_START = "split_start"
+        self.FOLDER_DIM_CONFIG = "dim_config"
         
         self.VAR_BASE_NAME = os.sep
         self.VAR_CSV_FILE_SECOND = 0
@@ -40,6 +41,7 @@ class Dotfolder(object):
         self.VAR_SPLIT_END = 0
         self.VAR_SPLIT_FOLDER_NAME = "split"
         self.VAR_SPLIT_START = 0
+        self.VAR_DIM_CONFIG = 4
         
         """ initialize tasks """
         self.dotfolder_exists()
@@ -77,6 +79,7 @@ class Dotfolder(object):
         self.VAR_SPLIT_END = self.dot_read(self.FOLDER_SPLIT_END)
         self.VAR_SPLIT_FOLDER_NAME = self.dot_read(self.FOLDER_SPLIT_FOLDER_NAME)
         self.VAR_SPLIT_START = self.dot_read(self.FOLDER_SPLIT_START)
+        self.VAR_DIM_CONFIG = self.dot_read(self.FOLDER_DIM_CONFIG)
 
     def save_vars(self):
         ''' do not use this!! '''
@@ -95,6 +98,7 @@ class Dotfolder(object):
         self.dot_write(self.FOLDER_SPLIT_END, self.VAR_SPLIT_END)
         self.dot_write(self.FOLDER_SPLIT_FOLDER_NAME, self.VAR_SPLIT_FOLDER_NAME)
         self.dot_write(self.FOLDER_SPLIT_START, self.VAR_SPLIT_START)
+        self.dot_write(self.FOLDER_DIM_CONFIG, self.VAR_DIM_CONFIG)
 
 if __name__ == '__main__': 
     d = Dotfolder()

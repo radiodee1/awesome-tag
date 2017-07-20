@@ -24,6 +24,7 @@ class DrawingArea(Gtk.DrawingArea, dim.Dimension) :
         self.ENUM_GRADIENT_RGB = 2
         self.gradient_list = []
         self.draw_enum = self.ENUM_BOXES
+
         self.dim_x = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][0]
         self.dim_y = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][1]
 

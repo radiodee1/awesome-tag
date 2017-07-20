@@ -263,6 +263,7 @@ if __name__ == '__main__':
     parser.add_argument("-zero-conv", action="store_true")
     parser.add_argument("-weight-img", action="store_true")
     parser.add_argument("-make-list", nargs=1)
+    parser.add_argument("-dim-config", nargs=1)
 
     args = parser.parse_args()
     print args
@@ -288,6 +289,11 @@ if __name__ == '__main__':
 
     r = Read(a, pic)
     if args.pipeline != None: r.pipeline_stage = int(args.pipeline[0])
+
+    if args.dim_config != None:
+        a.dot_write(a.VAR_DIM_CONFIG, int(args.dim_config[0] -1 ))
+        r.nn.key = int(args.dim_config[0] -1)
+        print int(args.dim_config[0] - 1) ,"dim_config"
 
     if len(pic) > 0 :
         ''' any combination '''

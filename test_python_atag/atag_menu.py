@@ -31,7 +31,8 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
         self.set_border_width(10)
 
-        self.predict_list = ["-pipeline","10"]
+        self.predict_call_list = ["-pipeline","10"]
+        self.dim_key_call_list = ["-dim-config","4"]
         self.train_list = []
         self.train_thread = None
 
@@ -395,13 +396,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         thread = threading.Thread(target=self.run_predict_single_image)
         thread.daemon = False
         thread.start()
-        '''
-        call = ["python","./nn_launch_train.py",str(self.VAR_IMAGE_NAME[:])]
-        #print call, self.predict_list
-        call.extend(self.predict_list)
-        #print call
-        subprocess.call(call) #["python","./nn_launch_train.py",self.VAR_IMAGE_NAME])
-        '''
+
 
     def on_button_options(self, widget):
         print 5
@@ -422,8 +417,8 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         ii = easygui.buttonbox("Further Options","Choose",choices=("PIPELINE","RESET-CURSOR","SHOW-WEIGHTS","CANCEL"))
         if ii == "PIPELINE":
             jj = easygui.buttonbox("Pipeline Options","Choose",choices=("1","2","3","4","5","6","7"))
-            self.predict_list = ["-pipeline", str(jj)]
-            print self.predict_list
+            self.predict_call_list = ["-pipeline", str(jj)]
+            print self.predict_call_list
             self.set_progress_text("started")
             pass
         if ii == "RESET-CURSOR":
@@ -550,7 +545,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
     def run_predict_single_image(self):
         call = ["python", "./nn_launch_train.py", str(self.VAR_IMAGE_NAME[:])]
         # print call, self.predict_list
-        call.extend(self.predict_list)
+        call.extend(self.predict_call_list)
         # print call
         self.p = subprocess.Popen(call)
         self.p.wait()
@@ -566,7 +561,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     ''' utility and atag var callback '''
     def set_progress_text(self, text):
-        self.progress_label.set_text("Pipeline:" +self.predict_list[1] +", Progress: "+ text)
+        self.progress_label.set_text("Pipeline:" +self.predict_call_list[1] +", Progress: "+ text)
 
     def show_window(self):
         win = self  # Interface()
