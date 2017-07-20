@@ -114,7 +114,7 @@ class Write( enum.Enum, dim.Dimension) :
             else:
                 yaw = float(line[self.FACE_YAW])
                 has_yaw = True
-            print yaw, line[self.FILE]
+            #print yaw, line[self.FILE]
 
         if filter_yaw and (yaw < - 4.0 or yaw > 4.0): # don't know what values to use here!!
             #print "X"
