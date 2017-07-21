@@ -162,7 +162,7 @@ class Record( enum.Enum, dim.Dimension):
 
                 if self.dat[num][self.ATAG_ID] == line :
                     del self.dat[num]
-                    print "delete here", num, line
+                    #print "delete here", num, line
                     break
         return self.dat
 

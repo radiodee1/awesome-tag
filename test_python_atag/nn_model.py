@@ -295,11 +295,12 @@ class NN(enum.Enum, dim.Dimension):
             stop = self.cursor_tot
             if len(self.loader.dat) > self.cursor_tot * self.batchsize:
                 stop = self.cursor_tot + 1
-                print stop
+                print stop, "stop"
 
-            for i in range(start, stop ) :
+            for i in range(start, stop + 1) :
+                #self.cursor = i
                 batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, self.CONST_DOT)
-                print "batch_0", len(batch_0)
+                print "batch_0", len(batch_0), self.batchsize
                 if len(batch_0) > 0 :
                     out.extend( self.sess.run( self.d_y_out, feed_dict={self.d_x : batch_0, self.d_y_: batch_1, self.d_keep: 1.0}))
                     print "out" , len(out) , i, self.cursor_tot, out[-10:],"..."

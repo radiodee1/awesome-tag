@@ -91,14 +91,17 @@ class Load(enum.Enum, dim.Dimension):
         self.normal_train = False
         self.skintone_training = False
         self.num_channels_global = num_channels
-        tot_cursors = int(len(self.dat) / batchsize)
+        tot_cursors = int(math.floor(len(self.dat) / float(batchsize)))
         if cursor > tot_cursors  :
             print cursor, tot_cursors, batchsize, len(self.dat), "end"
-            skin, three, images, labels = self._get_pixels_from_dat(cursor-1 * batchsize, len(self.dat) )
-        elif batchsize > len(self.dat):
-            skin, three, images, labels = self._get_pixels_from_dat(0, len(self.dat))
+            skin, three, images, labels = self._get_pixels_from_dat((cursor-1) * batchsize, len(self.dat)-1 )# len(self.dat) -1)
+        elif batchsize > len(self.dat) - 1:
+            print batchsize, "large batch size", len(self.dat) -1, cursor
+            skin, three, images, labels = self._get_pixels_from_dat(cursor * batchsize, len(self.dat) -1)
+            print "batches returned", len(skin)
         elif cursor <= tot_cursors :
             skin, three, images, labels = self._get_pixels_from_dat(cursor * batchsize, cursor * batchsize + batchsize)
+        print batchsize, "batch size", len(self.dat) - 1, cursor, len(labels), len(skin)
         if num_channels == self.CONST_ONE_CHANNEL : return images, labels
         if num_channels == self.CONST_THREE_CHANNEL : return three, labels
         if num_channels == self.CONST_DOT : return skin, labels
@@ -142,12 +145,19 @@ class Load(enum.Enum, dim.Dimension):
         self.image_skin = []
         self.iter = start
 
-        if self.iter  > len(self.dat):
-            self.iter = 0
-            stop = stop - start
+        if self.iter  >= len(self.dat):
+            #self.iter = 0
+            #stop = stop - start
             print "some kind of reset"
+            #exit()
+            return self.image_skin, self.image_x3, self.image, self.label
 
-        while self.iter < stop and stop <= len(self.dat) and self.iter < len(self.dat):
+        while self.iter < stop and stop <= len(self.dat) and self.iter < len(self.dat) :
+
+            #print self.dat[self.iter]
+            #if self.iter >= len(self.dat) -1 or len(self.dat[self.iter]) < self.FILE:
+            #    return
+
             filename = self.dat[self.iter][self.FILE]
             if not filename.startswith(self.image_folder + os.sep) and not (filename.startswith(os.sep)) :
                 filename = self.image_folder + os.sep + filename
@@ -185,10 +195,12 @@ class Load(enum.Enum, dim.Dimension):
 
             skin, img , three = self.look_at_img(filename,x,y,width,height, skin_reject=skin_reject)
 
+            '''
             if skin[0] == 0.0 and skin[1] == 0.0:
                 self.iter = self.iter + 1
                 stop = stop + 1
                 continue
+            '''
 
             #print len(skin) , skin, "skin", lbl_1, lbl_2
 

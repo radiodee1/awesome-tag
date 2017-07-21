@@ -146,7 +146,7 @@ class Read( enum.Enum, dim.Dimension) :
             print "pipeline enum 1"
             ll.record.save_dat_to_file(ll.dat, erase=(not self.make_list))
 
-        if self.pipeline_enum == self.ENUM_PIPELINE_2 or self.pipeline_enum == self.ENUM_PIPELINE_3:
+        if self.pipeline_enum == self.ENUM_PIPELINE_2:
             ''' make initial box grid '''
             if self.pipeline_stage >= 1:
                 ll.dat = ll.record.make_boxes(self.pic, dim=4)  # 7
@@ -197,6 +197,59 @@ class Read( enum.Enum, dim.Dimension) :
                 print "len-dat3", len(self.nn.dat_best)
 
             print "pipeline enum 2"
+            ll.record.save_dat_to_file(ll.dat, erase=(not self.make_list))
+
+        if self.pipeline_enum == self.ENUM_PIPELINE_3:
+            ''' make initial box grid '''
+            if self.pipeline_stage >= 1:
+                ll.dat = ll.record.make_boxes(self.pic, dim=4)  # 7
+                print "num-boxes", len(ll.dat)
+
+            if self.pipeline_stage >= 2:
+                ''' initial simple neural network '''
+                self.nn.predict_remove_symbol = 1
+                self.nn.set_vars(len(ll.dat), 10 * 100, 0)
+                self.nn.dot_setup()
+                print "len-dat2", len(ll.dat)
+
+            if self.pipeline_stage >= 3 and False:
+                ''' two passes through aggregate box function '''
+                ll.dat = ll.record.aggregate_dat_list(ll.dat)
+                ll.record.renumber_dat_list(ll.dat)
+                ll.dat = ll.record.aggregate_dat_list(ll.dat, del_shapes=True)
+                ll.record.renumber_dat_list(ll.dat)
+                print "len-dat1", len(ll.dat)
+
+            if self.pipeline_stage >= 4 and False:
+                ''' final convolution neural network '''
+                # ll.normal_train = False
+                self.nn.predict_remove_symbol = 1
+                self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=True)
+                self.nn.conv_setup(remove_low=False)
+                print "len-dat2", len(ll.dat)
+
+            if self.pipeline_stage >= 5 and False:
+                ''' try to improve box '''
+                see_boxes = False
+                if self.pipeline_stage == 5: see_boxes = True
+                see_list = []
+                self.nn.dat_best = []
+                self.dat_mc = ll.dat[:]
+                for k in range(len(self.dat_mc)):
+                    ll.dat = ll.record.make_boxes_mc(self.pic, dim=100, dat=[self.dat_mc[k]])
+                    ll.record.renumber_dat_list(ll.dat)
+                    if see_boxes: see_list.extend(ll.dat[:])
+
+                    self.nn.predict_remove_symbol = 1
+                    self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=True)
+                    if not see_boxes: self.nn.conv_setup_mc(remove_low=False)
+                if not see_boxes:
+                    ll.dat = ll.record.renumber_dat_list(self.nn.dat_best)
+                else:
+                    ll.dat = see_list[:]
+                print "len-dat3", len(self.nn.dat_best)
+
+            print "pipeline enum 3"
             ll.record.save_dat_to_file(ll.dat, erase=(not self.make_list))
 
 
@@ -291,7 +344,7 @@ if __name__ == '__main__':
     if args.pipeline != None: r.pipeline_stage = int(args.pipeline[0])
 
     if args.dim_config != None:
-        a.dot_write(a.VAR_DIM_CONFIG, int(args.dim_config[0]  ))
+        a.dot_write(a.VAR_DIM_CONFIG, str(int(args.dim_config[0] ) ))
         r.nn.key = int(args.dim_config[0] )
         print int(args.dim_config[0] ) ,"dim_config"
 
