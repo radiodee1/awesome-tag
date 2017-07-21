@@ -68,6 +68,9 @@ class NN(enum.Enum, dim.Dimension):
         if self.load_dot_only: self.nn_configure_dot()
         if self.load_conv_only: self.nn_configure_conv()
 
+        init = tf.global_variables_initializer().run()
+
+
     def nn_configure_dot(self):
 
         self.group_initialize = True
@@ -233,7 +236,7 @@ class NN(enum.Enum, dim.Dimension):
 
         self.c_y_out = tf.argmax(self.y_conv, 1)  ## for prediction
 
-        init = tf.global_variables_initializer().run()
+        #init = tf.global_variables_initializer().run()
         #self.sess.run(init)
 
         #summary_writer = tf.train.SummaryWriter(self.ckpt_folder + os.sep + "logs" + os.sep, self.sess.graph)

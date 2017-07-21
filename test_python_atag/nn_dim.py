@@ -69,6 +69,13 @@ class Dimension(object) :
         convdim = 9  # try 11
         basedim = 13 # try 13
 
+        load_dot = True
+        load_conv = False
+
+        name_string = ""
+        if load_dot: name_string = name_string + "_dot"
+        if load_conv: name_string = name_string + "_conv"
+
         self.DIMENSIONS = [
             [
                 self.ENUM_LOAD_ALL_GRADIENT,
@@ -157,7 +164,7 @@ class Dimension(object) :
             ],
             [
                 self.ENUM_LOAD_ALL_GRADIENT,
-                'pipeline_3_working_input_' + str(basedim * 4) +"_" + str(convdim) ,
+                'pipeline_3_working_input_' + str(basedim * 4) + "_" + str(convdim) + name_string ,
                 'load all as big input, experiment with pipeline',
                 6,
                 dim_ab(4 * 3, 2),  # in out dot
@@ -174,7 +181,7 @@ class Dimension(object) :
                 dim_ab(1024, 2),
                 dim_bias(2),
                 self.ENUM_PIPELINE_3,
-                dim_load_dot_conv(load_dot=True, load_conv=True)
+                dim_load_dot_conv(load_dot=load_dot, load_conv=load_conv)
             ]
 
         ]
