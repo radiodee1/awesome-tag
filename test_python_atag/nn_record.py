@@ -1,4 +1,5 @@
 import random
+import math
 import os
 import atag_csv as enum
 #import nn_kmeans as kmeans
@@ -29,11 +30,27 @@ class Record( enum.Enum, dim.Dimension):
     def set_dat(self, dat):
         self.dat = dat
 
-    def make_boxes(self, filename, dim=-1):
-        if dim == -1 : dim = self.xy
+    def make_boxes(self, filename, dim=-1, grid=10000):
+
+        do_fit = False
+        if dim == -1 :
+            dim = self.xy
+            do_fit = True
+
+        #self.dim_x = dim
+        #self.dim_y = dim
+        xx, yy = Image.open(filename).size
+
+        if do_fit:
+            #grid = 127 * 127
+            img_size = xx * yy
+            dim = int(math.ceil(math.sqrt(math.ceil(float(img_size)/grid))))
+
+            print dim, self.xy, grid, "dim"
+            if dim < 4 : dim = 4
+
         self.dim_x = dim
         self.dim_y = dim
-        xx, yy = Image.open(filename).size
 
         w = xx / self.dim_x  ## w is how many tiles wide
         h = yy / self.dim_y  ## h is how many tiles high
@@ -68,6 +85,9 @@ class Record( enum.Enum, dim.Dimension):
         return self.dat
 
     def make_boxes_mc(self, filename, dim=-1, dat = []):
+
+        #xx, yy = Image.open(filename).size
+
         if dim == -1 : dim = self.xy
         self.dim_x = dim
         self.dim_y = dim

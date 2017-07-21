@@ -69,7 +69,7 @@ class Dimension(object) :
         convdim = 9  # try 11
         basedim = 13 # try 13
 
-        load_dot = True
+        load_dot = False
         load_conv = False
 
         name_string = ""

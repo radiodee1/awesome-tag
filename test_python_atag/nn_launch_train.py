@@ -202,17 +202,18 @@ class Read( enum.Enum, dim.Dimension) :
         if self.pipeline_enum == self.ENUM_PIPELINE_3:
             ''' make initial box grid '''
             if self.pipeline_stage >= 1:
-                ll.dat = ll.record.make_boxes(self.pic, dim=4)  # 7
+                ll.dat = ll.record.make_boxes(self.pic)  # 7
                 print "num-boxes", len(ll.dat)
 
-            if self.pipeline_stage >= 2:
+            if self.pipeline_stage >= 2 and True:
                 ''' initial simple neural network '''
+                self.nn.nn_configure_dot()
                 self.nn.predict_remove_symbol = 1
                 self.nn.set_vars(len(ll.dat), 10 * 100, 0)
                 self.nn.dot_setup()
                 print "len-dat2", len(ll.dat)
 
-            if self.pipeline_stage >= 3 and False:
+            if self.pipeline_stage >= 3 and True:
                 ''' two passes through aggregate box function '''
                 ll.dat = ll.record.aggregate_dat_list(ll.dat)
                 ll.record.renumber_dat_list(ll.dat)
@@ -220,8 +221,10 @@ class Read( enum.Enum, dim.Dimension) :
                 ll.record.renumber_dat_list(ll.dat)
                 print "len-dat1", len(ll.dat)
 
-            if self.pipeline_stage >= 4 and False:
+            if self.pipeline_stage >= 4 and True:
                 ''' final convolution neural network '''
+                self.nn.nn_clear_and_reset()
+                self.nn.nn_configure_conv()
                 # ll.normal_train = False
                 self.nn.predict_remove_symbol = 1
                 self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=True)

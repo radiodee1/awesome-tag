@@ -59,6 +59,9 @@ class NN(enum.Enum, dim.Dimension):
         self.group_initialize = False
         self.predict_remove_symbol = 1 ## 1 or 0 ??
 
+        config = tf.ConfigProto()
+        config.gpu_options.allow_growth = True
+
         self.sess = tf.InteractiveSession()
 
         self.load_dot_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][0]
@@ -145,6 +148,8 @@ class NN(enum.Enum, dim.Dimension):
             #self.d_y_out = tf.cast(tf.logical_not(tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.bool)),tf.int64)
 
             self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
+        init = tf.global_variables_initializer().run()
+
 
     def nn_configure_conv(self):
 
@@ -236,17 +241,22 @@ class NN(enum.Enum, dim.Dimension):
 
         self.c_y_out = tf.argmax(self.y_conv, 1)  ## for prediction
 
-        #init = tf.global_variables_initializer().run()
+        init = tf.global_variables_initializer().run()
         #self.sess.run(init)
 
         #summary_writer = tf.train.SummaryWriter(self.ckpt_folder + os.sep + "logs" + os.sep, self.sess.graph)
 
+    def nn_clear_and_reset(self):
+        tf.reset_default_graph()
+        self.sess = tf.InteractiveSession()
 
     def dot_setup(self, mid_num = 0):
         mid_num = 3
         #if mid_num == 0: self.d_train_step_2 = None
 
-        if self.load_ckpt : self.load_group()
+        name = "dot"
+        if self.load_conv_only != True and self.load_dot_only != True: name = ""
+        if self.load_ckpt : self.load_group(graph_name=name)
 
         if self.train :
             self.dot_only = True
@@ -263,7 +273,7 @@ class NN(enum.Enum, dim.Dimension):
                         print "early exit"
                         exit()
 
-        if self.save_ckpt and self.train : self.save_group()
+        if self.save_ckpt and self.train : self.save_group(graph_name=name)
 
         if self.test :
             self.cursor = 0
@@ -318,8 +328,9 @@ class NN(enum.Enum, dim.Dimension):
 
     def conv_setup(self, remove_low=False):
 
-
-        if self.load_ckpt : self.load_group()
+        name = "conv"
+        if self.load_conv_only != True and self.load_dot_only != True: name = ""
+        if self.load_ckpt : self.load_group(graph_name=name)
 
         if self.train :
 
@@ -337,7 +348,7 @@ class NN(enum.Enum, dim.Dimension):
                 cost = self.sess.run([self.c_cross_entropy], feed_dict={self.c_x: batch_0, self.c_y_: batch_1, self.keep_prob: 1.0})
                 print cost, "cost"
 
-        if self.save_ckpt and self.train  : self.save_group()
+        if self.save_ckpt and self.train  : self.save_group(graph_name=name)
 
         if self.test :
             self.cursor = 0
@@ -580,16 +591,16 @@ class NN(enum.Enum, dim.Dimension):
             #print skin
             img3.save(filename3)
 
-    def save_group(self):
+    def save_group(self, graph_name=""):
         #self.save_string = tf.Variable("saved values")
         op = tf.assign(self.save_string, "saved values")
         self.sess.run(op)
 
         extraname = self.DIMENSIONS[self.key][self.COLUMN_NAME]
         filename = "group_" + extraname #+ ".ckpt"
-
+        if graph_name != "": filename = "group_" + graph_name + "_" + extraname
         meta = True
-        folder = self.ckpt_folder + os.sep + "ckpt_" + extraname
+        folder = self.ckpt_folder + os.sep + "ckpt_" + graph_name + "_" + extraname
         if not os.path.exists(folder) :
             os.makedirs(folder)
         else:
@@ -610,14 +621,15 @@ class NN(enum.Enum, dim.Dimension):
 
         print ("saved?", filename, save_path)
 
-    def load_group(self):
+    def load_group(self, graph_name=""):
         #tf.reset_default_graph()
         extraname = self.DIMENSIONS[self.key][self.COLUMN_NAME]
         filename = "group_" + extraname  #+  ".index"
-        file2 = self.ckpt_folder + os.sep + "ckpt_" + extraname + os.sep
+        if graph_name != "": filename = "group_" + graph_name + "_" + extraname
+        file2 = self.ckpt_folder + os.sep + "ckpt_" + graph_name + "_" + extraname + os.sep
         ckpt = tf.train.get_checkpoint_state(file2 + ".")
 
-        file = self.ckpt_folder + os.sep + "ckpt_" + extraname + os.sep + self.ckpt_name + "." + filename
+        file = self.ckpt_folder + os.sep + "ckpt_" + graph_name + "_" + extraname + os.sep + self.ckpt_name + "." + filename
         if ckpt and ckpt.model_checkpoint_path: # os.path.isfile(file) or True:
 
             if True: #with tf.Session() as sess:
