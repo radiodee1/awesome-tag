@@ -38,6 +38,16 @@ class Read( enum.Enum, dim.Dimension) :
         self.image_folder = atag.VAR_ROOT_DATABASE
         self.pipeline_enum = self.DIMENSIONS[self.key][self.COLUMN_ENUM_PIPELINE]
 
+    '''
+    def load_correct_model(self, dim_version=3):
+        self.load_dot_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][0]
+        self.load_conv_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][1]
+        if dim_version == self.ROW_NAME_PIPELINE_3_WORKING:
+            if self.load_dot_only == True:
+                self.nn.dot_setup()
+            if self.load_conv_only == True:
+                self.nn.conv_setup()
+    '''
 
     def run_nn(self):
 
@@ -47,6 +57,9 @@ class Read( enum.Enum, dim.Dimension) :
         #ll.read_csv()
 
         signal.signal(signal.SIGINT, self.signal_handler)
+
+        self.load_dot_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][0]
+        self.load_conv_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][1]
 
         self.nn.set_loader(ll)
         self.zero_out_counter = False
@@ -66,6 +79,12 @@ class Read( enum.Enum, dim.Dimension) :
             ll.read_csv()
 
             self.nn.set_vars(len(ll.dat), 100, 0)
+
+            if self.load_dot_only == False and self.load_conv_only == True:
+                sys.exit()
+            elif self.load_conv_only == False :
+                self.nn.nn_configure_dot()
+
             self.nn.dot_setup()
             if self.zero_out_counter: self.a.dot_write(a.FOLDER_SAVED_CURSOR_DOT, str(0))
 
@@ -77,6 +96,12 @@ class Read( enum.Enum, dim.Dimension) :
             #self.nn.skintone_setup()
 
             self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=self.nn.train)
+
+            if self.load_conv_only == False and self.load_dot_only == True:
+                sys.exit()
+            elif self.load_dot_only == False:
+                self.nn.nn_configure_conv()
+
             self.nn.conv_setup()
             if self.zero_out_counter: self.a.dot_write(a.FOLDER_SAVED_CURSOR_CONV, str(0))
 
@@ -295,7 +320,15 @@ class Read( enum.Enum, dim.Dimension) :
 
     def signal_handler(self, signum, frame):
         if self.nn.save_ckpt:
-            self.nn.save_group()
+            load_dot_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][0]
+            load_conv_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][1]
+            name = ""
+            if not load_conv_only or not load_dot_only:
+                pass
+                if self.nn.dot_only: name = "dot"
+                if self.nn.conv_only: name = "conv"
+
+            self.nn.save_group(graph_name=name)
         sys.exit()
 
     def check_folder_exists(self):
@@ -374,6 +407,7 @@ if __name__ == '__main__':
         r.nn.test = args.test
         r.dot_only = args.dot_only
         r.conv_only = args.conv_only
+        #r.load_correct_model(dim_version=a.VAR_DIM_CONFIG)
         r.run_nn()
 
     print "pipeline", r.pipeline_stage

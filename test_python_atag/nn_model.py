@@ -79,7 +79,7 @@ class NN(enum.Enum, dim.Dimension):
         self.group_initialize = True
         #self.sess = tf.Session()
 
-        self.save_string = tf.Variable("load random normal", validate_shape=False)
+        #self.save_string = tf.Variable("load random normal", validate_shape=False)
 
         ''' DOT FIRST '''
 
@@ -253,9 +253,10 @@ class NN(enum.Enum, dim.Dimension):
     def dot_setup(self, mid_num = 0):
         mid_num = 3
         #if mid_num == 0: self.d_train_step_2 = None
-
+        #self.load_dot_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][0]
+        #self.load_conv_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][1]
         name = "dot"
-        if self.load_conv_only != True and self.load_dot_only != True: name = ""
+        if self.load_conv_only == True and self.load_dot_only == True: name = ""
         if self.load_ckpt : self.load_group(graph_name=name)
 
         if self.train :
@@ -266,13 +267,16 @@ class NN(enum.Enum, dim.Dimension):
                 batch_xs, batch_ys = self.get_nn_next_train(self.batchsize, self.CONST_DOT)
                 self.sess.run(self.d_train_step, feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys, self.d_keep: 1.0})
                 if True: #mid_num > 0:
-                    cost = self.sess.run([self.d_cross_entropy, self.save_string], feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys, self.d_keep: 1.0})
+                    cost = self.sess.run([self.d_cross_entropy], feed_dict={self.d_x: batch_xs, self.d_y_: batch_ys, self.d_keep: 1.0})
                     print cost, "cost"
+                    '''
                     if (cost[0] < 0.590) and False:
                         self.save_group()
                         print "early exit"
                         exit()
+                    '''
 
+        print name, "name"
         if self.save_ckpt and self.train : self.save_group(graph_name=name)
 
         if self.test :
@@ -284,7 +288,7 @@ class NN(enum.Enum, dim.Dimension):
             d_accuracy = tf.reduce_mean(tf.cast(d_correct_prediction, tf.float32))
 
             if self.use_loader : self.get_nn_next_test(self.batchsize, self.CONST_DOT)
-            cost = (self.sess.run([d_accuracy, self.d_y_out,self.d_y_softmax, self.save_string], feed_dict={self.d_x: self.mnist_test.images, self.d_y_: self.mnist_test.labels, self.d_keep: 1.0}))
+            cost = (self.sess.run([d_accuracy, self.d_y_out,self.d_y_softmax], feed_dict={self.d_x: self.mnist_test.images, self.d_y_: self.mnist_test.labels, self.d_keep: 1.0}))
             print cost[0]
             print cost[1]
             print len(cost[2]) , cost[2]
@@ -328,8 +332,10 @@ class NN(enum.Enum, dim.Dimension):
 
     def conv_setup(self, remove_low=False):
 
+        #self.load_dot_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][0]
+        #self.load_conv_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][1]
         name = "conv"
-        if self.load_conv_only != True and self.load_dot_only != True: name = ""
+        if self.load_conv_only == True and self.load_dot_only == True: name = ""
         if self.load_ckpt : self.load_group(graph_name=name)
 
         if self.train :
@@ -592,12 +598,11 @@ class NN(enum.Enum, dim.Dimension):
             img3.save(filename3)
 
     def save_group(self, graph_name=""):
-        #self.save_string = tf.Variable("saved values")
-        op = tf.assign(self.save_string, "saved values")
-        self.sess.run(op)
+
+        print graph_name, "graph name"
 
         extraname = self.DIMENSIONS[self.key][self.COLUMN_NAME]
-        filename = "group_" + extraname #+ ".ckpt"
+        filename = "group_" + extraname
         if graph_name != "": filename = "group_" + graph_name + "_" + extraname
         meta = True
         folder = self.ckpt_folder + os.sep + "ckpt_" + graph_name + "_" + extraname
@@ -622,9 +627,9 @@ class NN(enum.Enum, dim.Dimension):
         print ("saved?", filename, save_path)
 
     def load_group(self, graph_name=""):
-        #tf.reset_default_graph()
+
         extraname = self.DIMENSIONS[self.key][self.COLUMN_NAME]
-        filename = "group_" + extraname  #+  ".index"
+        filename = "group_" + extraname
         if graph_name != "": filename = "group_" + graph_name + "_" + extraname
         file2 = self.ckpt_folder + os.sep + "ckpt_" + graph_name + "_" + extraname + os.sep
         ckpt = tf.train.get_checkpoint_state(file2 + ".")
@@ -689,7 +694,7 @@ class NN(enum.Enum, dim.Dimension):
                 #print ("next train batch")
             else:
                 self.cursor = 0
-                self.save_group()
+                #self.save_group()
                 print "exit at end"
                 sys.exit()
 

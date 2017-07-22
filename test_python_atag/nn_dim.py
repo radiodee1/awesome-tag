@@ -69,6 +69,7 @@ class Dimension(object) :
         convdim = 9  # try 11
         basedim = 13 # try 13
 
+        ''' set both to False for multi-graph version to work '''
         load_dot = False
         load_conv = False
 
@@ -143,7 +144,7 @@ class Dimension(object) :
             ],
             [
                 self.ENUM_LOAD_ALL_GRADIENT,
-                'pipeline_biggest_input_' + str(basedim * 4) +"_" + str(convdim) ,
+                'pipeline_2_biggest_input_' + str(basedim * 4) +"_" + str(convdim) ,
                 'load all as big input, experiment with pipeline',
                 6,
                 dim_ab(4 * 3, 2),  # in out dot
@@ -164,8 +165,8 @@ class Dimension(object) :
             ],
             [
                 self.ENUM_LOAD_ALL_GRADIENT,
-                'pipeline_3_working_input_' + str(basedim * 4) + "_" + str(convdim) + name_string ,
-                'load all as big input, experiment with pipeline',
+                'pipeline_3_multi_graph_' + str(basedim * 4) + "_" + str(convdim) + name_string ,
+                'save graph in two parts, experiment with pipeline',
                 6,
                 dim_ab(4 * 3, 2),  # in out dot
                 dim_ab(basedim * 4 * basedim * 4 * 3, 2),  # in out conv 4800, 2

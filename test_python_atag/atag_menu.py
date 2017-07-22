@@ -647,7 +647,10 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     def exit(self, widget):
         if self.p != None:
-            self.p.send_signal(signal.SIGINT)
+            try:
+                self.p.send_signal(signal.SIGINT)
+            except:
+                print "must be predict operation"
         print "exit here"
         Gtk.main_quit()
         sys.exit()
