@@ -233,6 +233,7 @@ class Read( enum.Enum, dim.Dimension) :
             if self.pipeline_stage >= 2 and True:
                 ''' initial simple neural network '''
                 self.nn.nn_configure_dot()
+                self.nn.nn_global_var_init()
                 self.nn.predict_remove_symbol = 1
                 self.nn.set_vars(len(ll.dat), 10 * 100, 0)
                 self.nn.dot_setup()
@@ -250,6 +251,7 @@ class Read( enum.Enum, dim.Dimension) :
                 ''' final convolution neural network '''
                 self.nn.nn_clear_and_reset()
                 self.nn.nn_configure_conv()
+                self.nn.nn_global_var_init()
                 # ll.normal_train = False
                 self.nn.predict_remove_symbol = 1
                 self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=True)

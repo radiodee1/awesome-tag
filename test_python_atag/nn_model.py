@@ -71,7 +71,8 @@ class NN(enum.Enum, dim.Dimension):
         if self.load_dot_only: self.nn_configure_dot()
         if self.load_conv_only: self.nn_configure_conv()
 
-        init = tf.global_variables_initializer().run()
+        if self.load_dot_only and self.load_conv_only:
+            init = tf.global_variables_initializer().run()
 
 
     def nn_configure_dot(self):
@@ -148,7 +149,7 @@ class NN(enum.Enum, dim.Dimension):
             #self.d_y_out = tf.cast(tf.logical_not(tf.cast(tf.ceil(tf.nn.relu(self.d_y_softmax - self.d_cross_entropy)), tf.bool)),tf.int64)
 
             self.d_y_out = tf.argmax(self.d_y, 1)  ## for prediction
-        init = tf.global_variables_initializer().run()
+        #init = tf.global_variables_initializer().run()
 
 
     def nn_configure_conv(self):
@@ -241,7 +242,7 @@ class NN(enum.Enum, dim.Dimension):
 
         self.c_y_out = tf.argmax(self.y_conv, 1)  ## for prediction
 
-        init = tf.global_variables_initializer().run()
+        #init = tf.global_variables_initializer().run()
         #self.sess.run(init)
 
         #summary_writer = tf.train.SummaryWriter(self.ckpt_folder + os.sep + "logs" + os.sep, self.sess.graph)
@@ -249,6 +250,9 @@ class NN(enum.Enum, dim.Dimension):
     def nn_clear_and_reset(self):
         tf.reset_default_graph()
         self.sess = tf.InteractiveSession()
+
+    def nn_global_var_init(self):
+        tf.global_variables_initializer().run()
 
     def dot_setup(self, mid_num = 0):
         mid_num = 3
@@ -290,9 +294,9 @@ class NN(enum.Enum, dim.Dimension):
             if self.use_loader : self.get_nn_next_test(self.batchsize, self.CONST_DOT)
             cost = (self.sess.run([d_accuracy, self.d_y_out,self.d_y_softmax], feed_dict={self.d_x: self.mnist_test.images, self.d_y_: self.mnist_test.labels, self.d_keep: 1.0}))
             print cost[0]
-            print cost[1]
-            print len(cost[2]) , cost[2]
-            print cost[3]
+            #print cost[1]
+            #print len(cost[2]) , cost[2]
+            #print cost[3]
             #print self.mnist_test.labels
             #print self.d_y_out
 
