@@ -490,7 +490,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
                     self.p = subprocess.Popen(call)
                 elif True:
                     self.list_predict_call_list = ["-make-list", "1"]
-                    thread = threading.Thread(target=self.run_predict_list_images, args=(jj))
+                    thread = threading.Thread(target=self.run_predict_list_images, kwargs={"num":int(jj)})
 
                     thread.daemon = True
                     thread.start()
@@ -584,7 +584,8 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
         pass
 
-    def run_predict_list_images(self, jj):
+    def run_predict_list_images(self, num):
+        jj = num
         p = predict.PredictRead(self)
         p.read_skipping_repeats()
 
@@ -598,7 +599,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
             if not self.list_filename.startswith(self.image_folder + os.sep) and not (
                     self.list_filename.startswith(os.sep)):
                 self.list_filename = self.image_folder + os.sep + self.list_filename
-            print self.list_filename, list_dat[iterfile], "list_filename"
+            #print self.list_filename, list_dat[iterfile], "list_filename"
             self.dot_write(self.FOLDER_IMAGE_NAME, self.list_filename)
             self.VAR_IMAGE_NAME = self.list_filename
             self.drawingarea.set_imagename(self.VAR_IMAGE_NAME)
