@@ -481,15 +481,27 @@ class NN(enum.Enum, dim.Dimension):
 
         print sl8, sl4, skin2, sl5
 
-        if self.load_ckpt : self.load_group()
+        name = ""
+        if self.load_conv_only: name = "conv"
+        if self.load_dot_only: name = "dot"
+        if self.load_dot_only and self.load_conv_only: name = ""
+        if self.load_ckpt : self.load_group(graph_name=name)
+
         filename2 = self.ckpt_folder + os.sep+ "visualize_weights.bmp"
         filename = self.ckpt_folder + os.sep + "visualize_weights_alternate.bmp"
         filename3 = self.ckpt_folder + os.sep + "visualize_weights_skintone.bmp"
-        weights = self.sess.run(self.W_conv1)
-        skin = self.sess.run(self.d_W_1)
+
         show1 = False
         show2 = True
         show3 = True
+
+        if self.load_conv_only:
+            weights = self.sess.run(self.W_conv1)
+            show2 = True
+        if self.load_dot_only:
+            skin = self.sess.run(self.d_W_1)
+            show3 = True
+
         size = (sl5* sl8 * 10, sl5 * sl4 * sl2 *10)
         size2 = (sl5 * sl8 * 10, sl5 * sl4 * 10)
         size3 = (skin2 * 50 * 3, skin2 * 50)
@@ -502,7 +514,16 @@ class NN(enum.Enum, dim.Dimension):
         rgba = (0,0,0,0)
         rgba2 = (0,0,0,0)
         rgba3 = (0,0,0,0)
-        if True:
+
+        if not self.load_conv_only and not self.load_dot_only:
+            self.nn_configure_conv()
+            self.nn_global_var_init()
+            name = "conv"
+            self.load_group(graph_name=name)
+            weights = self.sess.run(self.W_conv1)
+            show2 = True
+
+        if show1 or show2:
             for i in range(sl5):
                 for j in range(sl5):
                     for k in range(sl8 ):
@@ -551,8 +572,17 @@ class NN(enum.Enum, dim.Dimension):
                                                 rgba2 = (255,255,255,0)
                                             img2.putpixel(xy2, rgba2)
 
+        if not self.load_dot_only and not self.load_conv_only:
+            self.nn_clear_and_reset()
+            self.nn_configure_dot()
+            self.nn_global_var_init()
+            name = "dot"
+            self.load_group(graph_name=name)
+            skin = self.sess.run(self.d_W_1)
+            show3 = True
+
         #print weights
-        if True:
+        if show3:
             index = 0
 
             for index in range(3):
