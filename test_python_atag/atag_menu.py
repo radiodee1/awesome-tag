@@ -463,12 +463,13 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         print "short list length", len(p.dat), p.external_count + 1
 
 
-        ii = easygui.buttonbox("List Viewing Options","Choose",choices=("NEXT","PREV","LAUNCH","CANCEL"))
+        ii = easygui.buttonbox("List Viewing Options","Choose",choices=("FIRST","NEXT","PREV","LAUNCH","CANCEL"))
         if ii == "CANCEL" : return
 
+        if ii == "FIRST": self.VAR_IMAGE_NAME = p.predict_first(self.VAR_IMAGE_NAME)
         if ii == "NEXT" : self.VAR_IMAGE_NAME = p.predict_next(self.VAR_IMAGE_NAME)
         if ii == "PREV" : self.VAR_IMAGE_NAME = p.predict_prev(self.VAR_IMAGE_NAME)
-        if ii == "NEXT" or ii == "PREV" :
+        if ii == "NEXT" or ii == "PREV" or ii == "FIRST" :
             self.set_progress_text("List:" + str(p.external_count+1))
             r = draw.Read(self)
             folder = self.FOLDER_IMAGE_NAME
@@ -478,10 +479,15 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
             self.label_image.set_text(self.shorten(var))
             self.switch_folder_var(folder, var)
+
+            self.drawingarea.set_imagename(self.VAR_IMAGE_NAME)
+
             r.process_read_file_predict_list()
             self.drawingarea.boxlist_red = r.boxlist_r
             self.drawingarea.boxlist_green = r.boxlist_g
             self.drawingarea.boxlist_blue = r.boxlist_b
+
+            self.drawingarea.queue_draw()
         if ii == "LAUNCH":
             jj = easygui.buttonbox("Number of Pictures","Choose",choices=("2","5","10","50","100","CANCEL"))
             if jj != "CANCEL":
@@ -551,8 +557,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         print "run from command line!"
 
         call = ["python","./nn_launch_train.py",self.ii,"-train","-test"]
-        #if self.ii == "-dot-only" and self.train_list == "-zero-dot": call.append(self.train_list)
-        #if self.ii == "-conv-only" and self.train_list == "-zero-conv": call.append(self.train_list)
+
         self.train_list = ""
         print call
         self.p = subprocess.Popen(call)
@@ -589,7 +594,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         p = predict.PredictRead(self)
         p.read_skipping_repeats()
 
-        list_dat = p.dat
+        list_dat = p.dat_no_repeat
         self.image_folder = self.VAR_ROOT_DATABASE
 
 
