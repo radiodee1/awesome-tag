@@ -74,6 +74,8 @@ class NN(enum.Enum, dim.Dimension):
         if self.load_dot_only and self.load_conv_only:
             init = tf.global_variables_initializer().run()
 
+        #if not self.load_conv_only and not self.load_dot_only:
+        #    tf.global_variables_initializer().run()
 
     def nn_configure_dot(self):
 
@@ -249,6 +251,7 @@ class NN(enum.Enum, dim.Dimension):
 
     def nn_clear_and_reset(self):
         tf.reset_default_graph()
+        #tf.contrib.keras.backend.clear_session()
         self.sess = tf.InteractiveSession()
 
     def nn_global_var_init(self):

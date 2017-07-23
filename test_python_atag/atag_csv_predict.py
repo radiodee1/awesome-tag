@@ -13,6 +13,19 @@ class PredictRead(enum.Enum):
         self.dat = []
         self.external_count = 0
 
+    def read_skipping_repeats(self):
+        self.ll = loader.Load(self.a, "")
+        self.ll.read_csv()
+        self.start = self.ll.dat[:]
+        self.dat = []
+        filename = self.start[0]
+        self.dat.append(filename)
+        #print len(self.start), filename, "before_start"
+        for i in range(len(self.start)):
+            if not self.start[i][self.FILE].endswith(filename[self.FILE]):
+                self.dat.append(self.start[i])
+            filename = self.start[i]
+
     def read_predict_list(self):
         self.ll.read_csv()
         self.dat = self.ll.dat

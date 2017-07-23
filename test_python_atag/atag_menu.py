@@ -13,7 +13,9 @@ import atag_csv_write as write
 #import atag_csv_read_tf as read
 import atag_csv_predict as predict
 import atag_csv_draw as draw
+import atag_csv as aa
 import nn_record as record
+import nn_loader as loader
 import subprocess
 import os
 import sys
@@ -23,6 +25,8 @@ class Interface(Gtk.Window, atag.Dotfolder) :
     def __init__(self):
         atag.Dotfolder.__init__(self)
         Gtk.Window.__init__(self, title="Tag")
+
+        self.a = aa.Enum()
 
         self.connect("destroy", self.exit)
         signal.signal(signal.SIGINT, self.signal_handler)
@@ -34,10 +38,12 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         if self.VAR_DIM_CONFIG == "" : self.VAR_DIM_CONFIG = 4
         self.predict_call_list = ["-pipeline","10"]
         self.dim_key_call_list = ["-dim-config", str(self.VAR_DIM_CONFIG)]
+        self.list_predict_call_list = []
         self.train_list = []
         self.train_thread = None
 
         self.progress_text = ""
+        self.list_filename = ""
 
         self.grid = Gtk.Grid()
         self.add(self.grid)
@@ -479,8 +485,16 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         if ii == "LAUNCH":
             jj = easygui.buttonbox("Number of Pictures","Choose",choices=("2","5","10","50","100","CANCEL"))
             if jj != "CANCEL":
-                call =  ["python", "./nn_launch_train.py", "-make-list", str(jj)]
-                self.p = subprocess.Popen(call)
+                if False:
+                    call =  ["python", "./nn_launch_train.py", "-make-list", str(jj)]
+                    self.p = subprocess.Popen(call)
+                elif True:
+                    self.list_predict_call_list = ["-make-list", "1"]
+                    thread = threading.Thread(target=self.run_predict_list_images, args=(jj))
+
+                    thread.daemon = True
+                    thread.start()
+
         print 8
         pass
 
@@ -553,9 +567,10 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     def run_predict_single_image(self):
         call = ["python", "./nn_launch_train.py", str(self.VAR_IMAGE_NAME[:])]
-        # print call, self.predict_list
+        print call, "single_image"
         call.extend(self.predict_call_list)
         call.extend(self.dim_key_call_list)
+        call.extend(self.list_predict_call_list)
         # print call
         self.p = subprocess.Popen(call)
         self.p.wait()
@@ -568,6 +583,30 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         self.drawingarea.queue_draw()
 
         pass
+
+    def run_predict_list_images(self, jj):
+        p = predict.PredictRead(self)
+        p.read_skipping_repeats()
+
+        list_dat = p.dat
+        self.image_folder = self.VAR_ROOT_DATABASE
+
+
+        for i in range(int(jj)):
+            iterfile = i
+            self.list_filename = list_dat[iterfile][self.a.FILE]
+            if not self.list_filename.startswith(self.image_folder + os.sep) and not (
+                    self.list_filename.startswith(os.sep)):
+                self.list_filename = self.image_folder + os.sep + self.list_filename
+            print self.list_filename, list_dat[iterfile], "list_filename"
+            self.dot_write(self.FOLDER_IMAGE_NAME, self.list_filename)
+            self.VAR_IMAGE_NAME = self.list_filename
+            self.drawingarea.set_imagename(self.VAR_IMAGE_NAME)
+            self.drawingarea.queue_draw()
+            self.run_predict_single_image()
+        pass
+        self.list_predict_call_list = []
+
 
     ''' utility and atag var callback '''
     def set_progress_text(self, text):

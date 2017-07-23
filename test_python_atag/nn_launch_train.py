@@ -38,16 +38,7 @@ class Read( enum.Enum, dim.Dimension) :
         self.image_folder = atag.VAR_ROOT_DATABASE
         self.pipeline_enum = self.DIMENSIONS[self.key][self.COLUMN_ENUM_PIPELINE]
 
-    '''
-    def load_correct_model(self, dim_version=3):
-        self.load_dot_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][0]
-        self.load_conv_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][1]
-        if dim_version == self.ROW_NAME_PIPELINE_3_WORKING:
-            if self.load_dot_only == True:
-                self.nn.dot_setup()
-            if self.load_conv_only == True:
-                self.nn.conv_setup()
-    '''
+
 
     def run_nn(self):
 
@@ -84,8 +75,10 @@ class Read( enum.Enum, dim.Dimension) :
                 sys.exit()
             elif self.load_conv_only == False :
                 self.nn.nn_configure_dot()
+                self.nn.nn_global_var_init()
 
             self.nn.dot_setup()
+
             if self.zero_out_counter: self.a.dot_write(a.FOLDER_SAVED_CURSOR_DOT, str(0))
 
         if self.conv_only :
@@ -101,8 +94,10 @@ class Read( enum.Enum, dim.Dimension) :
                 sys.exit()
             elif self.load_dot_only == False:
                 self.nn.nn_configure_conv()
+                self.nn.nn_global_var_init()
 
             self.nn.conv_setup()
+
             if self.zero_out_counter: self.a.dot_write(a.FOLDER_SAVED_CURSOR_CONV, str(0))
 
     def run_predict(self, picture):
@@ -227,11 +222,12 @@ class Read( enum.Enum, dim.Dimension) :
         if self.pipeline_enum == self.ENUM_PIPELINE_3:
             ''' make initial box grid '''
             if self.pipeline_stage >= 1:
-                ll.dat = ll.record.make_boxes(self.pic)  # 7
+                ll.dat = ll.record.make_boxes(self.pic, dim=4)  # dim=4
                 print "num-boxes", len(ll.dat)
 
             if self.pipeline_stage >= 2 and True:
                 ''' initial simple neural network '''
+                self.nn.nn_clear_and_reset()
                 self.nn.nn_configure_dot()
                 self.nn.nn_global_var_init()
                 self.nn.predict_remove_symbol = 1
@@ -288,7 +284,7 @@ class Read( enum.Enum, dim.Dimension) :
         self.nn.conv_weight_img()
         pass
 
-    def run_make_list(self):
+    def run_make_list(self, pic=""):
         print "make list", self.list_end
         self.check_folder_exists()
 
@@ -299,26 +295,29 @@ class Read( enum.Enum, dim.Dimension) :
         signal.signal(signal.SIGINT, self.signal_handler)
 
         predict_filename = self.a.VAR_LOCAL_DATABASE + os.sep + "predict-list" + ".csv"
-        f = open(predict_filename, "w")
+        f = open(predict_filename, "a") # "w"
         f.write("")
 
-        filename = ""
-        filename_old = None
-        iterate = 0
-        iterfile = 0
-        while iterate < self.list_end and iterfile < len(self.list_dat):
-            filename = self.list_dat[iterfile][self.FILE]
-            if not filename.startswith(self.image_folder + os.sep) and not (filename.startswith(os.sep)) :
-                filename = self.image_folder + os.sep + filename
-            print filename, self.list_dat[iterfile]
-            #sys.exit()
-            if filename != filename_old:
-                self.run_predict(filename)
-                iterate += 1
-            filename_old = filename
-            iterfile += 1
-            print iterate, "make-list"
-        pass
+        if len(pic) == 0:
+            filename = ""
+            filename_old = None
+            iterate = 0
+            iterfile = 0
+            while iterate < self.list_end and iterfile < len(self.list_dat):
+                filename = self.list_dat[iterfile][self.FILE]
+                if not filename.startswith(self.image_folder + os.sep) and not (filename.startswith(os.sep)) :
+                    filename = self.image_folder + os.sep + filename
+                print filename, self.list_dat[iterfile]
+                #sys.exit()
+                if filename != filename_old:
+                    self.run_predict(filename)
+                    iterate += 1
+                filename_old = filename
+                iterfile += 1
+                print iterate, "make-list"
+            pass
+        else:
+            self.run_predict(pic)
 
     def signal_handler(self, signum, frame):
         if self.nn.save_ckpt:
@@ -386,7 +385,7 @@ if __name__ == '__main__':
         r.nn.key = int(args.dim_config[0] )
         print int(args.dim_config[0] ) ,"dim_config"
 
-    if len(pic) > 0 :
+    if len(pic) > 0 and args.make_list == None :
         ''' any combination '''
         r.nn.predict_softmax = True
         r.nn.predict_conv = True
@@ -400,8 +399,12 @@ if __name__ == '__main__':
         r.nn.predict_conv = True
         r.nn.predict_dot = True
         r.make_list = True
+
         r.list_end = int(args.make_list[0])
-        r.run_make_list()
+        #print r.list_end, "list_end", pic
+        if r.list_end == 1 and len(pic) > 0: r.run_make_list(pic=pic)
+        else:
+            r.run_make_list()
     else:
         r.nn.save_ckpt = args.no_save
         r.nn.load_ckpt = args.no_load
