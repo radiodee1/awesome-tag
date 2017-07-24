@@ -44,6 +44,7 @@ class Load(enum.Enum, dim.Dimension):
         self.record = rec.Record(atag)
         self.normal_train = True
         self.skintone_training = False
+        self.predict_op = False
         self.num_channels_global = 1
         self.mp = math.pow(10,6) * 8
 
@@ -65,6 +66,7 @@ class Load(enum.Enum, dim.Dimension):
 
     def get_nn_next_train(self, batchsize, cursor, num_channels = 1):
         self.skintone_training = True
+        self.predict_op = False
         self.num_channels_global = num_channels
         if cursor * batchsize + batchsize >= len(self.dat):
             skin, three, images, lables = self._get_pixels_from_dat(cursor * batchsize, len(self.dat) -1 )
@@ -79,6 +81,7 @@ class Load(enum.Enum, dim.Dimension):
     def get_nn_next_test(self, batchsize, num_channels = 1):
         testframe = 0
         self.skintone_training = False
+        self.predict_op = False
         self.num_channels_global = num_channels
         skin, three, images, labels = self._get_pixels_from_dat( testframe * batchsize, testframe * batchsize + batchsize) #len(self.dat) - batchsize, len(self.dat))
         print ("next test", len(images), batchsize, testframe)
@@ -90,6 +93,7 @@ class Load(enum.Enum, dim.Dimension):
     def get_nn_next_predict(self, batchsize, cursor, num_channels = 1):
         self.normal_train = False
         self.skintone_training = False
+        self.predict_op = True
         self.num_channels_global = num_channels
         tot_cursors = int(math.floor(len(self.dat) / float(batchsize)))
         if cursor > tot_cursors  :
@@ -154,9 +158,7 @@ class Load(enum.Enum, dim.Dimension):
 
         while self.iter < stop and stop <= len(self.dat) and self.iter < len(self.dat) :
 
-            #print self.dat[self.iter]
-            #if self.iter >= len(self.dat) -1 or len(self.dat[self.iter]) < self.FILE:
-            #    return
+
 
             filename = self.dat[self.iter][self.FILE]
             if not filename.startswith(self.image_folder + os.sep) and not (filename.startswith(os.sep)) :
@@ -167,7 +169,7 @@ class Load(enum.Enum, dim.Dimension):
             height = self.dat[self.iter][self.FACE_HEIGHT]
 
             if filename != self.filename_old:
-                print self.iter, " -- ", int(self.iter / float(len(self.dat)) * 100) , "% -- " , filename, len(self.dat)
+                print self.iter, " -- ", 1 + int(self.iter / float(len(self.dat)) * 100) , "% -- " , filename, len(self.dat)
 
             ''' open image if it is new! '''
             self.filename = filename
@@ -195,19 +197,20 @@ class Load(enum.Enum, dim.Dimension):
 
             skin, img , three = self.look_at_img(filename,x,y,width,height, skin_reject=skin_reject)
 
-            '''
-            if skin[0] == 0.0 and skin[1] == 0.0:
+
+            if True and not self.predict_op and skin[0] == 0.0 and skin[1] == 0.0:
                 self.iter = self.iter + 1
                 stop = stop + 1
+                print "skipping 2, design problem"
                 continue
-            '''
+
 
             #print len(skin) , skin, "skin", lbl_1, lbl_2
 
             if (len(img) != self.dim_x * self.dim_y or len(three) != self.dim_x * self.dim_y * 3) and self.normal_train :
                 self.iter = self.iter + 1
                 stop = stop + 1
-                print "skipping 2, output sizes"
+                print "skipping 3, output sizes"
                 continue
 
             if self.inspection_num >= self.iter and False :
@@ -396,26 +399,29 @@ class Load(enum.Enum, dim.Dimension):
             zx = 0# int( self.dim_x / 2 )
             zy = 0# int( self.dim_y / 2 )
 
-            if True:
+            if not self.predict_op:
+                #print "almost always"
                 if q[0] == zx + 0 and q[1] == zy + 0 and len(img_skin) >= 1:
-                    img_skin[0] = color #/ float(255)
+                    img_skin[0] = color
                 if q[0] == zx + 0 and q[1] == zy + 1 and len(img_skin) >= 2:
-                    img_skin[1] = color #/ float(255)
+                    img_skin[1] = color
                 if q[0] == zx + 1 and q[1] == zy + 0 and len(img_skin) >= 3:
-                    img_skin[2] = color #/ float(255)
+                    img_skin[2] = color
                 if q[0] == zx + 1 and q[1] == zy + 1 and len(img_skin) >= 4:
-                    img_skin[3] = color #/ float(255)
+                    img_skin[3] = color
 
-            elif not skin_reject:
+            elif True:
+                #print "predict op"
                 if q[0] == zx + 0 and q[1] == zy + 0 and len(img_skin) >= 1:
                     img_skin[0] = color #/ float(255)
-                if q[0] == zx + 1 and q[1] == zy + 0 and len(img_skin) >= 2:
+                if q[0] == zx + 2 and q[1] == zy + 0 and len(img_skin) >= 2:
                     img_skin[1] = color #/ float(255)
-                if q[0] == zx + 2 and q[1] == zy + 0 and len(img_skin) >= 3:
+                if q[0] == zx + 4 and q[1] == zy + 0 and len(img_skin) >= 3:
                     img_skin[2] = color #/ float(255)
-                if q[0] == zx + 3 and q[1] == zy + 0 and len(img_skin) >= 4:
+                if q[0] == zx + 6 and q[1] == zy + 0 and len(img_skin) >= 4:
                     img_skin[3] = color #/ float(255)
             else:
+                print "remember"
                 if q[0] == 0 and q[1] == 0 and len(img_skin) >= 1:
                     remember = color
                     img_skin[0] = remember #color #/ float(255)

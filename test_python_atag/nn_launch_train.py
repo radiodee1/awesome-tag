@@ -74,6 +74,7 @@ class Read( enum.Enum, dim.Dimension) :
             if self.load_dot_only == False and self.load_conv_only == True:
                 sys.exit()
             elif self.load_conv_only == False :
+                self.nn.nn_clear_and_reset()
                 self.nn.nn_configure_dot()
                 self.nn.nn_global_var_init()
 
@@ -93,6 +94,7 @@ class Read( enum.Enum, dim.Dimension) :
             if self.load_conv_only == False and self.load_dot_only == True:
                 sys.exit()
             elif self.load_dot_only == False:
+                self.nn.nn_clear_and_reset()
                 self.nn.nn_configure_conv()
                 self.nn.nn_global_var_init()
 

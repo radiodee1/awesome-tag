@@ -259,9 +259,7 @@ class NN(enum.Enum, dim.Dimension):
 
     def dot_setup(self, mid_num = 0):
         mid_num = 3
-        #if mid_num == 0: self.d_train_step_2 = None
-        #self.load_dot_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][0]
-        #self.load_conv_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][1]
+
         name = "dot"
         if self.load_conv_only == True and self.load_dot_only == True: name = ""
         if self.load_ckpt : self.load_group(graph_name=name)
@@ -283,7 +281,7 @@ class NN(enum.Enum, dim.Dimension):
                         exit()
                     '''
 
-        print name, "name"
+        #print name, "name"
         if self.save_ckpt and self.train : self.save_group(graph_name=name)
 
         if self.test :
@@ -295,13 +293,9 @@ class NN(enum.Enum, dim.Dimension):
             d_accuracy = tf.reduce_mean(tf.cast(d_correct_prediction, tf.float32))
 
             if self.use_loader : self.get_nn_next_test(self.batchsize, self.CONST_DOT)
-            cost = (self.sess.run([d_accuracy, self.d_y_out,self.d_y_softmax], feed_dict={self.d_x: self.mnist_test.images, self.d_y_: self.mnist_test.labels, self.d_keep: 1.0}))
+            cost = (self.sess.run([d_accuracy], feed_dict={self.d_x: self.mnist_test.images, self.d_y_: self.mnist_test.labels, self.d_keep: 1.0}))
             print cost[0]
-            #print cost[1]
-            #print len(cost[2]) , cost[2]
-            #print cost[3]
-            #print self.mnist_test.labels
-            #print self.d_y_out
+
 
         if self.predict_dot :
             self.cursor = 0
@@ -339,8 +333,6 @@ class NN(enum.Enum, dim.Dimension):
 
     def conv_setup(self, remove_low=False):
 
-        #self.load_dot_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][0]
-        #self.load_conv_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][1]
         name = "conv"
         if self.load_conv_only == True and self.load_dot_only == True: name = ""
         if self.load_ckpt : self.load_group(graph_name=name)
