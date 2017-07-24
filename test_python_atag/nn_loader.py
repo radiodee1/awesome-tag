@@ -399,7 +399,7 @@ class Load(enum.Enum, dim.Dimension):
             zx = 0# int( self.dim_x / 2 )
             zy = 0# int( self.dim_y / 2 )
 
-            if not self.predict_op:
+            if True or not self.predict_op:
                 #print "almost always"
                 if q[0] == zx + 0 and q[1] == zy + 0 and len(img_skin) >= 1:
                     img_skin[0] = color
