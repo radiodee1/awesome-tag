@@ -5,10 +5,18 @@
 
 using namespace tensorflow;
 
+
+REGISTER_OP("AssembleBoxesGpu")
+    .Input("in: uint16")
+    .Output("out: uint16");
+    
+
+
 using CPUDevice = Eigen::ThreadPoolDevice;
 using GPUDevice = Eigen::GpuDevice;
 
 // CPU specialization of actual computation.
+
 template <typename T>
 struct AssembleBoxesFunctor<CPUDevice, T> {
   void operator()(const CPUDevice& d, int size, const T* in, T* out) {
@@ -17,6 +25,7 @@ struct AssembleBoxesFunctor<CPUDevice, T> {
     }
   }
 };
+
 
 // OpKernel definition.
 // template parameter <T> is the datatype of the tensors.
@@ -35,8 +44,9 @@ class AssembleBoxesOp : public OpKernel {
                                                      &output_tensor));
 
     // Do the computation.
-    OP_REQUIRES(context, input_tensor.NumElements() <= tensorflow::kint32max,
-                errors::InvalidArgument("Too many elements in tensor"));
+    //OP_REQUIRES(context, input_tensor.NumElements() <= tensorflow::kint32max,
+    //            errors::InvalidArgument("Too many elements in tensor"));
+    
     AssembleBoxesFunctor<Device, T>()(
         context->eigen_device<Device>(),
         static_cast<int>(input_tensor.NumElements()),
@@ -45,19 +55,23 @@ class AssembleBoxesOp : public OpKernel {
   }
 };
 
+
+
 // Register the CPU kernels.
+/*
 #define REGISTER_CPU(T)                                          \
   REGISTER_KERNEL_BUILDER(                                       \
-      Name("AssembleBoxes").Device(DEVICE_CPU).TypeConstraint<T>("T"), \
-      AssembleBoxesOp<CPUDevice, T>);
+      Name("AssembleBoxesCpu").Device(DEVICE_CPU).TypeConstraint<T>("T"), \
+      AssembleBoxes<CPUDevice, T>);
 //REGISTER_CPU(float);
 REGISTER_CPU(uint16);
+*/
 
 // Register the GPU kernels.
 #ifdef GOOGLE_CUDA
 #define REGISTER_GPU(T)                                          \
   REGISTER_KERNEL_BUILDER(                                       \
-      Name("AssembleBoxes").Device(DEVICE_GPU).TypeConstraint<T>("T"), \
+      Name("AssembleBoxesGpu").Device(DEVICE_GPU).TypeConstraint<T>("T"), \
       AssembleBoxesOp<GPUDevice, T>);
 //REGISTER_GPU(float);
 REGISTER_GPU(uint16);

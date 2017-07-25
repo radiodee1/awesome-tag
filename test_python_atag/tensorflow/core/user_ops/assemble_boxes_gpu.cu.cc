@@ -43,7 +43,7 @@ struct AssembleBoxesFunctor<GPUDevice, T> {
 	int shape_x = in[size - 2];
 	int shape_y = in[size - 1];
 	
-	if (num_rows != shape_y) {
+	if (num_rows != shape_y + 1) {
 		printf("shape problem!");
 		exit(0);
 	}

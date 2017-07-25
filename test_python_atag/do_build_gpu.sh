@@ -10,7 +10,7 @@ nvcc  -std=c++11 -c -o assemble_boxes_gpu.cu.o assemble_boxes_gpu.cu.cc \
 -I $TF_INC -D GOOGLE_CUDA=1 -x cu -Xcompiler -fPIC --expt-relaxed-constexpr  
 
 
-g++-5 -std=c++11 -shared -o assemble_boxes_gpu.so assemble_boxes_gpu.cc \
+g++-5 -std=c++11 -shared -o assemble_boxes_gpu.so assemble_boxes_gpu.cc -D GOOGLE_CUDA=1 \
 assemble_boxes_gpu.cu.o -I $TF_INC -fPIC -lcudart -D_GLIBCXX_USE_CXX11_ABI=0 -L /usr/lib/nvidia-375/
 
 
