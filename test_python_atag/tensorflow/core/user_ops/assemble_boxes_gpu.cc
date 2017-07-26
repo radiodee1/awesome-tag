@@ -39,6 +39,8 @@ class AssembleBoxesOp : public OpKernel {
   explicit AssembleBoxesOp(OpKernelConstruction* context) : OpKernel(context) {}
 
   void Compute(OpKernelContext* context) override {
+	printf("never get here.1");
+
     // Grab the input tensor
     const Tensor& input_tensor = context->input(0);
 
@@ -51,7 +53,7 @@ class AssembleBoxesOp : public OpKernel {
     OP_REQUIRES(context, input_tensor.NumElements() <= tensorflow::kint32max,
                 errors::InvalidArgument("Too many elements in tensor"));
     
-    printf("never get here.");
+    printf("never get here.2");
     AssembleBoxesFunctor<Device, T>()(
         context->eigen_device<Device>(),
         static_cast<int>(input_tensor.NumElements()),
