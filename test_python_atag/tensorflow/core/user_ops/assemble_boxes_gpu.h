@@ -13,10 +13,12 @@ struct AssembleBoxesFunctor {
 #define COLUMN_H 3
 #define COLUMN_NUM 4
 #define COLUMN_BOX 5
-//#define COLUMN_SHAPE_X 6
-//#define COLUMN_SHAPE_Y 7
 #define COLUMN_TOT 6
 
+#define BIT_TOP  0x0001
+#define BIT_BOTTOM  0x0002
+#define BIT_LEFT 0x0004
+#define BIT_RIGHT 0x0008
 
 
 #endif //KERNEL_ASSEMBLE_BOXES_H_

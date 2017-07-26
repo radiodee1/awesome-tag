@@ -9,7 +9,8 @@ class AssembleBoxesTest(tf.test.TestCase):
       with tf.device("/gpu:0"):
       
           test = [1,1,3,3,1,15]
-          test.extend([6,1])
+          test.extend([4,1,3,3,2,0])
+          test.extend([6,2])
           test = tf.constant(test, dtype=tf.uint16)
           #test = tf.cast(test, dtype=tf.int32)
       print test
