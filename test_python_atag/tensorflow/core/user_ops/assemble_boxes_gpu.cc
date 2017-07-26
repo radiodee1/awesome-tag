@@ -6,9 +6,9 @@
 using namespace tensorflow;
 
 
-REGISTER_OP("AssembleBoxesGpu")
-    .Input("in: uint16")
-    .Output("out: uint16");
+REGISTER_OP("AssembleBoxesOp")
+    .Input("in: int32")
+    .Output("out: int32");
     
 
 
@@ -16,7 +16,7 @@ using CPUDevice = Eigen::ThreadPoolDevice;
 using GPUDevice = Eigen::GpuDevice;
 
 // CPU specialization of actual computation.
-
+/*
 template <typename T>
 struct AssembleBoxesFunctor<CPUDevice, T> {
   void operator()(const CPUDevice& d, int size, const T* in, T* out) {
@@ -25,7 +25,7 @@ struct AssembleBoxesFunctor<CPUDevice, T> {
     }
   }
 };
-
+*/
 
 // OpKernel definition.
 // template parameter <T> is the datatype of the tensors.
@@ -44,8 +44,8 @@ class AssembleBoxesOp : public OpKernel {
                                                      &output_tensor));
 
     // Do the computation.
-    //OP_REQUIRES(context, input_tensor.NumElements() <= tensorflow::kint32max,
-    //            errors::InvalidArgument("Too many elements in tensor"));
+    OP_REQUIRES(context, input_tensor.NumElements() <= tensorflow::kint32max,
+                errors::InvalidArgument("Too many elements in tensor"));
     
     AssembleBoxesFunctor<Device, T>()(
         context->eigen_device<Device>(),
@@ -71,8 +71,10 @@ REGISTER_CPU(uint16);
 #ifdef GOOGLE_CUDA
 #define REGISTER_GPU(T)                                          \
   REGISTER_KERNEL_BUILDER(                                       \
-      Name("AssembleBoxesGpu").Device(DEVICE_GPU).TypeConstraint<T>("T"), \
+      Name("AssembleBoxesOp").Device(DEVICE_GPU).TypeConstraint<T>("T"), \
       AssembleBoxesOp<GPUDevice, T>);
-//REGISTER_GPU(float);
-REGISTER_GPU(uint16);
+REGISTER_GPU(int32);
+//REGISTER_GPU(uint16);
+//REGISTER_GPU(DT_UINT16);
+
 #endif  // GOOGLE_CUDA
