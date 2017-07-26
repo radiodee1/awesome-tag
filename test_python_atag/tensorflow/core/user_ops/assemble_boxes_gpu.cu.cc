@@ -21,13 +21,13 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
   }
 }
 
-/*
+
 template <class T>
 __host__ void getLaunchConfiguration(T t, int n, int *blocks, int *threads) {
-  //cudaOccupancyMaxPotentialBlockSize(blocks, threads, t, 0, n);
-  //*blocks = (n + *threads - 1) / *threads;
+  cudaOccupancyMaxPotentialBlockSize(blocks, threads, t, 0, n);
+  *blocks = (n + *threads - 1) / *threads;
 }
-*/
+
 
 // Define the GPU implementation that launches the CUDA kernel.
 template <typename T>
@@ -39,21 +39,17 @@ struct AssembleBoxesFunctor<GPUDevice, T> {
     // block count and thread_per_block count.
 	int block_count = 1024;
 	int thread_per_block = 20;
-	printf("shapes");
+	printf("shapes %i \n", size);
 	int num_columns = COLUMN_TOT - 2;
-	//int num_rows = (size - 2) / num_columns;
-	int shape_x = (int)in[size - 2];
-	int shape_y = (int)in[size - 1];
+	int num_rows = (size - 2) / num_columns;
+	int shape_x = num_columns;
+	int shape_y = num_rows;
 	
-	//if (num_rows != shape_y ) {
-		//printf("shape problem!");
-		//exit(0);
-	//}
-	
-	//getLaunchConfiguration(AssembleBoxesCudaKernel<T>, num_rows, &block_count, &thread_per_block);
+	getLaunchConfiguration(AssembleBoxesCudaKernel<T>, num_rows, &block_count, &thread_per_block);
     
     AssembleBoxesCudaKernel<T>
         <<<block_count, thread_per_block, 0, d.stream()>>>(size, in, out, shape_x, shape_y);
+	
   }
 };
 

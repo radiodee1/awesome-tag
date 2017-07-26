@@ -11,7 +11,7 @@ using namespace tensorflow;
 
 REGISTER_OP("AssembleBoxesOp")
 	.Attr("T: {int32, uint16}")
-    .Input("in: T")
+    .Input("input: T")
     .Output("out: T");
     
 
@@ -39,26 +39,26 @@ class AssembleBoxesOp : public OpKernel {
   explicit AssembleBoxesOp(OpKernelConstruction* context) : OpKernel(context) {}
 
   void Compute(OpKernelContext* context) override {
-	printf("never get here.1");
+	printf("get here.1\n");
 
     // Grab the input tensor
     const Tensor& input_tensor = context->input(0);
 
     // Create an output tensor
     Tensor* output_tensor = NULL;
-    OP_REQUIRES_OK(context, context->allocate_output(0, input_tensor.shape(),
-                                                     &output_tensor));
+    OP_REQUIRES_OK(context, context->allocate_output(0, input_tensor.shape(), &output_tensor));
 
     // Do the computation.
-    OP_REQUIRES(context, input_tensor.NumElements() <= tensorflow::kint32max,
-                errors::InvalidArgument("Too many elements in tensor"));
+    OP_REQUIRES(context, input_tensor.NumElements() <= tensorflow::kint32max, errors::InvalidArgument("Too many elements in tensor"));
     
-    printf("never get here.2");
+    printf("get here.2\n");
+    
     AssembleBoxesFunctor<Device, T>()(
         context->eigen_device<Device>(),
         static_cast<int>(input_tensor.NumElements()),
         input_tensor.flat<T>().data(),
         output_tensor->flat<T>().data());
+     
   }
 };
 

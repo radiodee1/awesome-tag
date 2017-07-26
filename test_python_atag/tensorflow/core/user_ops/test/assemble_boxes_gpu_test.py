@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import tensorflow as tf
 
 class AssembleBoxesTest(tf.test.TestCase):
