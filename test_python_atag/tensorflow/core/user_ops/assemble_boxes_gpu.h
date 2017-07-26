@@ -13,9 +13,9 @@ struct AssembleBoxesFunctor {
 #define COLUMN_H 3
 #define COLUMN_NUM 4
 #define COLUMN_BOX 5
-#define COLUMN_SHAPE_X 6
-#define COLUMN_SHAPE_Y 7
-#define COLUMN_TOT 8
+//#define COLUMN_SHAPE_X 6
+//#define COLUMN_SHAPE_Y 7
+#define COLUMN_TOT 6
 
 
 

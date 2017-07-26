@@ -59,7 +59,7 @@ struct AssembleBoxesFunctor<GPUDevice, T> {
 
 // Instantiate functors for the types of OpKernels registered.
 typedef Eigen::GpuDevice GPUDevice;
-//template struct AssembleBoxesFunctor<GPUDevice, int>;
+template struct AssembleBoxesFunctor<GPUDevice, uint16>;
 template struct AssembleBoxesFunctor<GPUDevice, int32>;
 
 #endif  // GOOGLE_CUDA

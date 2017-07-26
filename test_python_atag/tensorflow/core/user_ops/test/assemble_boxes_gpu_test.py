@@ -6,8 +6,8 @@ class AssembleBoxesTest(tf.test.TestCase):
     with self.test_session():
       test = [1,1,3,3,1,15]
       test.extend([6,1])
-      #test = tf.constant(test, dtype=tf.uint16)
-      test = tf.cast(test, dtype=tf.int32)
+      test = tf.constant(test, dtype=tf.uint16)
+      #test = tf.cast(test, dtype=tf.int32)
       print test
       result = assemble_module.assemble_boxes_op(test)
       print(result.eval())

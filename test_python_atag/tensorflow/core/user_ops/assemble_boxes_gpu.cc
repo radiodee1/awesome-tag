@@ -3,12 +3,16 @@
 #include "assemble_boxes_gpu.h"
 #include "tensorflow/core/framework/op_kernel.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+
 using namespace tensorflow;
 
 
 REGISTER_OP("AssembleBoxesOp")
-    .Input("in: int32")
-    .Output("out: int32");
+	.Attr("T: {int32, uint16}")
+    .Input("in: T")
+    .Output("out: T");
     
 
 
@@ -47,6 +51,7 @@ class AssembleBoxesOp : public OpKernel {
     OP_REQUIRES(context, input_tensor.NumElements() <= tensorflow::kint32max,
                 errors::InvalidArgument("Too many elements in tensor"));
     
+    printf("never get here.");
     AssembleBoxesFunctor<Device, T>()(
         context->eigen_device<Device>(),
         static_cast<int>(input_tensor.NumElements()),
@@ -74,7 +79,7 @@ REGISTER_CPU(uint16);
       Name("AssembleBoxesOp").Device(DEVICE_GPU).TypeConstraint<T>("T"), \
       AssembleBoxesOp<GPUDevice, T>);
 REGISTER_GPU(int32);
-//REGISTER_GPU(uint16);
-//REGISTER_GPU(DT_UINT16);
+REGISTER_GPU(uint16);
+
 
 #endif  // GOOGLE_CUDA
