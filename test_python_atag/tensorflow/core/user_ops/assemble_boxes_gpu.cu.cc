@@ -16,7 +16,6 @@ using namespace tensorflow;
 // Define the CUDA kernel.
 template <typename T>
 __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int shape_x, int shape_y) {
-  //for (int i = blockIdx.x * blockDim.x + threadIdx.x; i < shape_y ; i += blockDim.x * gridDim.x) {
 	  
 	int i = blockIdx.x * blockDim.x + threadIdx.x;
 	
@@ -45,24 +44,12 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 				clearLeft(out, j * COLUMN_TOT + COLUMN_BOX);
 				clearRight(out, i * COLUMN_TOT + COLUMN_BOX);
 			}
-			/*
-			else if (false && local_x == foreign_x + foreign_w && local_y == foreign_y) {
-				//duplicate
-				clearLeft(out, i * COLUMN_TOT + COLUMN_BOX);
-				clearRight(out, j * COLUMN_TOT + COLUMN_BOX);
-			}
-			*/
+			
 			else if (local_x == foreign_x && local_y + local_h == foreign_y ) {
 				clearTop(out, j * COLUMN_TOT + COLUMN_BOX);
 				clearBottom(out, i * COLUMN_TOT + COLUMN_BOX);
 			}
-			/*
-			else if (false && local_x == foreign_x && local_y  == foreign_y + foreign_h) {
-				//duplicate
-				clearTop(out, i * COLUMN_TOT + COLUMN_BOX);
-				clearBottom(out, j * COLUMN_TOT + COLUMN_BOX);
-			}
-			*/
+			
 		}
 	}
 	if (out[i * COLUMN_TOT + COLUMN_BOX] == 0) {
