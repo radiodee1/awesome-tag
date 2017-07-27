@@ -109,7 +109,7 @@ class Read( enum.Enum) :
             if self.is_left(line[self.GPU_BOX]):
                 draw.line((line[self.GPU_X], line[self.GPU_Y],
                            line[self.GPU_X], line[self.GPU_Y] + line[self.GPU_H]), fill=0x0000ff, width=1)
-                #print "left"
+                
                 pass
             if self.is_right(line[self.GPU_BOX]):
                 draw.line((line[self.GPU_X] + line[self.GPU_W], line[self.GPU_Y],
