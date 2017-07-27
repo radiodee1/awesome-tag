@@ -61,34 +61,7 @@ class Read( enum.Enum) :
             if self.num == self.num_chosen:
                 self.line_chosen = line
 
-    '''
-    def process_read_file_simple(self):
-        if os.path.isfile(self.csv_input):
-            with open(self.csv_input, 'r') as f:
-                for line in f:
-                    self.process_read_line(line)
-            f.close()
-            print "num of boxes simple", self.num
-            pass
-
-    def process_read_file_predict(self):
-        if os.path.isfile(self.csv_input_predict):
-            with open(self.csv_input_predict, 'r') as f:
-                for line in f:
-                    self.process_read_line(line)
-            f.close()
-            print "num of boxes predict", self.num
-            pass
-
-    def process_read_file_dot(self):
-        if os.path.isfile(self.csv_input_dot):
-            with open(self.csv_input_dot, 'r') as f:
-                for line in f:
-                    self.process_read_line(line)
-            f.close()
-            print "num of boxes dot", self.num
-            pass
-    '''
+    
     
     def process_read_file_predict_list(self):
         if os.path.isfile(self.csv_input_predict_list):
@@ -101,12 +74,8 @@ class Read( enum.Enum) :
             self.gpu_test.extend([6,self.num])
             pass
     
-    '''
-    def process_read_file_convolution_in_depth(self, num = 1):
-        self.num_chosen = num
-        self.process_read_file_simple()
-        print self.num_chosen
-        ll = loader.Load(self.a, self.picname)
-        return ll.outside_get_pixels_from_dat(self.picname, self.line_chosen)
-        pass
-    '''
+    def is_top(box): return False
+    def is_bottom(box): return False
+    def is_left(box): return False
+    def is_right(box): return False
+   

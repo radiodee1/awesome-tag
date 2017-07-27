@@ -33,3 +33,17 @@ class Enum(object) :
         self.AGGREGATE_START = -1
         self.AGGREGATE_TOUCHED = -5
         self.AGGREGATE_DELETE = -99
+        
+        # for gpu
+        self.BIT_TOP = 0x0001
+        self.BIT_BOTTOM = 0x0002
+        self.BIT_LEFT = 0x0004
+        self.BIT_RIGHT = 0x0008
+        
+        self.GPU_X = 0
+        self.GPU_Y = 1
+        self.GPU_W = 2
+        self.GPU_H = 3
+        self.GPU_NUM = 4
+        self.GPU_BOX = 5
+        self.GPU_TOT = 6
