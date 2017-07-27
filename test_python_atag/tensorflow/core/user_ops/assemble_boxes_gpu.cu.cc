@@ -25,37 +25,77 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
     	out[i * COLUMN_TOT + j] = in[i * COLUMN_TOT + j];
     }
     
-	
-	uint16 local_x = in[i * COLUMN_TOT + COLUMN_X];
-	uint16 local_y = in[i * COLUMN_TOT + COLUMN_Y];
-	uint16 local_w = in[i * COLUMN_TOT + COLUMN_W];
-	uint16 local_h = in[i * COLUMN_TOT + COLUMN_H];
-	
-	for (int j = 0; j < shape_y; j ++) {
-		if( i != j ) {
-			// check against all others for common boundaries
-			uint16 foreign_x = in[j * COLUMN_TOT + COLUMN_X];
-			uint16 foreign_y = in[j * COLUMN_TOT + COLUMN_Y];
-			//uint16 foreign_w = in[j * COLUMN_TOT + COLUMN_W];
-			//uint16 foreign_h = in[j * COLUMN_TOT + COLUMN_H];
-
-			if (local_x + local_w == foreign_x && local_y == foreign_y) {
-				//remove box walls
-				clearLeft(out, j * COLUMN_TOT + COLUMN_BOX);
-				clearRight(out, i * COLUMN_TOT + COLUMN_BOX);
-			}
-			
-			else if (local_x == foreign_x && local_y + local_h == foreign_y ) {
-				clearTop(out, j * COLUMN_TOT + COLUMN_BOX);
-				clearBottom(out, i * COLUMN_TOT + COLUMN_BOX);
-			}
-			
+    int count = 0;
+    
+	while(count < 10) {
+		uint16 local_x = out[i * COLUMN_TOT + COLUMN_X];
+		uint16 local_y = out[i * COLUMN_TOT + COLUMN_Y];
+		uint16 local_w = out[i * COLUMN_TOT + COLUMN_W];
+		uint16 local_h = out[i * COLUMN_TOT + COLUMN_H];
+		uint16 local_box = out[i * COLUMN_TOT + COLUMN_BOX];
+		
+		if (local_w == 0 || local_h == 0 || local_box == 0) {
+			count ++;
+			continue;
 		}
+		
+		for (int j = 0; j < shape_y; j ++) {
+			if( i != j ) {
+				// check against all others for common boundaries
+				uint16 foreign_x = out[j * COLUMN_TOT + COLUMN_X];
+				uint16 foreign_y = out[j * COLUMN_TOT + COLUMN_Y];
+				uint16 foreign_w = out[j * COLUMN_TOT + COLUMN_W];
+				uint16 foreign_h = out[j * COLUMN_TOT + COLUMN_H];
+				uint16 foreign_box = out[j * COLUMN_TOT + COLUMN_BOX];
+	
+				if (foreign_w != 0 && foreign_h != 0 && foreign_box != 0 && local_box != 0) {
+					if (local_x + local_w == foreign_x && local_y == foreign_y && local_h == foreign_h) {
+						//remove box walls
+						if (true) {
+							clearLeft(out, j * COLUMN_TOT + COLUMN_BOX);
+							clearRight(out, i * COLUMN_TOT + COLUMN_BOX);
+						}
+						if (local_h == foreign_h){// && local_box == 0 && foreign_box == 0) {
+							out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
+							//put together
+							//out[i * COLUMN_TOT + COLUMN_W] = local_w + foreign_w;
+							//out[j * COLUMN_TOT + COLUMN_W] = 0;
+						}
+					}
+					
+					
+				}
+				
+				foreign_box = out[j * COLUMN_TOT + COLUMN_BOX];
+				local_box = out[i * COLUMN_TOT + COLUMN_BOX];
+				
+				if(foreign_box != 0 && local_box != 0) {
+					
+					//if (foreign_box == 0 || local_box == 0) continue;
+					
+					if (local_x == foreign_x && local_y + local_h == foreign_y && local_w == foreign_w){// && foreign_box != 0 && local_box != 0 ) {
+						if(true) {
+							clearTop(out, j * COLUMN_TOT + COLUMN_BOX);
+							clearBottom(out, i * COLUMN_TOT + COLUMN_BOX);
+						}
+						if (local_w == foreign_w ){// && local_box == 0 && foreign_box == 0) {
+							out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
+
+							//put together
+							//out[i * COLUMN_TOT + COLUMN_H ] = local_h + foreign_h;
+							//out[j * COLUMN_TOT + COLUMN_H ] = 0;
+						}
+					}
+				}
+				
+			}
+		}
+		if (local_box == 0) {
+			//don't do this
+			//out[i * COLUMN_TOT + COLUMN_NUM] = 0;
+		}
+		count ++;
 	}
-	if (out[i * COLUMN_TOT + COLUMN_BOX] == 0) {
-		out[i * COLUMN_TOT + COLUMN_NUM] = 0;
-	}
-  
 }
 
 
@@ -108,15 +148,15 @@ __device__ void setLeft(int32 * input, int i) { (input[i]) |= 1 << 2; }
 __device__ void setRight(int32 * input, int i) { (input[i]) |= 1 << 3; }
 
 //clear
-__device__ void clearTop(uint16 * input, int i) {if (input[i] >= BIT_TOP)  input[i] = input[i] - BIT_TOP; }
-__device__ void clearBottom(uint16 * input, int i) {if (input[i] >= BIT_BOTTOM) input[i] = input[i] - BIT_BOTTOM; }
-__device__ void clearLeft(uint16 * input, int i) {if (input[i] >= BIT_LEFT) input[i] = input[i] - BIT_LEFT; }
-__device__ void clearRight(uint16 * input, int i) {if (input[i] >= BIT_RIGHT) input[i] = input[i] - BIT_RIGHT; }
+__device__ void clearTop(uint16 * input, int i) {input[i] &= ~(1 << 0);}//{if (input[i] >= BIT_TOP)  input[i] = input[i] - BIT_TOP; }
+__device__ void clearBottom(uint16 * input, int i) {input[i] &= ~(1 << 1);}// {if (input[i] >= BIT_BOTTOM) input[i] = input[i] - BIT_BOTTOM; }
+__device__ void clearLeft(uint16 * input, int i) {input[i] &= ~(1 << 2);} //{if (input[i] >= BIT_LEFT) input[i] = input[i] - BIT_LEFT; }
+__device__ void clearRight(uint16 * input, int i) {input[i] &= ~(1 << 3);} //{if (input[i] >= BIT_RIGHT) input[i] = input[i] - BIT_RIGHT; }
 
-__device__ void clearTop(int32 * input, int i) {if (input[i] >= BIT_TOP) input[i] = input[i] - BIT_TOP; }
-__device__ void clearBottom(int32 * input, int i) {if (input[i] >= BIT_BOTTOM) input[i] = input[i] - BIT_BOTTOM; }
-__device__ void clearLeft(int32 * input, int i) {if (input[i] >= BIT_LEFT) input[i] = input[i] - BIT_LEFT; }
-__device__ void clearRight(int32 * input, int i) {if (input[i] >= BIT_RIGHT) input[i] = input[i] - BIT_RIGHT; }
+__device__ void clearTop(int32 * input, int i) {input[i] &= ~(1 << 0);}//{if (input[i] >= BIT_TOP)  input[i] = input[i] - BIT_TOP; }
+__device__ void clearBottom(int32 * input, int i) {input[i] &= ~(1 << 1);}// {if (input[i] >= BIT_BOTTOM) input[i] = input[i] - BIT_BOTTOM; }
+__device__ void clearLeft(int32 * input, int i) {input[i] &= ~(1 << 2);} //{if (input[i] >= BIT_LEFT) input[i] = input[i] - BIT_LEFT; }
+__device__ void clearRight(int32 * input, int i) {input[i] &= ~(1 << 3);} //{if (input[i] >= BIT_RIGHT) input[i] = input[i] - BIT_RIGHT; }
 
 
 // Instantiate functors for the types of OpKernels registered.

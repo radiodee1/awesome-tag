@@ -96,7 +96,7 @@ class Read( enum.Enum) :
             line = self.dat[i * self.GPU_TOT: i * self.GPU_TOT + self.GPU_TOT]
             #print "out", line
 
-            #if line[self.GPU_BOX] == 0: continue
+            #if line[self.GPU_W] == 0 or line[self.GPU_H] == 0: continue
 
             if self.is_top(line[self.GPU_BOX]):
                 draw.line((line[self.GPU_X], line[self.GPU_Y],
@@ -109,12 +109,16 @@ class Read( enum.Enum) :
             if self.is_left(line[self.GPU_BOX]):
                 draw.line((line[self.GPU_X], line[self.GPU_Y],
                            line[self.GPU_X], line[self.GPU_Y] + line[self.GPU_H]), fill=0x0000ff, width=1)
-                
+
                 pass
             if self.is_right(line[self.GPU_BOX]):
                 draw.line((line[self.GPU_X] + line[self.GPU_W], line[self.GPU_Y],
                            line[self.GPU_X] + line[self.GPU_W], line[self.GPU_Y] + line[self.GPU_H]), fill=0x0000ff, width=1)
                 pass
+
+            if (line[self.GPU_H] > 4 or line[self.GPU_W] > 4) and False:
+                draw.rectangle([line[self.GPU_X], line[self.GPU_Y],
+                                line[self.GPU_X] + line[self.GPU_W], line[self.GPU_Y] + line[self.GPU_H]], outline=0x00ff00)
 
             pass
         self.img.show("gpu output")
