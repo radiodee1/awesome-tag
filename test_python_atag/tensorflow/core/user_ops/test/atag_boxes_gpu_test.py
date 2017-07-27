@@ -8,8 +8,10 @@ class AssembleBoxesTest(object):
 
     self.d = draw.Read()
     self.d.process_read_file_predict_list()
+    self.r = []
 
   def do_test(self):
+    test = []
     test = self.d.gpu_test
     assemble_module = tf.load_op_library('./../assemble_boxes_gpu.so')
     with tf.Session():
@@ -29,13 +31,15 @@ class AssembleBoxesTest(object):
           #test = tf.cast(test, dtype=tf.int32)
       print test
       result = assemble_module.assemble_boxes_op(test)
-      r = result.eval()
-      for i in range(len(r) // 6):
-          print(r[ i * 6: i * 6 + 6])
+      self.r = result.eval()
+      for i in range(len(self.r) // 6):
+          print(self.r[ i * 6: i * 6 + 6])
           
-      #print(r)
-      #self.assertAllEqual(result.eval(), test)
+  def do_show(self):
+      self.d.process_show_gpu_output(self.r)
+      pass
 
 if __name__ == "__main__":
     a = AssembleBoxesTest()
     a.do_test()
+    a.do_show()

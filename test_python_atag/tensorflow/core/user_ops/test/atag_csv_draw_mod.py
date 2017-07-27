@@ -2,7 +2,7 @@ import os
 import atag_csv_mod as enum
 #import nn_dim as dim
 #import nn_loader as loader
-#from PIL import Image, ImageFile
+from PIL import Image, ImageDraw
 
 '''
 Here we read the csv file that we made and train the models
@@ -26,7 +26,7 @@ class Read( enum.Enum) :
         #self.dim_y = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][1]
         self.img = None
         #self.image_folder = atag.VAR_ROOT_DATABASE
-
+        self.dat = []
 
         #self.a = atag
         #self.picname = atag.VAR_IMAGE_NAME
@@ -71,11 +71,50 @@ class Read( enum.Enum) :
                     self.process_read_line(line)
             f.close()
             print "num of boxes predict list", self.num
-            self.gpu_test.extend([6,self.num])
+            self.gpu_test.extend([self.GPU_TOT,  self.num])
             pass
     
-    def is_top(box): return False
-    def is_bottom(box): return False
-    def is_left(box): return False
-    def is_right(box): return False
+    def is_top(self, box):
+        if (box & self.BIT_TOP) >> 0 == 1 : return True;
+        return False
+    def is_bottom(self, box):
+        if (box & self.BIT_BOTTOM ) >> 1 == 1: return True;
+        return False
+    def is_left(self, box):
+        if (box & self.BIT_LEFT ) >> 2 == 1: return True;
+        return False
+    def is_right(self, box):
+        if (box & self.BIT_RIGHT) >> 3 == 1: return True;
+        return False
    
+
+    def process_show_gpu_output(self, dat=[]):
+        self.dat = dat
+        self.img = Image.new('RGB',(300,300))
+        draw = ImageDraw.Draw(self.img)
+        for i in range(len(self.dat) // self.GPU_TOT):
+            line = self.dat[i * self.GPU_TOT: i * self.GPU_TOT + self.GPU_TOT]
+            #print "out", line
+
+            #if line[self.GPU_BOX] == 0: continue
+
+            if self.is_top(line[self.GPU_BOX]):
+                draw.line((line[self.GPU_X], line[self.GPU_Y],
+                           line[self.GPU_X] + line[self.GPU_W], line[self.GPU_Y] ), fill=0x0000ff,width=1)
+                pass
+            if self.is_bottom(line[self.GPU_BOX]):
+                draw.line((line[self.GPU_X], line[self.GPU_Y] + line[self.GPU_H],
+                           line[self.GPU_X] + line[self.GPU_W], line[self.GPU_Y] + line[self.GPU_H]), fill=0x0000ff, width=1)
+                pass
+            if self.is_left(line[self.GPU_BOX]):
+                draw.line((line[self.GPU_X], line[self.GPU_Y],
+                           line[self.GPU_X], line[self.GPU_Y] + line[self.GPU_H]), fill=0x0000ff, width=1)
+                #print "left"
+                pass
+            if self.is_right(line[self.GPU_BOX]):
+                draw.line((line[self.GPU_X] + line[self.GPU_W], line[self.GPU_Y],
+                           line[self.GPU_X] + line[self.GPU_W], line[self.GPU_Y] + line[self.GPU_H]), fill=0x0000ff, width=1)
+                pass
+
+            pass
+        self.img.show("gpu output")
