@@ -116,7 +116,7 @@ class Read( enum.Enum) :
                            line[self.GPU_X] + line[self.GPU_W], line[self.GPU_Y] + line[self.GPU_H]), fill=0x0000ff, width=1)
                 pass
 
-            if (line[self.GPU_H] > 4 or line[self.GPU_W] > 4) or True:#  and line[self.GPU_NUM] == 5252:
+            if (line[self.GPU_H] > 4 and line[self.GPU_W] > 4 and False)  or line[self.GPU_NUM] == 436:
                 draw.rectangle([line[self.GPU_X], line[self.GPU_Y],
                                 line[self.GPU_X] + line[self.GPU_W], line[self.GPU_Y] + line[self.GPU_H]], outline=0x00ff00)
 

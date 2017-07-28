@@ -2,10 +2,14 @@
 #ifndef KERNEL_ASSEMBLE_BOXES_H_
 #define KERNEL_ASSEMBLE_BOXES_H_
 
+
+
 template <typename Device, typename T>
 struct AssembleBoxesFunctor {
   void operator()(const Device& d, int size, const T* in, T* out);
 };
+
+
 
 #define COLUMN_X 0
 #define COLUMN_Y 1
