@@ -17,6 +17,8 @@ using namespace tensorflow;
 template <typename T>
 __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int shape_x, int shape_y) {
 	  
+	bool change_wh = false;
+	
 	int i = blockIdx.x * blockDim.x + threadIdx.x;
 	
 	if (i * COLUMN_TOT + 0 >= size - 2 ) return;
@@ -24,19 +26,21 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
     for (int j = 0; j < COLUMN_TOT; j ++) {
     	out[i * COLUMN_TOT + j] = in[i * COLUMN_TOT + j];
     }
+    int size_img_x = size;
+    out[i * COLUMN_TOT + COLUMN_NUM] = size_img_x * out[i * COLUMN_TOT + COLUMN_Y] + out[ i * COLUMN_TOT + COLUMN_X];
     
     int count = 0;
     
-	while(count < 10) {
+	while(count < 15 ) { //15 // shape_y
 		uint16 local_x = out[i * COLUMN_TOT + COLUMN_X];
 		uint16 local_y = out[i * COLUMN_TOT + COLUMN_Y];
 		uint16 local_w = out[i * COLUMN_TOT + COLUMN_W];
 		uint16 local_h = out[i * COLUMN_TOT + COLUMN_H];
 		uint16 local_box = out[i * COLUMN_TOT + COLUMN_BOX];
 		
-		if (local_w == 0 || local_h == 0 || local_box == 0) {
-			count ++;
-			continue;
+		if (local_w == 0 || local_h == 0 ){//|| local_box == 0) {
+			//count ++;
+			//continue;
 		}
 		
 		for (int j = 0; j < shape_y; j ++) {
@@ -48,18 +52,36 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 				uint16 foreign_h = out[j * COLUMN_TOT + COLUMN_H];
 				uint16 foreign_box = out[j * COLUMN_TOT + COLUMN_BOX];
 	
-				if (foreign_w != 0 && foreign_h != 0 && foreign_box != 0 && local_box != 0) {
-					if (local_x + local_w == foreign_x && local_y == foreign_y && local_h == foreign_h) {
+				if (true || (foreign_w != 0 && foreign_h != 0 && foreign_box != 0 && local_box != 0 )) {
+					if (local_x + local_w == foreign_x && local_y == foreign_y ){//&& local_h == foreign_h) {
 						//remove box walls
 						if (true) {
-							clearLeft(out, j * COLUMN_TOT + COLUMN_BOX);
-							clearRight(out, i * COLUMN_TOT + COLUMN_BOX);
+							if (isLeft(out[j * COLUMN_TOT + COLUMN_BOX] ) ) clearLeft(out, j * COLUMN_TOT + COLUMN_BOX);
+							if (isRight (out[i * COLUMN_TOT + COLUMN_BOX] )) clearRight(out, i * COLUMN_TOT + COLUMN_BOX);
+							
+							if (change_wh) {
+								out[i * COLUMN_TOT + COLUMN_W] = out[j * COLUMN_TOT + COLUMN_W] + local_w;
+							
+							
+								setBoxPattern(out, i * COLUMN_TOT + COLUMN_BOX, out[j * COLUMN_TOT + COLUMN_BOX]);
+							}
 						}
-						if (local_h == foreign_h){// && local_box == 0 && foreign_box == 0) {
-							out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
-							//put together
-							//out[i * COLUMN_TOT + COLUMN_W] = local_w + foreign_w;
-							//out[j * COLUMN_TOT + COLUMN_W] = 0;
+						if (local_h == foreign_h || true){// && local_box == 0 && foreign_box == 0) {
+							if ( out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM]) {
+								out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
+								
+
+							}
+							////////////////////////////////////
+							/*
+							if (  out[j * COLUMN_TOT + COLUMN_X] > out[i * COLUMN_TOT + COLUMN_X]) {
+								out[i * COLUMN_TOT + COLUMN_W] = out[j * COLUMN_TOT + COLUMN_X] - out[i * COLUMN_TOT + COLUMN_X];
+																								
+																							
+							}
+							*/
+							////////////////////////////
+							
 						}
 					}
 					
@@ -69,31 +91,54 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 				foreign_box = out[j * COLUMN_TOT + COLUMN_BOX];
 				local_box = out[i * COLUMN_TOT + COLUMN_BOX];
 				
-				if(foreign_box != 0 && local_box != 0) {
+				if( true || (foreign_w != 0 && foreign_h != 0 && foreign_box != 0 && local_box != 0 ) ) {
 					
 					//if (foreign_box == 0 || local_box == 0) continue;
 					
-					if (local_x == foreign_x && local_y + local_h == foreign_y && local_w == foreign_w){// && foreign_box != 0 && local_box != 0 ) {
+					if (local_x == foreign_x && local_y + local_h == foreign_y ){//&& local_w == foreign_w){
 						if(true) {
-							clearTop(out, j * COLUMN_TOT + COLUMN_BOX);
-							clearBottom(out, i * COLUMN_TOT + COLUMN_BOX);
+							if (isTop(out[j * COLUMN_TOT + COLUMN_BOX] ) ) clearTop(out, j * COLUMN_TOT + COLUMN_BOX);
+							if (isBottom(out[i * COLUMN_TOT + COLUMN_BOX] ) ) clearBottom(out, i * COLUMN_TOT + COLUMN_BOX);
+							
+							if (change_wh) {
+								out[i * COLUMN_TOT + COLUMN_H] = out[j * COLUMN_TOT + COLUMN_H] + local_h;
+							
+							
+								setBoxPattern(out, i * COLUMN_TOT + COLUMN_BOX, out[j * COLUMN_TOT + COLUMN_BOX]);
+							}
+							
 						}
-						if (local_w == foreign_w ){// && local_box == 0 && foreign_box == 0) {
-							out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
-
-							//put together
-							//out[i * COLUMN_TOT + COLUMN_H ] = local_h + foreign_h;
-							//out[j * COLUMN_TOT + COLUMN_H ] = 0;
+						if (local_w == foreign_w || true){// && local_box == 0 && foreign_box == 0) {
+							if (  out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM]) {
+								out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
+								
+								
+							}
+							///////////////////////////////////////
+							/*
+							if (  out[j * COLUMN_TOT + COLUMN_X] > out[i * COLUMN_TOT + COLUMN_X]) {
+								out[i * COLUMN_TOT + COLUMN_W] = out[j * COLUMN_TOT + COLUMN_X] - out[i * COLUMN_TOT + COLUMN_X];
+																
+															
+							}
+							*/
+							/////////////////////////////////
+							
 						}
 					}
 				}
-				
+				///////
+				if (out[i* COLUMN_TOT + COLUMN_NUM] == out[j * COLUMN_TOT + COLUMN_NUM]) {
+					if (  out[j * COLUMN_TOT + COLUMN_X] > out[i * COLUMN_TOT + COLUMN_X]) {
+						out[i * COLUMN_TOT + COLUMN_W] = out[j * COLUMN_TOT + COLUMN_X] - out[i * COLUMN_TOT + COLUMN_X];
+																					
+																				
+					}
+				}
+				///////
 			}
 		}
-		if (local_box == 0) {
-			//don't do this
-			//out[i * COLUMN_TOT + COLUMN_NUM] = 0;
-		}
+		
 		count ++;
 	}
 }
@@ -157,6 +202,45 @@ __device__ void clearTop(int32 * input, int i) {input[i] &= ~(1 << 0);}//{if (in
 __device__ void clearBottom(int32 * input, int i) {input[i] &= ~(1 << 1);}// {if (input[i] >= BIT_BOTTOM) input[i] = input[i] - BIT_BOTTOM; }
 __device__ void clearLeft(int32 * input, int i) {input[i] &= ~(1 << 2);} //{if (input[i] >= BIT_LEFT) input[i] = input[i] - BIT_LEFT; }
 __device__ void clearRight(int32 * input, int i) {input[i] &= ~(1 << 3);} //{if (input[i] >= BIT_RIGHT) input[i] = input[i] - BIT_RIGHT; }
+
+
+__device__ void setBoxPattern(uint16 * out , int i, uint16 box) {
+	
+	out[i] = out[i] & box;
+	return;
+	
+	if (isTop(box)) {
+		setTop(out, i);
+	}
+	if (isBottom(box)) {
+		setBottom(out,i);
+	}
+	if (isLeft(box)) {
+		setLeft(out, i);
+	}
+	if (isRight(box)) {
+		setRight(out, i);
+	}
+}
+
+__device__ void setBoxPattern(int32 * out , int i, int32 box) {
+	
+	out[i] = out[i] & box;
+	return;
+	
+	if (isTop(box)) {
+		setTop(out, i);
+	}
+	if (isBottom(box)) {
+		setBottom(out,i);
+	}
+	if (isLeft(box)) {
+		setLeft(out, i);
+	}
+	if (isRight(box)) {
+		setRight(out, i);
+	}
+}
 
 
 // Instantiate functors for the types of OpKernels registered.
