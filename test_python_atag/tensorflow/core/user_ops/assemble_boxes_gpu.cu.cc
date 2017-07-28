@@ -31,7 +31,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
     
     int count = 0;
     
-	while(count < 15 ) { //15 // shape_y
+	while(count < shape_y ) { //15 // shape_y
 		uint16 local_x = out[i * COLUMN_TOT + COLUMN_X];
 		uint16 local_y = out[i * COLUMN_TOT + COLUMN_Y];
 		uint16 local_w = out[i * COLUMN_TOT + COLUMN_W];
@@ -53,7 +53,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 				uint16 foreign_box = out[j * COLUMN_TOT + COLUMN_BOX];
 	
 				if (true || (foreign_w != 0 && foreign_h != 0 && foreign_box != 0 && local_box != 0 )) {
-					if (local_x + local_w == foreign_x && local_y == foreign_y ){//&& local_h == foreign_h) {
+					if (local_x + local_w == foreign_x && local_y == foreign_y ){
 						//remove box walls
 						if (true) {
 							if (isLeft(out[j * COLUMN_TOT + COLUMN_BOX] ) ) clearLeft(out, j * COLUMN_TOT + COLUMN_BOX);
@@ -66,21 +66,13 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 								setBoxPattern(out, i * COLUMN_TOT + COLUMN_BOX, out[j * COLUMN_TOT + COLUMN_BOX]);
 							}
 						}
-						if (local_h == foreign_h || true){// && local_box == 0 && foreign_box == 0) {
+						if (true){
 							if ( out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM]) {
 								out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
 								
 
 							}
-							////////////////////////////////////
-							/*
-							if (  out[j * COLUMN_TOT + COLUMN_X] > out[i * COLUMN_TOT + COLUMN_X]) {
-								out[i * COLUMN_TOT + COLUMN_W] = out[j * COLUMN_TOT + COLUMN_X] - out[i * COLUMN_TOT + COLUMN_X];
-																								
-																							
-							}
-							*/
-							////////////////////////////
+							
 							
 						}
 					}
@@ -93,9 +85,8 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 				
 				if( true || (foreign_w != 0 && foreign_h != 0 && foreign_box != 0 && local_box != 0 ) ) {
 					
-					//if (foreign_box == 0 || local_box == 0) continue;
 					
-					if (local_x == foreign_x && local_y + local_h == foreign_y ){//&& local_w == foreign_w){
+					if (local_x == foreign_x && local_y + local_h == foreign_y ){
 						if(true) {
 							if (isTop(out[j * COLUMN_TOT + COLUMN_BOX] ) ) clearTop(out, j * COLUMN_TOT + COLUMN_BOX);
 							if (isBottom(out[i * COLUMN_TOT + COLUMN_BOX] ) ) clearBottom(out, i * COLUMN_TOT + COLUMN_BOX);
@@ -108,31 +99,35 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 							}
 							
 						}
-						if (local_w == foreign_w || true){// && local_box == 0 && foreign_box == 0) {
+						if ( true){
 							if (  out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM]) {
 								out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
 								
 								
 							}
-							///////////////////////////////////////
-							/*
-							if (  out[j * COLUMN_TOT + COLUMN_X] > out[i * COLUMN_TOT + COLUMN_X]) {
-								out[i * COLUMN_TOT + COLUMN_W] = out[j * COLUMN_TOT + COLUMN_X] - out[i * COLUMN_TOT + COLUMN_X];
-																
-															
-							}
-							*/
-							/////////////////////////////////
+							
 							
 						}
 					}
 				}
 				///////
 				if (out[i* COLUMN_TOT + COLUMN_NUM] == out[j * COLUMN_TOT + COLUMN_NUM]) {
-					if (  out[j * COLUMN_TOT + COLUMN_X] > out[i * COLUMN_TOT + COLUMN_X]) {
-						out[i * COLUMN_TOT + COLUMN_W] = out[j * COLUMN_TOT + COLUMN_X] - out[i * COLUMN_TOT + COLUMN_X];
-																					
-																				
+					if (  in[j * COLUMN_TOT + COLUMN_X] > in[i * COLUMN_TOT + COLUMN_X]) {
+						out[i * COLUMN_TOT + COLUMN_W] = in[j * COLUMN_TOT + COLUMN_X] - in[i * COLUMN_TOT + COLUMN_X];
+																																
+					}
+					if (  in[j * COLUMN_TOT + COLUMN_Y] > in[i * COLUMN_TOT + COLUMN_Y]) {
+						out[i * COLUMN_TOT + COLUMN_H] = in[j * COLUMN_TOT + COLUMN_Y] - in[i * COLUMN_TOT + COLUMN_Y];
+																																					
+					}
+					// use in 
+					if (  in[j * COLUMN_TOT + COLUMN_X] < in[i * COLUMN_TOT + COLUMN_X]) {
+						out[i * COLUMN_TOT + COLUMN_X] = in[j * COLUMN_TOT + COLUMN_X];// - out[i * COLUMN_TOT + COLUMN_X];
+																																
+					}
+					if (  in[j * COLUMN_TOT + COLUMN_Y] < in[i * COLUMN_TOT + COLUMN_Y]) {
+						out[i * COLUMN_TOT + COLUMN_Y] = in[j * COLUMN_TOT + COLUMN_Y];// - out[i * COLUMN_TOT + COLUMN_Y];
+																																					
 					}
 				}
 				///////
