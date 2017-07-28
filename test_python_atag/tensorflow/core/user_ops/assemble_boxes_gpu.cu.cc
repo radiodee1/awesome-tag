@@ -14,6 +14,7 @@ using namespace tensorflow;
 #define EIGEN_USE_GPU
 
 __device__ bool dimensionPass(uint16 locy, uint16 loch, uint16 fory, uint16 forh) {
+	//return false;
 	return not ((locy + loch < fory + forh && locy < fory + forh) || ( locy + loch > fory && locy > fory));
 }
 
@@ -122,29 +123,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 				///////
 				if (out[i* COLUMN_TOT + COLUMN_NUM] == out[j * COLUMN_TOT + COLUMN_NUM] && false) {
 					
-					/*
-					if (  in[j * COLUMN_TOT + COLUMN_X] > in[i * COLUMN_TOT + COLUMN_X]) {
-						out[i * COLUMN_TOT + COLUMN_W] = in[j * COLUMN_TOT + COLUMN_X] - in[i * COLUMN_TOT + COLUMN_X] + in[j * COLUMN_TOT + COLUMN_W];
-						//out[j * COLUMN_TOT + COLUMN_W] = 0;
-																																
-					}
-					if (  in[j * COLUMN_TOT + COLUMN_Y] > in[i * COLUMN_TOT + COLUMN_Y]) {
-						out[i * COLUMN_TOT + COLUMN_H] = in[j * COLUMN_TOT + COLUMN_Y] - in[i * COLUMN_TOT + COLUMN_Y] + in[j * COLUMN_TOT + COLUMN_H];
-						//out[j * COLUMN_TOT + COLUMN_H] = 0;
-																																					
-					}
 					
-					if (  in[j * COLUMN_TOT + COLUMN_X] < in[i * COLUMN_TOT + COLUMN_X]) {
-						out[i * COLUMN_TOT + COLUMN_X] = in[j * COLUMN_TOT + COLUMN_X];
-						//out[j * COLUMN_TOT + COLUMN_X] = 0;
-																			
-					}
-					if (  in[j * COLUMN_TOT + COLUMN_Y] < in[i * COLUMN_TOT + COLUMN_Y]) {
-						out[i * COLUMN_TOT + COLUMN_Y] = in[j * COLUMN_TOT + COLUMN_Y];
-						//out[j * COLUMN_TOT + COLUMN_Y] = 0;
-																								
-					}
-					*/
 					
 				}
 				///////
@@ -241,6 +220,7 @@ __device__ void setBoxPattern(int32 * out , int i, int32 box) {
 
 
 __device__  void manipulateBoxes(const uint16 * in, uint16 * out, int i, int j) {
+	
 	if (  in[j * COLUMN_TOT + COLUMN_X] > in[i * COLUMN_TOT + COLUMN_X]) {
 		out[i * COLUMN_TOT + COLUMN_W] = in[j * COLUMN_TOT + COLUMN_X] - in[i * COLUMN_TOT + COLUMN_X] + in[j * COLUMN_TOT + COLUMN_W];
 		//out[j * COLUMN_TOT + COLUMN_W] = 0;
