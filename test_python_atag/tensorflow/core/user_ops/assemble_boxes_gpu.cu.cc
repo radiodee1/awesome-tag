@@ -13,11 +13,21 @@ using namespace tensorflow;
 
 #define EIGEN_USE_GPU
 
+__device__ bool dimensionPass(uint16 locy, uint16 loch, uint16 fory, uint16 forh) {
+	return not ((locy + loch < fory + forh && locy < fory + forh) || ( locy + loch > fory && locy > fory));
+}
+
+__device__ bool dimensionPass(int32 locy, int32 loch, int32 fory, int32 forh) {
+	return not ((locy + loch < fory + forh && locy < fory + forh) || ( locy + loch > fory && locy > fory));
+}
+
+
+
 // Define the CUDA kernel.
 template <typename T>
 __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int shape_x, int shape_y) {
 	  
-	bool change_wh = false;
+	bool change_wh = true;
 	//uint16 initial_w = in[0 * COLUMN_TOT + COLUMN_W];
 	//uint16 initial_h = in[0 * COLUMN_TOT + COLUMN_H];
 	
@@ -55,7 +65,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 				//uint16 foreign_box = out[j * COLUMN_TOT + COLUMN_BOX];
 	
 				if (true ) {
-					if (local_x + local_w == foreign_x && (local_y == foreign_y) ){
+					if (local_x + local_w == foreign_x && (local_y == foreign_y || dimensionPass(local_y, local_h, foreign_y, foreign_h)) ){
 						//remove box walls
 						if (true) {
 							if (isLeft(out[j * COLUMN_TOT + COLUMN_BOX] ) ) clearLeft(out, j * COLUMN_TOT + COLUMN_BOX);
@@ -87,7 +97,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 				if( true ) {
 					
 					
-					if ((local_x == foreign_x) && local_y + local_h == foreign_y ){
+					if ((local_x == foreign_x || dimensionPass(local_x, local_w, foreign_x, foreign_w)) && local_y + local_h == foreign_y ){
 						if(true) {
 							if (isTop(out[j * COLUMN_TOT + COLUMN_BOX] ) ) clearTop(out, j * COLUMN_TOT + COLUMN_BOX);
 							if (isBottom(out[i * COLUMN_TOT + COLUMN_BOX] ) ) clearBottom(out, i * COLUMN_TOT + COLUMN_BOX);
@@ -227,6 +237,7 @@ __device__ void setBoxPattern(int32 * out , int i, int32 box) {
 	out[i] = out[i] & box;
 	return;
 }
+
 
 
 __device__  void manipulateBoxes(const uint16 * in, uint16 * out, int i, int j) {
