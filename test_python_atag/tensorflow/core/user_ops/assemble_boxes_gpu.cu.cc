@@ -15,12 +15,12 @@ using namespace tensorflow;
 
 __device__ bool dimensionPass(uint16 locy, uint16 loch, uint16 fory, uint16 forh) {
 	//return false;
-	if (forh > loch * 2.5) return false;
+	if (forh > loch * 3.5) return false;
 	return not ((locy + loch < fory + forh && locy < fory + forh) || ( locy + loch > fory && locy > fory));
 }
 
 __device__ bool dimensionPass(int32 locy, int32 loch, int32 fory, int32 forh) {
-	if (forh  > loch * 2.5) return false;
+	if (forh  > loch * 3.5) return false;
 	return not ((locy + loch < fory + forh && locy < fory + forh) || ( locy + loch > fory && locy > fory));
 }
 
@@ -53,7 +53,10 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 		uint16 local_h = out[i * COLUMN_TOT + COLUMN_H];
 		//uint16 local_box = out[i * COLUMN_TOT + COLUMN_BOX];
 		
-		if (local_w == 0 || local_h == 0 ){//|| local_box == 0) {
+		if (local_x == 0 || local_y == 0 ){//|| local_box == 0) {
+			out[i * COLUMN_TOT + COLUMN_W] = 0;
+			out[i * COLUMN_TOT + COLUMN_H] = 0;
+			out[i * COLUMN_TOT + COLUMN_NUM] = 0;
 			//count ++;
 			//continue;
 		}
@@ -68,29 +71,26 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 				//uint16 foreign_box = out[j * COLUMN_TOT + COLUMN_BOX];
 	
 				if (true ) {
-					if (local_x + local_w == foreign_x && (local_y == foreign_y || dimensionPass(local_y, local_h, foreign_y, foreign_h)) ){
+					if (local_x + local_w >= foreign_x && local_x + local_w < foreign_x + foreign_w && (local_y == foreign_y || dimensionPass(local_y, local_h, foreign_y, foreign_h)) ){
 						//remove box walls
 						if (true) {
 							if (isLeft(out[j * COLUMN_TOT + COLUMN_BOX] ) ) clearLeft(out, j * COLUMN_TOT + COLUMN_BOX);
 							if (isRight (out[i * COLUMN_TOT + COLUMN_BOX] )) clearRight(out, i * COLUMN_TOT + COLUMN_BOX);
 							
 							if (change_wh) {
-								out[i * COLUMN_TOT + COLUMN_W] = out[j * COLUMN_TOT + COLUMN_W] + local_w;
+								out[i * COLUMN_TOT + COLUMN_W] = out[j * COLUMN_TOT + COLUMN_W] + out[j * COLUMN_TOT + COLUMN_X] -  out[i * COLUMN_TOT + COLUMN_X] ;
 								
-								//setBoxPattern(out, i * COLUMN_TOT + COLUMN_BOX, out[j * COLUMN_TOT + COLUMN_BOX]);
-								//out[j * COLUMN_TOT + COLUMN_X] = 0;
-								//out[j * COLUMN_TOT + COLUMN_Y] = 0;
-								//out[j * COLUMN_TOT + COLUMN_NUM] = 0;
-
+								
 							}
 						}
 						if (true){
 							if ( out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM]) {
 								out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
-
-
+								//manipulateBoxes(in,out,i,j);
 							}
-							manipulateBoxes(in,out,i,j);
+							else {
+								
+							}
 							
 							
 						}
@@ -105,19 +105,15 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 				if( true ) {
 					
 					
-					if ((local_x == foreign_x || dimensionPass(local_x, local_w, foreign_x, foreign_w)) && local_y + local_h == foreign_y ){
+					if ((local_x == foreign_x || dimensionPass(local_x, local_w, foreign_x, foreign_w)) && local_y + local_h >= foreign_y && local_y + local_h < foreign_y + foreign_h){
 						if(true) {
 							if (isTop(out[j * COLUMN_TOT + COLUMN_BOX] ) ) clearTop(out, j * COLUMN_TOT + COLUMN_BOX);
 							if (isBottom(out[i * COLUMN_TOT + COLUMN_BOX] ) ) clearBottom(out, i * COLUMN_TOT + COLUMN_BOX);
 							
 							if (change_wh) {
 								//out[i * COLUMN_TOT + COLUMN_H] = out[j * COLUMN_TOT + COLUMN_H] + local_h;
-								out[i * COLUMN_TOT + COLUMN_H] = out[j * COLUMN_TOT + COLUMN_H] + local_h;
+								out[i * COLUMN_TOT + COLUMN_H] = out[j * COLUMN_TOT + COLUMN_H] + out[j * COLUMN_TOT + COLUMN_Y] -  out[i * COLUMN_TOT + COLUMN_Y] ;
 								
-								//setBoxPattern(out, i * COLUMN_TOT + COLUMN_BOX, out[j * COLUMN_TOT + COLUMN_BOX]);
-								//out[j * COLUMN_TOT + COLUMN_X] = 0;
-								//out[j * COLUMN_TOT + COLUMN_Y] = 0;
-								//out[j * COLUMN_TOT + COLUMN_NUM] = 0;
 							}
 							
 						}
@@ -127,7 +123,9 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 								//manipulateBoxes(in,out,i,j);
 								
 							}
-							manipulateBoxes(in,out,i,j);
+							else{
+								
+							}
 
 							
 						}
@@ -136,24 +134,12 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 				///////
 				if (out[i* COLUMN_TOT + COLUMN_NUM] == out[j * COLUMN_TOT + COLUMN_NUM] && true) {
 					
-					if(out[i * COLUMN_TOT + COLUMN_BOX] == 0) {
-						//out[i * COLUMN_TOT + COLUMN_NUM] = 0;
-					}	
-					
 				}
 				///////
+				manipulateBoxes(in, out, i , j);
 			}
 		}
-		/*
-		if (out[i * COLUMN_TOT + COLUMN_W] >  in[i * COLUMN_TOT + COLUMN_W] && (out[i * COLUMN_TOT + COLUMN_X] == 0 || out[i * COLUMN_TOT + COLUMN_Y] == 0)) {
-			//out[i * COLUMN_TOT + COLUMN_X] = 0;
-			//out[i * COLUMN_TOT + COLUMN_Y] = 0;
-			//out[i * COLUMN_TOT + COLUMN_W] = 0;
-			//out[i * COLUMN_TOT + COLUMN_H] = 0;
-			out[i * COLUMN_TOT + COLUMN_NUM] = 0;
-
-		}
-		*/
+		
 		
 		count ++;
 	}
@@ -235,51 +221,28 @@ __device__ void setBoxPattern(int32 * out , int i, int32 box) {
 
 
 __device__  void manipulateBoxes(const uint16 * in, uint16 * out, int i, int j) {
+	
+	if(out[i * COLUMN_TOT + COLUMN_X] == 0 || out[i * COLUMN_TOT + COLUMN_Y] == 0) return;
+	
+	//if(out[j * COLUMN_TOT + COLUMN_X] == 0 || out[j * COLUMN_TOT + COLUMN_Y] == 0) return;
+	
+	if (not (out[i * COLUMN_TOT + COLUMN_X] <=  out[j * COLUMN_TOT + COLUMN_X] && out[i * COLUMN_TOT + COLUMN_Y] <=  out[j * COLUMN_TOT + COLUMN_Y] 
+		&& out[i * COLUMN_TOT + COLUMN_W] + out[i * COLUMN_TOT + COLUMN_X] >=  out[j * COLUMN_TOT + COLUMN_W] + out[j * COLUMN_TOT + COLUMN_X] && 
+		out[i * COLUMN_TOT + COLUMN_H] + out[i * COLUMN_TOT + COLUMN_Y]  >=  out[j * COLUMN_TOT + COLUMN_H] + out[j * COLUMN_TOT + COLUMN_Y] )) return;//&&
+		
+	if (not (out[i * COLUMN_TOT + COLUMN_NUM ] == out[j * COLUMN_TOT + COLUMN_NUM] ) ) return;
+	
+	
+	int jj = j;
 	///////////////
+	out[jj * COLUMN_TOT + COLUMN_X] = 0;
+	out[jj * COLUMN_TOT + COLUMN_Y] = 0;
+	out[jj * COLUMN_TOT + COLUMN_W] = 0;
+	out[jj * COLUMN_TOT + COLUMN_H] = 0;
+	out[jj * COLUMN_TOT + COLUMN_NUM] = 0;
 	return;
-	if (  out[j * COLUMN_TOT + COLUMN_W] > out[i * COLUMN_TOT + COLUMN_W]) {
-		out[j * COLUMN_TOT + COLUMN_W] = out[i * COLUMN_TOT + COLUMN_W];
-		
-	}
-	if (  out[j * COLUMN_TOT + COLUMN_H] > out[i * COLUMN_TOT + COLUMN_H]) {
-		out[j * COLUMN_TOT + COLUMN_H] = out[i * COLUMN_TOT + COLUMN_H];
-		
-	}
-	if (  out[j * COLUMN_TOT + COLUMN_X] < out[i * COLUMN_TOT + COLUMN_X]) {
-		out[j * COLUMN_TOT + COLUMN_X] = out[i * COLUMN_TOT + COLUMN_X];
-		
-	}
-	if (  out[j * COLUMN_TOT + COLUMN_Y] < out[i * COLUMN_TOT + COLUMN_Y]) {
-		out[j * COLUMN_TOT + COLUMN_Y] = out[i * COLUMN_TOT + COLUMN_Y];
-		
-	}
-	//////////////
 	
-	return;
-	if (  in[j * COLUMN_TOT + COLUMN_X] > in[i * COLUMN_TOT + COLUMN_X]) {
-		out[i * COLUMN_TOT + COLUMN_W] = in[j * COLUMN_TOT + COLUMN_X] - in[i * COLUMN_TOT + COLUMN_X] + in[j * COLUMN_TOT + COLUMN_W];
-		//out[j * COLUMN_TOT + COLUMN_W] = 0;
-																												
-	}
-	if (  in[j * COLUMN_TOT + COLUMN_Y] > in[i * COLUMN_TOT + COLUMN_Y]) {
-		out[i * COLUMN_TOT + COLUMN_H] = in[j * COLUMN_TOT + COLUMN_Y] - in[i * COLUMN_TOT + COLUMN_Y] + in[j * COLUMN_TOT + COLUMN_H];
-		//out[j * COLUMN_TOT + COLUMN_H] = 0;
-																																	
-	}
 	
-	if (  in[j * COLUMN_TOT + COLUMN_X] < in[i * COLUMN_TOT + COLUMN_X]) {
-		out[i * COLUMN_TOT + COLUMN_X] = in[j * COLUMN_TOT + COLUMN_X];
-		//out[j * COLUMN_TOT + COLUMN_X] = 0;
-															
-	}
-	if (  in[j * COLUMN_TOT + COLUMN_Y] < in[i * COLUMN_TOT + COLUMN_Y]) {
-		out[i * COLUMN_TOT + COLUMN_Y] = in[j * COLUMN_TOT + COLUMN_Y];
-		//out[j * COLUMN_TOT + COLUMN_Y] = 0;
-																				
-	}
-	if(out[i * COLUMN_TOT + COLUMN_BOX] == 0) {
-		out[i * COLUMN_TOT + COLUMN_NUM] = 0;
-	}
 }
 
 __device__ void manipulateBoxes(const int32 * in, int32 * out, int i, int j) {};
