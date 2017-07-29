@@ -45,7 +45,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
     
     int count = 0;
     
-	while(count < 15 ) { //15 // shape_y
+	while(count < 10 ) { //15 // shape_y
 		uint16 local_x = out[i * COLUMN_TOT + COLUMN_X];
 		uint16 local_y = out[i * COLUMN_TOT + COLUMN_Y];
 		uint16 local_w = out[i * COLUMN_TOT + COLUMN_W];
@@ -69,86 +69,84 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 				uint16 foreign_h = out[j * COLUMN_TOT + COLUMN_H];
 				//uint16 foreign_box = out[j * COLUMN_TOT + COLUMN_BOX];
 	
-				if (true ) {
-					if (local_x + local_w >= foreign_x && local_x + local_w <= foreign_x + foreign_w && (local_y == foreign_y || dimensionPass(local_y, local_h, foreign_y, foreign_h)) ){
-						//remove box walls
-						if (true) {
-							if (isLeft(out[j * COLUMN_TOT + COLUMN_BOX] ) ) clearLeft(out, j * COLUMN_TOT + COLUMN_BOX);
-							if (isRight (out[i * COLUMN_TOT + COLUMN_BOX] )) clearRight(out, i * COLUMN_TOT + COLUMN_BOX);
+				//if (true ) {
+				if (local_x + local_w >= foreign_x && local_x + local_w <= foreign_x + foreign_w && (local_y == foreign_y || dimensionPass(local_y, local_h, foreign_y, foreign_h)) ){
+					//remove box walls
+					if (true) {
+						if (isLeft(out[j * COLUMN_TOT + COLUMN_BOX] ) ) clearLeft(out, j * COLUMN_TOT + COLUMN_BOX);
+						if (isRight (out[i * COLUMN_TOT + COLUMN_BOX] )) clearRight(out, i * COLUMN_TOT + COLUMN_BOX);
+						
+						if (change_wh) {
+							out[i * COLUMN_TOT + COLUMN_W] = out[j * COLUMN_TOT + COLUMN_W] + out[j * COLUMN_TOT + COLUMN_X] -  out[i * COLUMN_TOT + COLUMN_X] ;
 							
-							if (change_wh) {
-								out[i * COLUMN_TOT + COLUMN_W] = out[j * COLUMN_TOT + COLUMN_W] + out[j * COLUMN_TOT + COLUMN_X] -  out[i * COLUMN_TOT + COLUMN_X] ;
-								
-								//out[i * COLUMN_TOT + COLUMN_X] = in[i * COLUMN_TOT + COLUMN_X] ;
-								//out[i * COLUMN_TOT + COLUMN_Y] = in[i * COLUMN_TOT + COLUMN_Y] ;
-								//out[i * COLUMN_TOT + COLUMN_H] = in[i * COLUMN_TOT + COLUMN_H] ;
-								//out[j * COLUMN_TOT + COLUMN_Y] = in[j * COLUMN_TOT + COLUMN_Y] ;
-								
-							}
-						}
-						//manipulateBoxes(in, out, i , j);
-
-						if (true){
-							if ( out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM]) {
-								out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
-								//manipulateBoxes(in,out,i,j);
-							}
-							else {
-								
-							}
-							
+							//out[i * COLUMN_TOT + COLUMN_X] = in[i * COLUMN_TOT + COLUMN_X] ;
+							//out[i * COLUMN_TOT + COLUMN_Y] = in[i * COLUMN_TOT + COLUMN_Y] ;
+							//out[i * COLUMN_TOT + COLUMN_H] = in[i * COLUMN_TOT + COLUMN_H] ;
+							//out[j * COLUMN_TOT + COLUMN_Y] = in[j * COLUMN_TOT + COLUMN_Y] ;
 							
 						}
 					}
-					
-					
+					//manipulateBoxes(in, out, i , j);
+
+					if (true){
+						if ( out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM]) {
+							out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
+							//manipulateBoxes(in,out,i,j);
+						}
+						else {
+							
+						}
+						
+						
+					}
 				}
+					
+					
+				//}//
 				
 				//foreign_box = out[j * COLUMN_TOT + COLUMN_BOX];
 				//local_box = out[i * COLUMN_TOT + COLUMN_BOX];
 				
-				if( true ) {
+				//if( true ) {
 					
 					
-					if ((local_x == foreign_x || dimensionPass(local_x, local_w, foreign_x, foreign_w)) && local_y + local_h >= foreign_y && local_y + local_h <= foreign_y + foreign_h){
-						if(true) {
-							if (isTop(out[j * COLUMN_TOT + COLUMN_BOX] ) ) clearTop(out, j * COLUMN_TOT + COLUMN_BOX);
-							if (isBottom(out[i * COLUMN_TOT + COLUMN_BOX] ) ) clearBottom(out, i * COLUMN_TOT + COLUMN_BOX);
+				else if ((local_x == foreign_x || dimensionPass(local_x, local_w, foreign_x, foreign_w)) && local_y + local_h >= foreign_y && local_y + local_h <= foreign_y + foreign_h){
+					if(true) {
+						if (isTop(out[j * COLUMN_TOT + COLUMN_BOX] ) ) clearTop(out, j * COLUMN_TOT + COLUMN_BOX);
+						if (isBottom(out[i * COLUMN_TOT + COLUMN_BOX] ) ) clearBottom(out, i * COLUMN_TOT + COLUMN_BOX);
+						
+						if (change_wh) {
+							//out[i * COLUMN_TOT + COLUMN_H] = out[j * COLUMN_TOT + COLUMN_H] + local_h;
+							out[i * COLUMN_TOT + COLUMN_H] = out[j * COLUMN_TOT + COLUMN_H] + out[j * COLUMN_TOT + COLUMN_Y] -  out[i * COLUMN_TOT + COLUMN_Y] ;
 							
-							if (change_wh) {
-								//out[i * COLUMN_TOT + COLUMN_H] = out[j * COLUMN_TOT + COLUMN_H] + local_h;
-								out[i * COLUMN_TOT + COLUMN_H] = out[j * COLUMN_TOT + COLUMN_H] + out[j * COLUMN_TOT + COLUMN_Y] -  out[i * COLUMN_TOT + COLUMN_Y] ;
-								
-								//out[i * COLUMN_TOT + COLUMN_X] = in[i * COLUMN_TOT + COLUMN_X] ;
-								//out[i * COLUMN_TOT + COLUMN_Y] = in[i * COLUMN_TOT + COLUMN_Y] ;
-								//out[i * COLUMN_TOT + COLUMN_W] = in[i * COLUMN_TOT + COLUMN_W] ;
-								//out[j * COLUMN_TOT + COLUMN_Y] = in[j * COLUMN_TOT + COLUMN_Y] ;
+							//out[i * COLUMN_TOT + COLUMN_X] = in[i * COLUMN_TOT + COLUMN_X] ;
+							//out[i * COLUMN_TOT + COLUMN_Y] = in[i * COLUMN_TOT + COLUMN_Y] ;
+							//out[i * COLUMN_TOT + COLUMN_W] = in[i * COLUMN_TOT + COLUMN_W] ;
+							//out[j * COLUMN_TOT + COLUMN_Y] = in[j * COLUMN_TOT + COLUMN_Y] ;
 
-							}
+						}
+						
+					}
+					//manipulateBoxes(in, out, i , j);
+
+					if ( true){
+						if (  out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM]) {
+							out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
+							//manipulateBoxes(in,out,i,j);
 							
 						}
-						//manipulateBoxes(in, out, i , j);
-
-						if ( true){
-							if (  out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM]) {
-								out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
-								//manipulateBoxes(in,out,i,j);
-								
-							}
-							else{
-								
-							}
-
+						else{
 							
 						}
+
+						
 					}
 				}
+				//}//
 				manipulateBoxes(in, out, i , j);
 
 				///////
-				if (out[i* COLUMN_TOT + COLUMN_NUM] == out[j * COLUMN_TOT + COLUMN_NUM] && true) {
-					
-				}
+				
 				///////
 			}
 		}
@@ -250,6 +248,11 @@ __device__  void manipulateBoxes(const uint16 * in, uint16 * out, int i, int j) 
 	
 	if(out[j * COLUMN_TOT + COLUMN_X] == 0 || out[j * COLUMN_TOT + COLUMN_Y] == 0) {
 		jj = j;
+		out[jj * COLUMN_TOT + COLUMN_X] = 0;
+		out[jj * COLUMN_TOT + COLUMN_Y] = 0;
+		out[jj * COLUMN_TOT + COLUMN_W] = 0;
+		out[jj * COLUMN_TOT + COLUMN_H] = 0;
+		out[jj * COLUMN_TOT + COLUMN_NUM] = 0;
 	}
 	
 	if (not( true && (out[i * COLUMN_TOT + COLUMN_X] <=  out[j * COLUMN_TOT + COLUMN_X] && out[i * COLUMN_TOT + COLUMN_Y] <=  out[j * COLUMN_TOT + COLUMN_Y] 
@@ -257,7 +260,7 @@ __device__  void manipulateBoxes(const uint16 * in, uint16 * out, int i, int j) 
 		out[i * COLUMN_TOT + COLUMN_H] + out[i * COLUMN_TOT + COLUMN_Y]  >=  out[j * COLUMN_TOT + COLUMN_H] + out[j * COLUMN_TOT + COLUMN_Y] )) ) return;//&&
 		
 	if (not (out[i * COLUMN_TOT + COLUMN_NUM ] == out[j * COLUMN_TOT + COLUMN_NUM] ) ) return;
-	
+	jj = j;
 	
 	///////////////
 	out[jj * COLUMN_TOT + COLUMN_X] = 0;
