@@ -122,3 +122,5 @@ class Read( enum.Enum) :
 
             pass
         self.img.show("gpu output")
+        self.img.format = "png"
+        self.img.save("sample.png","png")
