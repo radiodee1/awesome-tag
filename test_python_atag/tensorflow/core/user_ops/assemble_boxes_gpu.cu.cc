@@ -86,6 +86,8 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 								
 							}
 						}
+						//manipulateBoxes(in, out, i , j);
+
 						if (true){
 							if ( out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM]) {
 								out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
@@ -125,6 +127,8 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 							}
 							
 						}
+						//manipulateBoxes(in, out, i , j);
+
 						if ( true){
 							if (  out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM]) {
 								out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
@@ -139,12 +143,13 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 						}
 					}
 				}
+				manipulateBoxes(in, out, i , j);
+
 				///////
 				if (out[i* COLUMN_TOT + COLUMN_NUM] == out[j * COLUMN_TOT + COLUMN_NUM] && true) {
 					
 				}
 				///////
-				manipulateBoxes(in, out, i , j);
 			}
 		}
 		
@@ -230,10 +235,16 @@ __device__ void setBoxPattern(int32 * out , int i, int32 box) {
 
 __device__  void manipulateBoxes(const uint16 * in, uint16 * out, int i, int j) {
 	
+	int jj = j;
 	//bool auto_remove = false;
-	if(out[i * COLUMN_TOT + COLUMN_X] == 0 || out[i * COLUMN_TOT + COLUMN_Y] == 0)return;// auto_remove = true;
+	if(out[i * COLUMN_TOT + COLUMN_X] == 0 || out[i * COLUMN_TOT + COLUMN_Y] == 0) {
+		jj = i;
+		//return;// auto_remove = true;
+	}
 	
-	if(out[j * COLUMN_TOT + COLUMN_X] == 0 || out[j * COLUMN_TOT + COLUMN_Y] == 0)return;// auto_remove = true;
+	if(out[j * COLUMN_TOT + COLUMN_X] == 0 || out[j * COLUMN_TOT + COLUMN_Y] == 0) {
+		jj = j;
+	}
 	
 	if (not( true && (out[i * COLUMN_TOT + COLUMN_X] <=  out[j * COLUMN_TOT + COLUMN_X] && out[i * COLUMN_TOT + COLUMN_Y] <=  out[j * COLUMN_TOT + COLUMN_Y] 
 		&& out[i * COLUMN_TOT + COLUMN_W] + out[i * COLUMN_TOT + COLUMN_X] >=  out[j * COLUMN_TOT + COLUMN_W] + out[j * COLUMN_TOT + COLUMN_X] && 
@@ -242,7 +253,6 @@ __device__  void manipulateBoxes(const uint16 * in, uint16 * out, int i, int j) 
 	if (not (out[i * COLUMN_TOT + COLUMN_NUM ] == out[j * COLUMN_TOT + COLUMN_NUM] ) ) return;
 	
 	
-	int jj = j;
 	///////////////
 	out[jj * COLUMN_TOT + COLUMN_X] = 0;
 	out[jj * COLUMN_TOT + COLUMN_Y] = 0;
