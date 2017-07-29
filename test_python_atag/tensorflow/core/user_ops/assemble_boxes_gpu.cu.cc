@@ -45,7 +45,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
     
     int count = 0;
     
-	while(count < 1 ) { //15 // shape_y
+	while(count < 15 ) { //15 // shape_y
 		uint16 local_x = out[i * COLUMN_TOT + COLUMN_X];
 		uint16 local_y = out[i * COLUMN_TOT + COLUMN_Y];
 		uint16 local_w = out[i * COLUMN_TOT + COLUMN_W];
@@ -240,6 +240,12 @@ __device__  void manipulateBoxes(const uint16 * in, uint16 * out, int i, int j) 
 	if(out[i * COLUMN_TOT + COLUMN_X] == 0 || out[i * COLUMN_TOT + COLUMN_Y] == 0) {
 		jj = i;
 		//return;// auto_remove = true;
+		out[jj * COLUMN_TOT + COLUMN_X] = 0;
+		out[jj * COLUMN_TOT + COLUMN_Y] = 0;
+		out[jj * COLUMN_TOT + COLUMN_W] = 0;
+		out[jj * COLUMN_TOT + COLUMN_H] = 0;
+		out[jj * COLUMN_TOT + COLUMN_NUM] = 0;
+		
 	}
 	
 	if(out[j * COLUMN_TOT + COLUMN_X] == 0 || out[j * COLUMN_TOT + COLUMN_Y] == 0) {
