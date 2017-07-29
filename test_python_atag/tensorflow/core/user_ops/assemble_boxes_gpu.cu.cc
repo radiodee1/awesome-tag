@@ -15,10 +15,12 @@ using namespace tensorflow;
 
 __device__ bool dimensionPass(uint16 locy, uint16 loch, uint16 fory, uint16 forh) {
 	//return false;
+	if (forh > loch * 2.5) return false;
 	return not ((locy + loch < fory + forh && locy < fory + forh) || ( locy + loch > fory && locy > fory));
 }
 
 __device__ bool dimensionPass(int32 locy, int32 loch, int32 fory, int32 forh) {
+	if (forh  > loch * 2.5) return false;
 	return not ((locy + loch < fory + forh && locy < fory + forh) || ( locy + loch > fory && locy > fory));
 }
 
