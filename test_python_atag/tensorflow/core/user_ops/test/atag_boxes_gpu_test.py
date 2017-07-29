@@ -32,9 +32,14 @@ class AssembleBoxesTest(object):
       print test
       result = assemble_module.assemble_boxes_op(test)
       self.r = result.eval()
+      s = []
       for i in range(len(self.r) // 6):
           print(self.r[ i * 6: i * 6 + 6])
-          
+          g = self.r[i * 6 + 4]
+          if not g in s:
+              s.append(g)
+      print "simple list:" , s
+
   def do_show(self):
       self.d.process_show_gpu_output(self.r)
       pass
