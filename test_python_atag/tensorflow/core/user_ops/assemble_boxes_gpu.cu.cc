@@ -16,12 +16,12 @@ using namespace tensorflow;
 __device__ bool dimensionPass(uint16 locy, uint16 loch, uint16 fory, uint16 forh) {
 	//return false;
 	if (forh > loch * CUDA_SHAPE_FLOAT ) return false;
-	return not ((locy + loch <= fory + forh && locy <= fory + forh) || ( locy + loch >= fory && locy >= fory));
+	return not ((locy + loch < fory + forh && locy < fory + forh) || ( locy + loch > fory && locy > fory));
 }
 
 __device__ bool dimensionPass(int32 locy, int32 loch, int32 fory, int32 forh) {
 	if (forh  > loch * CUDA_SHAPE_FLOAT ) return false;
-	return not ((locy + loch <= fory + forh && locy <= fory + forh) || ( locy + loch >= fory && locy >= fory));
+	return not ((locy + loch < fory + forh && locy < fory + forh) || ( locy + loch > fory && locy > fory));
 }
 
 
@@ -71,7 +71,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 				//uint16 foreign_box = out[j * COLUMN_TOT + COLUMN_BOX];
 	
 				//if (true ) {
-				if (local_x + local_w >= foreign_x && local_x + local_w <= foreign_x + foreign_w && (local_y == foreign_y || dimensionPass(local_y, local_h, foreign_y, foreign_h)) ){
+				if (local_x + local_w >= foreign_x && local_x + local_w <= foreign_x + foreign_w && (dimensionPass(foreign_y, foreign_h, local_y, local_h) || dimensionPass(local_y, local_h, foreign_y, foreign_h)) ){
 					//remove box walls
 					if (true) {
 						if (isLeft(out[j * COLUMN_TOT + COLUMN_BOX] ) ) clearLeft(out, j * COLUMN_TOT + COLUMN_BOX);
@@ -85,6 +85,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 						}
 					}
 					manipulateBoxes(in, out, i , j);
+					//pruneBoxes(in,out, i, j, count);
 
 					if (true){
 						if ( out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM] && out[i * COLUMN_TOT + COLUMN_NUM] != 0) {
@@ -103,7 +104,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 				////////////////////////////////
 					
 					
-				else if ((local_x == foreign_x || dimensionPass(local_x, local_w, foreign_x, foreign_w)) && local_y + local_h >= foreign_y && local_y + local_h <= foreign_y + foreign_h){
+				else if (( dimensionPass(foreign_x, foreign_w, local_x, local_w) || dimensionPass(local_x, local_w, foreign_x, foreign_w)) && local_y + local_h >= foreign_y && local_y + local_h <= foreign_y + foreign_h){
 					if(true) {
 						if (isTop(out[j * COLUMN_TOT + COLUMN_BOX] ) ) clearTop(out, j * COLUMN_TOT + COLUMN_BOX);
 						if (isBottom(out[i * COLUMN_TOT + COLUMN_BOX] ) ) clearBottom(out, i * COLUMN_TOT + COLUMN_BOX);
@@ -118,6 +119,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 						
 					}
 					manipulateBoxes(in, out, i , j);
+					//pruneBoxes(in,out, i, j, count);
 
 					if ( true){
 						if (  out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM] && out[i * COLUMN_TOT + COLUMN_NUM] != 0) {
