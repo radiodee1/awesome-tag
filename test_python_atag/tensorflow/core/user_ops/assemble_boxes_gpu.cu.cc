@@ -86,10 +86,10 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 							
 						}
 					}
-					//manipulateBoxes(in, out, i , j);
+					manipulateBoxes(in, out, i , j);
 
 					if (true){
-						if ( out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM]) {
+						if ( out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM] && out[i * COLUMN_TOT + COLUMN_NUM] != 0) {
 							out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
 							//manipulateBoxes(in,out,i,j);
 						}
@@ -127,10 +127,10 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 						}
 						
 					}
-					//manipulateBoxes(in, out, i , j);
+					manipulateBoxes(in, out, i , j);
 
 					if ( true){
-						if (  out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM]) {
+						if (  out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM] && out[i * COLUMN_TOT + COLUMN_NUM] != 0) {
 							out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
 							//manipulateBoxes(in,out,i,j);
 							
@@ -143,7 +143,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 					}
 				}
 				//}//
-				manipulateBoxes(in, out, i , j);
+				//manipulateBoxes(in, out, i , j);
 
 				///////
 				
