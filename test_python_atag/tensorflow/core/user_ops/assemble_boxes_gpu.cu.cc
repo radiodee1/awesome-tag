@@ -280,7 +280,6 @@ __device__  void pruneBoxes(const uint16 * in, uint16 * out, int i, int j, int c
 	
 	if (area_i < area_j || count < CUDA_LOOP_TOT * 3 / 4) return;
 	
-	//if ((area_i < area_j || count < CUDA_LOOP_TOT / 2) && (width_j <= height_j * CUDA_SHAPE_FLOAT && height_j <= width_j * CUDA_SHAPE_FLOAT )) return;
 
 	jj = j;
 	
