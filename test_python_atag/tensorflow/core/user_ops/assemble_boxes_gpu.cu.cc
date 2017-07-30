@@ -15,13 +15,13 @@ using namespace tensorflow;
 
 __device__ bool dimensionPass(uint16 locy, uint16 loch, uint16 fory, uint16 forh) {
 	//return false;
-	if (forh > loch * 3.5) return false;
-	return not ((locy + loch < fory + forh && locy < fory + forh) || ( locy + loch > fory && locy > fory));
+	if (forh > loch * CUDA_SHAPE_FLOAT ) return false;
+	return not ((locy + loch <= fory + forh && locy <= fory + forh) || ( locy + loch >= fory && locy >= fory));
 }
 
 __device__ bool dimensionPass(int32 locy, int32 loch, int32 fory, int32 forh) {
-	if (forh  > loch * 3.5) return false;
-	return not ((locy + loch < fory + forh && locy < fory + forh) || ( locy + loch > fory && locy > fory));
+	if (forh  > loch * CUDA_SHAPE_FLOAT ) return false;
+	return not ((locy + loch <= fory + forh && locy <= fory + forh) || ( locy + loch >= fory && locy >= fory));
 }
 
 
@@ -44,8 +44,9 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
     out[i * COLUMN_TOT + COLUMN_NUM] = size_img_x * out[i * COLUMN_TOT + COLUMN_Y] + out[ i * COLUMN_TOT + COLUMN_X];
     
     int count = 0;
+    int loop = CUDA_LOOP_TOT;
     
-	while(count < 15 ) { //15 // shape_y
+	while(count < loop ) { //15 // shape_y
 		uint16 local_x = out[i * COLUMN_TOT + COLUMN_X];
 		uint16 local_y = out[i * COLUMN_TOT + COLUMN_Y];
 		uint16 local_w = out[i * COLUMN_TOT + COLUMN_W];
@@ -271,7 +272,13 @@ __device__  void pruneBoxes(const uint16 * in, uint16 * out, int i, int j, int c
 	int area_i = out[i * COLUMN_TOT + COLUMN_W] * out[i * COLUMN_TOT + COLUMN_H]; 
 	int area_j = out[j * COLUMN_TOT + COLUMN_W] * out[j * COLUMN_TOT + COLUMN_H]; 
 
-	if (area_i < area_j ) return;
+	//int width_j = out[j * COLUMN_TOT + COLUMN_W] ; 
+	//int height_j = out[j * COLUMN_TOT + COLUMN_H] ;
+	
+	if (area_i < area_j || count < CUDA_LOOP_TOT * 3 / 4) return;
+	
+	//if ((area_i < area_j || count < CUDA_LOOP_TOT / 2) && (width_j <= height_j * CUDA_SHAPE_FLOAT && height_j <= width_j * CUDA_SHAPE_FLOAT )) return;
+
 	jj = j;
 	
 	///////////////
