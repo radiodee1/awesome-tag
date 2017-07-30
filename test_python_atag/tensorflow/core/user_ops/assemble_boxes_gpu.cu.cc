@@ -45,7 +45,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
     
     int count = 0;
     
-	while(count < 10 ) { //15 // shape_y
+	while(count < 15 ) { //15 // shape_y
 		uint16 local_x = out[i * COLUMN_TOT + COLUMN_X];
 		uint16 local_y = out[i * COLUMN_TOT + COLUMN_Y];
 		uint16 local_w = out[i * COLUMN_TOT + COLUMN_W];
@@ -79,10 +79,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 						if (change_wh) {
 							out[i * COLUMN_TOT + COLUMN_W] = out[j * COLUMN_TOT + COLUMN_W] + out[j * COLUMN_TOT + COLUMN_X] -  out[i * COLUMN_TOT + COLUMN_X] ;
 							
-							//out[i * COLUMN_TOT + COLUMN_X] = in[i * COLUMN_TOT + COLUMN_X] ;
-							//out[i * COLUMN_TOT + COLUMN_Y] = in[i * COLUMN_TOT + COLUMN_Y] ;
-							//out[i * COLUMN_TOT + COLUMN_H] = in[i * COLUMN_TOT + COLUMN_H] ;
-							//out[j * COLUMN_TOT + COLUMN_Y] = in[j * COLUMN_TOT + COLUMN_Y] ;
+							
 							
 						}
 					}
@@ -102,12 +99,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 				}
 					
 					
-				//}//
-				
-				//foreign_box = out[j * COLUMN_TOT + COLUMN_BOX];
-				//local_box = out[i * COLUMN_TOT + COLUMN_BOX];
-				
-				//if( true ) {
+				////////////////////////////////
 					
 					
 				else if ((local_x == foreign_x || dimensionPass(local_x, local_w, foreign_x, foreign_w)) && local_y + local_h >= foreign_y && local_y + local_h <= foreign_y + foreign_h){
@@ -119,10 +111,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 							//out[i * COLUMN_TOT + COLUMN_H] = out[j * COLUMN_TOT + COLUMN_H] + local_h;
 							out[i * COLUMN_TOT + COLUMN_H] = out[j * COLUMN_TOT + COLUMN_H] + out[j * COLUMN_TOT + COLUMN_Y] -  out[i * COLUMN_TOT + COLUMN_Y] ;
 							
-							//out[i * COLUMN_TOT + COLUMN_X] = in[i * COLUMN_TOT + COLUMN_X] ;
-							//out[i * COLUMN_TOT + COLUMN_Y] = in[i * COLUMN_TOT + COLUMN_Y] ;
-							//out[i * COLUMN_TOT + COLUMN_W] = in[i * COLUMN_TOT + COLUMN_W] ;
-							//out[j * COLUMN_TOT + COLUMN_Y] = in[j * COLUMN_TOT + COLUMN_Y] ;
+							
 
 						}
 						
@@ -142,12 +131,9 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 						
 					}
 				}
-				//}//
-				//manipulateBoxes(in, out, i , j);
-
-				///////
+				////////////////////////
+				pruneBoxes(in,out, i, j, count);
 				
-				///////
 			}
 		}
 		
@@ -274,6 +260,32 @@ __device__  void manipulateBoxes(const uint16 * in, uint16 * out, int i, int j) 
 }
 
 __device__ void manipulateBoxes(const int32 * in, int32 * out, int i, int j) {};
+
+__device__  void pruneBoxes(const uint16 * in, uint16 * out, int i, int j, int count) {
+	
+	int jj = j;
+	
+	
+	if (not (out[i * COLUMN_TOT + COLUMN_NUM ] == out[j * COLUMN_TOT + COLUMN_NUM] ) ) return;
+	
+	int area_i = out[i * COLUMN_TOT + COLUMN_W] * out[i * COLUMN_TOT + COLUMN_H]; 
+	int area_j = out[j * COLUMN_TOT + COLUMN_W] * out[j * COLUMN_TOT + COLUMN_H]; 
+
+	if (area_i < area_j ) return;
+	jj = j;
+	
+	///////////////
+	out[jj * COLUMN_TOT + COLUMN_X] = 0;
+	out[jj * COLUMN_TOT + COLUMN_Y] = 0;
+	out[jj * COLUMN_TOT + COLUMN_W] = 0;
+	out[jj * COLUMN_TOT + COLUMN_H] = 0;
+	out[jj * COLUMN_TOT + COLUMN_NUM] = 0;
+	return;
+	
+	
+}
+
+__device__ void pruneBoxes(const int32 * in, int32 * out, int i, int j, int count) {};
 
 // Instantiate functors for the types of OpKernels registered.
 typedef Eigen::GpuDevice GPUDevice;
