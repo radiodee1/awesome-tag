@@ -85,7 +85,6 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 						}
 					}
 					manipulateBoxes(in, out, i , j);
-					//pruneBoxes(in,out, i, j, count);
 
 					if (true){
 						if ( out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM] && out[i * COLUMN_TOT + COLUMN_NUM] != 0) {
@@ -119,7 +118,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 						
 					}
 					manipulateBoxes(in, out, i , j);
-					//pruneBoxes(in,out, i, j, count);
+
 
 					if ( true){
 						if (  out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM] && out[i * COLUMN_TOT + COLUMN_NUM] != 0) {
@@ -133,6 +132,10 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 
 						
 					}
+				}
+				else {
+					// small boxes alone
+					smallBoxes(in, out, i, j, count);
 				}
 				////////////////////////
 				pruneBoxes(in,out, i, j, count);
@@ -274,8 +277,6 @@ __device__  void pruneBoxes(const uint16 * in, uint16 * out, int i, int j, int c
 	int area_i = out[i * COLUMN_TOT + COLUMN_W] * out[i * COLUMN_TOT + COLUMN_H]; 
 	int area_j = out[j * COLUMN_TOT + COLUMN_W] * out[j * COLUMN_TOT + COLUMN_H]; 
 
-	//int width_j = out[j * COLUMN_TOT + COLUMN_W] ; 
-	//int height_j = out[j * COLUMN_TOT + COLUMN_H] ;
 	
 	if (area_i < area_j || count < CUDA_LOOP_TOT * 3 / 4) return;
 	
@@ -295,6 +296,38 @@ __device__  void pruneBoxes(const uint16 * in, uint16 * out, int i, int j, int c
 }
 
 __device__ void pruneBoxes(const int32 * in, int32 * out, int i, int j, int count) {};
+
+__device__  void smallBoxes(const uint16 * in, uint16 * out, int i, int j, int count) {
+	
+	int jj = j;
+	int mult = 2.5;
+	
+	int width_i = out[i * COLUMN_TOT + COLUMN_W] ; 
+	int height_i = out[i * COLUMN_TOT + COLUMN_H] ;
+		
+	
+	int area_out = out[i * COLUMN_TOT + COLUMN_W] * out[i * COLUMN_TOT + COLUMN_H]; 
+	int area_in = in[i * COLUMN_TOT + COLUMN_W] * in[i * COLUMN_TOT + COLUMN_H]; 
+
+	if ( count < CUDA_LOOP_TOT * 3 / 4) return;
+	
+	if ((area_out > area_in * CUDA_SHAPE_FLOAT * count / 2 ) && (width_i * mult > height_i && width_i < mult * height_i)) return;
+	
+
+	jj = i;
+	
+	///////////////
+	out[jj * COLUMN_TOT + COLUMN_X] = 0;
+	out[jj * COLUMN_TOT + COLUMN_Y] = 0;
+	out[jj * COLUMN_TOT + COLUMN_W] = 0;
+	out[jj * COLUMN_TOT + COLUMN_H] = 0;
+	out[jj * COLUMN_TOT + COLUMN_NUM] = 0;
+	return;
+	
+	
+}
+
+__device__ void smallBoxes(const int32 * in, int32 * out, int i, int j, int count) {};
 
 // Instantiate functors for the types of OpKernels registered.
 typedef Eigen::GpuDevice GPUDevice;
