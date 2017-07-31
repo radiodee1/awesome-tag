@@ -23,23 +23,12 @@ class Read( enum.Enum) :
 
         self.num_chosen = 0
         self.line_chosen = []
-        #self.dim_x = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][0]
-        #self.dim_y = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][1]
+        
         self.img = None
-        #self.image_folder = atag.VAR_ROOT_DATABASE
+
         self.dat = []
 
-        #self.a = atag
-        #self.picname = atag.VAR_IMAGE_NAME
-        #self.folder = atag.VAR_ROOT_DATABASE
-
-        #if self.picname.startswith(self.folder) :
-        #    self.picname = self.picname[len(self.folder)+1 : ]
-        #print self.picname, "picname"
-
-        #self.csv_input = atag.VAR_LOCAL_DATABASE + os.sep + atag.VAR_MY_CSV_NAME + ".csv"
-        #self.csv_input_predict = atag.VAR_LOCAL_DATABASE + os.sep + "predict" + ".csv"
-        #self.csv_input_dot = atag.VAR_LOCAL_DATABASE + os.sep + atag.VAR_MY_CSV_NAME + ".dot.csv"
+        
         self.csv_input_predict_list = "." + os.sep + "predict-list" + ".csv"
 
     def process_read_line(self, line):

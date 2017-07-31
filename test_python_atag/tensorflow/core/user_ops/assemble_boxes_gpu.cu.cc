@@ -213,15 +213,15 @@ __device__ void setLeft(int32 * input, int i) { (input[i]) |= 1 << 2; }
 __device__ void setRight(int32 * input, int i) { (input[i]) |= 1 << 3; }
 
 //clear
-__device__ void clearTop(uint16 * input, int i) {input[i] &= ~(1 << 0);}//{if (input[i] >= BIT_TOP)  input[i] = input[i] - BIT_TOP; }
-__device__ void clearBottom(uint16 * input, int i) {input[i] &= ~(1 << 1);}// {if (input[i] >= BIT_BOTTOM) input[i] = input[i] - BIT_BOTTOM; }
-__device__ void clearLeft(uint16 * input, int i) {input[i] &= ~(1 << 2);} //{if (input[i] >= BIT_LEFT) input[i] = input[i] - BIT_LEFT; }
-__device__ void clearRight(uint16 * input, int i) {input[i] &= ~(1 << 3);} //{if (input[i] >= BIT_RIGHT) input[i] = input[i] - BIT_RIGHT; }
+__device__ void clearTop(uint16 * input, int i) {input[i] &= ~(1 << 0);}
+__device__ void clearBottom(uint16 * input, int i) {input[i] &= ~(1 << 1);}
+__device__ void clearLeft(uint16 * input, int i) {input[i] &= ~(1 << 2);} 
+__device__ void clearRight(uint16 * input, int i) {input[i] &= ~(1 << 3);} 
 
-__device__ void clearTop(int32 * input, int i) {input[i] &= ~(1 << 0);}//{if (input[i] >= BIT_TOP)  input[i] = input[i] - BIT_TOP; }
-__device__ void clearBottom(int32 * input, int i) {input[i] &= ~(1 << 1);}// {if (input[i] >= BIT_BOTTOM) input[i] = input[i] - BIT_BOTTOM; }
-__device__ void clearLeft(int32 * input, int i) {input[i] &= ~(1 << 2);} //{if (input[i] >= BIT_LEFT) input[i] = input[i] - BIT_LEFT; }
-__device__ void clearRight(int32 * input, int i) {input[i] &= ~(1 << 3);} //{if (input[i] >= BIT_RIGHT) input[i] = input[i] - BIT_RIGHT; }
+__device__ void clearTop(int32 * input, int i) {input[i] &= ~(1 << 0);}
+__device__ void clearBottom(int32 * input, int i) {input[i] &= ~(1 << 1);}
+__device__ void clearLeft(int32 * input, int i) {input[i] &= ~(1 << 2);} 
+__device__ void clearRight(int32 * input, int i) {input[i] &= ~(1 << 3);} 
 
 
 __device__ void setBoxPattern(uint16 * out , int i, uint16 box) {
