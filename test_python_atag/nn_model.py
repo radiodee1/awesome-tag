@@ -39,6 +39,10 @@ class NN(enum.Enum, dim.Dimension):
         self.save_name = ""
         self.start_train = 1
 
+        self.assemble_module = None
+        self.dat = []
+        self.r = []
+
         self.predict_skintone = False
         self.predict_softmax = False
         self.predict_conv = False
@@ -248,6 +252,11 @@ class NN(enum.Enum, dim.Dimension):
         #self.sess.run(init)
 
         #summary_writer = tf.train.SummaryWriter(self.ckpt_folder + os.sep + "logs" + os.sep, self.sess.graph)
+
+    def nn_configure_assemble(self):
+        with tf.Session() as self.sess:
+            self.assemble_module = tf.load_op_library('tensorflow/core/user_ops/assemble_boxes_gpu.so')
+        pass
 
     def nn_clear_and_reset(self):
         tf.reset_default_graph()
@@ -461,6 +470,36 @@ class NN(enum.Enum, dim.Dimension):
                 self.loader.dat = self.loader.record.renumber_dat_list(self.loader.dat)
                 print "remove conv mc", self.dat_remove
             print "best conv mc", self.dat_best[:]
+
+    def assemble_setup(self):
+        test = []
+        num = 0
+        filename = self.dat[0][self.FILE]
+        for l in self.dat:
+            line = l #.split(",")
+            test.extend([int(line[self.FACE_X]), int(line[self.FACE_Y]),
+                int(line[self.FACE_WIDTH]), int(line[self.FACE_HEIGHT]), num, 15])
+            num += 1
+        test.extend([ self.GPU_TOT, len(l), 1, 16])
+        test = tf.constant(test, dtype=tf.uint16)
+
+        result = self.assemble_module.assemble_boxes_op(test)
+        self.r = result.eval()
+
+        s = []
+        new_d = []
+        for i in range(len(self.r) // 6):
+            #print(self.r[i * 6: i * 6 + 6])
+            g = self.r[i * 6 + 4]
+            if not g in s and g != 0:
+                s.append(g)
+                new_d.append([0,0,filename, 0,0,0,self.r[i * 6 + self.GPU_X], self.r[i * 6 + self.GPU_Y],
+                              self.r[i * 6 + self.GPU_W], self.r[i * 6 + self.GPU_H] , self.RED,
+                             0, g ])
+
+        print "simple list:", s
+        self.dat = new_d
+        pass
 
     def conv_weight_img(self):
         sl8 = 8

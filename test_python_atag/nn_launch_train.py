@@ -238,12 +238,16 @@ class Read( enum.Enum, dim.Dimension) :
                 print "len-dat2", len(ll.dat)
 
             if self.pipeline_stage >= 3 and True:
-                ''' two passes through aggregate box function '''
-                ll.dat = ll.record.aggregate_dat_list(ll.dat)
+                ''' new gpu aggregate box function '''
+                self.nn.dat = ll.dat
+                self.nn.nn_clear_and_reset()
+                self.nn.nn_configure_assemble()
+                self.nn.nn_global_var_init()
+                self.nn.assemble_setup()
+                ll.dat = self.nn.dat
+
                 ll.record.renumber_dat_list(ll.dat)
-                ll.dat = ll.record.aggregate_dat_list(ll.dat, del_shapes=True)
-                ll.record.renumber_dat_list(ll.dat)
-                print "len-dat1", len(ll.dat)
+                print "len-dat3", len(ll.dat)
 
             if self.pipeline_stage >= 4 and True:
                 ''' final convolution neural network '''
@@ -254,7 +258,7 @@ class Read( enum.Enum, dim.Dimension) :
                 self.nn.predict_remove_symbol = 1
                 self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=True)
                 self.nn.conv_setup(remove_low=False)
-                print "len-dat2", len(ll.dat)
+                print "len-dat4", len(ll.dat)
 
             if self.pipeline_stage >= 5 and False:
                 ''' try to improve box '''
@@ -275,7 +279,7 @@ class Read( enum.Enum, dim.Dimension) :
                     ll.dat = ll.record.renumber_dat_list(self.nn.dat_best)
                 else:
                     ll.dat = see_list[:]
-                print "len-dat3", len(self.nn.dat_best)
+                print "len-dat5", len(self.nn.dat_best)
 
             print "pipeline enum 3"
             ll.record.save_dat_to_file(ll.dat, erase=(not self.make_list))
