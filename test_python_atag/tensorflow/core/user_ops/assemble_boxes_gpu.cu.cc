@@ -46,7 +46,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 	if (size >= end_base_size + ARRAY_END_SHAPE_X) end_shape_x = in[ end_base_size + ARRAY_END_SHAPE_X];
 	if (size >= end_base_size + ARRAY_END_SHAPE_Y) end_shape_y = in[ end_base_size + ARRAY_END_SHAPE_Y];
 	if (size >= end_base_size + ARRAY_END_CHANGE_WH) end_change_wh = in[ end_base_size + ARRAY_END_CHANGE_WH];
-	if (size >= end_base_size + ARRAY_END_LOOP_MAX) end_loop_max = in[ end_base_size + ARRAY_END_LOOP_MAX];
+	if (size >= end_base_size + ARRAY_END_LOOP_MAX && in [end_base_size + ARRAY_END_LOOP_MAX] > 0) end_loop_max = in[ end_base_size + ARRAY_END_LOOP_MAX];
 	
 	// round-trip the array vars
 	out[end_base_size + ARRAY_END_SHAPE_X] = end_shape_x;
