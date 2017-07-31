@@ -20,7 +20,8 @@ class Read( enum.Enum) :
         self.gpu_test = []
         self.num = 0
         self.loop_max = 16
-
+        self.change_wh = 1
+        
         self.num_chosen = 0
         self.line_chosen = []
         
@@ -61,7 +62,7 @@ class Read( enum.Enum) :
                     self.process_read_line(line)
             f.close()
             print "num of boxes predict list", self.num
-            self.gpu_test.extend([self.GPU_TOT,  self.num, self.loop_max])
+            self.gpu_test.extend([self.GPU_TOT,  self.num,self.change_wh, self.loop_max])
             pass
     
     def is_top(self, box):
@@ -106,7 +107,7 @@ class Read( enum.Enum) :
                            line[self.GPU_X] + line[self.GPU_W], line[self.GPU_Y] + line[self.GPU_H]), fill=0x0000ff, width=1)
                 pass
 
-            if (line[self.GPU_H] >= 4 and line[self.GPU_W] >= 4 and True)  or line[self.GPU_NUM] == 52:
+            if (line[self.GPU_H] >= 4 and line[self.GPU_W] >= 4 and self.change_wh > 0)  or line[self.GPU_NUM] == 52:
                 draw.rectangle([line[self.GPU_X], line[self.GPU_Y],
                                 line[self.GPU_X] + line[self.GPU_W], line[self.GPU_Y] + line[self.GPU_H]], outline=0x00ff00)
 
@@ -114,4 +115,4 @@ class Read( enum.Enum) :
         self.img.show("gpu output")
         self.img.format = "png"
         self.img.save("sample.png","png")
-        print self.dat[len(self.dat) -3:]
+        print self.dat[len(self.dat) -4:]

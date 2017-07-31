@@ -30,7 +30,7 @@ __device__ bool dimensionPass(int32 locy, int32 loch, int32 fory, int32 forh) {
 template <typename T>
 __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int shape_x, int shape_y) {
 	  
-	bool change_wh = true;
+	bool change_wh = false;
 	
 	int i = blockIdx.x * blockDim.x + threadIdx.x;
 	
@@ -40,16 +40,21 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 	int end_base_size = (size / COLUMN_TOT ) * COLUMN_TOT;
 	int end_shape_x =  COLUMN_TOT;
 	int end_shape_y = size / (int) COLUMN_TOT;
+	int end_change_wh = 1;
 	int end_loop_max = CUDA_LOOP_TOT;
 	
 	if (size >= end_base_size + ARRAY_END_SHAPE_X) end_shape_x = in[ end_base_size + ARRAY_END_SHAPE_X];
 	if (size >= end_base_size + ARRAY_END_SHAPE_Y) end_shape_y = in[ end_base_size + ARRAY_END_SHAPE_Y];
+	if (size >= end_base_size + ARRAY_END_CHANGE_WH) end_change_wh = in[ end_base_size + ARRAY_END_CHANGE_WH];
 	if (size >= end_base_size + ARRAY_END_LOOP_MAX) end_loop_max = in[ end_base_size + ARRAY_END_LOOP_MAX];
 	
 	// round-trip the array vars
 	out[end_base_size + ARRAY_END_SHAPE_X] = end_shape_x;
 	out[end_base_size + ARRAY_END_SHAPE_Y] = end_shape_y;
+	out[end_base_size + ARRAY_END_CHANGE_WH] = end_change_wh;
 	out[end_base_size + ARRAY_END_LOOP_MAX] = end_loop_max;
+	
+	if (end_change_wh > 0) change_wh = true;
 	
     for (int j = 0; j < COLUMN_TOT; j ++) {
     	out[i * COLUMN_TOT + j] = in[i * COLUMN_TOT + j];
@@ -99,7 +104,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 							
 						}
 					}
-					manipulateBoxes(in, out, i , j);
+					if (change_wh) manipulateBoxes(in, out, i , j);
 
 					if (true){
 						if ( out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM] && out[i * COLUMN_TOT + COLUMN_NUM] != 0) {
@@ -132,7 +137,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 						}
 						
 					}
-					manipulateBoxes(in, out, i , j);
+					if (change_wh) manipulateBoxes(in, out, i , j);
 
 
 					if ( true){
@@ -150,10 +155,10 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 				}
 				else {
 					// small boxes alone
-					smallBoxes(in, out, i, j, count);
+					if (change_wh) smallBoxes(in, out, i, j, count);
 				}
 				////////////////////////
-				pruneBoxes(in,out, i, j, count);
+				if (change_wh) pruneBoxes(in,out, i, j, count);
 				
 			}
 		}
