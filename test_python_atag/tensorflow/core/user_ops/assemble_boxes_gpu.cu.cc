@@ -64,7 +64,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
     out[i * COLUMN_TOT + COLUMN_NUM] = size_img_x * out[i * COLUMN_TOT + COLUMN_Y] + out[ i * COLUMN_TOT + COLUMN_X];
     
     int count = 0;
-    //int loop = CUDA_LOOP_TOT;
+    
     
 	while(count < end_loop_max ) { //15 // shape_y
 		uint16 local_x = out[i * COLUMN_TOT + COLUMN_X];
@@ -88,7 +88,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 				uint16 foreign_y = out[j * COLUMN_TOT + COLUMN_Y];
 				uint16 foreign_w = out[j * COLUMN_TOT + COLUMN_W];
 				uint16 foreign_h = out[j * COLUMN_TOT + COLUMN_H];
-				//uint16 foreign_box = out[j * COLUMN_TOT + COLUMN_BOX];
+				
 	
 				//if (true ) {
 				if (local_x + local_w >= foreign_x && local_x + local_w <= foreign_x + foreign_w && (dimensionPass(foreign_y, foreign_h, local_y, local_h) || dimensionPass(local_y, local_h, foreign_y, foreign_h)) ){
@@ -109,7 +109,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 					if (true){
 						if ( out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM] && out[i * COLUMN_TOT + COLUMN_NUM] != 0) {
 							out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
-							//manipulateBoxes(in,out,i,j);
+							
 						}
 						else {
 							
@@ -129,7 +129,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 						if (isBottom(out[i * COLUMN_TOT + COLUMN_BOX] ) ) clearBottom(out, i * COLUMN_TOT + COLUMN_BOX);
 						
 						if (change_wh) {
-							//out[i * COLUMN_TOT + COLUMN_H] = out[j * COLUMN_TOT + COLUMN_H] + local_h;
+							
 							out[i * COLUMN_TOT + COLUMN_H] = out[j * COLUMN_TOT + COLUMN_H] + out[j * COLUMN_TOT + COLUMN_Y] -  out[i * COLUMN_TOT + COLUMN_Y] ;
 							
 							
@@ -143,7 +143,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 					if ( true){
 						if (  out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM] && out[i * COLUMN_TOT + COLUMN_NUM] != 0) {
 							out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
-							//manipulateBoxes(in,out,i,j);
+							
 							
 						}
 						else{
@@ -285,7 +285,46 @@ __device__  void manipulateBoxes(const uint16 * in, uint16 * out, int i, int j) 
 	
 }
 
-__device__ void manipulateBoxes(const int32 * in, int32 * out, int i, int j) {};
+__device__ void manipulateBoxes(const int32 * in, int32 * out, int i, int j) {
+
+	int jj = j;
+	//bool auto_remove = false;
+	if(out[i * COLUMN_TOT + COLUMN_X] == 0 || out[i * COLUMN_TOT + COLUMN_Y] == 0) {
+		jj = i;
+		//return;// auto_remove = true;
+		out[jj * COLUMN_TOT + COLUMN_X] = 0;
+		out[jj * COLUMN_TOT + COLUMN_Y] = 0;
+		out[jj * COLUMN_TOT + COLUMN_W] = 0;
+		out[jj * COLUMN_TOT + COLUMN_H] = 0;
+		out[jj * COLUMN_TOT + COLUMN_NUM] = 0;
+		
+	}
+	
+	if(out[j * COLUMN_TOT + COLUMN_X] == 0 || out[j * COLUMN_TOT + COLUMN_Y] == 0) {
+		jj = j;
+		out[jj * COLUMN_TOT + COLUMN_X] = 0;
+		out[jj * COLUMN_TOT + COLUMN_Y] = 0;
+		out[jj * COLUMN_TOT + COLUMN_W] = 0;
+		out[jj * COLUMN_TOT + COLUMN_H] = 0;
+		out[jj * COLUMN_TOT + COLUMN_NUM] = 0;
+	}
+	
+	if (not( true && (out[i * COLUMN_TOT + COLUMN_X] <=  out[j * COLUMN_TOT + COLUMN_X] && out[i * COLUMN_TOT + COLUMN_Y] <=  out[j * COLUMN_TOT + COLUMN_Y] 
+		&& out[i * COLUMN_TOT + COLUMN_W] + out[i * COLUMN_TOT + COLUMN_X] >=  out[j * COLUMN_TOT + COLUMN_W] + out[j * COLUMN_TOT + COLUMN_X] && 
+		out[i * COLUMN_TOT + COLUMN_H] + out[i * COLUMN_TOT + COLUMN_Y]  >=  out[j * COLUMN_TOT + COLUMN_H] + out[j * COLUMN_TOT + COLUMN_Y] )) ) return;//&&
+		
+	if (not (out[i * COLUMN_TOT + COLUMN_NUM ] == out[j * COLUMN_TOT + COLUMN_NUM] ) ) return;
+	jj = j;
+	
+	///////////////
+	out[jj * COLUMN_TOT + COLUMN_X] = 0;
+	out[jj * COLUMN_TOT + COLUMN_Y] = 0;
+	out[jj * COLUMN_TOT + COLUMN_W] = 0;
+	out[jj * COLUMN_TOT + COLUMN_H] = 0;
+	out[jj * COLUMN_TOT + COLUMN_NUM] = 0;
+	return;	
+	
+};
 
 __device__  void pruneBoxes(const uint16 * in, uint16 * out, int i, int j, int count) {
 	
@@ -314,7 +353,31 @@ __device__  void pruneBoxes(const uint16 * in, uint16 * out, int i, int j, int c
 	
 }
 
-__device__ void pruneBoxes(const int32 * in, int32 * out, int i, int j, int count) {};
+__device__ void pruneBoxes(const int32 * in, int32 * out, int i, int j, int count) {
+	
+
+	int jj = j;
+	
+	
+	if (not (out[i * COLUMN_TOT + COLUMN_NUM ] == out[j * COLUMN_TOT + COLUMN_NUM] ) ) return;
+	
+	int area_i = out[i * COLUMN_TOT + COLUMN_W] * out[i * COLUMN_TOT + COLUMN_H]; 
+	int area_j = out[j * COLUMN_TOT + COLUMN_W] * out[j * COLUMN_TOT + COLUMN_H]; 
+
+	
+	if (area_i < area_j || count < CUDA_LOOP_TOT * 3 / 4) return;
+	
+
+	jj = j;
+	
+	///////////////
+	out[jj * COLUMN_TOT + COLUMN_X] = 0;
+	out[jj * COLUMN_TOT + COLUMN_Y] = 0;
+	out[jj * COLUMN_TOT + COLUMN_W] = 0;
+	out[jj * COLUMN_TOT + COLUMN_H] = 0;
+	out[jj * COLUMN_TOT + COLUMN_NUM] = 0;
+	return;	
+};
 
 __device__  void smallBoxes(const uint16 * in, uint16 * out, int i, int j, int count) {
 	
@@ -346,7 +409,33 @@ __device__  void smallBoxes(const uint16 * in, uint16 * out, int i, int j, int c
 	
 }
 
-__device__ void smallBoxes(const int32 * in, int32 * out, int i, int j, int count) {};
+__device__ void smallBoxes(const int32 * in, int32 * out, int i, int j, int count) {
+	
+	int jj = j;
+	int mult = 2.5;
+	
+	int width_i = out[i * COLUMN_TOT + COLUMN_W] ; 
+	int height_i = out[i * COLUMN_TOT + COLUMN_H] ;
+		
+	
+	int area_out = out[i * COLUMN_TOT + COLUMN_W] * out[i * COLUMN_TOT + COLUMN_H]; 
+	int area_in = in[i * COLUMN_TOT + COLUMN_W] * in[i * COLUMN_TOT + COLUMN_H]; 
+
+	if ( count < CUDA_LOOP_TOT * 3 / 4) return;
+	
+	if ((area_out > area_in * CUDA_SHAPE_FLOAT * count / 2 ) && (width_i * mult > height_i && width_i < mult * height_i)) return;
+	
+
+	jj = i;
+	
+	///////////////
+	out[jj * COLUMN_TOT + COLUMN_X] = 0;
+	out[jj * COLUMN_TOT + COLUMN_Y] = 0;
+	out[jj * COLUMN_TOT + COLUMN_W] = 0;
+	out[jj * COLUMN_TOT + COLUMN_H] = 0;
+	out[jj * COLUMN_TOT + COLUMN_NUM] = 0;
+	return;	
+};
 
 // Instantiate functors for the types of OpKernels registered.
 typedef Eigen::GpuDevice GPUDevice;
