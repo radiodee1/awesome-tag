@@ -34,8 +34,23 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 	
 	int i = blockIdx.x * blockDim.x + threadIdx.x;
 	
-	if (i * COLUMN_TOT + 0 >= size - 2 ) return;
+	if (i * COLUMN_TOT + 0 >= size - ARRAY_END_TOT ) return;
 	  
+	// read init vars from end of array
+	int end_base_size = (size / COLUMN_TOT ) * COLUMN_TOT;
+	int end_shape_x =  COLUMN_TOT;
+	int end_shape_y = size / (int) COLUMN_TOT;
+	int end_loop_max = CUDA_LOOP_TOT;
+	
+	if (size >= end_base_size + ARRAY_END_SHAPE_X) end_shape_x = in[ end_base_size + ARRAY_END_SHAPE_X];
+	if (size >= end_base_size + ARRAY_END_SHAPE_Y) end_shape_y = in[ end_base_size + ARRAY_END_SHAPE_Y];
+	if (size >= end_base_size + ARRAY_END_LOOP_MAX) end_loop_max = in[ end_base_size + ARRAY_END_LOOP_MAX];
+	
+	// round-trip the array vars
+	out[end_base_size + ARRAY_END_SHAPE_X] = end_shape_x;
+	out[end_base_size + ARRAY_END_SHAPE_Y] = end_shape_y;
+	out[end_base_size + ARRAY_END_LOOP_MAX] = end_loop_max;
+	
     for (int j = 0; j < COLUMN_TOT; j ++) {
     	out[i * COLUMN_TOT + j] = in[i * COLUMN_TOT + j];
     }
@@ -44,9 +59,9 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
     out[i * COLUMN_TOT + COLUMN_NUM] = size_img_x * out[i * COLUMN_TOT + COLUMN_Y] + out[ i * COLUMN_TOT + COLUMN_X];
     
     int count = 0;
-    int loop = CUDA_LOOP_TOT;
+    //int loop = CUDA_LOOP_TOT;
     
-	while(count < loop ) { //15 // shape_y
+	while(count < end_loop_max ) { //15 // shape_y
 		uint16 local_x = out[i * COLUMN_TOT + COLUMN_X];
 		uint16 local_y = out[i * COLUMN_TOT + COLUMN_Y];
 		uint16 local_w = out[i * COLUMN_TOT + COLUMN_W];

@@ -24,6 +24,11 @@ struct AssembleBoxesFunctor {
 #define BIT_LEFT 0x0004
 #define BIT_RIGHT 0x0008
 
+#define ARRAY_END_SHAPE_X 0
+#define ARRAY_END_SHAPE_Y 1
+#define ARRAY_END_LOOP_MAX 2
+#define ARRAY_END_TOT 3
+
 // something divisible by 4!
 #define CUDA_LOOP_TOT 16 
 #define CUDA_SHAPE_FLOAT 3.5

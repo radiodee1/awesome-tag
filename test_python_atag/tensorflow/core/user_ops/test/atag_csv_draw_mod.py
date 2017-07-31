@@ -19,6 +19,7 @@ class Read( enum.Enum) :
         self.boxlist_b = []
         self.gpu_test = []
         self.num = 0
+        self.loop_max = 16
 
         self.num_chosen = 0
         self.line_chosen = []
@@ -71,7 +72,7 @@ class Read( enum.Enum) :
                     self.process_read_line(line)
             f.close()
             print "num of boxes predict list", self.num
-            self.gpu_test.extend([self.GPU_TOT,  self.num])
+            self.gpu_test.extend([self.GPU_TOT,  self.num, self.loop_max])
             pass
     
     def is_top(self, box):
@@ -124,3 +125,4 @@ class Read( enum.Enum) :
         self.img.show("gpu output")
         self.img.format = "png"
         self.img.save("sample.png","png")
+        print self.dat[len(self.dat) -3:]

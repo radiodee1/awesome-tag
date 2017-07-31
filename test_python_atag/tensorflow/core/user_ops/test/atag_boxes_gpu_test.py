@@ -26,7 +26,7 @@ class AssembleBoxesTest(object):
               test.extend([1,7,3,3,7,15])
               test.extend([4,7,3,3,8,15])
               test.extend([7,7,3,3,9,15])
-              test.extend([6,9])
+              test.extend([6,9, 16])
           test = tf.constant(test, dtype=tf.uint16)
           #test = tf.cast(test, dtype=tf.int32)
       print test
