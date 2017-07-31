@@ -334,13 +334,13 @@ class NN(enum.Enum, dim.Dimension):
                 if int(zz) == int(self.predict_remove_symbol ) : ## 1
                     self.dat_remove.append( j )
 
-            print "remove dot", len(self.dat_remove), self.dat_remove
+            #print "remove dot", len(self.dat_remove), self.dat_remove
             self.loader.record.remove_lines_from_dat(self.dat_remove)
             self.loader.record.renumber_dat_list(self.loader.dat)
             print self.batchsize
 
 
-    def conv_setup(self, remove_low=False):
+    def conv_setup(self, remove_low=False, color_reject=False):
 
         name = "conv"
         if self.load_conv_only == True and self.load_dot_only == True: name = ""
@@ -397,6 +397,7 @@ class NN(enum.Enum, dim.Dimension):
                     if int(zz) == int(self.predict_remove_symbol ) : ## 1
                         self.dat_remove.append( j)
 
+
             if remove_low:
                 print "out", len(out)
                 numlow = 0.95
@@ -412,6 +413,9 @@ class NN(enum.Enum, dim.Dimension):
                         numhigh = zz
                         numhigh_index = j
 
+            if color_reject == True:
+                self.dat = self.loader.record.recolor_dat_list(self.loader.dat, self.dat_remove,color_string=self.BLUE)
+                self.loader.record.save_dat_to_file(self.dat, erase=False)
             self.loader.record.remove_lines_from_dat(self.dat_remove)
             self.loader.dat = self.loader.record.renumber_dat_list(self.loader.dat)
             print "remove conv", self.dat_remove[:10],"..."

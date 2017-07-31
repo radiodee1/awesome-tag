@@ -198,6 +198,21 @@ class Record( enum.Enum, dim.Dimension):
             zz[self.ATAG_ID] = i
         return  self.dat
 
+    def recolor_dat_list(self, dat, list, color_string="BLUE"):
+        out = []
+        for i in range(len(list)):
+            ###
+            zz = list[i]
+            for j in range(len(dat)):
+                if zz == j:
+                    xx = dat[zz]
+                    for yy in range(len(xx)):
+                        color = dat[zz][yy]
+                        if color == self.RED or color == self.GREEN or color == self.BLUE:
+                            dat[zz][yy] = color_string
+                    out.append(dat[zz])
+        return out
+
     ##############################################################
 
     def aggregate_dat_list(self, dat, del_shapes=False, dim_xy=-1):

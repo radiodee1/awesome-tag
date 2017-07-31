@@ -257,7 +257,7 @@ class Read( enum.Enum, dim.Dimension) :
                 # ll.normal_train = False
                 self.nn.predict_remove_symbol = 1
                 self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=True)
-                self.nn.conv_setup(remove_low=False)
+                self.nn.conv_setup(remove_low=False, color_reject=True)
                 print "len-dat4", len(ll.dat)
 
             if self.pipeline_stage >= 5 and False:
