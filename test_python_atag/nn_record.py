@@ -123,13 +123,13 @@ class Record( enum.Enum, dim.Dimension):
 
                     elif j is self.FACE_HEIGHT:
                         #num = sizey #yy / h
-                        num =int( sizex * mult)
+                        num =int( sizex * mult )
                     elif j is self.FACE_X:
 
                         num = random.randint(xpos - width/div, xpos + width/div)
                     elif j is self.FACE_Y:
 
-                        num = random.randint(ypos - height/div, ypos + height/div)
+                        num = random.randint(ypos - height/div, ypos + height/div) - int(sizex * mult / 4)
 
                     elif j is self.COLOR :
                         num = self.RED
