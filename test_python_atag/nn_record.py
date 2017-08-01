@@ -160,7 +160,7 @@ class Record( enum.Enum, dim.Dimension):
             pass
             f.write(temp)
 
-    def save_dat_to_list_file(self, dat = [], erase=True):
+    def save_dat_to_list_file(self, dat = [], erase=True, color="RED"):
         self.dat = dat
         #print self.dat
         self.predict_filename = self.a.VAR_LOCAL_DATABASE + os.sep + "predict-list" + ".csv"
@@ -170,6 +170,7 @@ class Record( enum.Enum, dim.Dimension):
             temp = ""
             for j in range(len(i)) :
                 temp = temp + str(i[j])
+                if temp == self.RED or temp == self.GREEN or temp == self.BLUE: temp = color
                 if j < len(i) -1 : temp = temp + ","
                 else: temp = temp + "\n"
             pass

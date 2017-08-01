@@ -247,10 +247,13 @@ class Read( enum.Enum, dim.Dimension) :
                 ll.dat = self.nn.dat
 
                 ll.record.renumber_dat_list(ll.dat)
+                if True: ll.record.save_dat_to_list_file(ll.dat, erase=False,color=self.BLUE)
                 print "len-dat3", len(ll.dat)
 
-            if self.pipeline_stage >= 4 and True:
-                ''' final convolution neural network '''
+            mc_experement = True
+
+            if self.pipeline_stage >= 4 and not mc_experement:
+                ''' convolution neural network '''
                 self.nn.nn_clear_and_reset()
                 self.nn.nn_configure_conv()
                 self.nn.nn_global_var_init()
@@ -260,9 +263,14 @@ class Read( enum.Enum, dim.Dimension) :
                 self.nn.conv_setup(remove_low=False, color_reject=True)
                 print "len-dat4", len(ll.dat)
 
-            if self.pipeline_stage >= 5 and False:
+            if self.pipeline_stage >= 5 and True:
                 ''' try to improve box '''
+                if mc_experement:
+                    self.nn.nn_clear_and_reset()
+                    self.nn.nn_configure_conv()
+                    self.nn.nn_global_var_init()
                 see_boxes = False
+                self.nn.load_ckpt = True
                 if self.pipeline_stage == 5: see_boxes = True
                 see_list = []
                 self.nn.dat_best = []
@@ -272,9 +280,12 @@ class Read( enum.Enum, dim.Dimension) :
                     ll.record.renumber_dat_list(ll.dat)
                     if see_boxes: see_list.extend(ll.dat[:])
 
+
                     self.nn.predict_remove_symbol = 1
+                    #self.nn.dat = ll.dat ## ??
+                    #self.nn.predict_conv = True
                     self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=True)
-                    if not see_boxes: self.nn.conv_setup_mc(remove_low=False)
+                    if not see_boxes: self.nn.conv_setup_mc(remove_low=mc_experement, color_reject=True)
                 if not see_boxes:
                     ll.dat = ll.record.renumber_dat_list(self.nn.dat_best)
                 else:

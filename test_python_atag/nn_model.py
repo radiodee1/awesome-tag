@@ -421,7 +421,12 @@ class NN(enum.Enum, dim.Dimension):
             print "remove conv", self.dat_remove[:10],"..."
 
         #self.sess.close()
-    def conv_setup_mc(self, remove_low = False):
+    def conv_setup_mc(self, remove_low = False, color_reject=False, original=[]):
+
+        name = "conv"
+        if self.load_conv_only == True and self.load_dot_only == True: name = ""
+        if self.load_ckpt: self.load_group(graph_name=name)
+
         if self.predict_conv :
             self.cursor = 0
             self.dat_remove = []
@@ -434,13 +439,17 @@ class NN(enum.Enum, dim.Dimension):
                 stop = self.cursor_tot + 1
                 print stop
 
+            print start, stop, "start, stop"
+
             for i in range(start, stop ) :
                 batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, self.CONST_THREE_CHANNEL)
                 #self.c_y_out = tf.argmax(self.y_conv,1) ## 1
                 if len(batch_0) > 0  :
-                    #print batch_0
-                    out.extend( self.sess.run(self.y_conv, feed_dict={self.c_x : batch_0, self.c_y_: batch_1, self.keep_prob: 1.0}))
-                    #print out, len(out) , i, self.cursor_tot
+                    #print "show_batch", batch_0
+                    #out.extend( self.sess.run(self.y_conv, feed_dict={self.c_x : batch_0, self.c_y_: batch_1, self.keep_prob: 1.0}))
+                    part = self.sess.run(self.y_conv, feed_dict={self.c_x : batch_0, self.c_y_: batch_1, self.keep_prob: 1.0})
+                    out.extend(part)
+                    print part, len(part) , i, self.cursor_tot
                     mean = self.sess.run(self.c_cross_entropy, feed_dict={self.c_x: batch_0, self.c_y_: batch_1, self.keep_prob: 1.0})
                     #mean = mean * 2 #1.5
                     print mean, "mean"
@@ -453,12 +462,13 @@ class NN(enum.Enum, dim.Dimension):
                 save_index = False
                 for j in range(len(out)) :
                     zz = out[j][0]
-                    #print zz, "raw mc"
+                    print zz, "raw mc", mean
                     if float(zz) < numlow : # int(self.predict_remove_symbol ) : ## 1
+                        print "activity", zz
                         numlow = zz
-                        self.dat_remove.append( j)
+                        self.dat_remove.append( j )
                         save_index = False
-                    elif float(zz) > numhigh:
+                    elif float(zz) >= numhigh:
                         print zz, "numhigh"
                         numhigh = zz
                         numhigh_index = j
@@ -469,10 +479,14 @@ class NN(enum.Enum, dim.Dimension):
 
             print out [:3], "..."
             if remove_low:
-                pass
-                self.loader.record.remove_lines_from_dat(self.dat_remove)
+                print self.dat_remove, "dat_remove"
+                self.loader.dat = self.loader.record.remove_lines_from_dat(self.dat_remove)
                 self.loader.dat = self.loader.record.renumber_dat_list(self.loader.dat)
                 print "remove conv mc", self.dat_remove
+            if color_reject and False:
+                self.dat = self.loader.record.recolor_dat_list(self.loader.dat, self.dat_remove, color_string=self.BLUE)
+                self.loader.record.save_dat_to_file(self.dat, erase=False)
+                pass
             print "best conv mc", self.dat_best[:]
 
     def assemble_setup(self):
