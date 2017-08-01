@@ -250,7 +250,7 @@ class Read( enum.Enum, dim.Dimension) :
                 if True: ll.record.save_dat_to_list_file(ll.dat, erase=False,color=self.BLUE)
                 print "len-dat3", len(ll.dat)
 
-            mc_experement = True
+            mc_experement = False
 
             if self.pipeline_stage >= 4 and not mc_experement:
                 ''' convolution neural network '''
@@ -275,6 +275,7 @@ class Read( enum.Enum, dim.Dimension) :
                 see_list = []
                 self.nn.dat_best = []
                 self.dat_mc = ll.dat[:]
+                ll.dat = []
                 for k in range(len(self.dat_mc)):
                     ll.dat = ll.record.make_boxes_mc(self.pic, dim=100, dat=[self.dat_mc[k]])
                     ll.record.renumber_dat_list(ll.dat)
@@ -282,11 +283,11 @@ class Read( enum.Enum, dim.Dimension) :
 
 
                     self.nn.predict_remove_symbol = 1
-                    #self.nn.dat = ll.dat ## ??
-                    #self.nn.predict_conv = True
+
                     self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=True)
                     if not see_boxes: self.nn.conv_setup_mc(remove_low=mc_experement, color_reject=True)
                 if not see_boxes:
+                    pass
                     ll.dat = ll.record.renumber_dat_list(self.nn.dat_best)
                 else:
                     ll.dat = see_list[:]

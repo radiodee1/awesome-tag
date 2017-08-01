@@ -169,8 +169,9 @@ class Record( enum.Enum, dim.Dimension):
         for i in self.dat :
             temp = ""
             for j in range(len(i)) :
+                if str(i[j]) == self.RED or str(i[j]) == self.GREEN or str(i[j]) == self.BLUE: i[j] = color
                 temp = temp + str(i[j])
-                if temp == self.RED or temp == self.GREEN or temp == self.BLUE: temp = color
+
                 if j < len(i) -1 : temp = temp + ","
                 else: temp = temp + "\n"
             pass
@@ -186,6 +187,11 @@ class Record( enum.Enum, dim.Dimension):
                     #print "delete here", num, line
                     break
         return self.dat
+
+    def combine_lists(self, dat1, dat2):
+        for line in dat2:
+            dat1.append(line)
+        return dat1
 
     def show_dat_list(self, name = "listing"):
         for line in self.dat:
