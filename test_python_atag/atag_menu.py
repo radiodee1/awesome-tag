@@ -545,6 +545,8 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         elif ii == "[CLEAR]":
             self.record.save_dat_to_list_file()
             self.drawingarea.boxlist_red = []
+            self.drawingarea.boxlist_green = []
+            self.drawingarea.boxlist_blue = []
             pass
         self.drawingarea.queue_draw()
 

@@ -387,8 +387,9 @@ class NN(enum.Enum, dim.Dimension):
                 if len(batch_0) > 0  :
 
                     #print len(batch_0), "len batch_0 2"
-                    out.extend( self.sess.run(self.c_y_out, feed_dict={self.c_x : batch_0, self.c_y_: batch_1, self.keep_prob: 1.0}))
-                    #print out, len(out) , i, self.cursor_tot
+                    part = self.sess.run(self.c_y_out, feed_dict={self.c_x : batch_0, self.c_y_: batch_1, self.keep_prob: 1.0})
+                    out.extend(part)
+                    print part, len(part) , i, self.cursor_tot, "part listing..."
 
 
             if not remove_low:
@@ -399,9 +400,11 @@ class NN(enum.Enum, dim.Dimension):
 
 
             if remove_low:
+                pass
+                '''
                 print "out", len(out)
-                numlow = 0.95
-                numhigh = 0.95
+                numlow = 0.5#0.95
+                numhigh = 0.5
                 numhigh_index = 0
                 for j in range(len(out)) :
                     zz = out[j]
@@ -412,13 +415,15 @@ class NN(enum.Enum, dim.Dimension):
                     if float(zz) > numhigh:
                         numhigh = zz
                         numhigh_index = j
+                '''
+
+            self.loader.dat = self.loader.record.remove_lines_from_dat(self.dat_remove)
+            self.loader.dat = self.loader.record.renumber_dat_list(self.loader.dat)
+            print "remove conv", self.dat_remove[:10],"..."
 
             if color_reject == True:
                 self.dat = self.loader.record.recolor_dat_list(self.loader.dat, self.dat_remove,color_string=self.BLUE)
                 self.loader.record.save_dat_to_file(self.dat, erase=False)
-            self.loader.record.remove_lines_from_dat(self.dat_remove)
-            self.loader.dat = self.loader.record.renumber_dat_list(self.loader.dat)
-            print "remove conv", self.dat_remove[:10],"..."
 
         #self.sess.close()
     def conv_setup_mc(self, remove_low = False, color_reject=False, original=None):
@@ -465,12 +470,12 @@ class NN(enum.Enum, dim.Dimension):
                     zz = out[j][0]
                     #print zz, "raw mc", mean
                     if float(zz) < numlow : # int(self.predict_remove_symbol ) : ## 1
-                        print "activity", zz
+                        #print "activity", zz
                         numlow = zz
                         self.dat_remove.append( j )
                         save_index = False
                     elif float(zz) >= numhigh:
-                        print zz, "numhigh"
+                        #print zz, "numhigh"
                         numhigh = zz
                         numhigh_index = j
                         save_index = True
@@ -491,11 +496,11 @@ class NN(enum.Enum, dim.Dimension):
 
             #self.loader.dat = self.loader.record.remove_lines_from_dat(self.dat_remove)
 
-            if color_reject and True:
+            if color_reject and False:
                 self.dat = self.loader.record.recolor_dat_list(self.loader.dat, self.dat_remove, color_string=self.GREEN)
                 self.loader.record.save_dat_to_file(self.dat, erase=False)
                 pass
-            print "best conv mc", self.dat_best[:]
+            #print "best conv mc", self.dat_best[:]
 
     def assemble_setup(self):
         test = []

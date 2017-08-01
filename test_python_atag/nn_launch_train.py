@@ -250,7 +250,7 @@ class Read( enum.Enum, dim.Dimension) :
                 if True: ll.record.save_dat_to_list_file(ll.dat, erase=False,color=self.BLUE)
                 print "len-dat3", len(ll.dat)
 
-            mc_experement = False
+            mc_experement = True
 
             if self.pipeline_stage >= 4 and not mc_experement:
                 ''' convolution neural network '''
@@ -260,6 +260,7 @@ class Read( enum.Enum, dim.Dimension) :
                 # ll.normal_train = False
                 self.nn.predict_remove_symbol = 1
                 self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=True)
+                self.nn.load_ckpt = True
                 self.nn.conv_setup(remove_low=False, color_reject=True)
                 print "len-dat4", len(ll.dat)
 
