@@ -239,15 +239,24 @@ class Read( enum.Enum, dim.Dimension) :
 
             if self.pipeline_stage >= 3 and True:
                 ''' new gpu aggregate box function '''
-                self.nn.dat = ll.dat
-                self.nn.nn_clear_and_reset()
-                self.nn.nn_configure_assemble()
-                self.nn.nn_global_var_init()
-                self.nn.assemble_setup()
-                ll.dat = self.nn.dat
+                if False:
+                    self.nn.dat = ll.dat
+                    self.nn.nn_clear_and_reset()
+                    self.nn.nn_configure_assemble()
+                    self.nn.nn_global_var_init()
+                    self.nn.assemble_setup()
+                    ll.dat = self.nn.dat
 
-                ll.record.renumber_dat_list(ll.dat)
+                    ll.record.renumber_dat_list(ll.dat)
+                if True:
+                    ''' two passes through aggregate box function '''
+                    ll.dat = ll.record.aggregate_dat_list(ll.dat)
+                    ll.record.renumber_dat_list(ll.dat)
+                    ll.dat = ll.record.aggregate_dat_list(ll.dat, del_shapes=True)
+                    ll.record.renumber_dat_list(ll.dat)
+
                 if True: ll.record.save_dat_to_list_file(ll.dat, erase=False,color=self.BLUE)
+
                 print "len-dat3", len(ll.dat)
 
             mc_experement = True
