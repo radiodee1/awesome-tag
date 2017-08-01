@@ -248,7 +248,7 @@ class Read( enum.Enum, dim.Dimension) :
                     ll.dat = self.nn.dat
 
                     ll.record.renumber_dat_list(ll.dat)
-                if True:
+                elif True:
                     ''' two passes through aggregate box function '''
                     ll.dat = ll.record.aggregate_dat_list(ll.dat)
                     ll.record.renumber_dat_list(ll.dat)
