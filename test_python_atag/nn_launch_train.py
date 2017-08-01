@@ -287,7 +287,7 @@ class Read( enum.Enum, dim.Dimension) :
                 self.dat_mc = ll.dat[:]
                 ll.dat = []
                 for k in range(len(self.dat_mc)):
-                    ll.dat = ll.record.make_boxes_mc(self.pic, dim=100, dat=[self.dat_mc[k]])
+                    ll.dat = ll.record.make_boxes_mc(self.pic, dim=200, dat=[self.dat_mc[k]])
                     ll.record.renumber_dat_list(ll.dat)
                     if see_boxes: see_list.extend(ll.dat[:])
 
