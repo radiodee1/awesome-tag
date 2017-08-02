@@ -15,12 +15,12 @@ using namespace tensorflow;
 
 __device__ bool dimensionPass(uint16 locy, uint16 loch, uint16 fory, uint16 forh) {
 	//return false;
-	if (forh > loch * CUDA_SHAPE_FLOAT ) return false;
+	//if (forh > loch * CUDA_SHAPE_FLOAT ) return false;
 	return not ((locy + loch < fory + forh && locy < fory + forh) || ( locy + loch > fory && locy > fory));
 }
 
 __device__ bool dimensionPass(int32 locy, int32 loch, int32 fory, int32 forh) {
-	if (forh  > loch * CUDA_SHAPE_FLOAT ) return false;
+	//if (forh  > loch * CUDA_SHAPE_FLOAT ) return false;
 	return not ((locy + loch < fory + forh && locy < fory + forh) || ( locy + loch > fory && locy > fory));
 }
 
@@ -153,6 +153,8 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 				else {
 					// small boxes alone
 					if (change_wh) smallBoxes(in, out, i, j, count);
+					//if (change_wh) pruneBoxes(in,out, i, j, count);
+					
 				}
 				
 				if (change_wh) pruneBoxes(in,out, i, j, count);
@@ -325,16 +327,33 @@ __device__ void manipulateBoxes(const int32 * in, int32 * out, int i, int j) {
 
 __device__  void pruneBoxes(const uint16 * in, uint16 * out, int i, int j, int count) {
 	
+	
 	int jj = j;
 	
+	int width_i = out[i * COLUMN_TOT + COLUMN_W] ; 
+	int height_i =  out[i * COLUMN_TOT + COLUMN_H] ;
+			
+	bool bad_size = ((width_i > height_i * 2) or ( width_i * 2 < height_i));
 	
-	if (not (out[i * COLUMN_TOT + COLUMN_NUM ] == out[j * COLUMN_TOT + COLUMN_NUM] ) ) return;
+	if(bad_size) {
+		jj = i;
+		out[jj * COLUMN_TOT + COLUMN_X] = 0;
+		out[jj * COLUMN_TOT + COLUMN_Y] = 0;
+		out[jj * COLUMN_TOT + COLUMN_W] = 0;
+		out[jj * COLUMN_TOT + COLUMN_H] = 0;
+		out[jj * COLUMN_TOT + COLUMN_NUM] = 0;
+	}
+	
+	if ((not (out[i * COLUMN_TOT + COLUMN_NUM ] == out[j * COLUMN_TOT + COLUMN_NUM]   ))  ) return;
+	
 	
 	int area_i = out[i * COLUMN_TOT + COLUMN_W] * out[i * COLUMN_TOT + COLUMN_H]; 
 	int area_j = out[j * COLUMN_TOT + COLUMN_W] * out[j * COLUMN_TOT + COLUMN_H]; 
 
 	
-	if (area_i < area_j || count < CUDA_LOOP_TOT * 3 / 4) return;
+	if (area_i < area_j || count < CUDA_LOOP_TOT - 2) return;
+	
+	//if ( count < CUDA_LOOP_TOT - 2) return;
 	
 
 	jj = j;
@@ -352,17 +371,32 @@ __device__  void pruneBoxes(const uint16 * in, uint16 * out, int i, int j, int c
 
 __device__ void pruneBoxes(const int32 * in, int32 * out, int i, int j, int count) {
 	
-
 	int jj = j;
 	
+	int width_i = out[i * COLUMN_TOT + COLUMN_W] ; 
+	int height_i =  out[i * COLUMN_TOT + COLUMN_H] ;
+			
+	bool bad_size = ((width_i > height_i * 2) or ( width_i * 2 < height_i));
 	
-	if (not (out[i * COLUMN_TOT + COLUMN_NUM ] == out[j * COLUMN_TOT + COLUMN_NUM] ) ) return;
+	if(bad_size) {
+		jj = i;
+		out[jj * COLUMN_TOT + COLUMN_X] = 0;
+		out[jj * COLUMN_TOT + COLUMN_Y] = 0;
+		out[jj * COLUMN_TOT + COLUMN_W] = 0;
+		out[jj * COLUMN_TOT + COLUMN_H] = 0;
+		out[jj * COLUMN_TOT + COLUMN_NUM] = 0;
+	}
+	
+	if ((not (out[i * COLUMN_TOT + COLUMN_NUM ] == out[j * COLUMN_TOT + COLUMN_NUM]   ))  ) return;
+	
 	
 	int area_i = out[i * COLUMN_TOT + COLUMN_W] * out[i * COLUMN_TOT + COLUMN_H]; 
 	int area_j = out[j * COLUMN_TOT + COLUMN_W] * out[j * COLUMN_TOT + COLUMN_H]; 
 
 	
-	if (area_i < area_j || count < CUDA_LOOP_TOT * 3 / 4) return;
+	if (area_i < area_j || count < CUDA_LOOP_TOT - 2) return;
+	
+	//if ( count < CUDA_LOOP_TOT - 2) return;
 	
 
 	jj = j;
@@ -373,31 +407,33 @@ __device__ void pruneBoxes(const int32 * in, int32 * out, int i, int j, int coun
 	out[jj * COLUMN_TOT + COLUMN_W] = 0;
 	out[jj * COLUMN_TOT + COLUMN_H] = 0;
 	out[jj * COLUMN_TOT + COLUMN_NUM] = 0;
-	return;	
+	return;
+		
+	
 };
 
 __device__  void smallBoxes(const uint16 * in, uint16 * out, int i, int j, int count) {
 	
 	int jj = j;
-	float mult_w = 2.5;
-	float mult_h = 2.5;
+	//float mult_w = 2.5;
+	//float mult_h = 2.5;
 	
-	int width_i = out[i * COLUMN_TOT + COLUMN_W] ; 
-	int height_i = (int) out[i * COLUMN_TOT + COLUMN_H] ;
+	//int width_i = out[i * COLUMN_TOT + COLUMN_W] ; 
+	//int height_i = (int) out[i * COLUMN_TOT + COLUMN_H] ;
 		
 	
 	int area_out = out[i * COLUMN_TOT + COLUMN_W] * out[i * COLUMN_TOT + COLUMN_H]; 
 	int area_in = in[i * COLUMN_TOT + COLUMN_W] * in[i * COLUMN_TOT + COLUMN_H]; 
 
-	if ( count < CUDA_LOOP_TOT * 3 / 4) return;
+	if ( count < CUDA_LOOP_TOT -2 ) return;// * 3 / 4) return;
 	
-	if ((area_out > area_in * CUDA_SHAPE_FLOAT * count / 2 ) && (width_i * mult_w > height_i && width_i < mult_h * height_i)) return;
+	//if ((area_out > area_in * CUDA_SHAPE_FLOAT * count / 2  ) && (width_i * mult_w > height_i && width_i < mult_h * height_i)) return;
 	
+	if ((area_out > area_in * CUDA_SHAPE_FLOAT * count / 2  ) ) return;
 		
 
 	jj = i;
 	
-	///////////////
 	out[jj * COLUMN_TOT + COLUMN_X] = 0;
 	out[jj * COLUMN_TOT + COLUMN_Y] = 0;
 	out[jj * COLUMN_TOT + COLUMN_W] = 0;
@@ -413,31 +449,34 @@ __device__ void smallBoxes(const int32 * in, int32 * out, int i, int j, int coun
 	
 
 	int jj = j;
-	float mult_w = 2.5;
-	float mult_h = 2.5;
+	//float mult_w = 2.5;
+	//float mult_h = 2.5;
 	
-	int width_i = out[i * COLUMN_TOT + COLUMN_W] ; 
-	int height_i = (int) out[i * COLUMN_TOT + COLUMN_H] ;
+	//int width_i = out[i * COLUMN_TOT + COLUMN_W] ; 
+	//int height_i = (int) out[i * COLUMN_TOT + COLUMN_H] ;
 		
 	
 	int area_out = out[i * COLUMN_TOT + COLUMN_W] * out[i * COLUMN_TOT + COLUMN_H]; 
 	int area_in = in[i * COLUMN_TOT + COLUMN_W] * in[i * COLUMN_TOT + COLUMN_H]; 
 
-	if ( count < CUDA_LOOP_TOT * 3 / 4) return;
+	if ( count < CUDA_LOOP_TOT -2 ) return;// * 3 / 4) return;
 	
-	if ((area_out > area_in * CUDA_SHAPE_FLOAT * count / 2 ) && (width_i * mult_w > height_i && width_i < mult_h * height_i)) return;
+	//if ((area_out > area_in * CUDA_SHAPE_FLOAT * count / 2  ) && (width_i * mult_w > height_i && width_i < mult_h * height_i)) return;
+	
+	if ((area_out > area_in * CUDA_SHAPE_FLOAT * count / 2  ) ) return;
 		
-				
-	
+
 	jj = i;
 	
-	///////////////
 	out[jj * COLUMN_TOT + COLUMN_X] = 0;
 	out[jj * COLUMN_TOT + COLUMN_Y] = 0;
 	out[jj * COLUMN_TOT + COLUMN_W] = 0;
 	out[jj * COLUMN_TOT + COLUMN_H] = 0;
 	out[jj * COLUMN_TOT + COLUMN_NUM] = 0;
-	return;	
+	return;
+	
+	//////////////////////////////
+		
 };
 
 // Instantiate functors for the types of OpKernels registered.
