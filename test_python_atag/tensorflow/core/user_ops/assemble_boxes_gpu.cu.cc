@@ -73,13 +73,7 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 		uint16 local_h = out[i * COLUMN_TOT + COLUMN_H];
 		//uint16 local_box = out[i * COLUMN_TOT + COLUMN_BOX];
 		
-		if ((local_x == 0 || local_y == 0 ) && false){
-			out[i * COLUMN_TOT + COLUMN_W] = 0;
-			out[i * COLUMN_TOT + COLUMN_H] = 0;
-			out[i * COLUMN_TOT + COLUMN_NUM] = 0;
-			count ++;
-			continue;
-		}
+		
 		
 		for (int j = 0; j < shape_y; j ++) {
 			if( i != j ) {
@@ -90,40 +84,9 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 				uint16 foreign_h = out[j * COLUMN_TOT + COLUMN_H];
 				
 	
-				//if (true ) {
-				if (local_x + local_w >= foreign_x && local_x + local_w <= foreign_x + foreign_w && (dimensionPass(foreign_y, foreign_h, local_y, local_h) || dimensionPass(local_y, local_h, foreign_y, foreign_h)) ){
-					//remove box walls
-					if (true) {
-						if (isLeft(out[j * COLUMN_TOT + COLUMN_BOX] ) ) clearLeft(out, j * COLUMN_TOT + COLUMN_BOX);
-						if (isRight (out[i * COLUMN_TOT + COLUMN_BOX] )) clearRight(out, i * COLUMN_TOT + COLUMN_BOX);
-						
-						if (change_wh) {
-							out[i * COLUMN_TOT + COLUMN_W] = out[j * COLUMN_TOT + COLUMN_W] + out[j * COLUMN_TOT + COLUMN_X] -  out[i * COLUMN_TOT + COLUMN_X] ;
-							
-							
-							
-						}
-					}
-					if (change_wh) manipulateBoxes(in, out, i , j);
-
-					if (true){
-						if ( out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM] && out[i * COLUMN_TOT + COLUMN_NUM] != 0) {
-							out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
-							
-						}
-						else {
-							
-						}
-						
-						
-					}
-				}
-					
-					
-				////////////////////////////////
-					
-					
-				else if (( dimensionPass(foreign_x, foreign_w, local_x, local_w) || dimensionPass(local_x, local_w, foreign_x, foreign_w)) && local_y + local_h >= foreign_y && local_y + local_h <= foreign_y + foreign_h){
+				/////////////////////////////////////////
+				
+				if (( dimensionPass(foreign_x, foreign_w, local_x, local_w) || dimensionPass(local_x, local_w, foreign_x, foreign_w)) && local_y + local_h >= foreign_y && local_y + local_h <= foreign_y + foreign_h){
 					if(true) {
 						if (isTop(out[j * COLUMN_TOT + COLUMN_BOX] ) ) clearTop(out, j * COLUMN_TOT + COLUMN_BOX);
 						if (isBottom(out[i * COLUMN_TOT + COLUMN_BOX] ) ) clearBottom(out, i * COLUMN_TOT + COLUMN_BOX);
@@ -152,12 +115,46 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 
 						
 					}
+				}				
+				
+				else if (local_x + local_w >= foreign_x && local_x + local_w <= foreign_x + foreign_w && (dimensionPass(foreign_y, foreign_h, local_y, local_h) || dimensionPass(local_y, local_h, foreign_y, foreign_h)) ){
+					//remove box walls
+					if (true) {
+						if (isLeft(out[j * COLUMN_TOT + COLUMN_BOX] ) ) clearLeft(out, j * COLUMN_TOT + COLUMN_BOX);
+						if (isRight (out[i * COLUMN_TOT + COLUMN_BOX] )) clearRight(out, i * COLUMN_TOT + COLUMN_BOX);
+						
+						if (change_wh) {
+							out[i * COLUMN_TOT + COLUMN_W] = out[j * COLUMN_TOT + COLUMN_W] + out[j * COLUMN_TOT + COLUMN_X] -  out[i * COLUMN_TOT + COLUMN_X] ;
+							
+							
+							
+						}
+					}
+					if (change_wh) manipulateBoxes(in, out, i , j);
+
+					if (true){
+						if ( out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM] && out[i * COLUMN_TOT + COLUMN_NUM] != 0) {
+							out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
+							
+						}
+						else {
+							
+						}
+						
+						
+					}
 				}
+					
+					
+				
+					
+				
+				///////////////////////////////////////////
 				else {
 					// small boxes alone
 					if (change_wh) smallBoxes(in, out, i, j, count);
 				}
-				////////////////////////
+				
 				if (change_wh) pruneBoxes(in,out, i, j, count);
 				
 			}
@@ -382,10 +379,11 @@ __device__ void pruneBoxes(const int32 * in, int32 * out, int i, int j, int coun
 __device__  void smallBoxes(const uint16 * in, uint16 * out, int i, int j, int count) {
 	
 	int jj = j;
-	int mult = 2.5;
+	float mult_w = 2.5;
+	float mult_h = 2.5;
 	
 	int width_i = out[i * COLUMN_TOT + COLUMN_W] ; 
-	int height_i = out[i * COLUMN_TOT + COLUMN_H] ;
+	int height_i = (int) out[i * COLUMN_TOT + COLUMN_H] ;
 		
 	
 	int area_out = out[i * COLUMN_TOT + COLUMN_W] * out[i * COLUMN_TOT + COLUMN_H]; 
@@ -393,8 +391,9 @@ __device__  void smallBoxes(const uint16 * in, uint16 * out, int i, int j, int c
 
 	if ( count < CUDA_LOOP_TOT * 3 / 4) return;
 	
-	if ((area_out > area_in * CUDA_SHAPE_FLOAT * count / 2 ) && (width_i * mult > height_i && width_i < mult * height_i)) return;
+	if ((area_out > area_in * CUDA_SHAPE_FLOAT * count / 2 ) && (width_i * mult_w > height_i && width_i < mult_h * height_i)) return;
 	
+		
 
 	jj = i;
 	
@@ -411,11 +410,14 @@ __device__  void smallBoxes(const uint16 * in, uint16 * out, int i, int j, int c
 
 __device__ void smallBoxes(const int32 * in, int32 * out, int i, int j, int count) {
 	
+	
+
 	int jj = j;
-	int mult = 2.5;
+	float mult_w = 2.5;
+	float mult_h = 2.5;
 	
 	int width_i = out[i * COLUMN_TOT + COLUMN_W] ; 
-	int height_i = out[i * COLUMN_TOT + COLUMN_H] ;
+	int height_i = (int) out[i * COLUMN_TOT + COLUMN_H] ;
 		
 	
 	int area_out = out[i * COLUMN_TOT + COLUMN_W] * out[i * COLUMN_TOT + COLUMN_H]; 
@@ -423,9 +425,10 @@ __device__ void smallBoxes(const int32 * in, int32 * out, int i, int j, int coun
 
 	if ( count < CUDA_LOOP_TOT * 3 / 4) return;
 	
-	if ((area_out > area_in * CUDA_SHAPE_FLOAT * count / 2 ) && (width_i * mult > height_i && width_i < mult * height_i)) return;
+	if ((area_out > area_in * CUDA_SHAPE_FLOAT * count / 2 ) && (width_i * mult_w > height_i && width_i < mult_h * height_i)) return;
+		
+				
 	
-
 	jj = i;
 	
 	///////////////
