@@ -239,7 +239,7 @@ class Read( enum.Enum, dim.Dimension) :
 
             if self.pipeline_stage >= 3 and True:
                 ''' new gpu aggregate box function '''
-                if False:
+                if True:
                     self.nn.dat = ll.dat
                     self.nn.nn_clear_and_reset()
                     self.nn.nn_configure_assemble()
