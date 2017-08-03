@@ -81,12 +81,15 @@ class Read( enum.Enum) :
 
     def process_show_gpu_output(self, dat=[]):
         self.dat = dat
-        self.img = Image.new('RGB',(700,900))
+        self.img = Image.new('RGB',(1300,900))
+        mult = 4
         draw = ImageDraw.Draw(self.img)
         for i in range(len(self.dat) // self.GPU_TOT):
             line = self.dat[i * self.GPU_TOT: i * self.GPU_TOT + self.GPU_TOT]
             #print "out", line
 
+            for i in range(len(line)) :
+                line[i] = line[i] / mult
             #if line[self.GPU_W] == 0 or line[self.GPU_H] == 0: continue
 
             if self.is_top(line[self.GPU_BOX]):
@@ -107,7 +110,7 @@ class Read( enum.Enum) :
                            line[self.GPU_X] + line[self.GPU_W], line[self.GPU_Y] + line[self.GPU_H]), fill=0x0000ff, width=1)
                 pass
 
-            if (line[self.GPU_H] >= 4 and line[self.GPU_W] >= 4 and self.change_wh > 0)  or line[self.GPU_NUM] == 52:
+            if (line[self.GPU_H] >= 4 and line[self.GPU_W] >= 4 and self.change_wh > 0) or True  or line[self.GPU_NUM] == 52:
                 draw.rectangle([line[self.GPU_X], line[self.GPU_Y],
                                 line[self.GPU_X] + line[self.GPU_W], line[self.GPU_Y] + line[self.GPU_H]], outline=0x00ff00)
 

@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c15ed38a-2fe7-44d1-b032-ae199cd14d43" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_launch_train.py" afterPath="$PROJECT_DIR$/nn_launch_train.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_record.py" afterPath="$PROJECT_DIR$/nn_record.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tensorflow/core/user_ops/test/sample.png" afterPath="$PROJECT_DIR$/tensorflow/core/user_ops/test/sample.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tensorflow/core/user_ops/test/predict-list.csv" afterPath="$PROJECT_DIR$/tensorflow/core/user_ops/test/predict-list.csv" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -31,7 +30,7 @@
       <file leaf-file-name="atag_menu.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/atag_menu.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1152">
+            <state relative-caret-position="9828">
               <caret line="548" column="46" lean-forward="false" selection-start-line="548" selection-start-column="46" selection-end-line="548" selection-end-column="46" />
               <folding>
                 <element signature="e#19#33#0" expanded="true" />
@@ -75,7 +74,7 @@
       <file leaf-file-name="nn_record.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nn_record.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="149">
+            <state relative-caret-position="468">
               <caret line="32" column="53" lean-forward="false" selection-start-line="32" selection-start-column="53" selection-end-line="32" selection-end-column="53" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
@@ -109,7 +108,7 @@
       <file leaf-file-name="nn_model.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nn_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="545">
+            <state relative-caret-position="8586">
               <caret line="487" column="13" lean-forward="false" selection-start-line="487" selection-start-column="13" selection-end-line="487" selection-end-column="13" />
               <folding>
                 <element signature="e#18#27#0" expanded="true" />
@@ -222,6 +221,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -233,7 +233,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -770,7 +769,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="520" y="67" width="1400" height="1000" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1161,7 +1159,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nn_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="545">
+        <state relative-caret-position="8586">
           <caret line="487" column="13" lean-forward="false" selection-start-line="487" selection-start-column="13" selection-end-line="487" selection-end-column="13" />
           <folding>
             <element signature="e#18#27#0" expanded="true" />
@@ -1171,7 +1169,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/atag_menu.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1152">
+        <state relative-caret-position="9828">
           <caret line="548" column="46" lean-forward="false" selection-start-line="548" selection-start-column="46" selection-end-line="548" selection-end-column="46" />
           <folding>
             <element signature="e#19#33#0" expanded="true" />
@@ -1181,7 +1179,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nn_record.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="149">
+        <state relative-caret-position="468">
           <caret line="32" column="53" lean-forward="false" selection-start-line="32" selection-start-column="53" selection-end-line="32" selection-end-column="53" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
