@@ -38,7 +38,7 @@ class Read( enum.Enum, dim.Dimension) :
         self.image_folder = atag.VAR_ROOT_DATABASE
         self.pipeline_enum = self.DIMENSIONS[self.key][self.COLUMN_ENUM_PIPELINE]
 
-
+        self.blue_boxes = True
 
     def run_nn(self):
 
@@ -54,6 +54,7 @@ class Read( enum.Enum, dim.Dimension) :
 
         self.nn.set_loader(ll)
         self.zero_out_counter = False
+        self.blue_boxes = True
 
         switch = False
         if switch:
@@ -224,7 +225,7 @@ class Read( enum.Enum, dim.Dimension) :
         if self.pipeline_enum == self.ENUM_PIPELINE_3:
             ''' make initial box grid '''
             if self.pipeline_stage >= 1:
-                ll.dat = ll.record.make_boxes(self.pic, dim=4)  # dim=4
+                ll.dat = ll.record.make_boxes(self.pic, dim=-1, grid=10000 * 5)  # dim=4
                 print "num-boxes", len(ll.dat)
 
             if self.pipeline_stage >= 2 and True:
@@ -255,7 +256,7 @@ class Read( enum.Enum, dim.Dimension) :
                     ll.dat = ll.record.aggregate_dat_list(ll.dat, del_shapes=True)
                     ll.record.renumber_dat_list(ll.dat)
 
-                if True: ll.record.save_dat_to_list_file(ll.dat, erase=False,color=self.BLUE)
+                if self.blue_boxes: ll.record.save_dat_to_list_file(ll.dat, erase=False,color=self.BLUE)
 
                 print "len-dat3", len(ll.dat)
 
@@ -325,6 +326,8 @@ class Read( enum.Enum, dim.Dimension) :
         predict_filename = self.a.VAR_LOCAL_DATABASE + os.sep + "predict-list" + ".csv"
         f = open(predict_filename, "a") # "w"
         f.write("")
+
+        self.blue_boxes = False
 
         if len(pic) == 0:
             filename = ""
