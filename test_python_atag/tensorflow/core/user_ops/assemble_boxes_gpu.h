@@ -33,5 +33,6 @@ struct AssembleBoxesFunctor {
 // something divisible by 4!
 #define CUDA_LOOP_TOT 16 
 #define CUDA_SHAPE_FLOAT 3.5
+#define CUDA_BASE_WH 4
 
 #endif //KERNEL_ASSEMBLE_BOXES_H_

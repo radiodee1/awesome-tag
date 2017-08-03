@@ -92,8 +92,8 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 						if (isBottom(out[i * COLUMN_TOT + COLUMN_BOX] ) ) clearBottom(out, i * COLUMN_TOT + COLUMN_BOX);
 						
 						if (change_wh) {
-							
-							out[i * COLUMN_TOT + COLUMN_H] = out[j * COLUMN_TOT + COLUMN_H] + out[j * COLUMN_TOT + COLUMN_Y] -  out[i * COLUMN_TOT + COLUMN_Y] ;
+							int difference = (in[i * COLUMN_TOT + COLUMN_H] - CUDA_BASE_WH) / 2;
+							out[i * COLUMN_TOT + COLUMN_H] = out[j * COLUMN_TOT + COLUMN_H] + out[j * COLUMN_TOT + COLUMN_Y] -  out[i * COLUMN_TOT + COLUMN_Y] + difference;
 							
 							
 
@@ -124,7 +124,8 @@ __global__ void AssembleBoxesCudaKernel(const int size, const T* in, T* out,int 
 						if (isRight (out[i * COLUMN_TOT + COLUMN_BOX] )) clearRight(out, i * COLUMN_TOT + COLUMN_BOX);
 						
 						if (change_wh) {
-							out[i * COLUMN_TOT + COLUMN_W] = out[j * COLUMN_TOT + COLUMN_W] + out[j * COLUMN_TOT + COLUMN_X] -  out[i * COLUMN_TOT + COLUMN_X] ;
+							int difference = (in[i * COLUMN_TOT + COLUMN_W] - CUDA_BASE_WH) /2;
+							out[i * COLUMN_TOT + COLUMN_W] = out[j * COLUMN_TOT + COLUMN_W] + out[j * COLUMN_TOT + COLUMN_X] -  out[i * COLUMN_TOT + COLUMN_X] + difference;
 							
 							
 							
@@ -333,7 +334,10 @@ __device__  void pruneBoxes(const uint16 * in, uint16 * out, int i, int j, int c
 	int width_i = out[i * COLUMN_TOT + COLUMN_W] ; 
 	int height_i =  out[i * COLUMN_TOT + COLUMN_H] ;
 			
-	bool bad_size = ((width_i > height_i * 2) or ( width_i * 2 < height_i));
+	int difference = in[i * COLUMN_TOT + COLUMN_W] - CUDA_BASE_WH ;
+	if (difference <= 1 ) difference = 1;
+
+	bool bad_size = ((width_i > height_i * difference * 2) or ( width_i * difference * 2 < height_i));
 	
 	if(bad_size) {
 		jj = i;
@@ -375,8 +379,13 @@ __device__ void pruneBoxes(const int32 * in, int32 * out, int i, int j, int coun
 	
 	int width_i = out[i * COLUMN_TOT + COLUMN_W] ; 
 	int height_i =  out[i * COLUMN_TOT + COLUMN_H] ;
-			
-	bool bad_size = ((width_i > height_i * 2) or ( width_i * 2 < height_i));
+		
+	int difference = in[i * COLUMN_TOT + COLUMN_W] - CUDA_BASE_WH ;
+	if (difference <= 1 ) difference = 1;
+
+	bool bad_size = ((width_i > height_i * difference * 2) or ( width_i * difference * 2 < height_i));
+		
+	//bool bad_size = ((width_i > height_i * 2) or ( width_i * 2 < height_i));
 	
 	if(bad_size) {
 		jj = i;
