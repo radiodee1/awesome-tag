@@ -485,7 +485,7 @@ class NN(enum.Enum, dim.Dimension):
                     self.dat_best.append(self.loader.dat[numhigh_index])
 
 
-            print out [:3], "..."
+            #print out [:3], "..."
             if remove_low:
                 print self.dat_remove, "dat_remove"
                 #self.loader.dat = self.loader.record.remove_lines_from_dat(self.dat_remove)
