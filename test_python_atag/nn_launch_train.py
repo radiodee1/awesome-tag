@@ -319,7 +319,10 @@ class Read( enum.Enum, dim.Dimension) :
 
         ll = loader.Load(self.a, "")
         ll.read_csv()
-        self.list_dat = ll.dat[:]
+        self.list_dat = ll.dat[:100]
+
+        self.list_dat = sorted(self.list_dat, key=lambda line: line[self.FILE].lower())
+        print "index", self.FILE, self.list_dat
 
         signal.signal(signal.SIGINT, self.signal_handler)
 

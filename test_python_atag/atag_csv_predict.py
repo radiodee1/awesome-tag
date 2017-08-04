@@ -18,6 +18,7 @@ class PredictRead(enum.Enum):
         self.ll = loader.Load(self.a, "")
         self.ll.read_csv()
         self.start = self.ll.dat[:]
+        self.start = sorted(self.start, key=lambda line: line[self.FILE])
         self.dat_no_repeat = []
         filename = self.start[0]
         self.dat_no_repeat.append(filename)
@@ -30,6 +31,7 @@ class PredictRead(enum.Enum):
     def read_predict_list(self):
         self.ll.read_csv()
         self.dat = self.ll.dat
+        self.dat = sorted(self.dat, key=lambda line: line[self.FILE])
         if len(self.dat) > 0 and self.dat[self.pic_num][self.FILE].endswith(self.filename) : return
         count = 0
         self.external_count = 0
@@ -47,6 +49,7 @@ class PredictRead(enum.Enum):
         pass
 
     def predict_first(self, pic):
+        self.dat = sorted(self.dat, key=lambda line: line[self.FILE])
         #list = self.dat[:]
         if len(self.dat) > 1:
             pic = self.dat[0][self.FILE]
@@ -54,6 +57,7 @@ class PredictRead(enum.Enum):
 
     def predict_next(self, pic):
         list = self.dat[:]
+        list = sorted(list, key=lambda line: line[self.FILE])
         num = self.pic_num
         if num + 1 >= len(list): return pic
         self.external_count += 1
@@ -68,6 +72,7 @@ class PredictRead(enum.Enum):
 
     def predict_prev(self, pic):
         list = self.dat[:]
+        list = sorted(list, key=lambda line: line[self.FILE])
         num = self.pic_num
         if num - 1 < 0: return pic
         self.external_count -= 1
