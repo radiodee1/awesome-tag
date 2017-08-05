@@ -492,8 +492,11 @@ class Interface(Gtk.Window, atag.Dotfolder) :
             jj = easygui.buttonbox("Number of Pictures","Choose",choices=("2","5","10","50","100","CANCEL"))
             if jj != "CANCEL":
                 if False:
+                    pass
+                    '''
                     call =  ["python", "./nn_launch_train.py", "-make-list", str(jj)]
                     self.p = subprocess.Popen(call)
+                    '''
                 elif True:
                     self.list_predict_call_list = ["-make-list", "1"]
                     thread = threading.Thread(target=self.run_predict_list_images, kwargs={"num":int(jj)})
@@ -510,7 +513,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
                 self.p.send_signal(signal.SIGINT)
             except:
                 print "stop signal"
-                
+
         pass
 
     ''' threading etc '''
