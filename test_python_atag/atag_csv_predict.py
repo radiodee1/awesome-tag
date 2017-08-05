@@ -18,7 +18,7 @@ class PredictRead(enum.Enum):
         self.ll = loader.Load(self.a, "")
         self.ll.read_csv()
         self.start = self.ll.dat[:]
-        self.start = sorted(self.start, key=lambda line: line[self.FILE])
+        #self.start = sorted(self.start, key=lambda line: line[self.FILE])
         self.dat_no_repeat = []
         filename = self.start[0]
         self.dat_no_repeat.append(filename)

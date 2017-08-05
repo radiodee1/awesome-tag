@@ -506,7 +506,11 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     def on_button_stop(self, widget):
         if self.p != None:
-            self.p.send_signal(signal.SIGINT)
+            try:
+                self.p.send_signal(signal.SIGINT)
+            except:
+                print "stop signal"
+                
         pass
 
     ''' threading etc '''
@@ -696,7 +700,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         if self.p != None:
             try:
                 self.p.send_signal(signal.SIGINT)
-            except:
+            except :
                 print "must be predict operation"
         print "exit here"
         Gtk.main_quit()
