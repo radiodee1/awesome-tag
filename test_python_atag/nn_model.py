@@ -750,6 +750,8 @@ class NN(enum.Enum, dim.Dimension):
         filename2 = self.ckpt_folder + os.sep+ "visualize_weights.bmp"
         filename = self.ckpt_folder + os.sep + "visualize_weights_alternate.bmp"
         filename3 = self.ckpt_folder + os.sep + "visualize_weights_skintone.bmp"
+        filename4 = self.ckpt_folder + os.sep + "visualize_weights_eyespots.bmp"
+
 
         show1 = False
         show2 = True
@@ -768,6 +770,7 @@ class NN(enum.Enum, dim.Dimension):
         img = Image.new("RGBA", size, color=0)
         img2 = Image.new("RGBA", size2, color=0)
         img3 = Image.new("RGBA", size3, color=0)
+        img4 = Image.new("RGBA", size2, color=0)
         xy = (0,0)
         xy2 = (0,0)
         xy3 = (0,0)
@@ -784,53 +787,17 @@ class NN(enum.Enum, dim.Dimension):
             show2 = True
 
         if show1 or show2:
-            for i in range(sl5):
-                for j in range(sl5):
-                    for k in range(sl8 ):
-                        for m in range(sl4  ):
-                            for n in range(sl2):
-                                for p in range(10):
-                                    for q in range(10):
-                                        pass
-                                        if show1:
-                                            xy = ((i * sl8+  k) * 10 + p   , (j *  sl4  +m  )  * 10 * sl2 + n * 10 + q)
-                                            index = k * 4 + m
-                                            index = min(index, sl8 * 4 - 1)
+            self.show_weights_1(img2, weights)
+            pass
 
-                                            r = weights[i][j][0][index] * 255.0 * math.pow(10,3)
-                                            g = weights[i][j][1][index] * 255.0 * math.pow(10,3)
-                                            b = weights[i][j][2][index] * 255.0 * math.pow(10,3)
-                                            if r > 255: r = 255
-                                            if g > 255: g = 255
-                                            if b > 255: b = 255
-                                            if r < 0: r = 0
-                                            if g < 0: g = 0
-                                            if b < 0: b = 0
-                                            rgba = (int(r),int(g),int(b),0)
-                                            if (q == 0 and m == 0 and n == 0) or (k == 0 and p == 0):
-                                                rgba = (255, 255, 255, 0)
-                                            img.putpixel(xy,rgba)
-
-                                        if show2:
-
-                                            xy2 = ((k * sl5 + i) * 10 + p  , (m*n * sl5 + j) * 10 * n + q )
-                                            index = k * 4 + m
-                                            index = min(index, sl8 * 4 - 1)
-
-                                            rr = weights[i][j][0][index] * 255.0 * math.pow(10, 3)
-                                            gg = weights[i][j][1][index] * 255.0 * math.pow(10, 3)
-                                            bb = weights[i][j][2][index] * 255.0 * math.pow(10, 3)
-                                            if rr > 255: rr = 255
-                                            if gg > 255: gg = 255
-                                            if bb > 255: bb = 255
-                                            if rr < 0: rr = 0
-                                            if gg < 0: gg = 0
-                                            if bb < 0: bb = 0
-                                            rgba2 = (int(rr),int(gg),int(bb),0)
-
-                                            if (k != 0 and i == 0 and p == 0) or ( m != 0 and j == 0 and q == 0) :
-                                                rgba2 = (255,255,255,0)
-                                            img2.putpixel(xy2, rgba2)
+        if self.load_eye_only:
+            self.nn_clear_and_reset()
+            self.nn_configure_eyes()
+            self.nn_global_var_init()
+            name = "eye"
+            self.load_group(graph_name=name)
+            weights2 = self.sess.run(self.W_eye1)
+            self.show_weights_1(img4, weights2)
 
         if not self.load_dot_only and not self.load_conv_only:
             self.nn_clear_and_reset()
@@ -840,46 +807,9 @@ class NN(enum.Enum, dim.Dimension):
             self.load_group(graph_name=name)
             skin = self.sess.run(self.d_W_1)
             show3 = True
-
-        #print weights
         if show3:
-            index = 0
+            self.show_weights_2(img3, skin)
 
-            for index in range(3):
-                for i in range(skin2):
-                    for j in range(skin2):
-                        for m in range(50):
-                            for n in range(50):
-                                xy3 = ((i*1) * 50 + m + index * 50 * skin2, (j * 1) * 50 + n)
-                                if index < 2:
-                                    rr = (skin[(j * skin2 + i) * 3 + 0][index] + 1.0) * 255.0 * math.pow(10, 0)
-                                    gg = (skin[(j * skin2 + i) * 3 + 1][index] + 1.0) * 255.0 * math.pow(10, 0)
-                                    bb = (skin[(j * skin2 + i) * 3 + 2][index] + 1.0) * 255.0 * math.pow(10, 0)
-                                    if m == 0 and n == 0 :print rr,gg,bb
-                                else:
-                                    r1 = (skin[(j * skin2 + i) * 3 + 0][0] + 0.0)# * 255.0 * math.pow(10, 1)
-                                    g1 = (skin[(j * skin2 + i) * 3 + 1][0] + 0.0)# * 255.0 * math.pow(10, 1)
-                                    b1 = (skin[(j * skin2 + i) * 3 + 2][0] + 0.0)# * 255.0 * math.pow(10, 1)
-                                    r2 = (skin[(j * skin2 + i) * 3 + 0][1] + 0.0)# * 255.0 * math.pow(10, 1)
-                                    g2 = (skin[(j * skin2 + i) * 3 + 1][1] + 0.0)# * 255.0 * math.pow(10, 1)
-                                    b2 = (skin[(j * skin2 + i) * 3 + 2][1] + 0.0)# * 255.0 * math.pow(10, 1)
-                                    rr = (r1 + r2) /2.0  * 255.0 * math.pow(10, 4)
-                                    gg = (g1 + g2) /2.0  * 255.0 * math.pow(10, 4)
-                                    bb = (b1 + b2) /2.0  * 255.0 * math.pow(10, 4)
-                                    #print rr, gg, bb
-                                    pass
-
-                                if rr > 255: rr = 255
-                                if gg > 255: gg = 255
-                                if bb > 255: bb = 255
-                                if rr < 0: rr = 0
-                                if gg < 0: gg = 0
-                                if bb < 0: bb = 0
-                                rgba3 = (int(rr), int(gg), int(bb), 0)
-
-                                if ( m == 0 ) or ( n == 0 ):
-                                    rgba3 = (255, 255, 255, 0)
-                                img3.putpixel(xy3, rgba3)
         if show1:
             img.show("Conv Weights B")
             img.save(filename)
@@ -890,6 +820,104 @@ class NN(enum.Enum, dim.Dimension):
             img3.show("Skintone Weights A")
             #print skin
             img3.save(filename3)
+        if True:
+            img4.show("Conv Weights Eye")
+            img4.save(filename4)
+
+    def show_weights_1(self, img, weights):
+
+        show1 = False
+        show2 = True
+
+        sl2 = 2
+
+        sl5 = int(self.DIMENSIONS[self.key][self.COLUMN_CWEIGHT_2][0])
+        sl8 = int(self.DIMENSIONS[self.key][self.COLUMN_CWEIGHT_1][3] / 4)
+        sl4 = int(self.DIMENSIONS[self.key][self.COLUMN_CWEIGHT_1][3] / 8)
+        skin2 = int(math.sqrt(self.DIMENSIONS[self.key][self.COLUMN_IN_OUT_DOT][0] / 3))
+
+        if sl4 % 2 == 1: sl4 -= 1
+
+        for i in range(sl5):
+            for j in range(sl5):
+                for k in range(sl8 ):
+                    for m in range(sl4  ):
+                        for n in range(sl2):
+                            for p in range(10):
+                                for q in range(10):
+                                    pass
+
+                                    if show2:
+
+                                        xy2 = ((k * sl5 + i) * 10 + p  , (m*n * sl5 + j) * 10 * n + q )
+                                        index = k * 4 + m
+                                        index = min(index, sl8 * 4 - 1)
+
+                                        rr = weights[i][j][0][index] * 255.0 * math.pow(10, 3)
+                                        gg = weights[i][j][1][index] * 255.0 * math.pow(10, 3)
+                                        bb = weights[i][j][2][index] * 255.0 * math.pow(10, 3)
+                                        if rr > 255: rr = 255
+                                        if gg > 255: gg = 255
+                                        if bb > 255: bb = 255
+                                        if rr < 0: rr = 0
+                                        if gg < 0: gg = 0
+                                        if bb < 0: bb = 0
+                                        rgba2 = (int(rr),int(gg),int(bb),0)
+
+                                        if (k != 0 and i == 0 and p == 0) or ( m != 0 and j == 0 and q == 0) :
+                                            rgba2 = (255,255,255,0)
+                                        img.putpixel(xy2, rgba2)
+
+
+    #print weights
+    def show_weights_2(self, img3, skin):
+        index = 0
+
+        sl2 = 2
+
+        sl5 = int(self.DIMENSIONS[self.key][self.COLUMN_CWEIGHT_2][0])
+        sl8 = int(self.DIMENSIONS[self.key][self.COLUMN_CWEIGHT_1][3] / 4)
+        sl4 = int(self.DIMENSIONS[self.key][self.COLUMN_CWEIGHT_1][3] / 8)
+        skin2 = int(math.sqrt(self.DIMENSIONS[self.key][self.COLUMN_IN_OUT_DOT][0] / 3))
+
+        if sl4 % 2 == 1: sl4 -= 1
+
+        for index in range(3):
+            for i in range(skin2):
+                for j in range(skin2):
+                    for m in range(50):
+                        for n in range(50):
+                            xy3 = ((i*1) * 50 + m + index * 50 * skin2, (j * 1) * 50 + n)
+                            if index < 2:
+                                rr = (skin[(j * skin2 + i) * 3 + 0][index] + 1.0) * 255.0 * math.pow(10, 0)
+                                gg = (skin[(j * skin2 + i) * 3 + 1][index] + 1.0) * 255.0 * math.pow(10, 0)
+                                bb = (skin[(j * skin2 + i) * 3 + 2][index] + 1.0) * 255.0 * math.pow(10, 0)
+                                if m == 0 and n == 0 :print rr,gg,bb
+                            else:
+                                r1 = (skin[(j * skin2 + i) * 3 + 0][0] + 0.0)# * 255.0 * math.pow(10, 1)
+                                g1 = (skin[(j * skin2 + i) * 3 + 1][0] + 0.0)# * 255.0 * math.pow(10, 1)
+                                b1 = (skin[(j * skin2 + i) * 3 + 2][0] + 0.0)# * 255.0 * math.pow(10, 1)
+                                r2 = (skin[(j * skin2 + i) * 3 + 0][1] + 0.0)# * 255.0 * math.pow(10, 1)
+                                g2 = (skin[(j * skin2 + i) * 3 + 1][1] + 0.0)# * 255.0 * math.pow(10, 1)
+                                b2 = (skin[(j * skin2 + i) * 3 + 2][1] + 0.0)# * 255.0 * math.pow(10, 1)
+                                rr = (r1 + r2) /2.0  * 255.0 * math.pow(10, 4)
+                                gg = (g1 + g2) /2.0  * 255.0 * math.pow(10, 4)
+                                bb = (b1 + b2) /2.0  * 255.0 * math.pow(10, 4)
+                                #print rr, gg, bb
+                                pass
+
+                            if rr > 255: rr = 255
+                            if gg > 255: gg = 255
+                            if bb > 255: bb = 255
+                            if rr < 0: rr = 0
+                            if gg < 0: gg = 0
+                            if bb < 0: bb = 0
+                            rgba3 = (int(rr), int(gg), int(bb), 0)
+
+                            if ( m == 0 ) or ( n == 0 ):
+                                rgba3 = (255, 255, 255, 0)
+                            img3.putpixel(xy3, rgba3)
+
 
     def save_group(self, graph_name=""):
 
