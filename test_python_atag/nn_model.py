@@ -264,7 +264,7 @@ class NN(enum.Enum, dim.Dimension):
 
     def nn_configure_eyes(self):
 
-        ''' CONVOLUTION NEXT '''
+        ''' CONVOLUTION EYES NEXT '''
         #c_output = 2
         #c_input = 784 * 3
 
@@ -445,6 +445,8 @@ class NN(enum.Enum, dim.Dimension):
         name = "conv"
         if self.load_conv_only == True and self.load_dot_only == True: name = ""
         if self.load_ckpt : self.load_group(graph_name=name)
+
+        #print self.load_ckpt , "load ckpt"
 
         if self.train :
 
@@ -778,7 +780,7 @@ class NN(enum.Enum, dim.Dimension):
         rgba2 = (0,0,0,0)
         rgba3 = (0,0,0,0)
 
-        if not self.load_conv_only and not self.load_dot_only:
+        if True: #not self.load_conv_only and not self.load_dot_only:
             self.nn_configure_conv()
             self.nn_global_var_init()
             name = "conv"
@@ -786,7 +788,7 @@ class NN(enum.Enum, dim.Dimension):
             weights = self.sess.run(self.W_conv1)
             show2 = True
 
-        if show1 or show2:
+        if True: #show1 or show2:
             self.show_weights_1(img2, weights)
             pass
 
@@ -799,7 +801,7 @@ class NN(enum.Enum, dim.Dimension):
             weights2 = self.sess.run(self.W_eye1)
             self.show_weights_1(img4, weights2)
 
-        if not self.load_dot_only and not self.load_conv_only:
+        if True: # not self.load_dot_only and not self.load_conv_only:
             self.nn_clear_and_reset()
             self.nn_configure_dot()
             self.nn_global_var_init()
@@ -1015,10 +1017,20 @@ class NN(enum.Enum, dim.Dimension):
                 images, lables = self.loader.get_nn_next_train(batchsize, self.cursor, num_channels)
                 #print ("next train batch")
             else:
-                self.cursor = 0
+                #self.cursor = 0
                 #self.save_group()
                 print "exit at end"
+                #images, lables = self.loader.get_nn_next_train(batchsize, self.cursor, num_channels)
+
+                if self.dot_only: name = "dot"
+                if self.conv_only: name = "conv"
+                if self.eye_only: name = "eye"
+
+                self.save_group(graph_name=name)
+
                 sys.exit()
+                #self.cursor += 1
+                #return images, lables
 
             self.cursor = self.cursor + 1
 

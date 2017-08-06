@@ -50,7 +50,7 @@ class Write( enum.Enum, dim.Dimension) :
         self.f = open(self.csv_output, "a")
 
         for l in self.dat :
-            self.process_write_line(l, filter_yaw=True)
+            self.process_write_line(l, filter_yaw=False)
         self.f.close()
 
         #exit()

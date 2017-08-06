@@ -95,11 +95,13 @@ class Read( enum.Enum, dim.Dimension) :
 
             if self.load_conv_only == False and (self.load_dot_only == True or self.load_eye_only == True):
                 sys.exit()
-            elif self.load_dot_only == False and self.load_eye_only == False :
+            elif self.load_dot_only == False or self.load_eye_only == False :
                 self.nn.nn_clear_and_reset()
                 self.nn.nn_configure_conv()
                 self.nn.nn_global_var_init()
 
+            self.nn.load_ckpt = True
+            self.nn.save_ckpt = True
             self.nn.conv_setup()
 
             if self.zero_out_counter: self.a.dot_write(self.a.FOLDER_SAVED_CURSOR_CONV, str(0))
