@@ -4,7 +4,9 @@ import easygui
 
 import gi
 gi.require_version('Gtk', '3.0')
+gi.require_version('Keybinder', '3.0')
 from gi.repository import Gtk, GdkPixbuf, Gdk
+from gi.repository import Keybinder
 import threading
 import signal
 import atag_dotfolder as atag
@@ -32,6 +34,10 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         signal.signal(signal.SIGINT, self.signal_handler)
         self.p = None # process instance
         self.record = record.Record(self)
+
+        Keybinder.init()
+        keystr = "<Ctrl>W"
+        Keybinder.bind(keystr, self.exit_keystr)
 
         self.set_border_width(10)
 
@@ -698,6 +704,9 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         #    self.nn.save_group()
         Gtk.main_quit()
         sys.exit()
+
+    def exit_keystr(self, extra):
+        self.exit(None)
 
     def exit(self, widget):
         if self.p != None:
