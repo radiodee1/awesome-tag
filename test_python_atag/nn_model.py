@@ -47,12 +47,14 @@ class NN(enum.Enum, dim.Dimension):
         self.predict_softmax = False
         self.predict_conv = False
         self.predict_dot = False
+        self.predict_eye = False
 
         self.dat_remove = []
         self.dat_best = []
 
         self.dot_only = False
         self.conv_only = False
+        self.eye_only = False
 
         self.nn_out_skintone = None
         self.nn_out_softmax = None
@@ -67,6 +69,8 @@ class NN(enum.Enum, dim.Dimension):
         config.gpu_options.allow_growth = True
 
         self.sess = tf.InteractiveSession()
+
+        self.load_eye_only = True
 
         self.load_dot_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][0]
         self.load_conv_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][1]
@@ -258,6 +262,102 @@ class NN(enum.Enum, dim.Dimension):
             self.assemble_module = tf.load_op_library('tensorflow/core/user_ops/assemble_boxes_gpu.so')
         pass
 
+    def nn_configure_eyes(self):
+
+        ''' CONVOLUTION NEXT '''
+        #c_output = 2
+        #c_input = 784 * 3
+
+        ## DIM BLOCK ##
+        c_input = self.DIMENSIONS[self.key][self.COLUMN_IN_OUT_CONV][0]
+        c_output = self.DIMENSIONS[self.key][self.COLUMN_IN_OUT_CONV][1]
+        c_dimx = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][0]
+        c_dimy = self.DIMENSIONS[self.key][self.COLUMN_XY_CONV][1]
+        c_weight_dim_1 = self.DIMENSIONS[self.key][self.COLUMN_CWEIGHT_1]
+        c_bias_dim_1 = self.DIMENSIONS[self.key][self.COLUMN_CBIAS_1]
+        c_weight_dim_2 = self.DIMENSIONS[self.key][self.COLUMN_CWEIGHT_2]
+        c_bias_dim_2 = self.DIMENSIONS[self.key][self.COLUMN_CBIAS_2]
+        c_reshape_dim_1 = self.DIMENSIONS[self.key][self.COLUMN_RESHAPE_1]
+        c_reshape_dim_2 = self.DIMENSIONS[self.key][self.COLUMN_RESHAPE_2]
+        c_fc_weight_dim_1 = self.DIMENSIONS[self.key][self.COLUMN_FULL_CONNECTED_W1]
+        c_fc_bias_dim_1 = self.DIMENSIONS[self.key][self.COLUMN_FULL_CONNECTED_B1]
+        c_fc_weight_dim_2 = self.DIMENSIONS[self.key][self.COLUMN_FULL_CONNECTED_W2]
+        c_fc_bias_dim_2 = self.DIMENSIONS[self.key][self.COLUMN_FULL_CONNECTED_B2]
+
+        def weight_variable(shape):
+            initial = tf.truncated_normal(shape, stddev=0.0001) #0.1
+            return tf.Variable(initial)
+
+        def bias_variable(shape):
+            initial = tf.constant(0.1, shape=shape)
+            return tf.Variable(initial)
+
+        def conv2d(x, W):
+            return tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')
+
+        def max_pool_2x2(x):
+            return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
+                                  strides=[1, 2, 2, 1], padding='SAME')
+
+        self.e_x = tf.placeholder(tf.float32, shape=[None, c_input])
+        self.e_y_ = tf.placeholder(tf.float32, shape=[None, c_output])
+
+        self.W_eye1 = weight_variable(c_weight_dim_1)
+        #self.W_conv1 = weight_variable([5, 5, 3, 32])
+
+        self.b_eye1 = bias_variable(c_bias_dim_1)
+        #self.b_conv1 = bias_variable([32])
+
+        self.x_image_eye = tf.reshape(self.e_x, c_reshape_dim_1)
+        #self.x_image = tf.reshape(self.c_x, [-1, 28, 28  , 3])
+
+        self.h_eye1 = tf.nn.relu(conv2d(self.x_image_eye, self.W_eye1) + self.b_eye1)
+        self.h_pool1_eye = max_pool_2x2(self.h_eye1)
+
+        self.W_eye2 = weight_variable(c_weight_dim_2)
+        self.b_eye2 = bias_variable(c_bias_dim_2)
+
+        #self.W_conv2 = weight_variable([5, 5, 32, 64])
+        #self.b_conv2 = bias_variable([64])
+
+        self.h_eye2 = tf.nn.relu(conv2d(self.h_pool1_eye, self.W_eye2) + self.b_eye2)
+        self.h_pool2_eye = max_pool_2x2(self.h_eye2)
+
+        self.W_fc1_eye = weight_variable(c_fc_weight_dim_1)
+        self.b_fc1_eye = bias_variable(c_fc_bias_dim_1)
+
+        #self.W_fc1 = weight_variable([7 * 7 * 64, 1024])
+        #self.b_fc1 = bias_variable([1024])
+
+        self.h_pool2_flat_eye = tf.reshape(self.h_pool2_eye, c_reshape_dim_2)
+        #self.h_pool2_flat = tf.reshape(self.h_pool2, [-1, 7 * 7 * 64 ])
+
+        self.h_fc1_eye = tf.nn.relu(tf.matmul(self.h_pool2_flat_eye, self.W_fc1_eye) + self.b_fc1_eye)
+
+        self.keep_prob_eye = tf.placeholder(tf.float32)
+        self.h_fc1_drop_eye = tf.nn.dropout(self.h_fc1_eye, self.keep_prob_eye)
+
+        self.W_fc2_eye = weight_variable(c_fc_weight_dim_2)
+        self.b_fc2_eye = bias_variable(c_fc_bias_dim_2)
+
+        #self.W_fc2 = weight_variable([1024, c_output])
+        #self.b_fc2 = bias_variable([c_output])
+
+        self.y_conv_eye = tf.matmul(self.h_fc1_drop_eye, self.W_fc2_eye) + self.b_fc2_eye
+
+        self.e_cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=self.y_conv_eye, labels=self.e_y_))
+        self.e_train_step = tf.train.AdamOptimizer(1e-4).minimize(self.e_cross_entropy)
+        self.e_correct_prediction = tf.equal(tf.argmax(self.y_conv_eye, 1), tf.argmax(self.e_y_, 1))
+        self.e_accuracy = tf.reduce_mean(tf.cast(self.e_correct_prediction, tf.float32))
+
+        self.e_y_out = tf.argmax(self.y_conv_eye, 1)  ## for prediction
+
+        #init = tf.global_variables_initializer().run()
+        #self.sess.run(init)
+
+        #summary_writer = tf.train.SummaryWriter(self.ckpt_folder + os.sep + "logs" + os.sep, self.sess.graph)
+
+
     def nn_clear_and_reset(self):
         tf.reset_default_graph()
         #tf.contrib.keras.backend.clear_session()
@@ -426,6 +526,7 @@ class NN(enum.Enum, dim.Dimension):
                 self.loader.record.save_dat_to_file(self.dat, erase=False)
 
         #self.sess.close()
+
     def conv_setup_mc(self, remove_low = False, color_reject=False, original=None):
 
         name = "conv"
@@ -495,6 +596,100 @@ class NN(enum.Enum, dim.Dimension):
                 #self.loader.dat = self.loader.record.renumber_dat_list(self.loader.dat)
 
             #self.loader.dat = self.loader.record.remove_lines_from_dat(self.dat_remove)
+
+            if color_reject and False:
+                self.dat = self.loader.record.recolor_dat_list(self.loader.dat, self.dat_remove, color_string=self.GREEN)
+                self.loader.record.save_dat_to_file(self.dat, erase=False)
+                pass
+            #print "best conv mc", self.dat_best[:]
+
+    def eye_setup(self, remove_low = False, color_reject=False, original=None):
+
+        name = "eye"
+        if self.load_conv_only == True and self.load_dot_only == True and self.load_eye_only == True: name = ""
+        if self.load_ckpt: self.load_group(graph_name=name)
+
+        if self.train :
+
+            self.cursor = self.load_cursor(self.a.FOLDER_SAVED_CURSOR_CONV)
+            print self.cursor , "cursor"
+            self.eye_only = True
+            for i in range(self.start_train, self.cursor_tot ):
+                batch_0, batch_1 = self.get_nn_next_train(self.batchsize, self.CONST_EYES)
+
+                if i % 100 == 0:
+                    train_accuracy = self.e_accuracy.eval(feed_dict={
+                        self.e_x: batch_0, self.e_y_: batch_1, self.keep_prob_eye: 1.0})
+                    print("step %d, training accuracy %g" % (i, train_accuracy))
+                self.e_train_step.run(feed_dict={self.e_x: batch_0, self.e_y_: batch_1, self.keep_prob_eye: 0.5})
+                cost = self.sess.run([self.e_cross_entropy], feed_dict={self.e_x: batch_0, self.e_y_: batch_1, self.keep_prob_eye: 1.0})
+                print cost, "cost"
+
+        if self.save_ckpt and self.train  : self.save_group(graph_name=name)
+
+        if self.test :
+            self.cursor = 0
+            if self.use_loader : self.get_nn_next_test(self.batchsize, self.CONST_EYES)
+            print("test accuracy %g" % self.e_accuracy.eval(feed_dict={
+                self.e_x: self.mnist_test.images, self.e_y_: self.mnist_test.labels, self.keep_prob_eye: 1.0}))
+
+
+        if self.predict_eye :
+            self.cursor = 0
+            self.dat_remove = []
+            #self.dat_best = []
+            mean = 0.95
+
+            out = []
+            start = 0 # self.start_train
+            stop = self.cursor_tot
+            if len(self.loader.dat) > self.cursor_tot * self.batchsize :
+                stop = self.cursor_tot + 1
+                print stop
+
+            #print start, stop, "start, stop"
+
+            for i in range(start, stop ) :
+                batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, self.CONST_EYES)
+                #self.c_y_out = tf.argmax(self.y_conv,1) ## 1
+                if len(batch_0) > 0  :
+                    #print "show_batch", batch_0
+                    #out.extend( self.sess.run(self.y_conv, feed_dict={self.c_x : batch_0, self.c_y_: batch_1, self.keep_prob: 1.0}))
+                    part = self.sess.run(self.y_conv_eye, feed_dict={self.e_x : batch_0, self.e_y_: batch_1, self.keep_prob_eye: 1.0})
+                    out.extend(part)
+                    #print part, len(part) , i, self.cursor_tot
+                    mean = self.sess.run(self.e_cross_entropy, feed_dict={self.e_x: batch_0, self.e_y_: batch_1, self.keep_prob_eye: 1.0})
+                    #mean = mean * 2 #1.5
+                    print mean, "mean"
+
+            if True:
+                print "out", len(out)
+                numlow = mean # 0.95
+                numhigh = mean # 0.95
+                numhigh_index = 0
+                save_index = False
+                for j in range(len(out)) :
+                    zz = out[j][0]
+                    #print zz, "raw mc", mean
+                    if float(zz) < numlow : # int(self.predict_remove_symbol ) : ## 1
+                        #print "activity", zz
+                        numlow = zz
+                        self.dat_remove.append( j )
+                        save_index = False
+                    elif float(zz) >= numhigh:
+                        #print zz, "numhigh"
+                        numhigh = zz
+                        numhigh_index = j
+                        save_index = True
+
+                if save_index or not remove_low: ## or ?
+                    print numhigh_index, "index"
+                    self.dat_best.append(self.loader.dat[numhigh_index])
+
+
+            #print out [:3], "..."
+            if remove_low:
+                print self.dat_remove, "dat_remove"
 
             if color_reject and False:
                 self.dat = self.loader.record.recolor_dat_list(self.loader.dat, self.dat_remove, color_string=self.GREEN)

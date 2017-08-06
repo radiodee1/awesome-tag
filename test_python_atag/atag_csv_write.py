@@ -36,6 +36,8 @@ class Write( enum.Enum, dim.Dimension) :
 
         self.csv_output = atag.VAR_LOCAL_DATABASE + os.sep + atag.VAR_MY_CSV_NAME + ".csv"
         self.csv_output_dot = atag.VAR_LOCAL_DATABASE + os.sep + atag.VAR_MY_CSV_NAME +".dot.csv"
+        self.csv_output_eye = atag.VAR_LOCAL_DATABASE + os.sep + atag.VAR_MY_CSV_NAME +".eye.csv"
+
 
         with open(self.csv_input, 'r') as f:
             for line in f:
@@ -60,9 +62,22 @@ class Write( enum.Enum, dim.Dimension) :
         d = 0
         for l in self.dat:
             d += 1
-            print "wait... this could take time. -- ", int(float(d)/len(self.dat) * 100) , "%"
+            print "dot... this could take time. -- ", int(float(d)/len(self.dat) * 100) , "%"
             self.process_write_line_for_dot(l)
         self.f.close()
+
+        print self.csv_output_eye, "eyefile"
+        print "wait... this could take time."
+        self.f = open(self.csv_output_eye, "w")
+        self.f = open(self.csv_output_eye, "a")
+
+        d = 0
+        for l in self.dat:
+            d += 1
+            print "eyes... this could take time. -- ", int(float(d) / len(self.dat) * 100), "%"
+            self.process_write_line_for_eye(l)
+        self.f.close()
+
         print "done"
 
     def process_read_line(self, line):
@@ -125,6 +140,108 @@ class Write( enum.Enum, dim.Dimension) :
             for x in range(self.TOTAL_READ):
                 if y == 0  :
                     if x != self.FILE and len(line[x]) > 0:
+                        #print line, x
+                        self.f.write(str(int(math.floor(float(line[x])))))
+                    elif len(line[x]) == 0:
+                        self.f.write("0")
+                    else:
+                        self.f.write(line[x])
+
+                elif (y == 1 or y == 2) and x == self.FACE_X:
+                    r = 0
+                    if left + width < dimx : r = random.randint(0,dimx - width) # somewhere on top
+                    self.f.write(str(r))
+                elif (y == 1 or y == 2) and x == self.FACE_Y:
+                    r = 0
+                    #g = 0
+
+                    #if top - height <= 0 : g = 0 - (top - height)
+                    if top - height > 0 : r = random.randint(0, top - height)
+                    self.f.write(str(r))
+                else:
+                    if x != self.FILE and len(line[x]) > 0:
+                        self.f.write(str(int(math.floor(float(line[x])))))
+                    elif len(line[x]) == 0:
+                        self.f.write("0")
+                    else:
+                        self.f.write(line[x])
+
+                if x < self.TOTAL_READ - 1:
+                    self.f.write(",")
+                elif y == 0 :
+                    #true
+                    self.f.write(","+ self.RED+",1,0\n")
+                elif (y == 1 or y == 2):
+                    #false
+                    self.f.write(","+self.RED+",0,0\n")
+
+    def process_write_line_for_eye(self, line, filter_yaw=False):
+
+        filename = line[self.FILE]
+        if not filename.startswith(self.a.VAR_ROOT_DATABASE + os.sep) :
+            filename = self.a.VAR_ROOT_DATABASE + os.sep + line[self.FILE]
+
+        if not os.path.isfile(filename) : return
+
+        dimx = 1
+        dimy = 1
+        #i = Image.open(filename)
+
+        try:
+            #print filename, "try Image.open()"
+            if True : dimx, dimy = Image.open(filename).size # get image bounds... slow!!
+            if dimy == 0 or dimx == 0 : return
+        except:
+            print "bad jpg " + filename
+            return
+
+        try:
+            int(line[self.FACE_X]) # are we looking at heading?
+        except ValueError:
+            return
+
+        left = int(math.floor(float(line[self.FACE_X])))
+        #right = int(math.floor(float(line[self.FACE_X]))) + int(math.floor(float(line[self.FACE_WIDTH])))
+        top = int(math.floor(float(line[self.FACE_Y])))
+        #bottom = int(math.floor(float(line[self.FACE_Y]))) + int(math.floor(float(line[self.FACE_HEIGHT])))
+        width = int(math.floor(float(line[self.FACE_WIDTH])))
+        height = int(math.floor(float(line[self.FACE_HEIGHT])))
+
+        if len(line[self.RIGHT_EYE_Y]) == 0 or len(line[self.LEFT_EYE_Y]) == 0:
+            right_eye_y = top + 13
+            left_eye_y = top + 13
+        else:
+
+            #print line,"line", line[self.RIGHT_EYE_X], "right eye x"
+
+            #right_eye_x = int(math.floor(float(line[self.RIGHT_EYE_X])))
+            right_eye_y = int(math.floor(float(line[self.RIGHT_EYE_Y])))
+            #left_eye_x = int(math.floor(float(line[self.LEFT_EYE_X])))
+            left_eye_y = int(math.floor(float(line[self.LEFT_EYE_Y])))
+
+        avg_eye_y = int((right_eye_y + left_eye_y ) /2) - 6 ## very magic numbery
+
+        line[self.FACE_Y] = avg_eye_y
+
+        yaw = 3.5
+        has_yaw = False
+        if len(line) > self.FACE_YAW:
+            if line[self.FACE_YAW] == "" or  len(str(line[self.FACE_YAW])) == 0:
+                line[self.FACE_YAW] = yaw
+            else:
+                yaw = float(line[self.FACE_YAW])
+                has_yaw = True
+            #print yaw, line[self.FILE]
+
+        if filter_yaw and (yaw < - 4.0 or yaw > 4.0): # don't know what values to use here!!
+            #print "X"
+            return
+
+        for y in range(2): #3 # values of 2 or 3 are valid
+
+            for x in range(self.TOTAL_READ):
+                if y == 0  :
+                    if x != self.FILE and len(str(line[x])) > 0:
                         #print line, x
                         self.f.write(str(int(math.floor(float(line[x])))))
                     elif len(line[x]) == 0:

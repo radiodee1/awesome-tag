@@ -12,7 +12,7 @@ import nn_model as model
 import argparse
 
 '''
-Here we read the csv file that we made and train the models. NOTE: nn_model is imported BELOW.
+Here we read the csv file that we made and train the models. NOTE: nn_model is imported twice.
 '''
 
 class Read( enum.Enum, dim.Dimension) :
@@ -28,6 +28,7 @@ class Read( enum.Enum, dim.Dimension) :
 
         self.dot_only = False
         self.conv_only = False
+        self.eye_only = False
 
         self.pipeline_stage = 10
 
@@ -51,6 +52,7 @@ class Read( enum.Enum, dim.Dimension) :
 
         self.load_dot_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][0]
         self.load_conv_only = self.DIMENSIONS[self.key][self.COLUMN_LOAD_DOT_CONV][1]
+        self.load_eye_only = False
 
         self.nn.set_loader(ll)
         self.zero_out_counter = False
@@ -72,9 +74,9 @@ class Read( enum.Enum, dim.Dimension) :
 
             self.nn.set_vars(len(ll.dat), 100, 0)
 
-            if self.load_dot_only == False and self.load_conv_only == True:
+            if self.load_dot_only == False and (self.load_conv_only == True or self.load_eye_only == True):
                 sys.exit()
-            elif self.load_conv_only == False :
+            elif self.load_conv_only == False and self.load_eye_only == False :
                 self.nn.nn_clear_and_reset()
                 self.nn.nn_configure_dot()
                 self.nn.nn_global_var_init()
@@ -87,14 +89,13 @@ class Read( enum.Enum, dim.Dimension) :
             ll.csv_input = self.a.VAR_LOCAL_DATABASE + os.sep + self.a.VAR_MY_CSV_NAME + ".csv"
             ll.read_csv()
 
-            #self.nn.set_vars(len(ll.dat), 100, 0)
-            #self.nn.skintone_setup()
+
 
             self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=self.nn.train)
 
-            if self.load_conv_only == False and self.load_dot_only == True:
+            if self.load_conv_only == False and (self.load_dot_only == True or self.load_eye_only == True):
                 sys.exit()
-            elif self.load_dot_only == False:
+            elif self.load_dot_only == False and self.load_eye_only == False :
                 self.nn.nn_clear_and_reset()
                 self.nn.nn_configure_conv()
                 self.nn.nn_global_var_init()
@@ -102,6 +103,26 @@ class Read( enum.Enum, dim.Dimension) :
             self.nn.conv_setup()
 
             if self.zero_out_counter: self.a.dot_write(self.a.FOLDER_SAVED_CURSOR_CONV, str(0))
+
+        if self.eye_only :
+            ll.csv_input = self.a.VAR_LOCAL_DATABASE + os.sep + self.a.VAR_MY_CSV_NAME + ".eye.csv"
+            ll.read_csv()
+
+
+
+            self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=self.nn.train)
+
+            if self.load_eye_only == False and (self.load_dot_only == True or self.load_conv_only == True):
+                sys.exit()
+            elif self.load_dot_only == False and self.load_conv_only == False:
+                self.nn.nn_clear_and_reset()
+                self.nn.nn_configure_eyes()
+                self.nn.nn_global_var_init()
+
+            self.nn.eye_setup()
+
+            if self.zero_out_counter: self.a.dot_write(self.a.FOLDER_SAVED_CURSOR_CONV, str(0))
+
 
     def run_predict(self, picture):
         self.pic = picture
@@ -362,6 +383,7 @@ class Read( enum.Enum, dim.Dimension) :
                 pass
                 if self.nn.dot_only: name = "dot"
                 if self.nn.conv_only: name = "conv"
+                if self.nn.eye_only: name = "eye"
 
             self.nn.save_group(graph_name=name)
         sys.exit()
@@ -382,6 +404,7 @@ def main():
     parser.add_argument("-no-load", action="store_false")
     parser.add_argument("-dot-only", action="store_true")
     parser.add_argument("-conv-only", action="store_true")
+    parser.add_argument("-eyes-only", action="store_true")
     parser.add_argument("-pipeline", nargs=1)
     parser.add_argument("-zero-dot", action="store_true")
     parser.add_argument("-zero-conv", action="store_true")
@@ -446,6 +469,7 @@ def main():
         r.nn.test = args.test
         r.dot_only = args.dot_only
         r.conv_only = args.conv_only
+        r.eye_only = args.eyes_only
         #r.load_correct_model(dim_version=a.VAR_DIM_CONFIG)
         r.run_nn()
 

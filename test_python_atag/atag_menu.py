@@ -385,12 +385,14 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     def on_button_train(self, widget):
         #self.run_csv_read()
-        self.ii = easygui.buttonbox("Type of training", "Choose", choices=("SKIN", "CONVOLUTION", "ZERO-COUNTERS", "CANCEL"))
+        self.ii = easygui.buttonbox("Type of training", "Choose", choices=("SKIN", "CONVOLUTION","EYES", "ZERO-COUNTERS", "CANCEL"))
         print "run from command line!"
         if self.ii == "SKIN":
             self.ii = "-dot-only"
         elif self.ii == "CONVOLUTION":
             self.ii = "-conv-only"
+        elif self.ii == "EYES" :
+            self.ii = "-eyes-only"
         elif self.ii == "ZERO-COUNTERS":
             self.dot_write(self.FOLDER_SAVED_CURSOR_DOT, str(0))
             self.dot_write(self.FOLDER_SAVED_CURSOR_CONV, str(0))
@@ -413,12 +415,14 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     def on_button_options(self, widget):
         print 5
-        ii = easygui.buttonbox("Test Only, Etc.","Choose",choices=("SKIN","CONVOLUTION","CANCEL"))
+        ii = easygui.buttonbox("Test Only, Etc.","Choose",choices=("SKIN","CONVOLUTION","EYES","CANCEL"))
         print "run from command line!"
         if ii == "SKIN":
             subprocess.call(["python", "./nn_launch_train.py", "-dot-only", "-test", "-no-save"])
         elif ii == "CONVOLUTION":
             subprocess.call(["python", "./nn_launch_train.py", "-conv-only", "-test", "-no-save"])
+        elif ii == "EYES":
+            subprocess.call(["python", "./nn_launch_train.py", "-eyes-only", "-test", "-no-save"])
 
     def on_spinner_change(self, widget, var, folder, label):
         print 6

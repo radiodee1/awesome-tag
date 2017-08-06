@@ -14,6 +14,12 @@ class Enum(object) :
         self.FACE_HEIGHT = 9
 
         # only in non-detection csv files
+        self.RIGHT_EYE_X = 10
+        self.RIGHT_EYE_Y = 11
+        self.LEFT_EYE_X = 12
+        self.LEFT_EYE_Y = 13
+        self.NOSE_BASE_X = 14
+        self.NOSE_BASE_Y = 15
         self.FACE_YAW = 16
 
         self.COLOR = 10 # THIS IS MY COLOR
@@ -27,6 +33,7 @@ class Enum(object) :
         self.BLUE = "BLUE"
 
         self.CONST_ONE_CHANNEL = 1
+        self.CONST_EYES = 2
         self.CONST_THREE_CHANNEL = 3
         self.CONST_DOT = 12
 
