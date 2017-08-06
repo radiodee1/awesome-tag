@@ -7,7 +7,7 @@ import atag_csv as enum
 import nn_loader as loader
 import atag_dotfolder as aa
 import nn_dim as dim
-#import nn_model as model
+import nn_model as model
 #import nn_kmeans as kmeans
 import argparse
 
@@ -81,7 +81,7 @@ class Read( enum.Enum, dim.Dimension) :
 
             self.nn.dot_setup()
 
-            if self.zero_out_counter: self.a.dot_write(a.FOLDER_SAVED_CURSOR_DOT, str(0))
+            if self.zero_out_counter: self.a.dot_write(self.a.FOLDER_SAVED_CURSOR_DOT, str(0))
 
         if self.conv_only :
             ll.csv_input = self.a.VAR_LOCAL_DATABASE + os.sep + self.a.VAR_MY_CSV_NAME + ".csv"
@@ -101,7 +101,7 @@ class Read( enum.Enum, dim.Dimension) :
 
             self.nn.conv_setup()
 
-            if self.zero_out_counter: self.a.dot_write(a.FOLDER_SAVED_CURSOR_CONV, str(0))
+            if self.zero_out_counter: self.a.dot_write(self.a.FOLDER_SAVED_CURSOR_CONV, str(0))
 
     def run_predict(self, picture):
         self.pic = picture
@@ -372,8 +372,8 @@ class Read( enum.Enum, dim.Dimension) :
         if not os.path.exists(folder):
             os.makedirs(folder)
 
-if __name__ == '__main__':
 
+def main():
     parser = argparse.ArgumentParser(description="Train or Test ATAG neural network for facial detection in Python with Tensorflow.")
     parser.add_argument("filename", nargs="?")
     parser.add_argument("-train",   action="store_true")
@@ -451,3 +451,6 @@ if __name__ == '__main__':
 
     print "pipeline", r.pipeline_stage
     print("done")
+
+if __name__ == '__main__':
+    main()
