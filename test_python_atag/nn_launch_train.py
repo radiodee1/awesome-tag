@@ -330,6 +330,95 @@ class Read( enum.Enum, dim.Dimension) :
             print "pipeline enum 3"
             ll.record.save_dat_to_file(ll.dat, erase=(not self.make_list))
 
+        if self.pipeline_enum == self.ENUM_PIPELINE_4:
+            ''' make initial box grid '''
+            if self.pipeline_stage >= 1:
+                ll.dat = ll.record.make_boxes(self.pic, dim=-1, grid=10000 * 5)  # dim=4
+                print "num-boxes", len(ll.dat)
+
+            if self.pipeline_stage >= 2 and True:
+                ''' initial simple neural network '''
+                self.nn.nn_clear_and_reset()
+                self.nn.nn_configure_dot()
+                self.nn.nn_global_var_init()
+                self.nn.predict_remove_symbol = 1
+                self.nn.set_vars(len(ll.dat), 10 * 100, 0)
+                self.nn.dot_setup()
+                print "len-dat2", len(ll.dat)
+
+            if self.pipeline_stage >= 3 and True:
+                ''' new gpu aggregate box function '''
+                if True:
+                    self.nn.dat = ll.dat
+                    self.nn.nn_clear_and_reset()
+                    self.nn.nn_configure_assemble()
+                    self.nn.nn_global_var_init()
+                    self.nn.assemble_setup()
+                    ll.dat = self.nn.dat
+
+                    ll.record.renumber_dat_list(ll.dat)
+                elif True:
+                    ''' two passes through aggregate box function '''
+                    ll.dat = ll.record.aggregate_dat_list(ll.dat)
+                    ll.record.renumber_dat_list(ll.dat)
+                    ll.dat = ll.record.aggregate_dat_list(ll.dat, del_shapes=True)
+                    ll.record.renumber_dat_list(ll.dat)
+
+                if self.blue_boxes: ll.record.save_dat_to_list_file(ll.dat, erase=False,color=self.BLUE)
+
+                print "len-dat3", len(ll.dat)
+
+            mc_experement = True
+
+            if self.pipeline_stage >= 4 and not mc_experement:
+                ''' convolution neural network '''
+                self.nn.nn_clear_and_reset()
+                self.nn.nn_configure_conv()
+                self.nn.nn_global_var_init()
+                # ll.normal_train = False
+                self.nn.predict_remove_symbol = 1
+                self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=True)
+                self.nn.load_ckpt = True
+                self.nn.conv_setup(remove_low=False, color_reject=True)
+                print "len-dat4", len(ll.dat)
+
+            if self.pipeline_stage >= 5 and True:
+                ''' try to improve box '''
+                if mc_experement:
+                    self.nn.nn_clear_and_reset()
+                    self.nn.nn_configure_conv()
+                    self.nn.nn_global_var_init()
+                see_boxes = False
+                self.nn.load_ckpt = True
+                if self.pipeline_stage == 5: see_boxes = True
+                see_list = []
+                self.nn.dat_best = []
+                self.dat_mc = ll.dat[:]
+                ll.dat = []
+                for k in range(len(self.dat_mc)):
+                    ll.dat = ll.record.make_boxes_mc(self.pic, dim=100, dat=[self.dat_mc[k]])
+                    ll.record.renumber_dat_list(ll.dat)
+                    if see_boxes: see_list.extend(ll.dat[:])
+
+                    self.nn.predict_remove_symbol = 1
+
+                    eye_list = []
+                    mc_list = ll.dat[0:2]
+                    for j in range(len(mc_list)):
+                        eye_list = ll.record.make_boxes_eyes(self.pic, dat=[mc_list[j]])
+                        ll.dat = eye_list[:]
+                        self.nn.set_vars(len(eye_list), 100, 0, adjust_x=True)
+                        if not see_boxes: self.nn.eye_setup(remove_low=True, color_reject=True)
+                if not see_boxes:
+                    pass
+                    ll.dat = ll.record.renumber_dat_list(self.nn.dat_best)
+                else:
+                    ll.dat = eye_list[:]
+                    #ll.dat = see_list[:]
+                print "len-dat5", len(self.nn.dat_best)
+
+            print "pipeline enum 4"
+            ll.record.save_dat_to_file(ll.dat, erase=(not self.make_list))
 
     def run_weight_img(self):
         print "weight img"

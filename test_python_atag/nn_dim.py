@@ -18,6 +18,7 @@ class Dimension(object) :
         self.ENUM_PIPELINE_1 = 0
         self.ENUM_PIPELINE_2 = 1
         self.ENUM_PIPELINE_3 = 2
+        self.ENUM_PIPELINE_4 = 3
 
         self.COLUMN_LOADTYPE = 0
         self.COLUMN_NAME = 1
@@ -44,12 +45,13 @@ class Dimension(object) :
         self.ROW_NAME_PIPELINE_EXPERIMENT = 2
         self.ROW_NAME_PIPELINE_LARGEST_XY = 3
         self.ROW_NAME_PIPELINE_3_WORKING = 4
+        self.ROW_NAME_PIPELINE_4_EYE = 5
 
         #self.key = self.ROW_NAME_ORIGINAL_28 #
         #self.key =  self.ROW_NAME_LARGER_XY
         #self.key = self.ROW_NAME_PIPELINE_EXPERIMENT
         #self.key = self.ROW_NAME_PIPELINE_LARGEST_XY
-        self.dim_default = self.ROW_NAME_PIPELINE_3_WORKING
+        self.dim_default = self.ROW_NAME_PIPELINE_4_EYE
 
         def dim_xy(w, h):
             return [w , h]
@@ -182,6 +184,27 @@ class Dimension(object) :
                 dim_ab(1024, 2),
                 dim_bias(2),
                 self.ENUM_PIPELINE_3,
+                dim_load_dot_conv(load_dot=load_dot, load_conv=load_conv)
+            ],
+            [
+                self.ENUM_LOAD_ALL_GRADIENT,
+                'pipeline_3_multi_graph_' + str(basedim * 4) + "_" + str(convdim) + name_string,
+                'save graph in two parts, experiment with pipeline',
+                6,
+                dim_ab(4 * 3, 2),  # in out dot
+                dim_ab(basedim * 4 * basedim * 4 * 3, 2),  # in out conv 4800, 2
+                dim_xy(basedim * 4, basedim * 4),  # x y
+                dim_abcd(convdim, convdim, 3, basedim * 4 + convdim - 1),  # conv weight 1
+                dim_bias(basedim * 4 + convdim - 1),  # conv bias 1
+                dim_abcd(convdim, convdim, basedim * 4 + convdim - 1, 2 * (basedim * 4 + convdim - 1)),  # conv weight 2
+                dim_bias(2 * (basedim * 4 + convdim - 1)),
+                dim_abcd(-1, basedim * 4, basedim * 4, 3),
+                dim_ab(-1, basedim * basedim * 2 * (basedim * 4 + convdim - 1)),  # -1, 8800
+                dim_ab(basedim * basedim * 2 * (basedim * 4 + convdim - 1), 1024),  # 8800 , 1024
+                dim_bias(1024),
+                dim_ab(1024, 2),
+                dim_bias(2),
+                self.ENUM_PIPELINE_4,
                 dim_load_dot_conv(load_dot=load_dot, load_conv=load_conv)
             ]
 

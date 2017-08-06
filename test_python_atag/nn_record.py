@@ -145,6 +145,76 @@ class Record( enum.Enum, dim.Dimension):
 
         return self.dat
 
+    def make_boxes_eyes(self, filename, dim=-1, dat = []):
+
+        #xx, yy = Image.open(filename).size
+
+        if dim == -1 : dim = self.xy
+        self.dim_x = dim
+        self.dim_y = dim
+
+        self.dat = []
+
+        for k in range(len(dat)) :
+            xpos = dat[k][self.FACE_X]
+            ypos = dat[k][self.FACE_Y]
+            width = dat[k][self.FACE_WIDTH]
+            height = dat[k][self.FACE_HEIGHT]
+
+            xx, yy = Image.open(filename).size
+
+            mc_num = int ((height - ypos) //4)
+            div = 2 # 4
+            print "do mc file prediction"
+            #for i in range(mc_num):
+            i = 0
+            while i < mc_num:
+                #sizex = random.randint(width - width/div, width + width/div)
+
+                #mult = random.randint(0,100)
+                #mult = 1 +  mult/100.0
+
+                temp = []
+                for j in range(self.TOTAL):
+                    num = 0
+                    if j is self.FILE:
+                        num = filename
+                    elif j is self.FACE_WIDTH:
+                        #num = sizex
+                        num = width
+                    elif j is self.FACE_HEIGHT:
+
+                        #num =int( sizex * mult )
+                        num = height
+                    elif j is self.FACE_X:
+
+                        #num = random.randint(xpos - width/div, xpos + width/div)
+                        num = xpos
+                    elif j is self.FACE_Y:
+                        change =  int((height ) // (self.xy // 2))
+                        if change < 1: change = 1
+
+                        #num = random.randint(ypos - height/div, ypos + height/div) - int(sizex * mult / 4)
+
+                        num = ypos + i * change
+                        if num > xpos + (height // 2) :
+                            i += 1
+                            continue # num = xpos + (height // 2)
+
+                    elif j is self.COLOR :
+                        num = self.RED
+                    elif j is self.ATAG_ID :
+                        num = i
+                    temp.append(num)
+
+                if not (temp[self.FACE_X] + temp[self.FACE_WIDTH] >= xx or temp[self.FACE_Y] + temp[self.FACE_HEIGHT] >= yy or
+                    temp[self.FACE_X] < 0 or temp[self.FACE_Y] < 0):
+                    self.dat.append(temp)
+                i += 1
+            self.dat.append(dat[k])
+
+        return self.dat
+
     def save_dat_to_file(self, dat = [], erase=True):
         self.dat = dat
         #print self.dat
