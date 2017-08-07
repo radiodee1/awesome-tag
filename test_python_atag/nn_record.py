@@ -197,8 +197,9 @@ class Record( enum.Enum, dim.Dimension):
                         #num = random.randint(ypos - height/div, ypos + height/div) - int(sizex * mult / 4)
 
                         num = ypos + i * change
-                        if num > xpos + (height // 2) :
+                        if False and num > xpos + (height // 2) :
                             i += 1
+                            temp = []
                             continue # num = xpos + (height // 2)
 
                     elif j is self.COLOR :
@@ -207,8 +208,9 @@ class Record( enum.Enum, dim.Dimension):
                         num = i
                     temp.append(num)
 
-                if not (temp[self.FACE_X] + temp[self.FACE_WIDTH] >= xx or temp[self.FACE_Y] + temp[self.FACE_HEIGHT] >= yy or
-                    temp[self.FACE_X] < 0 or temp[self.FACE_Y] < 0):
+                if not (int(temp[self.FACE_X]) + int(temp[self.FACE_WIDTH]) >= xx or
+                                    int(temp[self.FACE_Y]) + int(temp[self.FACE_HEIGHT]) >= yy or
+                    int(temp[self.FACE_X]) < 0 or int(temp[self.FACE_Y]) < 0):
                     self.dat.append(temp)
                 i += 1
             self.dat.append(dat[k])

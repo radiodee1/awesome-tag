@@ -665,7 +665,7 @@ class NN(enum.Enum, dim.Dimension):
                     print mean, "mean"
 
             if True:
-                print "out", len(out)
+                print "eye out", len(out), out
                 numlow = mean # 0.95
                 numhigh = mean # 0.95
                 numhigh_index = 0

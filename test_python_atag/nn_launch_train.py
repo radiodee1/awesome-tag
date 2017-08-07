@@ -386,7 +386,7 @@ class Read( enum.Enum, dim.Dimension) :
                 ''' try to improve box '''
                 if mc_experement:
                     self.nn.nn_clear_and_reset()
-                    self.nn.nn_configure_conv()
+                    self.nn.nn_configure_eyes()
                     self.nn.nn_global_var_init()
                 see_boxes = False
                 self.nn.load_ckpt = True
@@ -408,6 +408,7 @@ class Read( enum.Enum, dim.Dimension) :
                         eye_list = ll.record.make_boxes_eyes(self.pic, dat=[mc_list[j]])
                         ll.dat = eye_list[:]
                         self.nn.set_vars(len(eye_list), 100, 0, adjust_x=True)
+                        self.nn.predict_eye = True
                         if not see_boxes: self.nn.eye_setup(remove_low=True, color_reject=True)
                 if not see_boxes:
                     pass
