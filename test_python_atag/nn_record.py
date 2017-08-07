@@ -185,7 +185,7 @@ class Record( enum.Enum, dim.Dimension):
                     elif j is self.FACE_HEIGHT:
 
                         #num =int( sizex * mult )
-                        num = height
+                        num = height // 2
                     elif j is self.FACE_X:
 
                         #num = random.randint(xpos - width/div, xpos + width/div)
