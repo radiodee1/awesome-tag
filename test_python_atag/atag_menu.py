@@ -528,7 +528,7 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     ''' threading etc '''
     def run_draw_compile(self):
-        ii = easygui.buttonbox("Type of Diagram","Choose",choices=("CONVOLUTION","INSET","DOT","PREDICT","[CLEAR]","LIST"))
+        ii = easygui.buttonbox("Type of Diagram","Choose",choices=("CONVOLUTION","INSET","INSET-EYES","DOT","PREDICT","[CLEAR]","LIST"))
         r = draw.Read(self)
         self.drawingarea.draw_enum = self.drawingarea.ENUM_BOXES
         if ii == "CONVOLUTION" :
@@ -557,6 +557,16 @@ class Interface(Gtk.Window, atag.Dotfolder) :
                 return
             skin, img, three = r.process_read_file_convolution_in_depth(num=(int(ii) * 2 - 1))
             #print three
+            self.drawingarea.set_gradient_info(skin, img, three)
+            pass
+        elif ii == "INSET-EYES":
+            ii = easygui.buttonbox("Number of Diagram", "Choose",
+                                   choices=("0", "1", "2", "3", "4", "5", "6", "7", "CANCEL"))
+            if ii == "CANCEL":
+                self.drawingarea.queue_draw()
+                return
+            skin, img, three = r.process_read_file_convolution_for_eyes(num=(int(ii) * 2 - 1))
+            # print three
             self.drawingarea.set_gradient_info(skin, img, three)
             pass
         elif ii == "[CLEAR]":

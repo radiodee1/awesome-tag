@@ -36,6 +36,7 @@ class Read( enum.Enum, dim.Dimension) :
         print self.picname, "picname"
 
         self.csv_input = atag.VAR_LOCAL_DATABASE + os.sep + atag.VAR_MY_CSV_NAME + ".csv"
+        self.csv_input_eye =  atag.VAR_LOCAL_DATABASE + os.sep + atag.VAR_MY_CSV_NAME + ".eye.csv"
         self.csv_input_predict = atag.VAR_LOCAL_DATABASE + os.sep + "predict" + ".csv"
         self.csv_input_dot = atag.VAR_LOCAL_DATABASE + os.sep + atag.VAR_MY_CSV_NAME + ".dot.csv"
         self.csv_input_predict_list = atag.VAR_LOCAL_DATABASE + os.sep + "predict-list" + ".csv"
@@ -96,6 +97,16 @@ class Read( enum.Enum, dim.Dimension) :
 
     def process_read_file_convolution_in_depth(self, num = 1):
         self.num_chosen = num
+        self.process_read_file_simple()
+        print self.num_chosen
+        ll = loader.Load(self.a, self.picname)
+        return ll.outside_get_pixels_from_dat(self.picname, self.line_chosen)
+        pass
+
+    def process_read_file_convolution_for_eyes(self, num = 1):
+        self.num_chosen = num
+        self.csv_input = self.csv_input_eye
+        print self.csv_input
         self.process_read_file_simple()
         print self.num_chosen
         ll = loader.Load(self.a, self.picname)

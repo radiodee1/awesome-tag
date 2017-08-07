@@ -201,9 +201,9 @@ class Write( enum.Enum, dim.Dimension) :
             return
 
         left = int(math.floor(float(line[self.FACE_X])))
-        #right = int(math.floor(float(line[self.FACE_X]))) + int(math.floor(float(line[self.FACE_WIDTH])))
+
         top = int(math.floor(float(line[self.FACE_Y])))
-        #bottom = int(math.floor(float(line[self.FACE_Y]))) + int(math.floor(float(line[self.FACE_HEIGHT])))
+
         width = int(math.floor(float(line[self.FACE_WIDTH])))
         height = int(math.floor(float(line[self.FACE_HEIGHT])))
 
@@ -219,7 +219,7 @@ class Write( enum.Enum, dim.Dimension) :
             #left_eye_x = int(math.floor(float(line[self.LEFT_EYE_X])))
             left_eye_y = int(math.floor(float(line[self.LEFT_EYE_Y])))
 
-        avg_eye_y = int((right_eye_y + left_eye_y ) /2) - 6 ## very magic numbery
+        avg_eye_y = int((right_eye_y + left_eye_y ) /2) - (2 * abs(right_eye_y - left_eye_y)) ## very magic numbery
 
         line[self.FACE_Y] = avg_eye_y
 
@@ -240,7 +240,7 @@ class Write( enum.Enum, dim.Dimension) :
         for y in range(2): #3 # values of 2 or 3 are valid
 
             for x in range(self.TOTAL_READ):
-                if y == 0  :
+                if (y == 0 or y == 1 ) and (x != self.FACE_HEIGHT and x != self.FACE_Y) :
                     if x != self.FILE and len(str(line[x])) > 0:
                         #print line, x
                         self.f.write(str(int(math.floor(float(line[x])))))
@@ -249,17 +249,27 @@ class Write( enum.Enum, dim.Dimension) :
                     else:
                         self.f.write(line[x])
 
-                elif (y == 1 or y == 2) and x == self.FACE_X:
+                elif (y == 1 ) and x == self.FACE_X:
                     r = 0
                     if left + width < dimx : r = random.randint(0,dimx - width) # somewhere on top
                     self.f.write(str(r))
-                elif (y == 1 or y == 2) and x == self.FACE_Y:
+                elif (y == 1 ) and x == self.FACE_Y:
                     r = 0
                     #g = 0
 
                     #if top - height <= 0 : g = 0 - (top - height)
                     if top - height > 0 : r = random.randint(0, top - height)
                     self.f.write(str(r))
+                elif (y == 1 or y == 0) and x == self.FACE_HEIGHT:
+                    #r = height // 8
+                    #if r < 2: r = 2
+                    r = height
+                    self.f.write(str(r))
+                    pass
+                elif y == 0 and x == self.FACE_Y:
+                    r = avg_eye_y
+                    self.f.write(str(r))
+                    pass
                 else:
                     if x != self.FILE and len(line[x]) > 0:
                         self.f.write(str(int(math.floor(float(line[x])))))
