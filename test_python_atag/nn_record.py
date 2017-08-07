@@ -163,7 +163,7 @@ class Record( enum.Enum, dim.Dimension):
 
             xx, yy = Image.open(filename).size
 
-            mc_num = int ((height - ypos) //4)
+            mc_num = self.xy // 2 #int ((height ) // (self.xy // 2))
             div = 2 # 4
             print "do mc file prediction"
             #for i in range(mc_num):
@@ -185,14 +185,14 @@ class Record( enum.Enum, dim.Dimension):
                     elif j is self.FACE_HEIGHT:
 
                         #num =int( sizex * mult )
-                        num = height // 2
+                        num = height #// 2
                     elif j is self.FACE_X:
 
                         #num = random.randint(xpos - width/div, xpos + width/div)
                         num = xpos
                     elif j is self.FACE_Y:
-                        change =  int((height ) // (self.xy // 2))
-                        if change < 1: change = 1
+                        change =  int((height ) // (self.xy // 1))
+                        if change < 2: change = 2
 
                         #num = random.randint(ypos - height/div, ypos + height/div) - int(sizex * mult / 4)
 

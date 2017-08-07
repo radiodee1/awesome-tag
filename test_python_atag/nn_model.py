@@ -656,8 +656,10 @@ class NN(enum.Enum, dim.Dimension):
                 #self.c_y_out = tf.argmax(self.y_conv,1) ## 1
                 if len(batch_0) > 0  :
                     #print "show_batch", batch_0
-                    #out.extend( self.sess.run(self.y_conv, feed_dict={self.c_x : batch_0, self.c_y_: batch_1, self.keep_prob: 1.0}))
-                    part = self.sess.run(self.y_conv_eye, feed_dict={self.e_x : batch_0, self.e_y_: batch_1, self.keep_prob_eye: 1.0})
+
+                    #part = self.sess.run(self.y_conv_eye, feed_dict={self.e_x : batch_0, self.e_y_: batch_1, self.keep_prob_eye: 1.0})
+                    part = self.sess.run(self.e_y_out, feed_dict={self.e_x : batch_0, self.e_y_: batch_1, self.keep_prob_eye: 1.0})
+
                     out.extend(part)
                     #print part, len(part) , i, self.cursor_tot
                     mean = self.sess.run(self.e_cross_entropy, feed_dict={self.e_x: batch_0, self.e_y_: batch_1, self.keep_prob_eye: 1.0})
@@ -666,6 +668,10 @@ class NN(enum.Enum, dim.Dimension):
 
             if True:
                 print "eye out", len(out), out
+
+            if False:
+                pass
+                '''
                 numlow = mean # 0.95
                 numhigh = mean # 0.95
                 numhigh_index = 0
@@ -687,7 +693,7 @@ class NN(enum.Enum, dim.Dimension):
                 if save_index or not remove_low: ## or ?
                     print numhigh_index, "index"
                     self.dat_best.append(self.loader.dat[numhigh_index])
-
+                '''
 
             #print out [:3], "..."
             if remove_low:

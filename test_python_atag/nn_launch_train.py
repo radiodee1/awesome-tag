@@ -403,7 +403,8 @@ class Read( enum.Enum, dim.Dimension) :
                     self.nn.predict_remove_symbol = 1
 
                     eye_list = []
-                    mc_list = ll.dat[0:2]
+                    mc_list = ll.dat[0:1]
+                    if see_boxes: ll.record.save_dat_to_list_file(mc_list,erase=False, color="GREEN")
                     for j in range(len(mc_list)):
                         eye_list = ll.record.make_boxes_eyes(self.pic, dat=[mc_list[j]])
                         ll.dat = eye_list[:]

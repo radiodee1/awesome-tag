@@ -252,7 +252,7 @@ class Load(enum.Enum, dim.Dimension):
         self.dat.append(row)
 
 
-    def look_at_img(self, filename, x = 0, y = 0, width = -1, height = -1, skin_reject=False):
+    def look_at_img(self, filename, x = 0, y = 0, width = -1, height = -1, skin_reject=False, mirror_vert=False):
 
         if width == -1 : width = self.dim_x
         if height == -1 : height = self.dim_y

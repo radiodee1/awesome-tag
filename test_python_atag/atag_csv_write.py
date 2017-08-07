@@ -261,9 +261,9 @@ class Write( enum.Enum, dim.Dimension) :
                     if top - height > 0 : r = random.randint(0, top - height)
                     self.f.write(str(r))
                 elif (y == 1 or y == 0) and x == self.FACE_HEIGHT:
-                    r = height // 2
-                    if r < 2: r = 2
-                    #r = height
+                    #r = height // 2
+                    #if r < 2: r = 2
+                    r = height
                     self.f.write(str(r))
                     pass
                 elif y == 0 and x == self.FACE_Y:
