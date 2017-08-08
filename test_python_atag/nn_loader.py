@@ -68,11 +68,13 @@ class Load(enum.Enum, dim.Dimension):
         self.skintone_training = True
         self.predict_op = False
         self.num_channels_global = num_channels
+        eye_vert = False
+        if num_channels == self.CONST_EYES: eye_vert = True
         if cursor * batchsize + batchsize >= len(self.dat):
-            skin, three, images, lables = self._get_pixels_from_dat(cursor * batchsize, len(self.dat) -1 )
+            skin, three, images, lables = self._get_pixels_from_dat(cursor * batchsize, len(self.dat) -1, eye_vert=eye_vert )
 
         elif cursor * batchsize + batchsize < len(self.dat) :
-            skin, three, images, lables = self._get_pixels_from_dat(cursor * batchsize, cursor * batchsize + batchsize)
+            skin, three, images, lables = self._get_pixels_from_dat(cursor * batchsize, cursor * batchsize + batchsize, eye_vert=eye_vert)
         if num_channels == self.CONST_ONE_CHANNEL : return images, lables
         if num_channels == self.CONST_THREE_CHANNEL or num_channels == self.CONST_EYES:
             return three, lables
@@ -84,7 +86,9 @@ class Load(enum.Enum, dim.Dimension):
         self.skintone_training = False
         self.predict_op = False
         self.num_channels_global = num_channels
-        skin, three, images, labels = self._get_pixels_from_dat( testframe * batchsize, testframe * batchsize + batchsize) #len(self.dat) - batchsize, len(self.dat))
+        eye_vert = False
+        if num_channels == self.CONST_EYES: eye_vert = True
+        skin, three, images, labels = self._get_pixels_from_dat( testframe * batchsize, testframe * batchsize + batchsize, eye_vert=eye_vert) #len(self.dat) - batchsize, len(self.dat))
         print ("next test", len(images), batchsize, testframe)
         if num_channels == self.CONST_ONE_CHANNEL : self.mnist_test = Map({'images':images, 'labels': labels})
         if num_channels == self.CONST_THREE_CHANNEL or num_channels == self.CONST_EYES:
@@ -97,16 +101,18 @@ class Load(enum.Enum, dim.Dimension):
         self.skintone_training = False
         self.predict_op = True
         self.num_channels_global = num_channels
+        eye_vert = False
+        if num_channels == self.CONST_EYES: eye_vert = True
         tot_cursors = int(math.floor(len(self.dat) / float(batchsize)))
         if cursor > tot_cursors  :
             print cursor, tot_cursors, batchsize, len(self.dat), "end"
-            skin, three, images, labels = self._get_pixels_from_dat((cursor-1) * batchsize, len(self.dat)-1 )# len(self.dat) -1)
+            skin, three, images, labels = self._get_pixels_from_dat((cursor-1) * batchsize, len(self.dat)-1 , eye_vert=eye_vert)# len(self.dat) -1)
         elif batchsize > len(self.dat) - 1:
             print batchsize, "large batch size", len(self.dat) -1, cursor
-            skin, three, images, labels = self._get_pixels_from_dat(cursor * batchsize, len(self.dat) -1)
+            skin, three, images, labels = self._get_pixels_from_dat(cursor * batchsize, len(self.dat) -1, eye_vert=eye_vert)
             print "batches returned", len(skin)
         elif cursor <= tot_cursors :
-            skin, three, images, labels = self._get_pixels_from_dat(cursor * batchsize, cursor * batchsize + batchsize)
+            skin, three, images, labels = self._get_pixels_from_dat(cursor * batchsize, cursor * batchsize + batchsize, eye_vert=eye_vert)
         print batchsize, "batch size", len(self.dat) - 1, cursor, len(labels), len(skin)
         if num_channels == self.CONST_ONE_CHANNEL : return images, labels
         if num_channels == self.CONST_THREE_CHANNEL or num_channels == self.CONST_EYES :
@@ -115,7 +121,7 @@ class Load(enum.Enum, dim.Dimension):
         return images, labels
 
 
-    def outside_get_pixels_from_dat(self, filename, chosen):
+    def outside_get_pixels_from_dat(self, filename, chosen, eye_vert=False):
         print ("work with dat var")
         self.image = []
         self.label = []
@@ -140,11 +146,11 @@ class Load(enum.Enum, dim.Dimension):
 
             self.special_horizontal_align = True
 
-            skin, img , three = self.look_at_img(filename, x, y, width, height)
+            skin, img , three = self._look_at_img(filename, x, y, width, height,eye_vert=eye_vert)
             print len(skin), len(img), len(three)
             return skin, img, three
 
-    def _get_pixels_from_dat(self, start, stop):
+    def _get_pixels_from_dat(self, start, stop, eye_vert=False):
         #print ("work with dat var")
         self.image = []
         self.label = []
@@ -198,7 +204,7 @@ class Load(enum.Enum, dim.Dimension):
                 lbl_2 = 1
                 if self.skintone_training and False: skin_reject = True
 
-            skin, img , three = self.look_at_img(filename,x,y,width,height, skin_reject=skin_reject)
+            skin, img , three = self._look_at_img(filename,x,y,width,height, skin_reject=skin_reject, eye_vert=eye_vert)
 
 
             if True and not self.predict_op and skin[0] == 0.0 and skin[1] == 0.0:
@@ -252,7 +258,7 @@ class Load(enum.Enum, dim.Dimension):
         self.dat.append(row)
 
 
-    def look_at_img(self, filename, x = 0, y = 0, width = -1, height = -1, skin_reject=False, mirror_vert=False):
+    def _look_at_img(self, filename, x = 0, y = 0, width = -1, height = -1, skin_reject=False, eye_vert=False):
 
         if width == -1 : width = self.dim_x
         if height == -1 : height = self.dim_y
@@ -288,32 +294,38 @@ class Load(enum.Enum, dim.Dimension):
             if not (x + xoffset <= 0 or x + xoffset + width > dimx) :
                 x = x + xoffset
 
+        ''' special for eye image '''
+        if eye_vert:
+            #repeat = int(height / 2)
+            #print repeat,"mod"
+            if  len (self.img.getbands()) == 3 :
+                if not (x + width > dimx and y + height / 2 > dimy) :
 
-        ''' Put in shrunk form. '''
-        if self.crop_resize_special:
-            #self.img.show()
-            print x, y, width, height, "dimensions"
-            cropped = self.img.crop((x,y,x + width, y + height))
-            #cropped.show()
-            resize = cropped.resize((self.dim_x, self.dim_y))
-            #resize = resizeimage.resize_height(resize, self.dim_y)
-            for aa in range(self.dim_x):
-                for bb in range(self.dim_y):
-                    astart = aa #x + aa * multx
-                    bstart = bb #y + bb * multy
+                    for aa in range(self.dim_x) :
+                        for bb in range(self.dim_y) :
+                            astart = x + aa * multx
+                            bstart = y + (bb % (self.dim_y / 2)) * multy
 
-                    if astart >= 0 and astart < dimx and bstart >= 0 and bstart < dimy:
-                        item = [aa, bb, list(resize.getpixel((int(astart), int(bstart)))[:3])]
-                        oneimg_rgb.extend(list(resize.getpixel((int(astart), int(bstart)))[:3]))
-                        xy_list.append(item)
-                        counter = counter + 1
-                    else:
-                        item = [aa, bb, list((0.0, 0.0, 0.0))]
-                        oneimg_rgb.extend(list((0.0, 0.0, 0.0)))
-                        xy_list.append(item)
-                        counter = counter + 1
 
-        if not self.crop_resize_special:
+                            if  astart >= 0 and astart < dimx and bstart >= 0 and bstart < dimy / 2:
+                                #print bstart , y, "mod?"
+                                item = [ aa, bb, list(self.img.getpixel((int(astart) ,int(bstart) )))]
+                                oneimg_rgb.extend(list(self.img.getpixel((int(astart) ,int(bstart) ))))
+                                xy_list.append(item)
+                                counter = counter + 1
+                            else:
+                                item = [aa, bb, list((0.0, 0.0, 0.0))]
+                                oneimg_rgb.extend(list((0.0, 0.0, 0.0)))
+                                xy_list.append(item)
+                                counter = counter + 1
+                else:
+                    print "change size??"
+
+
+
+
+        else :
+            ''' put in shrunk form '''
             if  len (self.img.getbands()) == 3 :
                 if not (x + width > dimx and y + height > dimy) :
 

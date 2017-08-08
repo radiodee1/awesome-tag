@@ -110,6 +110,6 @@ class Read( enum.Enum, dim.Dimension) :
         self.process_read_file_simple()
         print self.num_chosen
         ll = loader.Load(self.a, self.picname)
-        return ll.outside_get_pixels_from_dat(self.picname, self.line_chosen)
+        return ll.outside_get_pixels_from_dat(self.picname, self.line_chosen, eye_vert=True)
         pass
 
