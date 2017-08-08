@@ -394,23 +394,27 @@ class Read( enum.Enum, dim.Dimension) :
                 see_list = []
                 self.nn.dat_best = []
                 self.dat_mc = ll.dat[:]
-                ll.dat = []
+                #ll.dat = []
+                #self.nn.dat = []
                 for k in range(len(self.dat_mc)):
-                    ll.dat = ll.record.make_boxes_mc(self.pic, dim=100, dat=[self.dat_mc[k]])
+                    ll.dat = ll.record.make_boxes_mc(self.pic, dim=50, dat=[self.dat_mc[k]])
                     ll.record.renumber_dat_list(ll.dat)
                     if see_boxes: see_list.extend(ll.dat[:])
 
                     self.nn.predict_remove_symbol = 1
 
                     eye_list = []
-                    mc_list = ll.dat[0:1]
+                    mc_list = ll.dat[:] ##limit output here <---
                     if see_boxes: ll.record.save_dat_to_list_file(mc_list,erase=False, color="GREEN")
                     for j in range(len(mc_list)):
+                        print k, len(self.dat_mc), j, "progress"
                         eye_list = ll.record.make_boxes_eyes(self.pic, dat=[mc_list[j]])
                         ll.dat = eye_list[:]
                         self.nn.set_vars(len(eye_list), 100, 0, adjust_x=True)
                         self.nn.predict_eye = True
-                        if not see_boxes: self.nn.eye_setup(remove_low=True, color_reject=True)
+                        if not see_boxes:
+                            self.nn.eye_setup(remove_low=True, color_reject=True, index=k)
+                            #ll.dat = self.nn.dat
                 if not see_boxes:
                     pass
                     ll.dat = ll.record.renumber_dat_list(self.nn.dat_best)

@@ -605,7 +605,7 @@ class NN(enum.Enum, dim.Dimension):
                 pass
             #print "best conv mc", self.dat_best[:]
 
-    def eye_setup(self, remove_low = False, color_reject=False, original=None):
+    def eye_setup(self, remove_low = False, color_reject=False, original=None, index=0):
 
         name = "eye"
         if self.load_conv_only == True and self.load_dot_only == True and self.load_eye_only == True: name = ""
@@ -662,42 +662,41 @@ class NN(enum.Enum, dim.Dimension):
 
                     out.extend(part)
                     #print part, len(part) , i, self.cursor_tot
-                    mean = self.sess.run(self.e_cross_entropy, feed_dict={self.e_x: batch_0, self.e_y_: batch_1, self.keep_prob_eye: 1.0})
+                    #mean = self.sess.run(self.e_cross_entropy, feed_dict={self.e_x: batch_0, self.e_y_: batch_1, self.keep_prob_eye: 1.0})
                     #mean = mean * 2 #1.5
-                    print mean, "mean"
-
-            if True:
-                print "eye out", len(out), out
+                    #print mean, "mean"
 
             if False:
+                print "eye out", len(out), out
+                out = [0 , 0, 0, 1, 1, 1, 0, 1, 0 , 0]
+
+            if True:
+                starteye = False
+                mideye = False
+                endeye = False
+                outputeye = True
+                for i in range(len(out)):
+                    if (out[i] != self.predict_remove_symbol):
+                        starteye = True
+                        #print "start", starteye
+                    if (starteye and out[i] == self.predict_remove_symbol):
+                        mideye = True
+                        #print "mid", mideye
+                    if (starteye and mideye and out[i] != self.predict_remove_symbol):
+                        endeye = True
+                        #print "end", endeye
+                    if ( starteye and  mideye and  endeye and out[i] == self.predict_remove_symbol):
+                        outputeye = False
+                        #print "output",outputeye
+
+                #print len(out), out, outputeye, "output eye", self.predict_remove_symbol
+
+                #val = index
+                if  outputeye:
+                    #val = 1
+                    self.dat_best.append(self.loader.dat[index]) ## remove symbol
                 pass
-                '''
-                numlow = mean # 0.95
-                numhigh = mean # 0.95
-                numhigh_index = 0
-                save_index = False
-                for j in range(len(out)) :
-                    zz = out[j][0]
-                    #print zz, "raw mc", mean
-                    if float(zz) < numlow : # int(self.predict_remove_symbol ) : ## 1
-                        #print "activity", zz
-                        numlow = zz
-                        self.dat_remove.append( j )
-                        save_index = False
-                    elif float(zz) >= numhigh:
-                        #print zz, "numhigh"
-                        numhigh = zz
-                        numhigh_index = j
-                        save_index = True
 
-                if save_index or not remove_low: ## or ?
-                    print numhigh_index, "index"
-                    self.dat_best.append(self.loader.dat[numhigh_index])
-                '''
-
-            #print out [:3], "..."
-            if remove_low:
-                print self.dat_remove, "dat_remove"
 
             if color_reject and False:
                 self.dat = self.loader.record.recolor_dat_list(self.loader.dat, self.dat_remove, color_string=self.GREEN)
