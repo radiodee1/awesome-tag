@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c15ed38a-2fe7-44d1-b032-ae199cd14d43" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_launch_train.py" afterPath="$PROJECT_DIR$/nn_launch_train.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_model.py" afterPath="$PROJECT_DIR$/nn_model.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -74,8 +73,8 @@
       <file leaf-file-name="nn_launch_train.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nn_launch_train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="659">
-              <caret line="422" column="52" lean-forward="false" selection-start-line="422" selection-start-column="52" selection-end-line="422" selection-end-column="52" />
+            <state relative-caret-position="731">
+              <caret line="423" column="28" lean-forward="false" selection-start-line="423" selection-start-column="28" selection-end-line="423" selection-end-column="28" />
               <folding>
                 <element signature="e#19#28#0" expanded="true" />
               </folding>
@@ -1186,8 +1185,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nn_launch_train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="659">
-          <caret line="422" column="52" lean-forward="false" selection-start-line="422" selection-start-column="52" selection-end-line="422" selection-end-column="52" />
+        <state relative-caret-position="731">
+          <caret line="423" column="28" lean-forward="false" selection-start-line="423" selection-start-column="28" selection-end-line="423" selection-end-column="28" />
           <folding>
             <element signature="e#19#28#0" expanded="true" />
           </folding>

@@ -403,7 +403,8 @@ class Read( enum.Enum, dim.Dimension) :
                     if see_boxes: see_list.extend(ll.dat[:])
 
                     self.nn.predict_remove_symbol = 1
-
+                    #eyes_score = 0
+                    #eyes_index = 0
                     eye_list = []
                     self.nn.dat_eye = ll.dat[:] ##limit output here <---
                     if see_boxes: ll.record.save_dat_to_list_file(mc_list,erase=False, color="GREEN")
@@ -416,12 +417,13 @@ class Read( enum.Enum, dim.Dimension) :
                         self.nn.dat = self.dat_mc
                         if not see_boxes:
                             self.nn.eye_setup(remove_low=True, color_reject=True, index=j)
-                            #ll.dat = self.nn.dat
+
                         if self.nn.mc_score_eyes > eyes_score:
                             eyes_score = self.nn.mc_score_eyes
-                            eyes_index = k
-                print eyes_index, "mc index <-------"
-                temp_list.append(self.nn.dat_best[eyes_index])
+                            eyes_index = j #k
+                            print eyes_index, "mc index <-------"
+                    if not self.nn.dat_eye[eyes_index] in temp_list:
+                        temp_list.append(self.nn.dat_eye[eyes_index])
                 if not see_boxes:
                     pass
                     self.nn.dat_best = temp_list
