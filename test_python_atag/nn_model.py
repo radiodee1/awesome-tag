@@ -701,7 +701,7 @@ class NN(enum.Enum, dim.Dimension):
                 #print len(out), out, outputeye, "output eye", self.predict_remove_symbol
 
 
-                if not outputeye:
+                if  outputeye:
 
                     print index, "ll.dat/nn.dat_eye", out
                     if not self.dat_eye[index] in self.dat_best:

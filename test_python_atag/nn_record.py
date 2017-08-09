@@ -168,6 +168,7 @@ class Record( enum.Enum, dim.Dimension):
             print "do mc file prediction"
             #for i in range(mc_num):
             i = 0
+
             while i < mc_num:
                 #sizex = random.randint(width - width/div, width + width/div)
 
@@ -211,7 +212,8 @@ class Record( enum.Enum, dim.Dimension):
                 if not (int(temp[self.FACE_X]) + int(temp[self.FACE_WIDTH]) >= xx or
                                     int(temp[self.FACE_Y]) + int(temp[self.FACE_HEIGHT]) >= yy or
                     int(temp[self.FACE_X]) < 0 or int(temp[self.FACE_Y]) < 0):
-                    self.dat.append(temp)
+
+                    if (height > self.xy ) :self.dat.append(temp)
                 i += 1
             self.dat.append(dat[k])
 

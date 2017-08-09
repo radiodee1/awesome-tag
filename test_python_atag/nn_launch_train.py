@@ -364,7 +364,7 @@ class Read( enum.Enum, dim.Dimension) :
                     ll.dat = ll.record.aggregate_dat_list(ll.dat, del_shapes=True)
                     ll.record.renumber_dat_list(ll.dat)
 
-                if self.blue_boxes and False: ll.record.save_dat_to_list_file(ll.dat, erase=False,color=self.BLUE)
+                if self.blue_boxes and True: ll.record.save_dat_to_list_file(ll.dat, erase=False,color=self.BLUE)
 
                 print "len-dat3", len(ll.dat)
 
