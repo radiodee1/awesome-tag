@@ -421,7 +421,7 @@ class Read( enum.Enum, dim.Dimension) :
                         if self.nn.mc_score_eyes > eyes_score:
                             eyes_score = self.nn.mc_score_eyes
                             eyes_index = j #k
-                            print eyes_index, "mc index <-------"
+                        print eyes_index, "mc index <-------"
                     if not self.nn.dat_eye[eyes_index] in temp_list:
                         temp_list.append(self.nn.dat_eye[eyes_index])
                 if not see_boxes:

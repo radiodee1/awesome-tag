@@ -675,6 +675,7 @@ class NN(enum.Enum, dim.Dimension):
                 out = [0 , 0, 0, 1, 1, 1, 0, 0, 0 , 1]
 
             if True:
+                self.predict_remove_symbol = 1
                 starteye = False
                 mideye = False
                 endeye = False
