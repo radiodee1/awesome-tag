@@ -51,6 +51,7 @@ class NN(enum.Enum, dim.Dimension):
 
         self.dat_remove = []
         self.dat_best = []
+        self.dat_eye = []
 
         self.dot_only = False
         self.conv_only = False
@@ -692,9 +693,12 @@ class NN(enum.Enum, dim.Dimension):
                 #print len(out), out, outputeye, "output eye", self.predict_remove_symbol
 
                 #val = index
-                if  outputeye:
+                if not outputeye:
                     #val = 1
-                    self.dat_best.append(self.loader.dat[index]) ## remove symbol
+                    print index, "ll.dat/nn.dat_eye", out
+                    if not self.dat_eye[index] in self.dat_best:
+                        self.dat_best.append(self.dat_eye[index]) ## remove symbol
+                    print self.dat_best, "best"
                 pass
 
 

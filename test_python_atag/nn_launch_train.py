@@ -364,7 +364,7 @@ class Read( enum.Enum, dim.Dimension) :
                     ll.dat = ll.record.aggregate_dat_list(ll.dat, del_shapes=True)
                     ll.record.renumber_dat_list(ll.dat)
 
-                if self.blue_boxes: ll.record.save_dat_to_list_file(ll.dat, erase=False,color=self.BLUE)
+                if self.blue_boxes and False: ll.record.save_dat_to_list_file(ll.dat, erase=False,color=self.BLUE)
 
                 print "len-dat3", len(ll.dat)
 
@@ -404,16 +404,17 @@ class Read( enum.Enum, dim.Dimension) :
                     self.nn.predict_remove_symbol = 1
 
                     eye_list = []
-                    mc_list = ll.dat[:] ##limit output here <---
+                    self.nn.dat_eye = ll.dat[:] ##limit output here <---
                     if see_boxes: ll.record.save_dat_to_list_file(mc_list,erase=False, color="GREEN")
-                    for j in range(len(mc_list)):
+                    for j in range(len(self.nn.dat_eye)):
                         print k, len(self.dat_mc), j, "progress"
-                        eye_list = ll.record.make_boxes_eyes(self.pic, dat=[mc_list[j]])
+                        eye_list = ll.record.make_boxes_eyes(self.pic, dat=[self.nn.dat_eye[j]])
                         ll.dat = eye_list[:]
                         self.nn.set_vars(len(eye_list), 100, 0, adjust_x=True)
                         self.nn.predict_eye = True
+                        self.nn.dat = self.dat_mc
                         if not see_boxes:
-                            self.nn.eye_setup(remove_low=True, color_reject=True, index=k)
+                            self.nn.eye_setup(remove_low=True, color_reject=True, index=j)
                             #ll.dat = self.nn.dat
                 if not see_boxes:
                     pass
@@ -424,7 +425,7 @@ class Read( enum.Enum, dim.Dimension) :
                 print "len-dat5", len(self.nn.dat_best)
 
             print "pipeline enum 4"
-            ll.record.save_dat_to_file(ll.dat, erase=(not self.make_list))
+            ll.record.save_dat_to_list_file(ll.dat, erase=(not self.make_list),color=self.GREEN)
 
     def run_weight_img(self):
         print "weight img"
