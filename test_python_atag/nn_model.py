@@ -669,32 +669,40 @@ class NN(enum.Enum, dim.Dimension):
 
             if False:
                 print "eye out", len(out), out
-                out = [0 , 0, 0, 1, 1, 1, 0, 1, 0 , 0]
+                out = [0 , 0, 0, 1, 1, 1, 0, 0, 0 , 1]
 
             if True:
                 starteye = False
                 mideye = False
                 endeye = False
-                outputeye = True
+                outputeye = False
+                last_i = 0
                 for i in range(len(out)):
-                    if (out[i] != self.predict_remove_symbol):
+                    if (i == 0 and out[0] != self.predict_remove_symbol and not starteye):
                         starteye = True
                         #print "start", starteye
-                    if (starteye and out[i] == self.predict_remove_symbol):
+                    if (starteye and out[i] == self.predict_remove_symbol and not mideye):
                         mideye = True
                         #print "mid", mideye
-                    if (starteye and mideye and out[i] != self.predict_remove_symbol):
+                    if (starteye and mideye and out[i] != self.predict_remove_symbol and not endeye):
                         endeye = True
                         #print "end", endeye
-                    if ( starteye and  mideye and  endeye and out[i] == self.predict_remove_symbol):
+                    if  ( starteye and  mideye and  endeye and out[i] != self.predict_remove_symbol and not outputeye):
+                        outputeye = True
+                        last_i = i
+                        #print "last i here"
+                    if (out[last_i] != out[i] and outputeye):
                         outputeye = False
+                        starteye = False
+                        #print "reset to false"
+
                         #print "output",outputeye
 
                 #print len(out), out, outputeye, "output eye", self.predict_remove_symbol
 
-                #val = index
+
                 if not outputeye:
-                    #val = 1
+
                     print index, "ll.dat/nn.dat_eye", out
                     if not self.dat_eye[index] in self.dat_best:
                         self.dat_best.append(self.dat_eye[index]) ## remove symbol
