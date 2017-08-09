@@ -392,10 +392,11 @@ class Read( enum.Enum, dim.Dimension) :
                 self.nn.load_ckpt = True
                 if self.pipeline_stage == 5: see_boxes = True
                 see_list = []
+                temp_list = []
                 self.nn.dat_best = []
                 self.dat_mc = ll.dat[:]
-                #ll.dat = []
-                #self.nn.dat = []
+                eyes_score = 0
+                eyes_index = 0
                 for k in range(len(self.dat_mc)):
                     ll.dat = ll.record.make_boxes_mc(self.pic, dim=50, dat=[self.dat_mc[k]])
                     ll.record.renumber_dat_list(ll.dat)
@@ -407,7 +408,7 @@ class Read( enum.Enum, dim.Dimension) :
                     self.nn.dat_eye = ll.dat[:] ##limit output here <---
                     if see_boxes: ll.record.save_dat_to_list_file(mc_list,erase=False, color="GREEN")
                     for j in range(len(self.nn.dat_eye)):
-                        print k, len(self.dat_mc), j, "progress"
+                        #print k, len(self.dat_mc), j, "progress"
                         eye_list = ll.record.make_boxes_eyes(self.pic, dat=[self.nn.dat_eye[j]])
                         ll.dat = eye_list[:]
                         self.nn.set_vars(len(eye_list), 100, 0, adjust_x=True)
@@ -416,8 +417,14 @@ class Read( enum.Enum, dim.Dimension) :
                         if not see_boxes:
                             self.nn.eye_setup(remove_low=True, color_reject=True, index=j)
                             #ll.dat = self.nn.dat
+                        if self.nn.mc_score_eyes > eyes_score:
+                            eyes_score = self.nn.mc_score_eyes
+                            eyes_index = k
+                print eyes_index, "mc index <-------"
+                temp_list.append(self.nn.dat_best[eyes_index])
                 if not see_boxes:
                     pass
+                    self.nn.dat_best = temp_list
                     ll.dat = ll.record.renumber_dat_list(self.nn.dat_best)
                 else:
                     ll.dat = eye_list[:]

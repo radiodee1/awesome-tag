@@ -52,6 +52,7 @@ class NN(enum.Enum, dim.Dimension):
         self.dat_remove = []
         self.dat_best = []
         self.dat_eye = []
+        self.mc_score_eyes = 0
 
         self.dot_only = False
         self.conv_only = False
@@ -652,6 +653,7 @@ class NN(enum.Enum, dim.Dimension):
 
             #print start, stop, "start, stop"
 
+            out_f = []
             for i in range(start, stop ) :
                 batch_0, batch_1 = self.get_nn_next_predict(self.batchsize, self.CONST_EYES)
                 #self.c_y_out = tf.argmax(self.y_conv,1) ## 1
@@ -663,9 +665,10 @@ class NN(enum.Enum, dim.Dimension):
 
                     out.extend(part)
                     #print part, len(part) , i, self.cursor_tot
-                    #mean = self.sess.run(self.e_cross_entropy, feed_dict={self.e_x: batch_0, self.e_y_: batch_1, self.keep_prob_eye: 1.0})
+                    number = self.sess.run(self.y_conv_eye, feed_dict={self.e_x: batch_0, self.e_y_: batch_1, self.keep_prob_eye: 1.0})
                     #mean = mean * 2 #1.5
-                    #print mean, "mean"
+                    out_f.append(number)
+                    #print number, "number"
 
             if False:
                 print "eye out", len(out), out
@@ -699,14 +702,21 @@ class NN(enum.Enum, dim.Dimension):
                         #print "output",outputeye
 
                 #print len(out), out, outputeye, "output eye", self.predict_remove_symbol
-
+                if len(out_f) > 0: print len(out_f[0]), "len out-f"
 
                 if  outputeye:
+                    if len(out_f) > 0 and len(out_f[0]) > 0:
+                        self.mc_score_eyes = 0
+                        for j in range(len(out_f[0])):
+                            zz = out_f[0][j][0]
+                            print zz, len(out_f[0]), "zz, len out-f"
+                            if zz > self.mc_score_eyes: self.mc_score_eyes = zz
+                            pass
 
-                    print index, "ll.dat/nn.dat_eye", out
-                    if not self.dat_eye[index] in self.dat_best:
-                        self.dat_best.append(self.dat_eye[index]) ## remove symbol
-                    print self.dat_best, "best"
+                        #print index, "ll.dat/nn.dat_eye", out
+                        if not self.dat_eye[index] in self.dat_best:
+                            self.dat_best.append(self.dat_eye[index]) ## remove symbol
+                        print self.dat_best, "best", self.mc_score_eyes, "eyes score"
                 pass
 
 
