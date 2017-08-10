@@ -19,7 +19,7 @@ class Read( enum.Enum) :
         self.boxlist_b = []
         self.gpu_test = []
         self.num = 0
-        self.loop_max = 0 #16
+        self.loop_max = 1
         self.change_wh = 1
         
         self.num_chosen = 0
@@ -82,7 +82,7 @@ class Read( enum.Enum) :
     def process_show_gpu_output(self, dat=[]):
         self.dat = dat
         self.img = Image.new('RGB',(1300,900))
-        mult = 8
+        mult = 1
         draw = ImageDraw.Draw(self.img)
         for i in range(len(self.dat) // self.GPU_TOT):
             line = self.dat[i * self.GPU_TOT: i * self.GPU_TOT + self.GPU_TOT]
