@@ -52,7 +52,7 @@ class NN(enum.Enum, dim.Dimension):
         self.dat_remove = []
         self.dat_best = []
         self.dat_eye = []
-        self.mc_score_eyes = 0
+        self.mc_score_eyes = - 10.0
 
         self.dot_only = False
         self.conv_only = False
@@ -681,7 +681,7 @@ class NN(enum.Enum, dim.Dimension):
                 endeye = False
                 outputeye = False
                 last_i = 0
-                for i in range(len(out)):
+                for i in range(len(out) // 2):
                     if (i == 0 and out[0] != self.predict_remove_symbol and not starteye):
                         starteye = True
                         #print "start", starteye
@@ -707,17 +707,19 @@ class NN(enum.Enum, dim.Dimension):
 
                 if  outputeye:
                     if len(out_f) > 0 and len(out_f[0]) > 0:
-                        self.mc_score_eyes = 0
+                        self.mc_score_eyes = - 10.0
                         for j in range(len(out_f[0])):
                             zz = out_f[0][j][0]
-                            print zz, len(out_f[0]), "zz, len out-f"
-                            if zz > self.mc_score_eyes: self.mc_score_eyes = zz
+                            print zz, len(out_f[0]), "zz, len out-f", out_f[0][j]
+                            if zz > self.mc_score_eyes:
+                                self.mc_score_eyes = zz
+                                print "new high", zz
                             pass
 
                         #print index, "ll.dat/nn.dat_eye", out
                         if not self.dat_eye[index] in self.dat_best:
                             self.dat_best.append(self.dat_eye[index]) ## remove symbol
-                        print self.dat_best, "best", self.mc_score_eyes, "eyes score"
+                        #print self.dat_best, "best", self.mc_score_eyes, "eyes score"
                 pass
 
 
