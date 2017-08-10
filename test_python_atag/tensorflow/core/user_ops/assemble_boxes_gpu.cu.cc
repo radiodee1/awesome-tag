@@ -13,7 +13,7 @@ using namespace tensorflow;
 
 #define EIGEN_USE_GPU
 
-__device__ bool dimensionPass(uint16 locy, uint16 loch, uint16 fory, uint16 forh) {
+__host__ __device__ bool dimensionPass(uint16 locy, uint16 loch, uint16 fory, uint16 forh) {
 	//return false;
 	//if (forh > loch * CUDA_SHAPE_FLOAT ) return false;
 	return not ((locy + loch < fory + forh && locy < fory + forh) || ( locy + loch > fory && locy > fory));
@@ -201,16 +201,16 @@ struct AssembleBoxesFunctor<GPUDevice, T> {
   }
 };
 
-__device__ bool isTop(uint16 input) {if ((input & BIT_TOP) >> 0 == 1) return true; return false;}
-__device__ bool isBottom(uint16 input) {if ((input & BIT_BOTTOM) >> 1 == 1) return true; return false;}
-__device__ bool isLeft(uint16 input) {if ((input & BIT_LEFT) >> 2 == 1) return true; return false;}
-__device__ bool isRight(uint16 input) {if ((input & BIT_RIGHT) >> 3 == 1) return true; return false;}
+__host__ __device__ bool isTop(uint16 input) {if ((input & BIT_TOP) >> 0 == 1) return true; return false;}
+__host__ __device__ bool isBottom(uint16 input) {if ((input & BIT_BOTTOM) >> 1 == 1) return true; return false;}
+__host__ __device__ bool isLeft(uint16 input) {if ((input & BIT_LEFT) >> 2 == 1) return true; return false;}
+__host__ __device__ bool isRight(uint16 input) {if ((input & BIT_RIGHT) >> 3 == 1) return true; return false;}
 
 //set
-__device__ void setTop(uint16 * input, int i) { (input[i]) |= 1 << 0; }
-__device__ void setBottom(uint16 * input, int i) { (input[i]) |= 1 << 1; }
-__device__ void setLeft(uint16 * input, int i) { (input[i]) |= 1 << 2; }
-__device__ void setRight(uint16 * input, int i) { (input[i]) |= 1 << 3; }
+__host__ __device__ void setTop(uint16 * input, int i) { (input[i]) |= 1 << 0; }
+__host__ __device__ void setBottom(uint16 * input, int i) { (input[i]) |= 1 << 1; }
+__host__ __device__ void setLeft(uint16 * input, int i) { (input[i]) |= 1 << 2; }
+__host__ __device__ void setRight(uint16 * input, int i) { (input[i]) |= 1 << 3; }
 
 __device__ void setTop(int32 * input, int i) { (input[i]) |= 1 << 0; }
 __device__ void setBottom(int32 * input, int i) { (input[i]) |= 1 << 1; }
@@ -218,10 +218,10 @@ __device__ void setLeft(int32 * input, int i) { (input[i]) |= 1 << 2; }
 __device__ void setRight(int32 * input, int i) { (input[i]) |= 1 << 3; }
 
 //clear
-__device__ void clearTop(uint16 * input, int i) {input[i] &= ~(1 << 0);}
-__device__ void clearBottom(uint16 * input, int i) {input[i] &= ~(1 << 1);}
-__device__ void clearLeft(uint16 * input, int i) {input[i] &= ~(1 << 2);} 
-__device__ void clearRight(uint16 * input, int i) {input[i] &= ~(1 << 3);} 
+__host__ __device__ void clearTop(uint16 * input, int i) {input[i] &= ~(1 << 0);}
+__host__ __device__ void clearBottom(uint16 * input, int i) {input[i] &= ~(1 << 1);}
+__host__ __device__ void clearLeft(uint16 * input, int i) {input[i] &= ~(1 << 2);} 
+__host__ __device__ void clearRight(uint16 * input, int i) {input[i] &= ~(1 << 3);} 
 
 __device__ void clearTop(int32 * input, int i) {input[i] &= ~(1 << 0);}
 __device__ void clearBottom(int32 * input, int i) {input[i] &= ~(1 << 1);}
@@ -229,7 +229,7 @@ __device__ void clearLeft(int32 * input, int i) {input[i] &= ~(1 << 2);}
 __device__ void clearRight(int32 * input, int i) {input[i] &= ~(1 << 3);} 
 
 
-__device__ void setBoxPattern(uint16 * out , int i, uint16 box) {
+__host__ __device__ void setBoxPattern(uint16 * out , int i, uint16 box) {
 	
 	out[i] = out[i] & box;
 	return;
@@ -243,7 +243,7 @@ __device__ void setBoxPattern(int32 * out , int i, int32 box) {
 
 
 
-__device__  void manipulateBoxes(const uint16 * in, uint16 * out, int i, int j) {
+__host__ __device__  void manipulateBoxes(const uint16 * in, uint16 * out, int i, int j) {
 	
 	int jj = j;
 	//bool auto_remove = false;
@@ -326,7 +326,7 @@ __device__ void manipulateBoxes(const int32 * in, int32 * out, int i, int j) {
 	
 };
 
-__device__  void pruneBoxes(const uint16 * in, uint16 * out, int i, int j, int count) {
+__host__ __device__  void pruneBoxes(const uint16 * in, uint16 * out, int i, int j, int count) {
 	
 	
 	int jj = j;
@@ -421,7 +421,7 @@ __device__ void pruneBoxes(const int32 * in, int32 * out, int i, int j, int coun
 	
 };
 
-__device__  void smallBoxes(const uint16 * in, uint16 * out, int i, int j, int count) {
+__host__ __device__  void smallBoxes(const uint16 * in, uint16 * out, int i, int j, int count) {
 	
 	int jj = j;
 	//float mult_w = 2.5;
@@ -487,6 +487,148 @@ __device__ void smallBoxes(const int32 * in, int32 * out, int i, int j, int coun
 	//////////////////////////////
 		
 };
+
+__host__ void AssembleBoxesCpuKernel(const int size, const uint16* in, uint16 * out,int shape_x, int shape_y, int i) {
+	  
+	bool change_wh = false;
+	
+	//int i = blockIdx.x * blockDim.x + threadIdx.x;
+	
+	if (i * COLUMN_TOT + 0 >= size - ARRAY_END_TOT ) return;
+	  
+	// read init vars from end of array
+	int end_base_size = (size / COLUMN_TOT ) * COLUMN_TOT;
+	int end_shape_x =  COLUMN_TOT;
+	int end_shape_y = size / (int) COLUMN_TOT;
+	int end_change_wh = 1;
+	int end_loop_max = CUDA_LOOP_TOT;
+	
+	if (size >= end_base_size + ARRAY_END_SHAPE_X) end_shape_x = in[ end_base_size + ARRAY_END_SHAPE_X];
+	if (size >= end_base_size + ARRAY_END_SHAPE_Y) end_shape_y = in[ end_base_size + ARRAY_END_SHAPE_Y];
+	if (size >= end_base_size + ARRAY_END_CHANGE_WH) end_change_wh = in[ end_base_size + ARRAY_END_CHANGE_WH];
+	if (size >= end_base_size + ARRAY_END_LOOP_MAX && in [end_base_size + ARRAY_END_LOOP_MAX] > 0) end_loop_max = in[ end_base_size + ARRAY_END_LOOP_MAX];
+	
+	// round-trip the array vars
+	out[end_base_size + ARRAY_END_SHAPE_X] = end_shape_x;
+	out[end_base_size + ARRAY_END_SHAPE_Y] = end_shape_y;
+	out[end_base_size + ARRAY_END_CHANGE_WH] = end_change_wh;
+	out[end_base_size + ARRAY_END_LOOP_MAX] = end_loop_max;
+	
+	if (end_change_wh > 0) change_wh = true;
+	
+    for (int j = 0; j < COLUMN_TOT; j ++) {
+    	out[i * COLUMN_TOT + j] = in[i * COLUMN_TOT + j];
+    }
+    
+    int size_img_x = size/2;
+    out[i * COLUMN_TOT + COLUMN_NUM] = size_img_x * out[i * COLUMN_TOT + COLUMN_Y] + out[ i * COLUMN_TOT + COLUMN_X];
+    
+    int count = 0;
+    
+    
+	while(count < end_loop_max ) { //15 // shape_y
+		uint16 local_x = out[i * COLUMN_TOT + COLUMN_X];
+		uint16 local_y = out[i * COLUMN_TOT + COLUMN_Y];
+		uint16 local_w = out[i * COLUMN_TOT + COLUMN_W];
+		uint16 local_h = out[i * COLUMN_TOT + COLUMN_H];
+		//uint16 local_box = out[i * COLUMN_TOT + COLUMN_BOX];
+		
+		
+		
+		for (int j = 0; j < shape_y; j ++) {
+			if( i != j ) {
+				// check against all others for common boundaries
+				uint16 foreign_x = out[j * COLUMN_TOT + COLUMN_X];
+				uint16 foreign_y = out[j * COLUMN_TOT + COLUMN_Y];
+				uint16 foreign_w = out[j * COLUMN_TOT + COLUMN_W];
+				uint16 foreign_h = out[j * COLUMN_TOT + COLUMN_H];
+				
+	
+				/////////////////////////////////////////
+				
+				if (( dimensionPass(foreign_x, foreign_w, local_x, local_w) || dimensionPass(local_x, local_w, foreign_x, foreign_w)) && local_y + local_h >= foreign_y && local_y + local_h <= foreign_y + foreign_h){
+					if(true) {
+						if (isTop(out[j * COLUMN_TOT + COLUMN_BOX] ) ) clearTop(out, j * COLUMN_TOT + COLUMN_BOX);
+						if (isBottom(out[i * COLUMN_TOT + COLUMN_BOX] ) ) clearBottom(out, i * COLUMN_TOT + COLUMN_BOX);
+						
+						if (change_wh) {
+							int difference = (in[i * COLUMN_TOT + COLUMN_H] - CUDA_BASE_WH) / 2;
+							out[i * COLUMN_TOT + COLUMN_H] = out[j * COLUMN_TOT + COLUMN_H] + out[j * COLUMN_TOT + COLUMN_Y] -  out[i * COLUMN_TOT + COLUMN_Y] + difference;
+							
+							
+
+						}
+						
+					}
+					if (change_wh) manipulateBoxes(in, out, i , j);
+
+
+					if ( true){
+						if (  out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM] && out[i * COLUMN_TOT + COLUMN_NUM] != 0) {
+							out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
+							
+							
+						}
+						else{
+							
+						}
+
+						
+					}
+				}				
+				
+				else if (local_x + local_w >= foreign_x && local_x + local_w <= foreign_x + foreign_w && (dimensionPass(foreign_y, foreign_h, local_y, local_h) || dimensionPass(local_y, local_h, foreign_y, foreign_h)) ){
+					//remove box walls
+					if (true) {
+						if (isLeft(out[j * COLUMN_TOT + COLUMN_BOX] ) ) clearLeft(out, j * COLUMN_TOT + COLUMN_BOX);
+						if (isRight (out[i * COLUMN_TOT + COLUMN_BOX] )) clearRight(out, i * COLUMN_TOT + COLUMN_BOX);
+						
+						if (change_wh) {
+							int difference = (in[i * COLUMN_TOT + COLUMN_W] - CUDA_BASE_WH) /2;
+							out[i * COLUMN_TOT + COLUMN_W] = out[j * COLUMN_TOT + COLUMN_W] + out[j * COLUMN_TOT + COLUMN_X] -  out[i * COLUMN_TOT + COLUMN_X] + difference;
+							
+							
+							
+						}
+					}
+					if (change_wh) manipulateBoxes(in, out, i , j);
+
+					if (true){
+						if ( out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM] && out[i * COLUMN_TOT + COLUMN_NUM] != 0) {
+							out[j * COLUMN_TOT + COLUMN_NUM] = out[i * COLUMN_TOT + COLUMN_NUM];
+							
+						}
+						else {
+							
+						}
+						
+						
+					}
+				}
+					
+					
+				
+					
+				
+				///////////////////////////////////////////
+				else {
+					// small boxes alone
+					if (change_wh) smallBoxes(in, out, i, j, count);
+					//if (change_wh) pruneBoxes(in,out, i, j, count);
+					
+				}
+				
+				if (change_wh) pruneBoxes(in,out, i, j, count);
+				
+			}
+		}
+		
+		
+		count ++;
+	}
+}
+
+
 
 // Instantiate functors for the types of OpKernels registered.
 typedef Eigen::GpuDevice GPUDevice;

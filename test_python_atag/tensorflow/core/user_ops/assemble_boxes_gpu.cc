@@ -41,10 +41,16 @@ class AssembleBoxesCpu : public OpKernel {
                                                      &output_tensor));
     auto output_flat = output_tensor->flat<uint16>();
 
+    int num_columns = COLUMN_TOT ;
+    int num_rows = (input.size() - ARRAY_END_TOT ) / num_columns;
+    int shape_x = num_columns;
+    int shape_y = num_rows;
+    
     // Set all but the first element of the output tensor to 0.
     const int N = input.size();
     for (int i = 1; i < N; i++) {
-      output_flat(i) = 10;
+      //output_flat(i) = 10;
+      AssembleBoxesCpuKernel(N, input.data(), output_flat.data() , shape_x,  shape_y, i) ;
     }
 
     // Preserve the first input value if possible.

@@ -2,14 +2,14 @@
 #ifndef KERNEL_ASSEMBLE_BOXES_H_
 #define KERNEL_ASSEMBLE_BOXES_H_
 
-
+#include "stdint.h"
 
 template <typename Device, typename T>
 struct AssembleBoxesFunctor {
   void operator()(const Device& d, int size, const T* in, T* out);
 };
 
-
+void AssembleBoxesCpuKernel(const int size, const uint16_t* in, uint16_t * out,int shape_x, int shape_y, int i) ;
 
 #define COLUMN_X 0
 #define COLUMN_Y 1
