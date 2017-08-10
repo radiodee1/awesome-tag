@@ -30,7 +30,8 @@ class AssembleBoxesTest(object):
           test = tf.constant(test, dtype=tf.uint16)
           #test = tf.cast(test, dtype=tf.int32)
       print test
-      result = assemble_module.assemble_boxes_op(test)
+      #result = assemble_module.assemble_boxes_op(test)
+      result = assemble_module.assemble_boxes_cpu(test)
       self.r = result.eval()
       s = []
       for i in range(len(self.r) // 6):

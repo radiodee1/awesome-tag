@@ -13,6 +13,11 @@ REGISTER_OP("AssembleBoxesOp")
 	.Attr("T: {int32, uint16}")
     .Input("input: T")
     .Output("out: T");
+
+REGISTER_OP("AssembleBoxesCpu")
+	.Attr("T: { uint16}")
+    .Input("input: T")
+    .Output("out: T");
     
 
 
@@ -20,16 +25,32 @@ using CPUDevice = Eigen::ThreadPoolDevice;
 using GPUDevice = Eigen::GpuDevice;
 
 // CPU specialization of actual computation.
-/*
-template <typename T>
-struct AssembleBoxesFunctor<CPUDevice, T> {
-  void operator()(const CPUDevice& d, int size, const T* in, T* out) {
-    for (int i = 0; i < size; ++i) {
-      out[i] = 2 * in[i];
+
+class AssembleBoxesCpu : public OpKernel {
+ public:
+  explicit AssembleBoxesCpu(OpKernelConstruction* context) : OpKernel(context) {}
+
+  void Compute(OpKernelContext* context) override {
+    // Grab the input tensor
+    const Tensor& input_tensor = context->input(0);
+    auto input = input_tensor.flat<uint16>();
+
+    // Create an output tensor
+    Tensor* output_tensor = NULL;
+    OP_REQUIRES_OK(context, context->allocate_output(0, input_tensor.shape(),
+                                                     &output_tensor));
+    auto output_flat = output_tensor->flat<uint16>();
+
+    // Set all but the first element of the output tensor to 0.
+    const int N = input.size();
+    for (int i = 1; i < N; i++) {
+      output_flat(i) = 10;
     }
+
+    // Preserve the first input value if possible.
+    if (N > 0) output_flat(0) = input(0);
   }
 };
-*/
 
 // OpKernel definition.
 // template parameter <T> is the datatype of the tensors.
@@ -65,14 +86,9 @@ class AssembleBoxesOp : public OpKernel {
 
 
 // Register the CPU kernels.
-/*
-#define REGISTER_CPU(T)                                          \
-  REGISTER_KERNEL_BUILDER(                                       \
-      Name("AssembleBoxesCpu").Device(DEVICE_CPU).TypeConstraint<T>("T"), \
-      AssembleBoxes<CPUDevice, T>);
-//REGISTER_CPU(float);
-REGISTER_CPU(uint16);
-*/
+REGISTER_KERNEL_BUILDER(Name("AssembleBoxesCpu").Device(DEVICE_CPU), AssembleBoxesCpu);
+
+
 
 // Register the GPU kernels.
 #ifdef GOOGLE_CUDA
