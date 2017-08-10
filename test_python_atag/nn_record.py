@@ -84,7 +84,7 @@ class Record( enum.Enum, dim.Dimension):
             self.dat.append(temp)
         return self.dat
 
-    def make_boxes_mc(self, filename, dim=-1, dat = []):
+    def make_boxes_mc(self, filename, dim=-1, dat = [], skip_on_height=False):
 
         #xx, yy = Image.open(filename).size
 
@@ -139,13 +139,15 @@ class Record( enum.Enum, dim.Dimension):
 
                 if not (temp[self.FACE_X] + temp[self.FACE_WIDTH] >= xx or temp[self.FACE_Y] + temp[self.FACE_HEIGHT] >= yy or
                     temp[self.FACE_X] < 0 or temp[self.FACE_Y] < 0):
-                    self.dat.append(temp)
+
+                    if (height > self.xy * (4 / 3) or not skip_on_height):
+                        self.dat.append(temp)
                     i += 1
             self.dat.append(dat[k])
 
         return self.dat
 
-    def make_boxes_eyes(self, filename, dim=-1, dat = []):
+    def make_boxes_eyes(self, filename, dim=-1, dat = [], skip_on_height=False):
 
         #xx, yy = Image.open(filename).size
 
@@ -213,7 +215,7 @@ class Record( enum.Enum, dim.Dimension):
                                     int(temp[self.FACE_Y]) + int(temp[self.FACE_HEIGHT]) >= yy or
                     int(temp[self.FACE_X]) < 0 or int(temp[self.FACE_Y]) < 0):
 
-                    if (height > self.xy ) :self.dat.append(temp)
+                    if (height > self.xy * (4 / 3) or not skip_on_height) :self.dat.append(temp)
                 i += 1
             self.dat.append(dat[k])
 
