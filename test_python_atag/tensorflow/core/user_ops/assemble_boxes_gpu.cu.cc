@@ -649,7 +649,7 @@ __host__ void AssembleBoxesCpuKernel(const int size, const uint16* in, uint16 * 
 						
 					}
 
-					if (change_wh) manipulateBoxesCpu(in, out, i , j);
+					//if (change_wh) manipulateBoxesCpu(in, out, i , j);
 
 					if ( true){
 						if (  out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM] && out[i * COLUMN_TOT + COLUMN_NUM] != 0) {
@@ -682,7 +682,7 @@ __host__ void AssembleBoxesCpuKernel(const int size, const uint16* in, uint16 * 
 							
 						}
 					}
-					if (change_wh) manipulateBoxesCpu(in, out, i , j);
+					//if (change_wh) manipulateBoxesCpu(in, out, i , j);
 
 					if (true){
 						if ( out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM] && out[i * COLUMN_TOT + COLUMN_NUM] != 0) {
@@ -707,12 +707,12 @@ __host__ void AssembleBoxesCpuKernel(const int size, const uint16* in, uint16 * 
 				//else
 				else if (true){
 					// small boxes alone
-					if (change_wh) smallBoxesCpu(in, out, i, j, count);
+					//if (change_wh) smallBoxesCpu(in, out, i, j, count);
 					//
 					
 				}
 				
-				if (change_wh) pruneBoxesCpu(in,out, i, j, count);
+				//if (change_wh) pruneBoxesCpu(in,out, i, j, count);
 				
 			}
 		}

@@ -86,14 +86,28 @@ class AssembleBoxesCpu : public OpKernel {
 	for (int count = 0; count < end_loop_max; count ++) {
 		const int N = input.size();
 		for (int i = 0; i < N / COLUMN_TOT; i++) {
-		  //output_flat(i) = 10;
-		  AssembleBoxesCpuKernel(N, input.data(), output_flat.data() , shape_x,  shape_y, change_wh, i) ;
+		  
+			AssembleBoxesCpuKernel(N, input.data(), output_flat.data() , shape_x,  shape_y, change_wh, i) ;
 		}
 	}
-    // Preserve the first input value if possible.
-    //if (N > 0) output_flat(0) = input(0);
+	
+	for(int i = 0; i < shape_y; i ++){
+		for (int j = 0; j < shape_y; j ++) {
+			if (i != j) {
+				int count = end_loop_max;
+				if (change_wh) manipulateBoxesCpu(in, out, i , j);
+				if (change_wh) smallBoxesCpu(in, out, i, j, count);
+				if (change_wh) pruneBoxesCpu(in,out, i, j, count);
+
+			}
+		}
+	}
+	
+    //////////////////////////
   }
 };
+
+
 
 // OpKernel definition.
 // template parameter <T> is the datatype of the tensors.

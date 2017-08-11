@@ -11,6 +11,12 @@ struct AssembleBoxesFunctor {
 
 void AssembleBoxesCpuKernel(const int size, const uint16_t* in, uint16_t * out,int shape_x, int shape_y, bool change_wh, int i) ;
 
+void manipulateBoxesCpu(const uint16_t * in, uint16_t * out, int i, int j) ;
+void pruneBoxesCpu(const uint16_t * in, uint16_t * out, int i, int j, int count) ;
+void smallBoxesCpu(const uint16_t * in, uint16_t * out, int i, int j, int count) ;
+
+
+
 #define COLUMN_X 0
 #define COLUMN_Y 1
 #define COLUMN_W 2
