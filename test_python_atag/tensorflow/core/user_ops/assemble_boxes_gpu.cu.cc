@@ -613,45 +613,15 @@ __host__ void smallBoxesCpu(const uint16 * in, uint16 * out, int i, int j, int c
 	
 }
 
-__host__ void AssembleBoxesCpuKernel(const int size, const uint16* in, uint16 * out,int shape_x, int shape_y, int i) {
+__host__ void AssembleBoxesCpuKernel(const int size, const uint16* in, uint16 * out,int shape_x, int shape_y,bool change_wh, int i) {
 	  
-	bool change_wh = false;
 	
-	//int i = blockIdx.x * blockDim.x + threadIdx.x;
-	
-	//if (i * COLUMN_TOT + 0 >= size - ARRAY_END_TOT ) return;
-	  
-	// read init vars from end of array
-	int end_base_size = (size / COLUMN_TOT ) * COLUMN_TOT;
-	int end_shape_x =  COLUMN_TOT;
-	int end_shape_y = size / (int) COLUMN_TOT;
-	int end_change_wh = 1;
-	int end_loop_max = CUDA_LOOP_TOT;
-	
-	if (size >= end_base_size + ARRAY_END_SHAPE_X) end_shape_x = in[ end_base_size + ARRAY_END_SHAPE_X];
-	if (size >= end_base_size + ARRAY_END_SHAPE_Y) end_shape_y = in[ end_base_size + ARRAY_END_SHAPE_Y];
-	if (size >= end_base_size + ARRAY_END_CHANGE_WH) end_change_wh = in[ end_base_size + ARRAY_END_CHANGE_WH];
-	if (size >= end_base_size + ARRAY_END_LOOP_MAX && in [end_base_size + ARRAY_END_LOOP_MAX] > 0) end_loop_max = in[ end_base_size + ARRAY_END_LOOP_MAX];
-	
-	// round-trip the array vars
-	out[end_base_size + ARRAY_END_SHAPE_X] = end_shape_x;
-	out[end_base_size + ARRAY_END_SHAPE_Y] = end_shape_y;
-	out[end_base_size + ARRAY_END_CHANGE_WH] = end_change_wh;
-	out[end_base_size + ARRAY_END_LOOP_MAX] = end_loop_max;
-	
-	if (end_change_wh > 0) change_wh = true;
-	
-    for (int j = 0; j < COLUMN_TOT; j ++) {
-    	out[i * COLUMN_TOT + j] = in[i * COLUMN_TOT + j];
-    }
     
-    int size_img_x = size/2;
-    out[i * COLUMN_TOT + COLUMN_NUM] = size_img_x * out[i * COLUMN_TOT + COLUMN_Y] + out[ i * COLUMN_TOT + COLUMN_X];
     
     int count = 0;
     
     
-	while(count < end_loop_max ) { //15 // shape_y
+	while(count < 1 ) { //15 // shape_y
 		uint16 local_x = out[i * COLUMN_TOT + COLUMN_X];
 		uint16 local_y = out[i * COLUMN_TOT + COLUMN_Y];
 		uint16 local_w = out[i * COLUMN_TOT + COLUMN_W];
@@ -686,6 +656,7 @@ __host__ void AssembleBoxesCpuKernel(const int size, const uint16* in, uint16 * 
 						
 					}
 
+					if (change_wh) manipulateBoxesCpu(in, out, i , j);
 
 					if ( true){
 						if (  out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM] && out[i * COLUMN_TOT + COLUMN_NUM] != 0) {
@@ -699,13 +670,12 @@ __host__ void AssembleBoxesCpuKernel(const int size, const uint16* in, uint16 * 
 
 						
 					}
-					//if (change_wh) manipulateBoxesCpu(in, out, i , j);
 					
 					
 					
 				}				
 				//else
-				if (local_x + local_w >= foreign_x && local_x + local_w <= foreign_x + foreign_w && (dimensionPass(foreign_y, foreign_h, local_y, local_h) || dimensionPass(local_y, local_h, foreign_y, foreign_h)) ){
+				else if (local_x + local_w >= foreign_x && local_x + local_w <= foreign_x + foreign_w && (dimensionPass(foreign_y, foreign_h, local_y, local_h) || dimensionPass(local_y, local_h, foreign_y, foreign_h)) ){
 					//remove box walls
 					if (true) {
 						if (isLeft(out[j * COLUMN_TOT + COLUMN_BOX] ) ) clearLeft(out, j * COLUMN_TOT + COLUMN_BOX);
@@ -719,6 +689,7 @@ __host__ void AssembleBoxesCpuKernel(const int size, const uint16* in, uint16 * 
 							
 						}
 					}
+					if (change_wh) manipulateBoxesCpu(in, out, i , j);
 
 					if (true){
 						if ( out[j * COLUMN_TOT + COLUMN_NUM] > out[i * COLUMN_TOT + COLUMN_NUM] && out[i * COLUMN_TOT + COLUMN_NUM] != 0) {
@@ -732,7 +703,6 @@ __host__ void AssembleBoxesCpuKernel(const int size, const uint16* in, uint16 * 
 						
 					}
 					
-					//if (change_wh) manipulateBoxesCpu(in, out, i , j);
 
 					
 					
@@ -742,14 +712,14 @@ __host__ void AssembleBoxesCpuKernel(const int size, const uint16* in, uint16 * 
 					
 				///////////////////////////////////////////
 				//else
-				if (true){
+				else if (true){
 					// small boxes alone
-					//if (change_wh) smallBoxesCpu(in, out, i, j, count);
+					if (change_wh) smallBoxesCpu(in, out, i, j, count);
 					//
 					
 				}
 				
-				//if (change_wh) pruneBoxesCpu(in,out, i, j, count);
+				if (change_wh) pruneBoxesCpu(in,out, i, j, count);
 				
 			}
 		}
@@ -757,17 +727,7 @@ __host__ void AssembleBoxesCpuKernel(const int size, const uint16* in, uint16 * 
 		
 		count ++;
 	}
-	count = 0;
-	while(count < end_loop_max ) { //15 // shape_y
-		for (int j = 0; j < shape_y; j ++) {
-			if (j != i) {
-				if (change_wh) manipulateBoxesCpu(in, out, i , j);
-				if (change_wh) smallBoxesCpu(in, out, i, j, count);
-				if (change_wh) pruneBoxesCpu(in,out, i, j, count);
-			}
-		}
-		count ++;
-	}
+	
 	
 }
 

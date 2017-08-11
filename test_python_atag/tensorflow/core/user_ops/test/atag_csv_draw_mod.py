@@ -19,7 +19,7 @@ class Read( enum.Enum) :
         self.boxlist_b = []
         self.gpu_test = []
         self.num = 0
-        self.loop_max = 1
+        self.loop_max = 16
         self.change_wh = 1
         
         self.num_chosen = 0

@@ -9,7 +9,7 @@ struct AssembleBoxesFunctor {
   void operator()(const Device& d, int size, const T* in, T* out);
 };
 
-void AssembleBoxesCpuKernel(const int size, const uint16_t* in, uint16_t * out,int shape_x, int shape_y, int i) ;
+void AssembleBoxesCpuKernel(const int size, const uint16_t* in, uint16_t * out,int shape_x, int shape_y, bool change_wh, int i) ;
 
 #define COLUMN_X 0
 #define COLUMN_Y 1
