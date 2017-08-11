@@ -562,9 +562,9 @@ __host__   void pruneBoxesCpu(const uint16 * in, uint16 * out, int i, int j, int
 	int area_j = out[j * COLUMN_TOT + COLUMN_W] * out[j * COLUMN_TOT + COLUMN_H]; 
 
 	
-	if (area_i < area_j || count < CUDA_LOOP_TOT - 2) return;
+	//if (area_i < area_j || count < CUDA_LOOP_TOT - 2) return;
 	
-	//if ( count < CUDA_LOOP_TOT - 2) return;
+	if (area_i < area_j) return;
 	
 
 	jj = j;
@@ -583,20 +583,13 @@ __host__   void pruneBoxesCpu(const uint16 * in, uint16 * out, int i, int j, int
 __host__ void smallBoxesCpu(const uint16 * in, uint16 * out, int i, int j, int count) {
 	
 	int jj = j;
-	//float mult_w = 2.5;
-	//float mult_h = 2.5;
 	
-	//int width_i = out[i * COLUMN_TOT + COLUMN_W] ; 
-	//int height_i = (int) out[i * COLUMN_TOT + COLUMN_H] ;
 		
 	
 	int area_out = out[i * COLUMN_TOT + COLUMN_W] * out[i * COLUMN_TOT + COLUMN_H]; 
 	int area_in = in[i * COLUMN_TOT + COLUMN_W] * in[i * COLUMN_TOT + COLUMN_H]; 
 
-	//if ( count < CUDA_LOOP_TOT -2 ) return;// * 3 / 4) return;
 	
-	//if ((area_out > area_in * CUDA_SHAPE_FLOAT * count / 2  ) && (width_i * mult_w > height_i && width_i < mult_h * height_i)) return;
-	//count = 1;
 	
 	if ((area_out > area_in * CUDA_SHAPE_FLOAT * count / 2  ) ) return;
 		
@@ -621,7 +614,7 @@ __host__ void AssembleBoxesCpuKernel(const int size, const uint16* in, uint16 * 
     int count = 0;
     
     
-	while(count < 1 ) { //15 // shape_y
+	while(count < 5 ) { //15 // shape_y
 		uint16 local_x = out[i * COLUMN_TOT + COLUMN_X];
 		uint16 local_y = out[i * COLUMN_TOT + COLUMN_Y];
 		uint16 local_w = out[i * COLUMN_TOT + COLUMN_W];
