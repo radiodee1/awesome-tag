@@ -333,7 +333,7 @@ class Read( enum.Enum, dim.Dimension) :
         if self.pipeline_enum == self.ENUM_PIPELINE_4:
             ''' make initial box grid '''
             if self.pipeline_stage >= 1:
-                ll.dat = ll.record.make_boxes(self.pic, dim=-1, grid=10000 * 5)  # dim=4
+                ll.dat = ll.record.make_boxes(self.pic, dim=-1, grid=1000 * 50)  # dim=4
                 print "num-boxes", len(ll.dat)
 
             if self.pipeline_stage >= 2 and True:
@@ -353,7 +353,7 @@ class Read( enum.Enum, dim.Dimension) :
                     self.nn.nn_clear_and_reset()
                     self.nn.nn_configure_assemble()
                     self.nn.nn_global_var_init()
-                    self.nn.assemble_setup()
+                    self.nn.assemble_setup(use_gpu=True)
                     ll.dat = self.nn.dat
 
                     ll.record.renumber_dat_list(ll.dat)

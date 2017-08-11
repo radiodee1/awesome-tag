@@ -729,7 +729,7 @@ class NN(enum.Enum, dim.Dimension):
                 pass
             #print "best conv mc", self.dat_best[:]
 
-    def assemble_setup(self):
+    def assemble_setup(self, use_gpu=False):
         test = []
         num = 0
         filename = self.dat[0][self.FILE]
@@ -740,9 +740,10 @@ class NN(enum.Enum, dim.Dimension):
             num += 1
         test.extend([ self.GPU_TOT, len(l), 1, 15]) # MAGIC NUMBERS
         test = tf.constant(test, dtype=tf.uint16)
-
-        #result = self.assemble_module.assemble_boxes_op(test)
-        result = self.assemble_module.assemble_boxes_cpu(test)
+        if use_gpu:
+            result = self.assemble_module.assemble_boxes_op(test)
+        else:
+            result = self.assemble_module.assemble_boxes_cpu(test)
         self.r = result.eval()
 
         s = []
