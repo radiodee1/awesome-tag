@@ -368,23 +368,11 @@ class Read( enum.Enum, dim.Dimension) :
 
                 print "len-dat3", len(ll.dat)
 
-            mc_experement = True
+            #mc_experement = True
 
-            if self.pipeline_stage >= 4 and not mc_experement:
-                ''' convolution neural network '''
-                self.nn.nn_clear_and_reset()
-                self.nn.nn_configure_conv()
-                self.nn.nn_global_var_init()
-                # ll.normal_train = False
-                self.nn.predict_remove_symbol = 1
-                self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=True)
-                self.nn.load_ckpt = True
-                self.nn.conv_setup(remove_low=False, color_reject=True)
-                print "len-dat4", len(ll.dat)
-
-            if self.pipeline_stage >= 5 and True:
-                ''' try to improve box '''
-                if mc_experement:
+            if self.pipeline_stage >= 4 and True:
+                ''' try to improve box with eyes nn '''
+                if True:# mc_experement:
                     self.nn.nn_clear_and_reset()
                     self.nn.nn_configure_eyes()
                     self.nn.nn_global_var_init()
@@ -433,10 +421,23 @@ class Read( enum.Enum, dim.Dimension) :
                 else:
                     ll.dat = eye_list[:]
                     #ll.dat = see_list[:]
-                print "len-dat5", len(self.nn.dat_best)
+                print "len-dat4", len(self.nn.dat_best)
+
+
+            if self.pipeline_stage >= 5 and True:  # not mc_experement:
+                ''' convolution neural network '''
+                self.nn.nn_clear_and_reset()
+                self.nn.nn_configure_conv()
+                self.nn.nn_global_var_init()
+                # ll.normal_train = False
+                self.nn.predict_remove_symbol = 1
+                self.nn.set_vars(len(ll.dat), 100, 0, adjust_x=True)
+                self.nn.load_ckpt = True
+                self.nn.conv_setup(remove_low=False, color_reject=True)
+                print "len-dat5", len(ll.dat)
 
             print "pipeline enum 4"
-            ll.record.save_dat_to_list_file(ll.dat, erase=(not self.make_list),color=self.GREEN)
+            ll.record.save_dat_to_list_file(ll.dat, erase=(not self.make_list), color=self.GREEN)
 
     def run_weight_img(self):
         print "weight img"
