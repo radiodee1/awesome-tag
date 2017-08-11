@@ -741,7 +741,8 @@ class NN(enum.Enum, dim.Dimension):
         test.extend([ self.GPU_TOT, len(l), 1, 15]) # MAGIC NUMBERS
         test = tf.constant(test, dtype=tf.uint16)
 
-        result = self.assemble_module.assemble_boxes_op(test)
+        #result = self.assemble_module.assemble_boxes_op(test)
+        result = self.assemble_module.assemble_boxes_cpu(test)
         self.r = result.eval()
 
         s = []
