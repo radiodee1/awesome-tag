@@ -670,9 +670,9 @@ class NN(enum.Enum, dim.Dimension):
                     out_f.append(number)
                     #print number, "number"
 
-            if False:
+            if True:
                 print "eye out", len(out), out
-                out = [0 , 0, 0, 1, 1, 1, 0, 0, 0 , 1]
+                #out = [0 , 0, 0, 1, 1, 1, 0, 0, 0 , 1]
 
             if True:
                 self.predict_remove_symbol = 1
@@ -681,6 +681,7 @@ class NN(enum.Enum, dim.Dimension):
                 endeye = False
                 outputeye = False
                 last_i = 0
+                num_endeye = len(out) // 2
                 for i in range(len(out) // 2):
                     if (i == 0 and out[0] != self.predict_remove_symbol and not starteye):
                         starteye = True
@@ -688,7 +689,7 @@ class NN(enum.Enum, dim.Dimension):
                     if (starteye and out[i] == self.predict_remove_symbol and not mideye):
                         mideye = True
                         #print "mid", mideye
-                    if (starteye and mideye and out[i] != self.predict_remove_symbol and not endeye):
+                    if ( starteye and mideye and out[i] != self.predict_remove_symbol and not endeye):
                         endeye = True
                         #print "end", endeye
                     if  ( starteye and  mideye and  endeye and out[i] != self.predict_remove_symbol and not outputeye):
@@ -700,7 +701,7 @@ class NN(enum.Enum, dim.Dimension):
                         starteye = False
                         #print "reset to false"
 
-                        #print "output",outputeye
+                print "output",outputeye
 
                 #print len(out), out, outputeye, "output eye", self.predict_remove_symbol
                 if len(out_f) > 0: print len(out_f[0]), "len out-f"
