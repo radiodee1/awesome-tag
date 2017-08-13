@@ -333,7 +333,7 @@ class Read( enum.Enum, dim.Dimension) :
         if self.pipeline_enum == self.ENUM_PIPELINE_4:
             ''' make initial box grid '''
             if self.pipeline_stage >= 1:
-                ll.dat = ll.record.make_boxes(self.pic, dim=-1, grid=1000 * 50)  # dim=4
+                ll.dat = ll.record.make_boxes(self.pic, dim=-1, grid=1000 * 15)  # grid=1000 * 50
                 print "num-boxes", len(ll.dat)
 
             if self.pipeline_stage >= 2 and True:
@@ -353,7 +353,7 @@ class Read( enum.Enum, dim.Dimension) :
                     self.nn.nn_clear_and_reset()
                     self.nn.nn_configure_assemble()
                     self.nn.nn_global_var_init()
-                    self.nn.assemble_setup(use_gpu=True)
+                    self.nn.assemble_setup(use_gpu=False)
                     ll.dat = self.nn.dat
 
                     ll.record.renumber_dat_list(ll.dat)
@@ -378,7 +378,7 @@ class Read( enum.Enum, dim.Dimension) :
                     self.nn.nn_global_var_init()
                 see_boxes = False
                 self.nn.load_ckpt = True
-                if self.pipeline_stage == 5: see_boxes = True
+                if self.pipeline_stage == 4: see_boxes = True
                 see_list = []
                 temp_list = []
                 self.nn.dat_best = []
@@ -395,7 +395,7 @@ class Read( enum.Enum, dim.Dimension) :
                     eyes_index = -1
                     eye_list = []
                     self.nn.dat_eye = ll.dat[:] ##limit output here <---
-                    if see_boxes: ll.record.save_dat_to_list_file(mc_list,erase=False, color="GREEN")
+                    if see_boxes: ll.record.save_dat_to_list_file(ll.dat, erase=False, color="GREEN")
                     for j in range(len(self.nn.dat_eye)):
                         #print k, len(self.dat_mc), j, "progress"
                         eye_list = ll.record.make_boxes_eyes(self.pic, dat=[self.nn.dat_eye[j]],skip_on_height=True)
@@ -424,7 +424,7 @@ class Read( enum.Enum, dim.Dimension) :
                 print "len-dat4", len(self.nn.dat_best)
 
 
-            if self.pipeline_stage >= 5 and True:  # not mc_experement:
+            if self.pipeline_stage >= 5 and False:  # not mc_experement:
                 ''' convolution neural network '''
                 self.nn.nn_clear_and_reset()
                 self.nn.nn_configure_conv()
