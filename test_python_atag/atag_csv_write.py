@@ -11,7 +11,7 @@ Here we read the split file and write our own csv file for training later on.
 '''
 
 class Write( enum.Enum, dim.Dimension) :
-    def __init__(self, atag):
+    def __init__(self, atag, randomize=False):
         enum.Enum.__init__(self)
         dim.Dimension.__init__(self)
 
@@ -49,9 +49,21 @@ class Write( enum.Enum, dim.Dimension) :
         self.f = open(self.csv_output, "w")
         self.f = open(self.csv_output, "a")
 
-        for l in self.dat :
-            self.process_write_line(l, filter_yaw=False)
-        self.f.close()
+        if not randomize:
+            for l in self.dat :
+                self.process_write_line(l, filter_yaw=False)
+            self.f.close()
+
+        else:
+            rdat = self.dat[:]
+            while len(rdat) > 1:
+                r = random.randint(0,len(rdat)-1)
+                l = rdat[r]
+                del rdat[r]
+                print "len", len(rdat)
+                self.process_write_line(l, filter_yaw=False)
+            self.f.close()
+
 
         #exit()
         print self.csv_output_dot , "dotfile"

@@ -353,7 +353,7 @@ class Read( enum.Enum, dim.Dimension) :
                     self.nn.nn_clear_and_reset()
                     self.nn.nn_configure_assemble()
                     self.nn.nn_global_var_init()
-                    self.nn.assemble_setup(use_gpu=False)
+                    self.nn.assemble_setup(use_gpu=True)
                     ll.dat = self.nn.dat
 
                     ll.record.renumber_dat_list(ll.dat)

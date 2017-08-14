@@ -378,7 +378,15 @@ class Interface(Gtk.Window, atag.Dotfolder) :
         #print 1
 
     def on_button_write_csv(self, widget):
-        thread = threading.Thread(target=self.run_csv_write)
+        thread = None
+        jj = easygui.buttonbox("Type of output", "Choose", choices=("NON-RANDOM","RANDOM","CANCEL"))
+        if jj == "NON-RANDOM":
+            thread = threading.Thread(target=self.run_csv_write)
+        elif jj == "RANDOM":
+            thread = threading.Thread(target=self.run_csv_write_random)
+            pass
+        elif jj == "CANCEL":
+            return
         thread.daemon = True
         thread.start()
         print 2
@@ -579,6 +587,10 @@ class Interface(Gtk.Window, atag.Dotfolder) :
 
     def run_csv_write(self):
         write.Write(self)
+
+    def run_csv_write_random(self):
+        write.Write(self, randomize=True)
+        pass
 
     def run_csv_read(self):
         #read.Read(self)
